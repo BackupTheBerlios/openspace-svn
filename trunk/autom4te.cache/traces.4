@@ -9113,7 +9113,25 @@ m4trace:configure.ac:36: -1- AH_OUTPUT([HAVE_RMDIR], [/* Define to 1 if you have
 #undef HAVE_RMDIR])
 m4trace:configure.ac:36: -1- AH_OUTPUT([HAVE_STRTOUL], [/* Define to 1 if you have the `strtoul\' function. */
 #undef HAVE_STRTOUL])
-m4trace:configure.ac:46: -1- AC_CONFIG_FILES([
+m4trace:configure.ac:40: -1- AC_CHECK_LIB([FOX-1.4], [fxfindfox], [], [{ { echo "$as_me:$LINENO: error: \"libFOX-1.4 not found\"" >&5
+echo "$as_me: error: \"libFOX-1.4 not found\"" >&2;}
+   { (exit 1); exit 1; }; }])
+m4trace:configure.ac:40: -1- AH_OUTPUT([HAVE_LIBFOX_1_4], [/* Define to 1 if you have the `FOX-1.4\' library (-lFOX-1.4). */
+#undef HAVE_LIBFOX_1_4])
+m4trace:configure.ac:40: -1- AC_DEFINE_TRACE_LITERAL([HAVE_LIBFOX_1_4])
+m4trace:configure.ac:43: -1- AC_HEADER_STDC
+m4trace:configure.ac:43: -1- AC_DEFINE_TRACE_LITERAL([STDC_HEADERS])
+m4trace:configure.ac:43: -1- AH_OUTPUT([STDC_HEADERS], [/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS])
+m4trace:configure.ac:44: -1- _m4_warn([obsolete], [The macro `AC_LANG_CPLUSPLUS' is obsolete.
+You should run autoupdate.], [autoconf/c.m4:103: AC_LANG_CPLUSPLUS is expanded from...
+configure.ac:44: the top level])
+m4trace:configure.ac:45: -1- AC_CHECK_HEADERS([fox-1.4/fx.h], [], [{ { echo "$as_me:$LINENO: error: \"fox-1.4/fx.h not found\"" >&5
+echo "$as_me: error: \"fox-1.4/fx.h not found\"" >&2;}
+   { (exit 1); exit 1; }; }])
+m4trace:configure.ac:45: -1- AH_OUTPUT([HAVE_FOX_1_4_FX_H], [/* Define to 1 if you have the <fox-1.4/fx.h> header file. */
+#undef HAVE_FOX_1_4_FX_H])
+m4trace:configure.ac:55: -1- AC_CONFIG_FILES([
 		 openspacerc
 		 Makefile
 		 src/Makefile
@@ -9122,7 +9140,7 @@ m4trace:configure.ac:46: -1- AC_CONFIG_FILES([
 		 src/plugins/filelist/Makefile
 		 src/plugins/cmddialog/Makefile
                  ])
-m4trace:configure.ac:47: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
-m4trace:configure.ac:47: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
-m4trace:configure.ac:47: -1- _AC_AM_CONFIG_HEADER_HOOK([$ac_file])
-m4trace:configure.ac:47: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS
+m4trace:configure.ac:56: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
+m4trace:configure.ac:56: -1- AC_SUBST([LTLIBOBJS], [$ac_ltlibobjs])
+m4trace:configure.ac:56: -1- _AC_AM_CONFIG_HEADER_HOOK([$ac_file])
+m4trace:configure.ac:56: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS

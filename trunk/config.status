@@ -487,19 +487,19 @@ s,@DEFS@,-DHAVE_CONFIG_H,;t t
 s,@ECHO_C@,,;t t
 s,@ECHO_N@,-n,;t t
 s,@ECHO_T@,,;t t
-s,@LIBS@,,;t t
+s,@LIBS@,-lFOX-1.4 ,;t t
 s,@INSTALL_PROGRAM@,${INSTALL},;t t
 s,@INSTALL_SCRIPT@,${INSTALL},;t t
 s,@INSTALL_DATA@,${INSTALL} -m 644,;t t
 s,@CYGPATH_W@,echo,;t t
 s,@PACKAGE@,openspace,;t t
 s,@VERSION@,0.0.0.1,;t t
-s,@ACLOCAL@,${SHELL} /root/op/missing --run aclocal-1.9,;t t
-s,@AUTOCONF@,${SHELL} /root/op/missing --run autoconf,;t t
-s,@AUTOMAKE@,${SHELL} /root/op/missing --run automake-1.9,;t t
-s,@AUTOHEADER@,${SHELL} /root/op/missing --run autoheader,;t t
-s,@MAKEINFO@,${SHELL} /root/op/missing --run makeinfo,;t t
-s,@install_sh@,/root/op/install-sh,;t t
+s,@ACLOCAL@,${SHELL} /root/ok/trunk/missing --run aclocal-1.9,;t t
+s,@AUTOCONF@,${SHELL} /root/ok/trunk/missing --run autoconf,;t t
+s,@AUTOMAKE@,${SHELL} /root/ok/trunk/missing --run automake-1.9,;t t
+s,@AUTOHEADER@,${SHELL} /root/ok/trunk/missing --run autoheader,;t t
+s,@MAKEINFO@,${SHELL} /root/ok/trunk/missing --run makeinfo,;t t
+s,@install_sh@,/root/ok/trunk/install-sh,;t t
 s,@STRIP@,strip,;t t
 s,@ac_ct_STRIP@,strip,;t t
 s,@INSTALL_STRIP_PROGRAM@,${SHELL} $(install_sh) -c -s,;t t
@@ -507,7 +507,7 @@ s,@mkdir_p@,mkdir -p --,;t t
 s,@AWK@,gawk,;t t
 s,@SET_MAKE@,,;t t
 s,@am__leading_dot@,.,;t t
-s,@AMTAR@,${SHELL} /root/op/missing --run tar,;t t
+s,@AMTAR@,${SHELL} /root/ok/trunk/missing --run tar,;t t
 s,@am__tar@,${AMTAR} chof - "$$tardir",;t t
 s,@am__untar@,${AMTAR} xf -,;t t
 s,@CXX@,g++,;t t
@@ -914,6 +914,9 @@ ${ac_dA}HAVE_MKDIR${ac_dB}HAVE_MKDIR${ac_dC}1${ac_dD}
 ${ac_dA}HAVE_MKFIFO${ac_dB}HAVE_MKFIFO${ac_dC}1${ac_dD}
 ${ac_dA}HAVE_RMDIR${ac_dB}HAVE_RMDIR${ac_dC}1${ac_dD}
 ${ac_dA}HAVE_STRTOUL${ac_dB}HAVE_STRTOUL${ac_dC}1${ac_dD}
+${ac_dA}HAVE_LIBFOX_1_4${ac_dB}HAVE_LIBFOX_1_4${ac_dC}1${ac_dD}
+${ac_dA}STDC_HEADERS${ac_dB}STDC_HEADERS${ac_dC}1${ac_dD}
+${ac_dA}HAVE_FOX_1_4_FX_H${ac_dB}HAVE_FOX_1_4_FX_H${ac_dC}1${ac_dD}
 CEOF
   sed -f $tmp/defines.sed $tmp/in >$tmp/out
   rm -f $tmp/in
@@ -977,6 +980,9 @@ ${ac_uA}HAVE_MKDIR${ac_uB}HAVE_MKDIR${ac_uC}1${ac_uD}
 ${ac_uA}HAVE_MKFIFO${ac_uB}HAVE_MKFIFO${ac_uC}1${ac_uD}
 ${ac_uA}HAVE_RMDIR${ac_uB}HAVE_RMDIR${ac_uC}1${ac_uD}
 ${ac_uA}HAVE_STRTOUL${ac_uB}HAVE_STRTOUL${ac_uC}1${ac_uD}
+${ac_uA}HAVE_LIBFOX_1_4${ac_uB}HAVE_LIBFOX_1_4${ac_uC}1${ac_uD}
+${ac_uA}STDC_HEADERS${ac_uB}STDC_HEADERS${ac_uC}1${ac_uD}
+${ac_uA}HAVE_FOX_1_4_FX_H${ac_uB}HAVE_FOX_1_4_FX_H${ac_uC}1${ac_uD}
 s,^[	 ]*#[	 ]*undef[	 ][	 ]*[a-zA-Z_][a-zA-Z_0-9]*,/* & */,
 CEOF
   sed -f $tmp/undefs.sed $tmp/in >$tmp/out
