@@ -22,6 +22,9 @@ using namespace std;
 class box;
 class Frame;
 
+
+//the main application window
+
 class MainWindow : public FXMainWindow
 {
 FXDECLARE(MainWindow)

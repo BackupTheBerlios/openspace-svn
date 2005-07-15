@@ -1,12 +1,12 @@
 oslistitem.o oslistitem.o: oslistitem.cpp /usr/include/fox-1.4/fx.h \
   /usr/include/stdio.h /usr/include/features.h /usr/include/sys/cdefs.h \
   /usr/include/gnu/stubs.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/stddef.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/stddef.h \
   /usr/include/bits/types.h /usr/include/bits/wordsize.h \
   /usr/include/bits/typesizes.h /usr/include/libio.h \
   /usr/include/_G_config.h /usr/include/wchar.h /usr/include/bits/wchar.h \
   /usr/include/gconv.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/stdarg.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/stdarg.h \
   /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
   /usr/include/bits/stdio.h /usr/include/stdlib.h \
   /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
@@ -123,63 +123,63 @@ oslistitem.o oslistitem.o: oslistitem.cpp /usr/include/fox-1.4/fx.h \
   /usr/include/fox-1.4/FXPrintDialog.h \
   /usr/include/fox-1.4/FXDebugTarget.h \
   /usr/include/fox-1.4/FXSplashWindow.h oslistitem.h osfile.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/string \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/c++config.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/os_defines.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stringfwd.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/char_traits.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/cstring \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/cstddef \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/fpos.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/c++io.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/cstdio \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/gthr.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/gthr-default.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/string \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/c++config.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/os_defines.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stringfwd.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/char_traits.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/cstring \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/cstddef \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/fpos.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/c++io.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/cstdio \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/gthr.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/gthr-default.h \
   /usr/include/pthread.h /usr/include/sched.h /usr/include/signal.h \
   /usr/include/bits/initspin.h /usr/include/bits/sigthread.h \
   /usr/include/unistd.h /usr/include/bits/posix_opt.h \
   /usr/include/bits/environments.h /usr/include/bits/confname.h \
   /usr/include/getopt.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/cwchar \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/ctime \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/memory \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_algobase.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/climits \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/limits.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/syslimits.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/cwchar \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/ctime \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/memory \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_algobase.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/climits \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/limits.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/syslimits.h \
   /usr/include/limits.h /usr/include/bits/posix1_lim.h \
   /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
   /usr/include/bits/posix2_lim.h /usr/include/bits/xopen_lim.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/cstdlib \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/new \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/exception \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/iosfwd \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/c++locale.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/clocale \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/cstdlib \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/new \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/exception \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/iosfwd \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/c++locale.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/clocale \
   /usr/include/locale.h /usr/include/bits/locale.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/cctype \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/cctype \
   /usr/include/ctype.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/functexcept.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/exception_defines.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_pair.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/type_traits.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_iterator_base_types.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_iterator_base_funcs.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/concept_check.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_iterator.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_alloc.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_threads.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/atomicity.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_construct.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_uninitialized.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_raw_storage_iter.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_function.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/basic_string.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/algorithm \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_algo.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_heap.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_tempbuf.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/basic_string.tcc \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/functexcept.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/exception_defines.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_pair.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/type_traits.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_iterator_base_types.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_iterator_base_funcs.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/concept_check.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_iterator.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_alloc.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_threads.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/atomicity.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_construct.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_uninitialized.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_raw_storage_iter.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_function.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/basic_string.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/algorithm \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_algo.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_heap.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_tempbuf.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/basic_string.tcc \
   filelist.h filelist_base.h configure.h \
   /usr/include/libxml2/libxml/parser.h \
   /usr/include/libxml2/libxml/xmlversion.h \
@@ -200,15 +200,15 @@ oslistitem.o oslistitem.o: oslistitem.cpp /usr/include/fox-1.4/fx.h \
   /usr/include/libxml2/libxml/xmlmemory.h \
   /usr/include/libxml2/libxml/threads.h \
   /usr/include/libxml2/libxml/xpath.h thread_elem.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/vector \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_vector.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_bvector.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/vector.tcc \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/vector \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_vector.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_bvector.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/vector.tcc \
   pathtype.h filetype.h cmddialog.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/map \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_tree.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_map.h \
-  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_multimap.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/map \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_tree.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_map.h \
+  /usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_multimap.h \
   preferences.h sharedobjects.h
 
 /usr/include/fox-1.4/fx.h:
@@ -221,7 +221,7 @@ oslistitem.o oslistitem.o: oslistitem.cpp /usr/include/fox-1.4/fx.h \
 
 /usr/include/gnu/stubs.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/stddef.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/stddef.h:
 
 /usr/include/bits/types.h:
 
@@ -239,7 +239,7 @@ oslistitem.o oslistitem.o: oslistitem.cpp /usr/include/fox-1.4/fx.h \
 
 /usr/include/gconv.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/stdarg.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/stdarg.h:
 
 /usr/include/bits/stdio_lim.h:
 
@@ -657,29 +657,29 @@ oslistitem.h:
 
 osfile.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/string:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/string:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/c++config.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/c++config.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/os_defines.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/os_defines.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stringfwd.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stringfwd.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/char_traits.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/char_traits.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/cstring:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/cstring:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/cstddef:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/cstddef:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/fpos.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/fpos.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/c++io.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/c++io.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/cstdio:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/cstdio:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/gthr.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/gthr.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/gthr-default.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/gthr-default.h:
 
 /usr/include/pthread.h:
 
@@ -701,19 +701,19 @@ osfile.h:
 
 /usr/include/getopt.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/cwchar:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/cwchar:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/ctime:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/ctime:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/memory:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/memory:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_algobase.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_algobase.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/climits:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/climits:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/limits.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/limits.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/syslimits.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/syslimits.h:
 
 /usr/include/limits.h:
 
@@ -727,67 +727,67 @@ osfile.h:
 
 /usr/include/bits/xopen_lim.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/cstdlib:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/cstdlib:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/new:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/new:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/exception:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/exception:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/iosfwd:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/iosfwd:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/c++locale.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/c++locale.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/clocale:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/clocale:
 
 /usr/include/locale.h:
 
 /usr/include/bits/locale.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/cctype:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/cctype:
 
 /usr/include/ctype.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/functexcept.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/functexcept.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/exception_defines.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/exception_defines.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_pair.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_pair.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/type_traits.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/type_traits.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_iterator_base_types.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_iterator_base_types.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_iterator_base_funcs.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_iterator_base_funcs.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/concept_check.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/concept_check.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_iterator.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_iterator.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_alloc.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_alloc.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_threads.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_threads.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/i686-pc-linux-gnu/bits/atomicity.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/i686-pc-linux-gnu/bits/atomicity.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_construct.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_construct.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_uninitialized.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_uninitialized.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_raw_storage_iter.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_raw_storage_iter.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_function.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_function.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/basic_string.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/basic_string.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/algorithm:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/algorithm:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_algo.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_algo.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_heap.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_heap.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_tempbuf.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_tempbuf.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/basic_string.tcc:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/basic_string.tcc:
 
 filelist.h:
 
@@ -843,13 +843,13 @@ configure.h:
 
 thread_elem.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/vector:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/vector:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_vector.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_vector.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_bvector.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_bvector.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/vector.tcc:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/vector.tcc:
 
 pathtype.h:
 
@@ -857,13 +857,13 @@ filetype.h:
 
 cmddialog.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/map:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/map:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_tree.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_tree.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_map.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_map.h:
 
-/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.3/include/g++-v3/bits/stl_multimap.h:
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.3.4/include/g++-v3/bits/stl_multimap.h:
 
 preferences.h:
 

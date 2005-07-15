@@ -8,7 +8,7 @@
 int main(int argc,char ** argv) 
 {
 	
-
+fxTraceLevel=10;
 	
 	FXApp *application=new FXApp("openspace",NULL);
 	application->init(argc,argv);

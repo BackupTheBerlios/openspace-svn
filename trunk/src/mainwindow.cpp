@@ -141,16 +141,14 @@ conf=new configure();
 pref=new preferences(this);
 
 string res=conf->readonestring("/OpenspaceConfig/version");
-fxmessage(res.c_str());
+FXTRACE((1,"VERSION %s\n",res.c_str()));
 
 int w=atoi(conf->readonestring("/OpenspaceConfig/mainwindow/width").c_str());
 int h=atoi(conf->readonestring("/OpenspaceConfig/mainwindow/height").c_str());
 
 resize(w,h);
 string s=conf->readonestring("/OpenspaceConfig/path") + "icons/directory.gif";
-fxmessage("\n");
-fxmessage(s.c_str());
-fxmessage("\n");
+
 		loadicon(conf->readonestring("/OpenspaceConfig/path") + "icons/directory.gif");
 		loadicon(conf->readonestring("/OpenspaceConfig/path") + "icons/big_directory.gif");
 		loadicon(conf->readonestring("/OpenspaceConfig/path") + "icons/unknown.gif");
@@ -211,7 +209,7 @@ if(conf->openxpath("/OpenspaceConfig/file_types")!=-1)
 		}
 	
  	
-	//fxmessage(path.c_str());
+
 	}
 
 
@@ -281,7 +279,7 @@ getApp()->addTimeout(this,ID_TIMER,200);
 //---------------------------------------------------- 
 long MainWindow::onConfigure(FXObject * sender,FXSelector sel,void*)
 {
-fxmessage("PREF\n");
+FXTRACE((5,"CONFIGURE\n"));
 	if(pref->shown())
 	pref->hide();
 	else
@@ -411,7 +409,7 @@ void MainWindow::create()
      
 
 //---------------------------------------------------- 
-
+//show or hide frame containing informaitions about copying/moving files
 long MainWindow::commandsShow(FXObject * sender,FXSelector,void* ptr)
 {
 	if(infoframe->shown())
@@ -420,19 +418,13 @@ long MainWindow::commandsShow(FXObject * sender,FXSelector,void* ptr)
 	infoframe->show();
 }
 
-
+//executed when we change directory clicking directory name in popoup window 
 long MainWindow::onChangeDir(FXObject * sender,FXSelector,void* ptr)
 {
 
-/*
-Frame *ff=(Frame*)0xf;
-if(fr==ff)
-return 0;
-*/
 
 filelist *fil=current_frame->f;
-fxmessage(fil->path.c_str());
-fxmessage("CHANGE DIR\n");
+FXTRACE((5,"CHANGE DIR\n",fil->path.c_str()));
 FXMenuCommand *mc=(FXMenuCommand *)sender;
 FXEvent* event=(FXEvent*)ptr;
 FXWindow *win=(FXWindow *)mc->getParent();
@@ -515,7 +507,6 @@ sort(vec.begin(), vec.end());
 filemenu=new FXMenuPane(this);
 	for (indx = 0; indx < vec.size(); indx++)
 	{
-	//fxmessage(vec[indx].c_str());
 	new FXMenuCommand(filemenu,vec[indx].c_str(),osicons[0],this,MainWindow::ID_DIRCH);
 	} 
 
@@ -535,11 +526,10 @@ long MainWindow::onListNextDir(FXObject * sender,FXSelector sel,void* ptr)
 }
 
 
-
+//popup with directory names when we click right button in path
 long MainWindow::onListDirs(FXObject * sender,FXSelector,void* ptr)
 {
-fxmessage("LIIII\n");
-
+FXTRACE((5,"LIST DIRS\n"));
 
 FXButton *bt=(FXButton*)sender;
 
@@ -672,17 +662,17 @@ leftframe->recalc();
 
 
 
-
+//notify from filelist
 long MainWindow::onNotify(FXObject * sender,FXSelector sel,void* ptr)
 {
-fxmessage("NOTIFY\n");
+FXTRACE((5,"NOTIFY\n"));
 
 FXushort id = FXSELID(sel);
-	if(id==667)
+	if(id==667)	//directory change, for example user clicked double on direcotry, or clicked with 3rd button to go to parent dir
 	{
 	string *file_ptr=(string*)ptr;
 	string  file=*file_ptr;
-	fxmessage(file.c_str());
+	FXTRACE((5,"change to directory %s\n",file.c_str()));
 	delete file_ptr;
 	
 
@@ -755,10 +745,10 @@ FXushort id = FXSELID(sel);
 
 }
 
-//klikniecie w sciezce plikow przycisku
+//pressed button in path
 long MainWindow::onOpenDir(FXObject * sender,FXSelector,void* ptr)
 {
-fxmessage("OPEN DIR\n");
+FXTRACE((5,"OPEN DIR\n"));
 FXButton *bt=(FXButton*)sender;
 
 box *boxel=(box*)bt->getUserData();
@@ -796,13 +786,12 @@ boxbackup->fr->generate_menu(path,this);
 
 
 
-
+//executed cyclically to update informations about progress of copying/moving/deleteing files
+//using vector of special objects thread_elem to read from them information and to write request
+//for example stoping copying.
 long MainWindow::onTimer(FXObject*,FXSelector,void*)
 {
 
-	
-
-//vector<thread_elem*> thread_vec_todel;
 
 vector<thread_elem*>::iterator iter;
 
@@ -867,11 +856,10 @@ vector<thread_elem*>::iterator iter;
 		
 		
 		
-			
+			//popup with question about skipping or overwriting file
 			if(telem->question==true)
 			{
 			telem->question=false;
-			fxmessage("WONHO\n");
 			telem->pane=new FXMenuPane(this);
 			FXButton *but= new FXButton(telem->pane,"overwrite",NULL,this,ID_OVERWRITE);
 				  but->setUserData(telem);
@@ -890,7 +878,7 @@ vector<thread_elem*>::iterator iter;
 			}
 			
 		
-	
+		//when command is copy or move update information about progress
 		if(telem->command=="copy" || telem->command=="move")
 		{
 		infp=(informationpanel*)telem->gui;
@@ -929,8 +917,8 @@ vector<thread_elem*>::iterator iter;
 		{
 		infp=(informationpanel*)telem->gui;
 			string info="Removing: " + telem->act_file_name;
-			fxmessage("DEL=");
-			fxmessage(info.c_str());
+			FXTRACE((5,"remove file %s\n",telem->act_file_name.c_str()));
+			
 			infp->lab0->setText(info.c_str());
 			infp->frame->recalc();
 		}
@@ -947,8 +935,7 @@ vector<thread_elem*>::iterator iter;
 				{
 				 string s="";
 				 s=s+readbuf[0];
-				 fxmessage(s.c_str());
-				// fxmessage("=");
+		
 					 if(s=="!")
 						 telem->end=true;
 				 	 else	 
@@ -963,11 +950,11 @@ vector<thread_elem*>::iterator iter;
 		}
 		end=telem->end;
 		telem->mutex.unlock();
-		if(end)
+		if(end)		//when telem ended
 		{
 				if(telem->command=="init")
 				{
-				fxmessage("INIT \n");
+				FXTRACE((5,"INIT \n"));
 				filelist * fil=(filelist *)telem->filel;
 				fil->init();
 				}
@@ -994,9 +981,9 @@ vector<thread_elem*>::iterator iter;
 			left_frame->f->refresh();			
 		}
 		
-		string options=telem->options;
+		string options=telem->options; // get special options
 		
-		string::size_type pos=options.find("rescan");
+		string::size_type pos=options.find("rescan"); // when we need to rescan directory after command finish
 		if (pos != string::npos)
 		{
 		
@@ -1008,7 +995,7 @@ vector<thread_elem*>::iterator iter;
 			
 		}
 		
-		 pos=telem->options.find("capture");
+		 pos=telem->options.find("capture");  // when we need to capture data from standard output from executed program
 			if (pos != string::npos)
 			{
 			telem->pane=new FXMenuPane(this);
@@ -1018,16 +1005,14 @@ vector<thread_elem*>::iterator iter;
 			telem->pane->popup(NULL,this->getX(),this->getY(),lab->getWidth(),lab->getHeight());
 			}
 				
-		
-		//thread_vec_todel.push_back(telem);
-		
-		
+
+			//cleanup
 			delete ((informationpanel*)telem->gui);
 			telem->gui=NULL;
 			infoframe->recalc();
 			
 			
-			//delete telem;	
+			//erase from vector and delete telem;	
 			thread_vec.erase(iter);
 			delete telem;
 			
@@ -1041,20 +1026,6 @@ vector<thread_elem*>::iterator iter;
 	} //end for
 
 
-
-/*	
-	for (indx = 0; indx < thread_vec_todel.size(); indx++)
-	{
-		
-		 fxmessage("DELETE TELEM \n");
-		 
-			
-
-	}
-	
-	thread_vec_todel.clear();  
-	 
-*/
 
 
 getApp()->addTimeout(this,ID_TIMER,200);
@@ -1102,13 +1073,11 @@ long MainWindow::onOverwrite(FXObject * sender,FXSelector sel,void*)
 
 long MainWindow::update(FXObject * sender,FXSelector,void*)
 {
-//fxmessage("UPDATE");
  	left->setWidth(this->getWidth()/2);
-
 }
 
 
-
+//telem is canceled
 long  MainWindow::cancel(FXObject * sender,FXSelector,void*)
 {
 	FXButton *but=(FXButton*)sender;
@@ -1212,8 +1181,7 @@ toright->hide();
 
 void Frame::generate_menu(string path,FXObject *tgt)
 	{
-	fxmessage("\n");
-	fxmessage(path.c_str());
+	FXTRACE((5,"GENERATE MENU path %s ",path.c_str()));
 		if(path[0]=='/' && path[1]=='/')
 		path.erase(0,1);
 	
