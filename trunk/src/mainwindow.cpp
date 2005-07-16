@@ -56,7 +56,7 @@ FXDEFMAP(MainWindow) MainWindowMap[]=
      FXIMPLEMENT(MainWindow,FXMainWindow,MainWindowMap,ARRAYNUMBER(MainWindowMap))
 
 
-
+//load icon from file and put in the array
 void MainWindow::loadicon(string src)
 {
 static unsigned int counter=0;
@@ -74,8 +74,10 @@ FXFileStream stream;
 counter++;
 
 }
-   
-  FXColor readcolor(string col)
+
+
+ // read color definied as FF FF FF and return FXColor  
+FXColor readcolor(string col)
 {
 if(col=="")
 return FXRGB(0,0,0);
@@ -100,6 +102,8 @@ return FXRGB(0,0,0);
 			
 }
 
+
+//the same as above but defualt color is white
  FXColor readcolor2(string col)
 {
 if(col=="")
@@ -174,7 +178,7 @@ osicons[21]=NULL;
 
 
 
-
+// read icons for file types
 if(conf->openxpath("/OpenspaceConfig/file_types")!=-1)
 {
  
@@ -277,6 +281,7 @@ getApp()->addTimeout(this,ID_TIMER,200);
 }
 
 //---------------------------------------------------- 
+// open configure window
 long MainWindow::onConfigure(FXObject * sender,FXSelector sel,void*)
 {
 FXTRACE((5,"CONFIGURE\n"));
@@ -287,13 +292,15 @@ FXTRACE((5,"CONFIGURE\n"));
 }
 
 
-
+//about
 long MainWindow::onAbout(FXObject * sender,FXSelector sel,void*)
 {
   FXMessageBox about(this,"About Openspace","Openspace File Browser V0.0.1 ALPHA\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org)\n\nCopyright (C) Mateusz Dworak (compbatant@t-nas.org)",osicons[19],MBOX_OK|DECOR_TITLE|DECOR_BORDER);
   about.execute();
 } 
-  
+ 
+ 
+ //change view type: big/small/detailes 
 long MainWindow::onChangeView(FXObject * sender,FXSelector sel,void*)
 {
 FXushort id = FXSELID(sel);
@@ -323,6 +330,7 @@ filelist *f;
 }   
 
 
+//new frame
 long MainWindow::onNewFrame(FXObject * sender,FXSelector,void* ptr)
 {
 string dir;
@@ -355,7 +363,7 @@ fr->hf->create();
 controlframe->recalc();
 }
 
-
+//show or hide frame where we can set login/pass/etc for connecting do remote filesystem
  long MainWindow::onNewNetworkFrame(FXObject * sender,FXSelector,void*)
  {
  	if(networkframe==NULL)
@@ -452,7 +460,7 @@ popupDir(current_frame->f,current_path,x,y);
 
 
 
-
+//popup with dir names when we click right button in dir path
 int MainWindow::popupDir(filelist *current_filelist, string path , int x, int y)
 {
 
@@ -519,7 +527,7 @@ filemenu->popup(NULL,x,y,0,0);
 
 }
 
-
+//currently nothing ;p
 long MainWindow::onListNextDir(FXObject * sender,FXSelector sel,void* ptr)
 {
 
@@ -579,6 +587,8 @@ popupDir(current_frame->f,path,x,y);
 
 }
 
+
+//change position or close frame
 long MainWindow::onChangeList(FXObject * sender,FXSelector sel,void* ptr)
 {
 FXButton *bt=(FXButton*)sender;
@@ -650,15 +660,6 @@ rightframe->recalc();
 leftframe->recalc();
 
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1033,6 +1034,9 @@ return 1;
 
 }
 
+
+//when we choose in popup if we want overwrite or skip
+//notify about this filelist plugin using telem
 long MainWindow::onOverwrite(FXObject * sender,FXSelector sel,void*)
 {
 
@@ -1071,6 +1075,8 @@ long MainWindow::onOverwrite(FXObject * sender,FXSelector sel,void*)
 	
 }
 
+
+//NEED TO CHANGE THIS
 long MainWindow::update(FXObject * sender,FXSelector,void*)
 {
  	left->setWidth(this->getWidth()/2);
@@ -1179,6 +1185,8 @@ toright->hide();
 
 	}
 
+
+//generate buttons path for given path
 void Frame::generate_menu(string path,FXObject *tgt)
 	{
 	FXTRACE((5,"GENERATE MENU path %s ",path.c_str()));
