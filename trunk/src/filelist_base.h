@@ -9,7 +9,7 @@ using namespace std;
 #include "thread_elem.h"
 #include "pathtype.h"
 
-
+//filelist plugins need to inherit from this class
 class filelist_base
 {
 	public:

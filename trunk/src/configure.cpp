@@ -18,7 +18,7 @@ configure * conf;
 
 configure::configure()
 {
-fxmessage("OTWIERAMY\n");
+
 string dir=FXFile::getUserDirectory("").text();
  file=dir + SEPARATOR + ".openspacerc";
  
@@ -27,7 +27,7 @@ string dir=FXFile::getUserDirectory("").text();
 	file="";
   	file=file + PATH_CFG + SEPARATOR + "openspacerc";
  	}
- fxmessage(file.c_str());
+FXTRACE((5,"OPENING CONFIGRATION FILE %s\n",file.c_str())); 
 //char *docname=;
 doc = xmlParseFile(file.c_str());
 copy=false;
@@ -45,7 +45,7 @@ configure::~configure()
 {
 	if(!copy)
 	{
-	fxmessage("ZAPISUJEMY XMLA\n");
+	FXTRACE((5,"CONFIGURATION SAVING\n"));
 	FILE *save=fopen(file.c_str(),"w");
 	xmlDocDump(save, doc);
 	fclose(save);

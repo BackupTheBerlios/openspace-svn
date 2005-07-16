@@ -3,7 +3,8 @@
 
 #include "osfile.h"
 
-
+//added some features to standard fxiconitem
+//for example new big icon view
 class os_ListItem : public FXIconItem 
 {
 FXDECLARE(os_ListItem)

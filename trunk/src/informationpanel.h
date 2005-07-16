@@ -1,7 +1,7 @@
 #ifndef INFORMATIONPANEL
 #define INFORMATIONPANEL
 
-
+//this is information panel, it is shown for example during copying files
 class informationpanel
 {
 

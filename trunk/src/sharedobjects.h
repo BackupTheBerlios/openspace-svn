@@ -5,6 +5,8 @@
 
 extern configure * conf;
 
+
+//some global functions ;p
 string ntos(unsigned long k);
 string numtostring(unsigned long k);
 FXColor readcolor(string col);

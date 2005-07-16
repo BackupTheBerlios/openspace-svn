@@ -8,7 +8,7 @@
 #include <string>
 using namespace std;
 
-
+//read and save to XML config file
 class configure
 {
 public:

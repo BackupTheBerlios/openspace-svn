@@ -1,6 +1,7 @@
 #ifndef filetype
 #define filetype
 
+//icon and colors associated with filetype
 class file_type
 {
 public:

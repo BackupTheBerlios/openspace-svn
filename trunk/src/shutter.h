@@ -1,7 +1,7 @@
 #ifndef SHUTTER
 #define SHUTTER
 
-
+//this is used in filelist popup, this scrolling popup
 class shutter : public FXShutter
 {
 FXDECLARE(shutter)

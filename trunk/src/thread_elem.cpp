@@ -36,7 +36,7 @@ thread_elem::thread_elem()
 {
 gui=NULL;
 }
-
+//number to string in human readable units
 string numtostring(unsigned long k)
 {
 	
@@ -58,7 +58,7 @@ string numtostring(unsigned long k)
 		
 	return retstrin;
 }
-
+//number to string
 string ntos(unsigned long k)
 {
 	char chstr[20];		

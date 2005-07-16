@@ -56,7 +56,7 @@ void os_ListItem::drawDetails(const FXIconList* list,FXDC& dc,FXint x,FXint y,FX
     }
   xx=x+SIDE_SPACING/2;
   if(miniIcon){
- // fxmessage(osf.name.c_str());
+
     iw=miniIcon->getWidth();
     ih=miniIcon->getHeight();
     dc.setClipRectangle(x,y,header->getItemSize(0),h);
@@ -257,8 +257,7 @@ FXFont *font1=((filelist*)list)->captionfont1;
     if(!label.empty()) th=4+list->getFont()->getFontHeight();
     h=FXMAX(ih,th);
     }
-   // fxmessage("\n");
-   // fxmessage(ntos(h).c_str());
+
   return h;
   }
 

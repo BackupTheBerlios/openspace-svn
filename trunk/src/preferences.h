@@ -29,8 +29,9 @@ FXVerticalFrame *frame;
 };
 
 
-
-class preferences : public FXDialogBox {
+//preferences window, this is one of the most important things to be extended
+class preferences : public FXDialogBox 
+{
   FXDECLARE(preferences)
 protected:
  
@@ -47,7 +48,7 @@ FXTextField *newcommandedit;
 FXPopup* commandspop;
 FXOptionMenu *commandsmenu;
 FXVerticalFrame* commandspane;
-FXVerticalFrame* staticcommandpane;
+FXVerticalFrame* staticcommandpane
 FXVerticalFrame* commandsmainpane;
 
 FXPopup* filetypepop;

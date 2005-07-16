@@ -240,21 +240,11 @@ std::ifstream infile("/etc/fstab");
     			 parser >> field;
     			 string::size_type pos = field.find ("noauto",0);
 				if (pos != string::npos)  
-				{  
-				
-				fxmessage(partition.c_str());
-				fxmessage("\n");
-				fxmessage(command.c_str());
-				fxmessage("\n");
-				fxmessage(type.c_str());
-				fxmessage("\n");
-				
+				{ 
+								
 				if(mount(partition.c_str(), command.c_str(), type.c_str(),MS_RDONLY, "")==0)
-				fxmessage("MOUNT\n");
-          
-        		      //  mount("/dev/hda2", "/mnt", MS_MGC_VAL | MS_REMOUNT, "");
-	
-			 
+				FXTRACE((5,"MOUNT\n"));
+
     				}
     			}
 
@@ -274,9 +264,9 @@ chdir(dir.c_str());
 
 int filelist_local::mkdir(string dir,int mode)
 {
-fxmessage("MKDIR !!!!!!!!!!!!!!!!\n");
+FXTRACE((5,"MKDIR\n"));
 string d=this->dir+SEPARATOR+dir;
-fxmessage(d.c_str());
+
 	return FXFile::createDirectory(d.c_str(),666);
 	return 0;
 }
@@ -306,8 +296,8 @@ bool canc=false;
 		string sr=te->src[c];
 		if(FXFile::isDirectory(sr.c_str()))
 		sr.append(SEPARATOR);
-		fxmessage("usuniete\n");
-		fxmessage(sr.c_str());	
+		FXTRACE((5,"REMOVE: %s",sr.c_str()));
+
 		if(OSFXFile::remove(sr.c_str(),te)==FALSE)canc=true;
 		}
 		
@@ -389,7 +379,7 @@ unsigned long size=0;
 			}	
 			else
 			{
-			fxmessage("MOVE;]");
+			FXTRACE((5,"MOVE;]"));
 				if(OSFXFile::move(sr.c_str(),ds.c_str(),te)==FALSE)canc=true;
 			}
 		
@@ -465,7 +455,7 @@ unsigned int filelist_local::mode(string file)
 
 bool filelist_local::mode(string file,unsigned int mod,bool recursive)
 {
-fxmessage("MODE");
+FXTRACE((5,"MODE"));
  if(!recursive)
  {
  	return FXFile::mode(file.c_str(),mod);
@@ -474,11 +464,10 @@ fxmessage("MODE");
  {
  	FXFile::mode(file.c_str(),mod);
 	string path=file+SEPARATOR;
-	fxmessage("\nRECURSIVE:");
- 	fxmessage(file.c_str());
+	
  	if(FXFile::isDirectory(path.c_str()))
 	{
-	fxmessage("\nDIR\n");
+
 	struct stat status;
 	struct dirent *dp;
 	DIR *dirp;
@@ -510,6 +499,6 @@ int filelist_local::quit(void)
 return 0;
 }
  
-EXPORTFUNCTION filelist_base *get_filelist (void) { fxmessage("zwracamy"); return new filelist_local(); }
+EXPORTFUNCTION filelist_base *get_filelist (void) { FXTRACE((5,"PLUGIN LOAD\n")); return new filelist_local(); }
 
 

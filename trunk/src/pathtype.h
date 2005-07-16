@@ -4,6 +4,7 @@
 #include <string>
 using namespace std;
 
+//containg informations for remote filelist
 class pathtype
 {
 public:

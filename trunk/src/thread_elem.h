@@ -8,6 +8,9 @@ using namespace std;
 
 #include <time.h>
 
+
+//to execute something as thread you have to create object of this class
+//it is used to send information beetwen main program and threads
 class thread_elem
 {
 public:

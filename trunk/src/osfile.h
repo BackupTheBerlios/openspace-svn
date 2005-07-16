@@ -19,7 +19,7 @@ enum{
     };
 
 
-
+//class associated with file
 class osfile
 {
 public:

@@ -55,12 +55,16 @@ bool filelist::ascend=true;
 bool filelist::strcase=false;
 
 
+
+//return file type for given name
 string getfiletype(string name)
 {
 
 transform (name.begin(),name.end(), name.begin(), tolower);
 
 
+
+//realy ugly, need to change this
 if(name.length()>=6 && name.substr(name.length()-6,6)=="tar.gz")
 {
 	return "tar.gz";
@@ -100,16 +104,13 @@ if(name.length()>=7 && name.substr(name.length()-7,7)=="tar.bz2")
 
 
 
-
-//---------------------------------------------------- 
-
-
 //-----FILELIST----------------------------------------------------------------------------------------------------------------------------------------- 
 
 
 
 
-
+//return default command for given filename
+// if resolve true return command with replaced {f} with valid path
 string filelist::getdefaultcommand(string name, bool resolve=true)
 {
 
@@ -136,7 +137,7 @@ string key="";
 		
 		if(res=="INTERNAL")
 		{
-		fxmessage("IIIIIIIIIIIN");
+		FXTRACE((5,"INTERNAL"));
 		return "INTERNAL";
 		}
 		string fullname="\""+path + SEPARATOR + name+"\"";
@@ -165,6 +166,8 @@ FXIconList(p,this,ID_ICO,LAYOUT_FILL_X|LAYOUT_FILL_Y|ICONLIST_EXTENDEDSELECT|ICO
 popupmenu=NULL;
 sortpop=NULL;
 
+
+//bind keys
 FXAccelTable *table=getShell()->getAccelTable();
 table->addAccel(MKUINT(KEY_a,CONTROLMASK),this,FXSEL(SEL_COMMAND,filelist::ID_SELECT_ALL));
 table->addAccel(MKUINT(KEY_F5,0),this,FXSEL(SEL_COMMAND,filelist::ID_REFRESH));
@@ -216,9 +219,6 @@ string style=conf->readonestring("/OpenspaceConfig/filelist/" + this->type + "/s
 sort_nr=0;
 
 
-
-
-//notifyparent=p->getParent()->getParent()->getParent()->getParent()->getParent();
 notifyparent=getShell();
 
 active=false;
@@ -279,12 +279,12 @@ filelist::~filelist()
 {
 
 delete sortpop;
-fxmessage("destruct\n");
+FXTRACE((5,"destruct\n"));
 
 }
 
 //--------------------------------------------------------------------
-
+//initializing fuction, get availible headers from filelist plugin
 void filelist::init(void)
 {
 processing=false;
@@ -316,9 +316,10 @@ opendir(this->path);
 }
 
 
-
+//button pressed
 long    filelist::keyPress(FXObject * sender,FXSelector sel,void* ptr)
 {
+FXTRACE((5,"KEY PRESSED\n"));
 
 if(processing)
 return 0;
@@ -329,7 +330,7 @@ filelist *fil;
 	else
 	fil=filelist_opposite;
 
-fxmessage("KLAWISZ :)\n");
+
 
 FXushort id = FXSELID(sel);
 
@@ -348,11 +349,11 @@ FXushort id = FXSELID(sel);
 	}
 	else if(id==ID_REMOVE)
 	{
-	//fxmessage("DELETE");
 	fil->copymoveremove("remove");
 	}
 }
 
+//copy/move/remove function
 void filelist::copymoveremove(string com_name)
 {
 		int selit=0;
@@ -390,11 +391,11 @@ void filelist::copymoveremove(string com_name)
 					  options="download";
 					  
 					  			  
-					   fxmessage("copy/move/remove");					   
+					   FXTRACE(5,("copy/move/remove"));					   
 					   thread_elem* el=new thread_elem(fil,com_name,options,srclist,filelist_opposite->path);
 					   start_thread(el);
 }
-
+//opendir
 void filelist::opendir(string dir)
 {
 
@@ -432,9 +433,7 @@ int count=0;
 	
 		if(os_file.name=="")
 		break;
-		
-	//fxmessage(os_file.name.c_str()); 
-	//fxmessage("\n");
+
 	FXColor color;
 	FXColor backcolor;
 	FXIcon *icon=NULL;
@@ -588,6 +587,8 @@ setBackColor(FXRGB(220,220,220));
 
 }
 
+
+//when we enter string in the text field and execute command for regexp select etc
 long  filelist::parseTextField(FXObject * sender,FXSelector sel,void*)
 {
 
@@ -633,7 +634,7 @@ FXushort id = FXSELID(sel);
 
 
 }
-
+//double click on file/direcotry in filelist
 long  filelist::openfile(FXObject * sender,FXSelector,void*)
 {
 
@@ -685,17 +686,14 @@ os_ListItem* oslistitem=(os_ListItem*)getItem(k);
 		
 		string res=getdefaultcommand(name);
 		string key=getdefaultcommand(name,false);
-		fxmessage("KEY=");
-		fxmessage(key.c_str());
 		
-		if(res=="INTERNAL")
+		
+		if(res=="INTERNAL")//internal command, open new window for virtual file system
 		{
-		fxmessage("OOOOOOOOOOOOOOOOO");
 		if(key=="open_tar_bz2")
 					   {
 					   int c=getCurrentItem();
 					   string *file=new string(path + SEPARATOR + getItemText(c).text());
-					   fxmessage("CO TO ??\n");
 					   notifyparent->handle(this,FXSEL(SEL_COMMAND,667),(void*)file);
 					   }
 		return 0;
@@ -739,7 +737,8 @@ os_ListItem* oslistitem=(os_ListItem*)getItem(k);
 
 }
 
-//----------------------------------------------------   
+//----------------------------------------------------  
+// go up dir, 3rd button of mouse 
 long  filelist::gotoparentdir(FXObject *,FXSelector,void*)
 {
 if(processing)
@@ -755,13 +754,13 @@ return 0;
 
  
 //----------------------------------------------------   
+//poup menu
 long  filelist::onPopup(FXObject *,FXSelector,void* ptr)
 {
 
 if(processing)
 return 0;
 
-fxmessage("\n\n");
 
 	
 	FXEvent* event=(FXEvent*)ptr;
@@ -850,9 +849,7 @@ fxmessage("\n\n");
 									
 										if(sp==1)
 										{
-										//fxmessage("ADD:");
-										//fxmessage(res.c_str());
-										//fxmessage("\n");
+							
 										supported_commands.push_back (res);										
 										}
 										else //sp >1
@@ -901,7 +898,7 @@ fxmessage("\n\n");
 									
 							new FXButton(shutterItem->getContent(),res.c_str(),0,this,ID_LAST+command_num,FRAME_RAISED|LAYOUT_FILL_X|LAYOUT_TOP|LAYOUT_LEFT|BUTTON_TOOLBAR,0,0,0,0,0,0,0,0);
 			 				commands_tab[command_num++]=comm_s.c_str();
-							//fxmessage("button\n");
+					
 											
 							}
 					
@@ -921,7 +918,7 @@ fxmessage("\n\n");
 				
 			 	new FXButton(shutterItem->getContent(),res.c_str(),0,this,ID_LAST+command_num,FRAME_RAISED|LAYOUT_FILL_X|LAYOUT_TOP|LAYOUT_LEFT|BUTTON_TOOLBAR,0,0,0,0,0,0,0,0);
 			 	commands_tab[command_num++]=comm_s.c_str();
-				//fxmessage("button\n");	
+	
 				}
 			
 			}
@@ -948,7 +945,7 @@ fxmessage("\n\n");
 }
 
 //----------------------------------------------------  
-
+// choose command from popoup menu
 long filelist::file_operation(FXObject * obj ,FXSelector sel ,void* ptr)
 {
 if(processing)
@@ -991,8 +988,7 @@ return 0;
 						string name=oslistitem->osf.name;
 						
 						string fullname=path + SEPARATOR + name;
-						//fxmessage(name.c_str());
-						//fxmessage("\n");
+		
 						int pos=res.find("{f}");
 						string comm=res;
 						if(pos!=-1)
@@ -1045,7 +1041,7 @@ return 0;
 					  }
 					  else if(com_name=="new_file")
 					  {
-					   fxmessage("NEWFILE");
+				
 					   string sr="touch " + path + SEPARATOR + "newfile";
 					   system(sr.c_str());
 					   refresh();
@@ -1084,7 +1080,6 @@ return 0;
 					   {
 					   int c=getCurrentItem();
 					   string *file=new string(path + SEPARATOR + getItemText(c).text());
-					   fxmessage("CO TO ??\n");
 					   notifyparent->handle(this,FXSEL(SEL_COMMAND,667),(void*)file);
 					   }
 					   
@@ -1094,13 +1089,13 @@ return 0;
 				
 					else if(com_type=="PL")
 					{
-					fxmessage("PLUGIN\n");
+					FXASSERT((5,"PLUGIN\n"));
 					 string res=conf->readonestring("/OpenspaceConfig/plugins/cmddialog/" + com_name);
 		
 						if(res=="")return 0;
 						
 					   popupmenu->popdown();
-					   fxmessage("mkdir");
+	
 								  
 					   string plugin_path=conf->readonestring("/OpenspaceConfig/path") + "plugins/cmddialog/lib"+res;
 						#ifdef WIN32
@@ -1138,7 +1133,7 @@ return 0;
 						}
 						srclist[ind]="";
 						
-						 fxmessage("PLUG IN\n");   
+	 
 		   				 cmddialog * (*gg)(FXWindow*,filelist_base *fb,string *src);
 		   				 gg=(cmddialog  * (*)(FXWindow*,filelist_base *fb,string *src))fxdllSymbol(dllhandle,"get_cmddialog");
 		    				 dial=gg(this,fb,srclist);
@@ -1167,6 +1162,8 @@ popupmenu->popdown();
 
 }
 
+
+//execute function(copying files etc) as thread 
 void filelist::start_thread(thread_elem *te)
 {
 
@@ -1218,14 +1215,14 @@ pthread_attr_destroy(&attr);
 
 }
 
+//thread function
 void * filelist::thread_func(void * data)
 {
 
 thread_elem* el=(thread_elem*)data;
 filelist_base* fb=(filelist_base*)el->fb;
 
-fxmessage("watek :)");
-fxmessage(el->command.c_str());
+FXASSERT((5,"THREAD :) %s\n",el->command.c_str()));
 
 filelist *filel=(filelist*)el->filel;
 
@@ -1277,8 +1274,7 @@ opendir(path);
 }
 
 //----------------------------------------------------   
-
-
+//select item using right mouse button
 void filelist::selectitem()
 {
 if(processing)
@@ -1312,7 +1308,7 @@ return;
 }
 
 //----------------------------------------------------  
-
+//function for sorting files in filelist
 FXint filelist::cmp(const FXIconItem* pa,const FXIconItem* pb)
 {
 
@@ -1395,14 +1391,13 @@ return -1;
 }
 
 //--------------------------------------------------------------------
-
-
+//click on filelist header (change sorting)
 long filelist::onCmdHeader(FXObject*,FXSelector sel,void* ptr)
 {
 if(processing)
 return 0;
 
-fxmessage("WOHOHOHO\n");
+FXASSERT((5,"CMDHEADER\n"));
 FXushort id = FXSELID(sel);
 int num;
 
@@ -1438,6 +1433,7 @@ if(num==sort_nr)
 sortItems();
 }
 
+//execute command from cmddialog plugin and hide this plugin window
 long filelist::onCommand(FXObject*,FXSelector,void* ptr)
 {
 
@@ -1450,11 +1446,14 @@ refresh();
 
 
 }
+//cancel cmddialog
 long filelist::onCommandCancel(FXObject*,FXSelector,void* ptr)
 {
 dial->hide();
 delete dial;
 }
+
+//update info about selected files
 long filelist::click(FXObject*,FXSelector,void* ptr)
 {
 int count=0;

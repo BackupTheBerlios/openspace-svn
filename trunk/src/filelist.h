@@ -11,6 +11,8 @@
 #include "preferences.h"
 using namespace std;
 
+
+//filelist
 class filelist : public FXIconList
 {
 

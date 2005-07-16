@@ -234,7 +234,7 @@ preferences::~preferences()
 
 long preferences::onSave(FXObject * sender,FXSelector sel,void*)
 {
-fxmessage("save");
+FXTRACE((5,"save\n"));
 
 
 
