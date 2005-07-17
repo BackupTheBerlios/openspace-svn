@@ -6,6 +6,7 @@
 #endif
 
 #include <fx.h>
+#include <errno.h>
 #include "filelist_local.h"
 #include "../../sharedobjects.h"
 #include "OSFXFile.h"
