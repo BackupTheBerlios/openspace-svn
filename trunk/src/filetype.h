@@ -3,7 +3,7 @@
 
 //icon and colors associated with filetype
 class file_type {
-	
+
 	public:
 		FXIcon *icon;
 		FXColor color;

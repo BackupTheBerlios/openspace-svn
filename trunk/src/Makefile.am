@@ -25,7 +25,9 @@ openspace_SOURCES = cmddialog.cpp \
 	preferences.h \
 	filelist.h \
 	osfile.h \
-	sharedobjects.h 
+	sharedobjects.h \
+	MimeType.h \
+	MimeType.cpp
 
 SUBDIRS = plugins
 
