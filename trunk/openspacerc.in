@@ -9,17 +9,17 @@
 	</mainwindow>
   
   	<defaultdir>
-		<dir>/root</dir>
+		<dir>/</dir>
 		<type>local</type>
 	</defaultdir>
 	
   	<leftdir>
-		<dir>/root</dir>
+		<dir>/</dir>
 		<type>local</type>
 	</leftdir>
   
   	<rightdir>
-		<dir>/root</dir>
+		<dir>/</dir>
 		<type>local</type>
 	</rightdir>
 	<dirs>
