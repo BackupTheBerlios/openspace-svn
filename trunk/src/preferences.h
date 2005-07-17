@@ -48,7 +48,7 @@ FXTextField *newcommandedit;
 FXPopup* commandspop;
 FXOptionMenu *commandsmenu;
 FXVerticalFrame* commandspane;
-FXVerticalFrame* staticcommandpane
+FXVerticalFrame* staticcommandpane;
 FXVerticalFrame* commandsmainpane;
 
 FXPopup* filetypepop;

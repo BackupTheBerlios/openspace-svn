@@ -391,7 +391,7 @@ void filelist::copymoveremove(string com_name)
 					  options="download";
 					  
 					  			  
-					   FXTRACE(5,("copy/move/remove"));					   
+					   FXTRACE((5,"copy/move/remove"));					   
 					   thread_elem* el=new thread_elem(fil,com_name,options,srclist,filelist_opposite->path);
 					   start_thread(el);
 }
