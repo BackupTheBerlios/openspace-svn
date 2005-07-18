@@ -51,18 +51,16 @@ string MimeType::getMimeFromName(string name) {
 /*
 		if (name.find(".gz") != string::npos)
 			ext=name.substr(name.length() - 6, 6);
-			
+
 		if (name.find(".bz2") != string::npos)
 			ext= name.substr(name.length() - 7, 7);
 */
 
- if (name.length() >= 6 && name.substr(name.length() - 6, 6) == "tar.gz") {
-		ext="tar.gz";
-    }
+		if (name.length() >= 6 && name.substr(name.length() - 6, 6) == "tar.gz")
+			ext="tar.gz";
 
-    if (name.length() >= 7 && name.substr(name.length() - 7, 7) == "tar.bz2") {
-		ext="tar.bz2";
-    }
+		if (name.length() >= 7 && name.substr(name.length() - 7, 7) == "tar.bz2")
+			ext="tar.bz2";
 
 	}
 
