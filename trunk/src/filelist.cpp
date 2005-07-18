@@ -62,7 +62,7 @@ bool filelist::strcase = false;
 string getfiletype(string name) {
 
     transform(name.begin(), name.end(), name.begin(), tolower);
-
+fxmessage(name.c_str());
 	string r = MimeType::getMimeFromName(name);
 
 	printf("Name: '%s' MimeType: '%s'\n", name.c_str(), r.c_str());
