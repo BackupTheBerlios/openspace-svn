@@ -9,17 +9,17 @@
 	</mainwindow>
   
   	<defaultdir>
-		<dir>/</dir>
+		<dir>{homedir}</dir>
 		<type>local</type>
 	</defaultdir>
 	
   	<leftdir>
-		<dir>/</dir>
+		<dir>{homedir}</dir>
 		<type>local</type>
 	</leftdir>
   
   	<rightdir>
-		<dir>/</dir>
+		<dir>{homedir}</dir>
 		<type>local</type>
 	</rightdir>
 	<dirs>
@@ -144,112 +144,21 @@
   
   
   	<file_types>
-		<txt>
-			<default>view_txt</default>			
-			<icon>txt.gif</icon>
-		</txt>
+		<image>
+			<icon>foxbig.gif</icon>
 		
-		<tar.bz2>
-			<default>extract_tar_bz2</default>
-			<icon>compressed.gif</icon>
-		</tar.bz2>
-		<tar.gz>
-			<default>extract_tar_gz</default>
-			<icon>compressed.gif</icon>
-		</tar.gz>
-		<rar>
-			<default>unrar</default>
-			<icon>compressed.gif</icon>
-		</rar>
-		<zip>
-			<default>unzip</default>
-			<icon>compressed.gif</icon>
-		</zip>
-
-		<sxw>
-			<default>view_doc</default>			
-			<icon>word.gif</icon>
-		</sxw>
-		<sxc>
-			<default>view_doc</default>			
-			<icon>calc.gif</icon>
-		</sxc>
-		<xls>
-			<default>view_doc</default>			
-			<icon>calc.gif</icon>
-		</xls>
-		<so>
-			<icon>library.gif</icon>
-		</so>
-		<doc>
-			<default>view_doc</default>			
-			<icon>word.gif</icon>
-			<color>100 0 100</color>
-		</doc>
-		<pdf>
-			<default>view_pdf</default>
-			<icon>doc.gif</icon>
-		</pdf>	
-		<sh>
-			<icon>script.gif</icon>
-		</sh>	
-		<mp3>
-			<default>play_music</default>
-			<icon>music.gif</icon>
-		</mp3>			
-		<pdf>
-			<default>view_pdf</default>
-			<icon>doc.gif</icon>
-		</pdf>	
-			
-		<jpg>
-			<default>view_image</default>
-				<commands>
-					<command>edit_image</command>
-					<command>view_image</command>
-				</commands>
-			<icon>image.gif</icon>	
+			<types>
+				<png>
+					<default>view_image</default>
+						<commands>
+							<command>edit_image</command>
+							<command>view_image</command>
+						</commands>
+					<icon>image.gif</icon>	
 					
-		</jpg>
-		<png>
-			<default>view_image</default>
-				<commands>
-					<command>edit_image</command>
-					<command>view_image</command>
-				</commands>
-			<icon>image.gif</icon>	
-					
-		</png>
-		<bmp>
-			<default>view_image</default>
-				<commands>
-					<command>edit_image</command>
-					<command>view_image</command>
-				</commands>
-			<icon>image.gif</icon>	
-					
-		</bmp>
-		<gif>
-			<default>view_image</default>
-				<commands>
-					<command>edit_image</command>
-					<command>view_image</command>
-				</commands>
-			<icon>image.gif</icon>	
-					
-		</gif>
-		<avi>
-			<default>play_video</default>
-			<icon>movie.gif</icon>						
-		</avi>
-		<mpg>
-			<default>play_video</default>
-			<icon>movie.gif</icon>						
-		</mpg>
-		<mpeg>
-			<default>play_video</default>
-			<icon>.gif</icon>						
-		</mpeg>
+				</png>
+			</types>	
+		</image>
 		
 		
 	</file_types>
