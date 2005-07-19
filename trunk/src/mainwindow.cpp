@@ -129,6 +129,14 @@ return FXRGB(255,255,255);
 			
 }
 
+
+string MainWindow::parseDir(string dir)
+{
+	if(dir=="{homedir}")
+	return FXFile::getHomeDirectory().text();
+	else
+	return dir;
+}
      
 //-----MAIN WINDOW---------------------------------------------------------------------------------------------------------------------------         
      
@@ -259,12 +267,12 @@ new FXButton (buttonsframe,"",osicons[18],this,MainWindow::ID_ABOUT,FRAME_THICK,
 
 
 		
-		string dir=conf->readonestring("/OpenspaceConfig/leftdir/dir");
+		string dir=parseDir(conf->readonestring("/OpenspaceConfig/leftdir/dir"));		
 		string type=conf->readonestring("/OpenspaceConfig/leftdir/type");
 		pathtype pt(dir,type);		
 		left_frame=new Frame(leftcontrolframe,leftframe,pt,this,-1,&thread_vec,&file_type_settings,osicons);
 		
-		dir=conf->readonestring("/OpenspaceConfig/rightdir/dir");
+		dir=parseDir(conf->readonestring("/OpenspaceConfig/rightdir/dir"));
 		type=conf->readonestring("/OpenspaceConfig/rightdir/type");
 		pathtype pt2(dir,type);
 		right_frame=new Frame(rightcontrolframe,rightframe,pt2,this,-1,&thread_vec,&file_type_settings,osicons);
@@ -339,7 +347,7 @@ string str_server;
 string str_user;
 	if(networkframe==NULL)
  	{
-	dir=conf->readonestring("/OpenspaceConfig/defaultdir/dir");
+	dir=parseDir(conf->readonestring("/OpenspaceConfig/defaultdir/dir"));
 	type=conf->readonestring("/OpenspaceConfig/defaultdir/type");	
 	}
 	else
