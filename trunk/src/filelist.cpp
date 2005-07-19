@@ -65,38 +65,9 @@ string getfiletype(string name) {
 
 	string r = MimeType::getMimeFromName(name);
 
-	printf("Name: '%s' MimeType: '%s'\n", name.c_str(), r.c_str());
+	//printf("Name: '%s' MimeType: '%s'\n", name.c_str(), r.c_str());
 
-	//realy ugly, need to change this
-    if (name.length() >= 6 && name.substr(name.length() - 6, 6) == "tar.gz") {
-		return "tar.gz";
-    }
-
-    if (name.length() >= 7 && name.substr(name.length() - 7, 7) == "tar.bz2") {
-		return "tar.bz2";
-    }
-
-
-    string::size_type pos = name.find(".", name.length() - 5);
-    if (pos != string::npos) {
-	/*string::size_type pos2 = name.find (".",pos);
-	   if (pos2 != string::npos) 
-	   {
-	   string test=name.substr(pos2+1,3);
-	   if(test=="tar")
-	   return name.substr(pos2+1,name.length());
-	   } */
-		return name.substr(pos + 1, name.length());
-    }
-    /*
-       if(name.length()>3 &&  name[name.length()-4]=='.')
-       {
-       //fxmessage("OK\n"); 
-       return name.substr(name.length()-3,3);
-       }
-     */
-    else
-		return "";
+return r;
 
 }
 
@@ -473,6 +444,12 @@ void filelist::opendir(string dir)
 	    file_type *filet = NULL;
 	    if (ext != "") {
 		filet = (*file_type_settings)[ext];
+			if(filet==NULL)
+			{
+			ext=ext.substr(0,ext.find("/"));
+			
+			filet = (*file_type_settings)[ext];
+			}
 
 	    }
 

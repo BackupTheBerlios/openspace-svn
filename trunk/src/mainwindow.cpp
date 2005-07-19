@@ -137,6 +137,41 @@ string MainWindow::parseDir(string dir)
 	else
 	return dir;
 }
+    
+    
+bool MainWindow::loadMimeSettings(string path,string type)
+{   
+    
+    string res2=conf->readonestring(path+"/icon");
+ string colorstr=conf->readonestring(path+ "/color");
+ FXColor color=readcolor(colorstr);
+ 
+  string backcolorstr=conf->readonestring(path + "/backcolor");
+ FXColor backcolor=readcolor2(backcolorstr);
+ 
+ 	if(res2!="")
+	{
+	FXFileStream stream;
+	string path=conf->readonestring("/OpenspaceConfig/path") + "/icons/" + res2;
+	FXIcon *osicon=NULL;
+	osicon=new FXGIFIcon(getApp(),NULL);
+
+		if(stream.open(path.c_str(),FXStreamLoad))
+		{
+		osicon->loadPixels(stream);
+		stream.close();
+		osicon->create();
+		file_type_settings[type]=new file_type(osicon,color,backcolor);
+		fxmessage("\n");
+		fxmessage(type.c_str());
+		fxmessage("\n");
+		}
+	
+ 	
+
+	}
+    
+ }
      
 //-----MAIN WINDOW---------------------------------------------------------------------------------------------------------------------------         
      
@@ -194,35 +229,24 @@ if(conf->openxpath("/OpenspaceConfig/file_types")!=-1)
  {
  string res=conf->getnextnode();
  	if(res=="")break;
- string res2=conf->readonestring("/OpenspaceConfig/file_types/" + res + "/icon");
- string colorstr=conf->readonestring("/OpenspaceConfig/file_types/" + res + "/color");
- FXColor color=readcolor(colorstr);
+	
+	loadMimeSettings("/OpenspaceConfig/file_types/" + res, res);
  
-  string backcolorstr=conf->readonestring("/OpenspaceConfig/file_types/" + res + "/backcolor");
- FXColor backcolor=readcolor2(backcolorstr);
- 
- 	if(res2!="")
+	
+	configure conflocal = *conf;
+	if(conflocal.openxpath("/OpenspaceConfig/file_types/" + res + "/types" )!=-1)
 	{
-	FXFileStream stream;
-	string path=conf->readonestring("/OpenspaceConfig/path") + "/icons/" + res2;
-	FXIcon *osicon=NULL;
-	//string name=res2;
-	//if(name.substr(name.length()-3,3)=="gif")
-	osicon=new FXGIFIcon(getApp(),NULL);
-	//else if(name.substr(name.length()-3,3)=="png")
-	//osicon=new FXPNGIcon(getApp(),NULL);
-	
-		if(stream.open(path.c_str(),FXStreamLoad))
-		{
-		osicon->loadPixels(stream);
-		stream.close();
-		osicon->create();
-		file_type_settings[res]=new file_type(osicon,color,backcolor);
-		}
-	
- 	
 
+ 		while(1)
+ 		{
+		
+		 string res2=conflocal.getnextnode();
+ 			if(res2=="")break;
+			loadMimeSettings("/OpenspaceConfig/file_types/" + res + "/types/" + res2, res+"/"+res2);
+		}	
 	}
+	
+	
 
 
  }

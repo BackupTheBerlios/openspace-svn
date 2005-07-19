@@ -80,7 +80,7 @@ ID_LAST,
   int  MainWindow::popupDir(filelist *current_filelist, string path, int x, int y);
   
   string MainWindow::parseDir(string dir);
-
+  bool MainWindow::loadMimeSettings(string path,string type);
 
 	
 	
