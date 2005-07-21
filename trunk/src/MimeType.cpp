@@ -57,10 +57,11 @@ string MimeType::getMimeFromName(string name) {
 */
 
 		if (name.length() >= 6 && name.substr(name.length() - 6, 6) == "tar.gz")
-			ext="tar.gz";
+			return "application/x-compressed-tar";	//ext="tar.gz";
 
 		if (name.length() >= 7 && name.substr(name.length() - 7, 7) == "tar.bz2")
-			ext="tar.bz2";
+			return "application/x-bzip-compressed-tar"; //ext="tar.bz2";
+		
 
 	}
 

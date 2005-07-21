@@ -206,7 +206,10 @@
 				<x-bzip-compressed-tar>
 					<default>extract_tar_bz2</default>
 					<icon>compressed.gif</icon>
-				</x-bzip-compressed-tar>
+					<commands>
+							<command>view_tar_bz2</command>
+					</commands>
+				</x-bzip-compressed-tar
 				
 			</types>	
 		</application>	

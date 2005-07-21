@@ -62,7 +62,7 @@ FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
 
   string r = MimeType::getMimeFromName (name);
 
-  //printf("Name: '%s' MimeType: '%s'\n", name.c_str(), r.c_str());
+ //printf("Name: '%s' MimeType: '%s'\n", name.c_str(), r.c_str());
 
   return r;
 
