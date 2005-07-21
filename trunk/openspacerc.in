@@ -144,8 +144,10 @@
   
   
   	<file_types>
+		
+		
 		<image>
-			<icon>foxbig.gif</icon>
+			<icon>image.gif</icon>
 		
 			<types>
 				<png>
@@ -160,6 +162,54 @@
 			</types>	
 		</image>
 		
+		<video>
+			<icon>movie.gif</icon>
+			<default>play_video</default>
+		</video>
+		
+		<audio>
+			<icon>music.gif</icon>
+			<default>play_music</default>
+		</audio>
+		
+		<application>
+			<types>
+				<pdf>
+					<default>view_pdf</default>
+					<icon>doc.gif</icon>	
+					
+				</pdf>
+				
+				<vnd.sun.xml.writer>
+					<default>view_doc</default>
+					<icon>word.gif</icon>	
+				</vnd.sun.xml.writer>
+				
+				<msword>
+					<default>view_doc</default>
+					<icon>word.gif</icon>	
+				</msword>
+				<vnd.sun.xml.calc>
+					<default>view_doc</default>
+					<icon>word.gif</icon>	
+				</vnd.sun.xml.calc>
+				<vnd.ms-excel>
+					<default>view_doc</default>
+					<icon>word.gif</icon>					
+				</vnd.ms-excel>
+				<x-sharedlib>
+					<icon>library.gif</icon>	
+				</x-sharedlib>
+				<x-shellscript>
+					<icon>script.gif</icon>
+				</x-shellscript>
+				<x-bzip-compressed-tar>
+					<default>extract_tar_bz2</default>
+					<icon>compressed.gif</icon>
+				</x-bzip-compressed-tar>
+				
+			</types>	
+		</application>	
 		
 	</file_types>
 	

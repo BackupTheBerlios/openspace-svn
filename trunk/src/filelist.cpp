@@ -88,10 +88,36 @@ string filelist::getdefaultcommand(string name, bool resolve = true)
     string ext = getfiletype(name);
     string key = "";
     if (ext != "")
+    {
+    
+    
+	string str = "/types/";
+  	ext=ext.replace (ext.find("/"),1,str);
+	fxmessage("\n");
+	fxmessage(ext.c_str());
+	fxmessage("\n");
 	key =
 	    conf->readonestring("/OpenspaceConfig/file_types/" + ext +
 				"/default");
+    }				
+    
+    
+    
+    if (key == "") {
+    
+    ext=ext.substr(0,ext.find("/"));
+   	fxmessage("\n");
+	fxmessage(ext.c_str());
+	fxmessage("\n");
+	key =
+	    conf->readonestring("/OpenspaceConfig/file_types/" + ext +
+				"/default");
+    }
+
+    
+    
     string res;
+    
     if (key == "") {
 	key =
 	    conf->
