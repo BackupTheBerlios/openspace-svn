@@ -80,6 +80,14 @@ int popup_y;
 
 cmddialog *dial;
 
+
+
+
+FXDragAction  dropaction;     // Drop action
+FXString      dragfiles;      // Dragged files
+
+
+
 filelist(){}
 virtual ~filelist();
 
@@ -92,6 +100,7 @@ filelist(
 );
 //==============================================
 
+virtual void create();
 
 void    filelist::opendir(string dir);
 long	filelist::setFocus(FXObject * obj ,FXSelector sel ,void* ptr);	
@@ -106,6 +115,15 @@ long    filelist::onCommandCancel(FXObject*,FXSelector,void* ptr);
 long 	filelist::click(FXObject*,FXSelector,void* ptr);
 long    filelist::parseTextField(FXObject * sender,FXSelector,void*);
 long    filelist::keyPress(FXObject * sender,FXSelector,void*);
+
+  long onDNDEnter(FXObject*,FXSelector,void*);
+  long onDNDLeave(FXObject*,FXSelector,void*);
+  long onDNDMotion(FXObject*,FXSelector,void*);
+  long onDNDDrop(FXObject*,FXSelector,void*);
+  long onDNDRequest(FXObject*,FXSelector,void*);
+  long onBeginDrag(FXObject*,FXSelector,void*);
+  long onEndDrag(FXObject*,FXSelector,void*);
+  long onDragged(FXObject*,FXSelector,void*);
 
 void filelist::selectitem(void);
 void filelist::refresh(void);
