@@ -25,6 +25,7 @@ os_ListItem::os_ListItem(FXIconList *list,osfile osf, FXColor col, FXColor backc
 this->list=list;
 color=col;
 backcolor=backcol;
+state|=FXIconItem::DRAGGABLE;
 }
 
 

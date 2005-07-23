@@ -137,6 +137,7 @@ filelist::onDNDMotion (FXObject * sender, FXSelector sel, void *ptr)
       // if(FXFile::isWritable(dropdirectory)){
       //  FXTRACE((100,"accepting drop on %s\n",dropdirectory.text()));
       acceptDrop (DRAG_ACCEPT);
+     // fxmessage("AKCPETUJEMY\n\n");
       //   }
       return 1;
     }
@@ -178,25 +179,29 @@ filelist::onDNDDrop (FXObject * sender, FXSelector sel, void *ptr)
 	  FXString url (p, q - p);
 	  FXString filesrc (FXURL::fileFromURL (url));
 	  //FXString filedst(dropdirectory+PATHSEPSTRING+FXFile::name(filesrc));
-	  FXString filedst (FXString (path.c_str ()) + FXFile::name (filesrc));
+	  FXString filedst (FXString (path.c_str ())+PATHSEPSTRING+ FXFile::name (filesrc));
 	  // Move, Copy, or Link as appropriate
 	  if (dropaction == DRAG_MOVE)
 	    {
 	      FXTRACE ((100, "Moving file: %s to %s\n", filesrc.text (), filedst.text ()));
 	      if (!FXFile::move (filesrc, filedst))
 		getApp ()->beep ();
+		refresh();
+		filelist_opposite->refresh();
 	    }
 	  else if (dropaction == DRAG_COPY)
 	    {
 	      FXTRACE ((100, "Copying file: %s to %s\n", filesrc.text (), filedst.text ()));
 	      if (!FXFile::copy (filesrc, filedst))
 		getApp ()->beep ();
+		refresh();
 	    }
 	  else if (dropaction == DRAG_LINK)
 	    {
 	      FXTRACE ((100, "Linking file: %s to %s\n", filesrc.text (), filedst.text ()));
 	      if (!FXFile::symlink (filesrc, filedst))
 		getApp ()->beep ();
+		refresh();
 	    }
 	  if (*q == '\r')
 	    q += 2;
@@ -251,6 +256,7 @@ filelist::onDNDRequest (FXObject * sender, FXSelector sel, void *ptr)
 long
 filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
 {
+fxmessage("\nBEGIN DRAG\n");
   register FXint i;
   if (FXIconList::onBeginDrag (sender, sel, ptr))
     return 1;
@@ -259,11 +265,18 @@ filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
       dragfiles = FXString::null;
       for (i = 0; i < getNumItems (); i++)
 	{
-	  if (isItemSelected (i))	//&& getItemFilename(i)!=".." && getItemFilename(i)!=".")
-	    {
-	      if (!dragfiles.empty ())
-		dragfiles += "\r\n";
-	      // dragfiles+=FXURL::fileToURL(getItemPathname(i));
+	  if (isItemSelected (i))	    {
+	    
+	   	  os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+	          string name = oslistitem->osf.name;
+	          string fullname = path + SEPARATOR + name;
+	     	 if(name!="." && name!="..")
+	      	 {	  
+	     		 if (!dragfiles.empty ())
+			 dragfiles += "\r\n";		  
+		
+	     		 dragfiles+=FXURL::fileToURL(fullname.c_str());
+	       }
 	    }
 	}
       return 1;
@@ -454,7 +467,7 @@ FXIconList::create();
 filelist::filelist (FXComposite * p, pathtype pt, vector < thread_elem * >*thread_vec, map < string, file_type * >*file_type_settings, FXGIFIcon ** specialicons):
 FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
 {
-
+flags|=FLAG_ENABLED|FLAG_DROPTARGET;
   popupmenu = NULL;
   sortpop = NULL;
 
