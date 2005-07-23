@@ -63,19 +63,10 @@ FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
 
 
 
-
-
-
-
-
-
-
-
-
 // Handle drag-and-drop enter, remember current directory
      long filelist::onDNDEnter (FXObject * sender, FXSelector sel, void *ptr)
 {
-fxmessage("DRAAAAAAAAAAAGI");
+  fxmessage ("DRAAAAAAAAAAAGI");
   FXIconList::onDNDEnter (sender, sel, ptr);
   //orgdirectory=getDirectory();
   return 1;
@@ -137,7 +128,7 @@ filelist::onDNDMotion (FXObject * sender, FXSelector sel, void *ptr)
       // if(FXFile::isWritable(dropdirectory)){
       //  FXTRACE((100,"accepting drop on %s\n",dropdirectory.text()));
       acceptDrop (DRAG_ACCEPT);
-     // fxmessage("AKCPETUJEMY\n\n");
+      // fxmessage("AKCPETUJEMY\n\n");
       //   }
       return 1;
     }
@@ -172,41 +163,44 @@ filelist::onDNDDrop (FXObject * sender, FXSelector sel, void *ptr)
       data[len] = '\0';
       FXchar *p, *q;
       p = q = (FXchar *) data;
+
+      vector < string > vec;
+
       while (*p)
 	{
 	  while (*q && *q != '\r')
 	    q++;
 	  FXString url (p, q - p);
 	  FXString filesrc (FXURL::fileFromURL (url));
-	  //FXString filedst(dropdirectory+PATHSEPSTRING+FXFile::name(filesrc));
-	  FXString filedst (FXString (path.c_str ())+PATHSEPSTRING+ FXFile::name (filesrc));
-	  // Move, Copy, or Link as appropriate
-	  if (dropaction == DRAG_MOVE)
-	    {
-	      FXTRACE ((100, "Moving file: %s to %s\n", filesrc.text (), filedst.text ()));
-	      if (!FXFile::move (filesrc, filedst))
-		getApp ()->beep ();
-		refresh();
-		filelist_opposite->refresh();
-	    }
-	  else if (dropaction == DRAG_COPY)
-	    {
-	      FXTRACE ((100, "Copying file: %s to %s\n", filesrc.text (), filedst.text ()));
-	      if (!FXFile::copy (filesrc, filedst))
-		getApp ()->beep ();
-		refresh();
-	    }
-	  else if (dropaction == DRAG_LINK)
-	    {
-	      FXTRACE ((100, "Linking file: %s to %s\n", filesrc.text (), filedst.text ()));
-	      if (!FXFile::symlink (filesrc, filedst))
-		getApp ()->beep ();
-		refresh();
-	    }
+	  vec.push_back (filesrc.text ());
 	  if (*q == '\r')
 	    q += 2;
 	  p = q;
 	}
+
+      int selit = vec.size ();
+      string *srclist = new string[selit + 1];
+
+      int ind = 0;
+      for (int i = 0; i < vec.size (); i++)
+	{
+	  srclist[ind] = vec[i];
+	  ind++;
+	}
+      srclist[ind] = "";
+      string com_name;
+      if (dropaction == DRAG_MOVE)
+	com_name = "move";
+      else if (dropaction == DRAG_COPY)
+	com_name = "copy";
+
+
+      string options = "download";
+      FXTRACE ((5, "copy/move/remove"));
+      thread_elem *el = new thread_elem (fb, com_name, options, srclist, path);
+      start_thread (el);
+
+
 
       FXFREE (&data);
       return 1;
@@ -256,7 +250,7 @@ filelist::onDNDRequest (FXObject * sender, FXSelector sel, void *ptr)
 long
 filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
 {
-fxmessage("\nBEGIN DRAG\n");
+  fxmessage ("\nBEGIN DRAG\n");
   register FXint i;
   if (FXIconList::onBeginDrag (sender, sel, ptr))
     return 1;
@@ -265,18 +259,19 @@ fxmessage("\nBEGIN DRAG\n");
       dragfiles = FXString::null;
       for (i = 0; i < getNumItems (); i++)
 	{
-	  if (isItemSelected (i))	    {
-	    
-	   	  os_ListItem *oslistitem = (os_ListItem *) getItem (i);
-	          string name = oslistitem->osf.name;
-	          string fullname = path + SEPARATOR + name;
-	     	 if(name!="." && name!="..")
-	      	 {	  
-	     		 if (!dragfiles.empty ())
-			 dragfiles += "\r\n";		  
-		
-	     		 dragfiles+=FXURL::fileToURL(fullname.c_str());
-	       }
+	  if (isItemSelected (i))
+	    {
+
+	      os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+	      string name = oslistitem->osf.name;
+	      string fullname = path + SEPARATOR + name;
+	      if (name != "." && name != "..")
+		{
+		  if (!dragfiles.empty ())
+		    dragfiles += "\r\n";
+
+		  dragfiles += FXURL::fileToURL (fullname.c_str ());
+		}
 	    }
 	}
       return 1;
@@ -332,31 +327,6 @@ filelist::onDragged (FXObject * sender, FXSelector sel, void *ptr)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //return file type for given name
 string
 getfiletype (string name)
@@ -383,19 +353,17 @@ getfiletype (string name)
 
 //return default command for given filename
 // if resolve true return command with replaced {f} with valid path
-string filelist::getdefaultcommand (string name, bool resolve = true)
+string
+filelist::getdefaultcommand (string name, bool resolve = true)
 {
 
-  string
-    ext = getfiletype (name);
-  string
-    key = "";
+  string ext = getfiletype (name);
+  string key = "";
   if (ext != "")
     {
 
 
-      string
-	str = "/types/";
+      string str = "/types/";
       ext = ext.replace (ext.find ("/"), 1, str);
       key = conf->readonestring ("/OpenspaceConfig/file_types/" + ext + "/default");
     }
@@ -410,8 +378,7 @@ string filelist::getdefaultcommand (string name, bool resolve = true)
 
 
 
-  string
-    res;
+  string res;
 
   if (key == "")
     {
@@ -434,11 +401,9 @@ string filelist::getdefaultcommand (string name, bool resolve = true)
 	  FXTRACE ((5, "INTERNAL"));
 	  return "INTERNAL";
 	}
-      string
-	fullname = "\"" + path + SEPARATOR + name + "\"";
+      string fullname = "\"" + path + SEPARATOR + name + "\"";
 
-      int
-	pos = res.find ("{f}");
+      int pos = res.find ("{f}");
       res.replace (pos, fullname.length (), fullname);
       return res;
     }
@@ -447,11 +412,12 @@ string filelist::getdefaultcommand (string name, bool resolve = true)
 }
 
 
-void filelist::create()
+void
+filelist::create ()
 {
 
-FXIconList::create();
- if (!deleteType)
+  FXIconList::create ();
+  if (!deleteType)
     {
       deleteType = getApp ()->registerDragType (deleteTypeName);
     }
@@ -467,12 +433,12 @@ FXIconList::create();
 filelist::filelist (FXComposite * p, pathtype pt, vector < thread_elem * >*thread_vec, map < string, file_type * >*file_type_settings, FXGIFIcon ** specialicons):
 FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
 {
-flags|=FLAG_ENABLED|FLAG_DROPTARGET;
+  flags |= FLAG_ENABLED | FLAG_DROPTARGET;
   popupmenu = NULL;
   sortpop = NULL;
 
 
- 
+
   dropaction = DRAG_MOVE;
 
 //bind keys
@@ -1693,17 +1659,15 @@ filelist::selectitem ()
 
 //----------------------------------------------------  
 //function for sorting files in filelist
-FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
+FXint
+filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 {
 
 
-  os_ListItem *
-    a = (os_ListItem *) pa;
-  os_ListItem *
-    b = (os_ListItem *) pb;
+  os_ListItem *a = (os_ListItem *) pa;
+  os_ListItem *b = (os_ListItem *) pb;
 
-  filelist *
-    fl = (filelist *) a->list;
+  filelist *fl = (filelist *) a->list;
 
   if (b->osf.type & FOLDER && !(a->osf.type & FOLDER))
     return 1;
@@ -1715,10 +1679,8 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 	 if(diff) 
 		return diff;
 		*/
-  register const unsigned char *
-    p;
-  register const unsigned char *
-    q;
+  register const unsigned char *p;
+  register const unsigned char *q;
 
   if (fl->sort_nr == 0)		//name
     {
@@ -1727,12 +1689,10 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
     }
   else if (fl->sort_nr == -1)	//extension sorting
     {
-      string
-	exta = getfiletype (a->getText ().text ());
+      string exta = getfiletype (a->getText ().text ());
       if (exta == "")
 	exta = "zzzzz";
-      string
-	extb = getfiletype (b->getText ().text ());
+      string extb = getfiletype (b->getText ().text ());
       if (exta == "")
 	extb = "zzzzz";
 
