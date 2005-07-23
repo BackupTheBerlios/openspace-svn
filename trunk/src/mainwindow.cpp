@@ -51,7 +51,7 @@ FXDEFMAP(MainWindow) MainWindowMap[]=
      FXMAPFUNCS(SEL_COMMAND,MainWindow::ID_CHANGE_VIEW_SMALL,MainWindow::ID_CHANGE_VIEW_DETAILS,MainWindow::onChangeView),
      FXMAPFUNC(SEL_COMMAND,MainWindow::ID_CANCEL,MainWindow::cancel), 
      FXMAPFUNC(SEL_COMMAND,MainWindow::ID_COMMANDS_SHOW,MainWindow::commandsShow),
-     FXMAPFUNC(SEL_UPDATE,0,MainWindow::update),  
+     FXMAPFUNC(SEL_CONFIGURE,0,MainWindow::update),  
      };    
      FXIMPLEMENT(MainWindow,FXMainWindow,MainWindowMap,ARRAYNUMBER(MainWindowMap))
 
@@ -266,7 +266,7 @@ controlframe=new FXVerticalFrame(ff,LAYOUT_FILL_X|FRAME_THICK,0,0,0,0,0,0,0,0);
 
 splitter = new FXSplitter(ff,LAYOUT_FILL_X|SPLITTER_TRACKING|LAYOUT_FILL_Y);
 
-left=new FXVerticalFrame(splitter,LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_SUNKEN|LAYOUT_FIX_WIDTH,0,0,w/2);
+left=new FXVerticalFrame(splitter,LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_SUNKEN,0,0,w/2);
 right=new FXVerticalFrame(splitter,LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_SUNKEN);
 
 leftcontrolframe=new FXVerticalFrame(left,LAYOUT_FILL_X);
@@ -1109,9 +1109,12 @@ long MainWindow::onOverwrite(FXObject * sender,FXSelector sel,void*)
 
 
 //NEED TO CHANGE THIS
-long MainWindow::update(FXObject * sender,FXSelector,void*)
+long MainWindow::update(FXObject * sender,FXSelector sel,void*ptr)
 {
- 	left->setWidth(this->getWidth()/2);
+
+FXMainWindow::onConfigure (sender, sel, ptr);
+ 	//left->setWidth(this->getWidth()/2);
+	fxmessage("RESIZE RESIZE \n\n");
 }
 
 
