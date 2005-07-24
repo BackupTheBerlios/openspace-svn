@@ -537,8 +537,12 @@ this->type=path.substr(0,pos);
       new FXButton (bottomframe, "", osicons[15], this, filelist::ID_TEXTFIELD_REG, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
       new FXButton (bottomframe, "Go", 0, this, filelist::ID_TEXTFIELD_GO, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
       new FXButton (bottomframe, "Get", 0, this, filelist::ID_TEXTFIELD_GET, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-      new FXButton (bottomframe, "", osicons[21], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-
+     
+     if(conf->readonestring("/OpenspaceConfig/panels")=="single")
+      new FXButton (bottomframe, "", osicons[22], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	else
+new FXButton (bottomframe, "", osicons[21], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+		
       dial = NULL;
       this->pt = new pathtype (pt);
 
@@ -1864,12 +1868,24 @@ filelist::click (FXObject *, FXSelector, void *ptr)
 
 long    filelist::onMaximize(FXObject * sender,FXSelector,void*)
 {
+
+if(filelist_opposite->getWidth()==0)
+maximize=true;
+
 fxmessage("MAX");
 maximize=!maximize;
 FXButton*bt=(FXButton*)sender;
 if(maximize)
+{
+fxmessage("zapis single");
 bt->setIcon(osicons[22]);
+conf->saveonestring("/OpenspaceConfig/panels","single");
+}
 else
+{
+fxmessage("zapis double");
 bt->setIcon(osicons[21]);
+conf->saveonestring("/OpenspaceConfig/panels","double");
+}
 notifyparent->handle (this, FXSEL (SEL_COMMAND, 668), NULL);
 }

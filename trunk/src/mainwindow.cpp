@@ -273,6 +273,9 @@ splitter = new FXSplitter(ff,LAYOUT_FILL_X|SPLITTER_TRACKING|LAYOUT_FILL_Y);
 left=new FXVerticalFrame(splitter,LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_SUNKEN,0,0,w/2);
 right=new FXVerticalFrame(splitter,LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_SUNKEN);
 
+if(conf->readonestring("/OpenspaceConfig/panels")=="single")
+ratio=0;
+else
 ratio=1.0/2.0;
 
 leftcontrolframe=new FXVerticalFrame(left,LAYOUT_FILL_X);

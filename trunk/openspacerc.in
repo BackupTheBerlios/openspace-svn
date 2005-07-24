@@ -30,7 +30,7 @@
 	</dirs>
 	
 	<show_commands>true</show_commands>
-  
+  	<panels>single</panels>
   	
   	<commands>
 	
@@ -148,7 +148,7 @@
 		
 		<image>
 			<icon>image.gif</icon>
-		
+			<command>view_image</command>
 			<types>
 				<png>
 					<default>view_image</default>
