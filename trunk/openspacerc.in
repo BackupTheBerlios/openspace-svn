@@ -209,8 +209,7 @@
 					<commands>
 							<command>view_tar_bz2</command>
 					</commands>
-				</x-bzip-compressed-tar
-				
+				</x-bzip-compressed-tar>			
 			</types>	
 		</application>	
 		
