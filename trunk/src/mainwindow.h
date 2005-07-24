@@ -75,6 +75,8 @@ ID_LAST,
   long MainWindow::onOverwrite(FXObject * sender,FXSelector,void*);
   long MainWindow::onChangeView(FXObject * sender,FXSelector,void*);
   long MainWindow::onAbout(FXObject * sender,FXSelector sel,void*); 
+  long MainWindow::onOpenConfigure(FXObject * sender,FXSelector sel,void*); 
+  long MainWindow::onUpdate(FXObject * sender,FXSelector sel,void*); 
   long MainWindow::onConfigure(FXObject * sender,FXSelector sel,void*); 
   
   int  MainWindow::popupDir(filelist *current_filelist, string path, int x, int y);
@@ -120,7 +122,7 @@ Frame *left_frame;
 Frame *right_frame;
 FXMenuPane *pane;
 preferences *pref;
-
+float ratio;
    
 };	   
 

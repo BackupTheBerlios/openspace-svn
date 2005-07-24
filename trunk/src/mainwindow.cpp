@@ -40,7 +40,7 @@ FXDEFMAP(MainWindow) MainWindowMap[]=
     // FXMAPFUNC(SEL_LEAVE, MainWindow::ID_DIRCH,   MainWindow::onListNextDir),
      FXMAPFUNC(SEL_RIGHTBUTTONRELEASE, MainWindow::ID_DIR,   MainWindow::onListDirs),
      FXMAPFUNC(SEL_COMMAND, MainWindow::ID_DIR,   MainWindow::onOpenDir),
-     FXMAPFUNC(SEL_COMMAND, MainWindow::ID_CONFIGURE,   MainWindow::onConfigure),     
+     FXMAPFUNC(SEL_COMMAND, MainWindow::ID_CONFIGURE,   MainWindow::onOpenConfigure),     
      FXMAPFUNC(SEL_COMMAND, MainWindow::ID_ABOUT,   MainWindow::onAbout),
      FXMAPFUNCS(SEL_LEFTBUTTONRELEASE,MainWindow::ID_TOLEFT, MainWindow::ID_TORIGHT,   MainWindow::onChangeList),
      FXMAPFUNCS(SEL_COMMAND, MainWindow::ID_OVERWRITE, MainWindow::ID_SKIP_ALL,   MainWindow::onOverwrite),     
@@ -51,7 +51,9 @@ FXDEFMAP(MainWindow) MainWindowMap[]=
      FXMAPFUNCS(SEL_COMMAND,MainWindow::ID_CHANGE_VIEW_SMALL,MainWindow::ID_CHANGE_VIEW_DETAILS,MainWindow::onChangeView),
      FXMAPFUNC(SEL_COMMAND,MainWindow::ID_CANCEL,MainWindow::cancel), 
      FXMAPFUNC(SEL_COMMAND,MainWindow::ID_COMMANDS_SHOW,MainWindow::commandsShow),
-     FXMAPFUNC(SEL_CONFIGURE,0,MainWindow::update),  
+     FXMAPFUNC(SEL_CONFIGURE,0,MainWindow::onConfigure), 
+     FXMAPFUNC(SEL_UPDATE,0,MainWindow::onUpdate),
+
      };    
      FXIMPLEMENT(MainWindow,FXMainWindow,MainWindowMap,ARRAYNUMBER(MainWindowMap))
 
@@ -269,6 +271,8 @@ splitter = new FXSplitter(ff,LAYOUT_FILL_X|SPLITTER_TRACKING|LAYOUT_FILL_Y);
 left=new FXVerticalFrame(splitter,LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_SUNKEN,0,0,w/2);
 right=new FXVerticalFrame(splitter,LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_SUNKEN);
 
+ratio=1.0/2.0;
+
 leftcontrolframe=new FXVerticalFrame(left,LAYOUT_FILL_X);
 leftframe=new FXVerticalFrame(left,LAYOUT_FILL_X|LAYOUT_FILL_Y);
 
@@ -314,7 +318,7 @@ getApp()->addTimeout(this,ID_TIMER,200);
 
 //---------------------------------------------------- 
 // open configure window
-long MainWindow::onConfigure(FXObject * sender,FXSelector sel,void*)
+long MainWindow::onOpenConfigure(FXObject * sender,FXSelector sel,void*)
 {
 FXTRACE((5,"CONFIGURE\n"));
 	if(pref->shown())
@@ -1109,14 +1113,26 @@ long MainWindow::onOverwrite(FXObject * sender,FXSelector sel,void*)
 
 
 //NEED TO CHANGE THIS
-long MainWindow::update(FXObject * sender,FXSelector sel,void*ptr)
+long MainWindow::onConfigure(FXObject * sender,FXSelector sel,void*ptr)
 {
 
 FXMainWindow::onConfigure (sender, sel, ptr);
- 	//left->setWidth(this->getWidth()/2);
-	fxmessage("RESIZE RESIZE \n\n");
+
+	float widthpanel=this->getWidth()*ratio;
+ 	left->setWidth((int)widthpanel);
+	//fxmessage("RESIZE RESIZE \n\n");
 }
 
+long MainWindow::onUpdate(FXObject * sender,FXSelector sel,void*ptr)
+{
+	FXMainWindow::onUpdate(sender, sel, ptr);
+	float l=left->getWidth();
+	float r=right->getWidth();
+	float w=getWidth();
+	ratio=(float)l/(float)w;
+
+	//FXTRACE((5,"UPDATE %f\n",ratio));
+}
 
 //telem is canceled
 long  MainWindow::cancel(FXObject * sender,FXSelector,void*)
