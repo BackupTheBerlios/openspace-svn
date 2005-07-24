@@ -29,7 +29,7 @@
 		</path>
 	</dirs>
 	
-	<show_commands>true</show_commands>
+	<show_commands>false</show_commands>
   	<panels>single</panels>
   	
   	<commands>

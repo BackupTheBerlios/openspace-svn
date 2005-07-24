@@ -13,44 +13,44 @@ using namespace std;
 //it is used to send information beetwen main program and threads
 class thread_elem
 {
-public:
+  public:
 
-thread_elem();
-thread_elem(void *fb,string command,string options,string *src=NULL, string dst="");
+    thread_elem ();
+    thread_elem (void *fb, string command, string options, string * src = NULL, string dst = "");
 
 
-FXMutex mutex;
-void *gui;
-void *fb;
-void *filel;
+    FXMutex mutex;
+    void *gui;
+    void *fb;
+    void *filel;
 
-string command;
-string *src;
-string dst;
-string options;
-int p[2];
-time_t * tim;
+    string command;
+    string *src;
+    string dst;
+    string options;
+    int p[2];
+    time_t *tim;
 
-string str1;
-string str2;
-string str3;
+    string str1;
+    string str2;
+    string str3;
 
-unsigned long total_size;
-unsigned long act_total_size;
-	
-unsigned long file_size;	
-unsigned long act_file_size;
+    unsigned long total_size;
+    unsigned long act_total_size;
 
-string act_file_name;
+    unsigned long file_size;
+    unsigned long act_file_size;
 
-bool cancel;
-bool end;
-bool question;
-bool answer;
-bool overwrite;
-bool all;
-pthread_t pid;
-FXMenuPane *pane;
+    string act_file_name;
+
+    bool cancel;
+    bool end;
+    bool question;
+    bool answer;
+    bool overwrite;
+    bool all;
+    pthread_t pid;
+    FXMenuPane *pane;
 
 };
 

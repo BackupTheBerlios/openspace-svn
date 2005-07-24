@@ -5,18 +5,18 @@
 class informationpanel
 {
 
-public:
+  public:
 
-	FXVerticalFrame * frame;
-	FXLabel *lab0;
-	FXLabel *lab1;
-	FXLabel *lab2;
-	FXProgressBar *pbar;
-	FXProgressBar *pbar2; 
-	FXButton * bu;
-	
-informationpanel::informationpanel(FXComposite *p, string command);
-informationpanel::~informationpanel(void);
+    FXVerticalFrame * frame;
+    FXLabel *lab0;
+    FXLabel *lab1;
+    FXLabel *lab2;
+    FXProgressBar *pbar;
+    FXProgressBar *pbar2;
+    FXButton *bu;
+
+     informationpanel::informationpanel (FXComposite * p, string command);
+     informationpanel::~informationpanel (void);
 
 };
 
