@@ -34,6 +34,7 @@ ID_SORT_CHANGE,
 ID_SELECT_ALL,
 ID_REMOVE,
 ID_REFRESH,
+ID_MAXIMIZE,
 ID_LAST,
 };
 
@@ -74,7 +75,7 @@ static bool ascend;
 static bool strcase;
 
 bool processing;
-
+bool maximize;
 int popup_x;
 int popup_y;
 
@@ -115,6 +116,7 @@ long    filelist::onCommandCancel(FXObject*,FXSelector,void* ptr);
 long 	filelist::click(FXObject*,FXSelector,void* ptr);
 long    filelist::parseTextField(FXObject * sender,FXSelector,void*);
 long    filelist::keyPress(FXObject * sender,FXSelector,void*);
+long    filelist::onMaximize(FXObject * sender,FXSelector,void*);
 
   long onDNDEnter(FXObject*,FXSelector,void*);
   long onDNDLeave(FXObject*,FXSelector,void*);

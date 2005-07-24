@@ -46,7 +46,7 @@ FXDEFMAP(MainWindow) MainWindowMap[]=
      FXMAPFUNCS(SEL_COMMAND, MainWindow::ID_OVERWRITE, MainWindow::ID_SKIP_ALL,   MainWindow::onOverwrite),     
      FXMAPFUNC(SEL_COMMAND, MainWindow::ID_NEWFRAME,   MainWindow::onNewFrame),
      FXMAPFUNC(SEL_COMMAND, MainWindow::ID_NEW_NETWORK,   MainWindow::onNewNetworkFrame),     
-     FXMAPFUNCS(SEL_COMMAND, 666,667,   MainWindow::onNotify),
+     FXMAPFUNCS(SEL_COMMAND, 666,668,   MainWindow::onNotify),
      FXMAPFUNC(SEL_TIMEOUT,MainWindow::ID_TIMER,MainWindow::onTimer),
      FXMAPFUNCS(SEL_COMMAND,MainWindow::ID_CHANGE_VIEW_SMALL,MainWindow::ID_CHANGE_VIEW_DETAILS,MainWindow::onChangeView),
      FXMAPFUNC(SEL_COMMAND,MainWindow::ID_CANCEL,MainWindow::cancel), 
@@ -219,7 +219,9 @@ string s=conf->readonestring("/OpenspaceConfig/path") + "icons/directory.gif";
 		loadicon(conf->readonestring("/OpenspaceConfig/path") + "icons/foxmini.gif");
 		loadicon(conf->readonestring("/OpenspaceConfig/path") + "icons/foxbig.gif");
 		loadicon(conf->readonestring("/OpenspaceConfig/path") + "icons/configure.gif"); //20
-osicons[21]=NULL;
+		loadicon(conf->readonestring("/OpenspaceConfig/path") + "icons/max.gif");
+		loadicon(conf->readonestring("/OpenspaceConfig/path") + "icons/min.gif");
+osicons[23]=NULL;
 
 
 
@@ -705,7 +707,7 @@ long MainWindow::onNotify(FXObject * sender,FXSelector sel,void* ptr)
 FXTRACE((5,"NOTIFY\n"));
 
 FXushort id = FXSELID(sel);
-	if(id==667)	//directory change, for example user clicked double on direcotry, or clicked with 3rd button to go to parent dir
+	if(id==667)	
 	{
 	string *file_ptr=(string*)ptr;
 	string  file=*file_ptr;
@@ -770,7 +772,7 @@ FXushort id = FXSELID(sel);
 	
 	
 	}
-	else
+	else if(id==666)//directory change, for example user clicked double on direcotry, or clicked with 3rd button to go to parent dir
 	{
 	
 
@@ -778,6 +780,19 @@ FXushort id = FXSELID(sel);
 		left_frame->generate_menu(left_frame->f->path,this);
 		else	
 		right_frame->generate_menu(right_frame->f->path,this);	
+	}
+	else if (id==668)
+	{
+		if(left->getWidth()==0 || right->getWidth()==0)
+		left->setWidth(getWidth()/2);
+		else
+		{
+		if(left_frame->f==(filelist*)sender)
+			left->setWidth(right->getWidth()+left->getWidth());
+		else
+			left->setWidth(0);
+		}	
+			
 	}
 
 }

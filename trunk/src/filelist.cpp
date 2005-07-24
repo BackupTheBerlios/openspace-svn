@@ -47,7 +47,9 @@ FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
     FXMAPFUNCS (SEL_COMMAND, filelist::ID_LAST, filelist::ID_LAST + 50, filelist::file_operation),
     FXMAPFUNC (SEL_COMMAND, filelist::ID_HEADER_CHANGE, filelist::onCmdHeader),
     FXMAPFUNC (SEL_COMMAND, filelist::ID_SORT_CHANGE, filelist::onCmdHeader),
-    FXMAPFUNC (SEL_COMMAND, cmddialog::ID_COMMAND, filelist::onCommand), FXMAPFUNC (SEL_COMMAND, cmddialog::ID_CANCEL_COMMAND, filelist::onCommandCancel),
+    FXMAPFUNC (SEL_COMMAND, filelist::ID_MAXIMIZE, filelist::onMaximize),
+    FXMAPFUNC (SEL_COMMAND, cmddialog::ID_COMMAND, filelist::onCommand),
+    FXMAPFUNC (SEL_COMMAND, cmddialog::ID_CANCEL_COMMAND, filelist::onCommandCancel),
     FXMAPFUNC (SEL_DRAGGED, 0, filelist::onDragged),
     FXMAPFUNC (SEL_DND_ENTER, 0, filelist::onDNDEnter),
     FXMAPFUNC (SEL_DND_LEAVE, 0, filelist::onDNDLeave),
@@ -535,7 +537,7 @@ this->type=path.substr(0,pos);
       new FXButton (bottomframe, "", osicons[15], this, filelist::ID_TEXTFIELD_REG, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
       new FXButton (bottomframe, "Go", 0, this, filelist::ID_TEXTFIELD_GO, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
       new FXButton (bottomframe, "Get", 0, this, filelist::ID_TEXTFIELD_GET, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-
+      new FXButton (bottomframe, "", osicons[21], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 
       dial = NULL;
       this->pt = new pathtype (pt);
@@ -1858,4 +1860,16 @@ filelist::click (FXObject *, FXSelector, void *ptr)
 
   info->setText (inf.c_str ());
 
+}
+
+long    filelist::onMaximize(FXObject * sender,FXSelector,void*)
+{
+fxmessage("MAX");
+maximize=!maximize;
+FXButton*bt=(FXButton*)sender;
+if(maximize)
+bt->setIcon(osicons[22]);
+else
+bt->setIcon(osicons[21]);
+notifyparent->handle (this, FXSEL (SEL_COMMAND, 668), NULL);
 }

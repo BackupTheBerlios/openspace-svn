@@ -46,20 +46,13 @@ EXIT_FAILURE=1
 
 PROGRAM=ltmain.sh
 PACKAGE=libtool
-VERSION=1.5.18
-TIMESTAMP=" (1.1220.2.246 2005/05/16 10:00:18)"
+VERSION=1.5.16
+TIMESTAMP=" (1.1220.2.235 2005/04/25 18:13:26)"
 
 # See if we are running on zsh, and set the options which allow our
 # commands through without removal of \ escapes.
 if test -n "${ZSH_VERSION+set}" ; then
   setopt NO_GLOB_SUBST
-fi
-# Same for EGREP, and just to be sure, do LTCC as well
-if [ "x$EGREP" = x ] ; then
-    EGREP=egrep
-fi
-if [ "x$LTCC" = x ] ; then
-    LTCC=${CC-gcc}
 fi
 
 # Check that we have a working $echo.
@@ -1401,8 +1394,6 @@ EOF
 	  ;;
         darwin_framework)
 	  compiler_flags="$compiler_flags $arg"
-	  compile_command="$compile_command $arg"
-	  finalize_command="$finalize_command $arg"
 	  prev=
 	  continue
 	  ;;
@@ -1467,8 +1458,6 @@ EOF
       -framework)
         prev=darwin_framework
         compiler_flags="$compiler_flags $arg"
-	compile_command="$compile_command $arg"
-	finalize_command="$finalize_command $arg"
         continue
         ;;
 
@@ -5306,9 +5295,6 @@ fi\
 		if test -z "$libdir"; then
 		  $echo "$modename: \`$deplib' is not a valid libtool archive" 1>&2
 		  exit $EXIT_FAILURE
-		fi
-		if [ "x$EGREP" = x ] ; then
-			EGREP=egrep
 		fi
 		# We do not want portage's install root ($D) present.  Check only for
 		# this if the .la is being installed.

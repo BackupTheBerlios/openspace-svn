@@ -112,7 +112,7 @@ private:
 
 vector<thread_elem*> thread_vec;
 map<string, file_type*> file_type_settings;  
-FXGIFIcon *osicons[25]; //IMPORTANT!!!
+FXGIFIcon *osicons[30]; //IMPORTANT!!!
 
  
 Frame *fr;

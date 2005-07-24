@@ -32,4 +32,7 @@ icons_DATA=big_directory.gif \
 	txt.gif \
 	unknown.gif \
 	user.gif \
-	word.gif
+	word.gif \
+	max.gif \
+	min.gif
+	 
