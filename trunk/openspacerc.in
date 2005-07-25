@@ -286,6 +286,9 @@
 					<width>200</width>
 				</accessed>
 			</properties>
+			<thumbs>
+				<size>500000</size>
+			</thumbs>
 		</local>
 		<scp>
 			<headers>
