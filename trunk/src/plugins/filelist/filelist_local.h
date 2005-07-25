@@ -33,9 +33,13 @@ public:
 	int remove(thread_elem* te);
 	int rename(string orgname,string newname);
 	int init(vector<string>*vector_name,vector<int>*vector_type,vector<int>*vector_width,pathtype pt,configure *conf);
-	unsigned int filelist_local::mode(string file);
-	bool filelist_local::mode(string file,unsigned int,bool recursive=false);
-	string filelist_local::info(void);
+	unsigned int mode(string file);
+	string owner(string file);
+	string group(string file);
+	bool mode(string file,unsigned int,bool recursive=false);
+	bool owner(string file,string ownername,bool recursive=false);
+	bool group(string file,string groupname,bool recursive=false);
+	string info(void);	
 	int quit(void);
 	
 	

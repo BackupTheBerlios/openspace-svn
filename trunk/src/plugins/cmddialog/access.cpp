@@ -191,10 +191,15 @@ ox->setCheck();
     while( (pwde = getpwent()) )
     {
         user->appendItem(pwde->pw_name);
+	
     }
-    endpwent();
+        endpwent();
+	
 	user->setSortFunc(FXList::ascending);
 	user->sortItems();	
+	string own=fb->owner(src[0]);
+	user->setCurrentItem(user->findItem(own.c_str()));
+		
 
 	// Group names (sorted in ascending order)
     struct group* grpe;
@@ -205,7 +210,8 @@ ox->setCheck();
     endgrent();
 	grp->setSortFunc(FXList::ascending);
 	grp->sortItems();
-	
+	string grou=fb->group(src[0]);
+	grp->setCurrentItem(grp->findItem(grou.c_str()));
 
 
 }

@@ -495,6 +495,98 @@ FXTRACE((5,"MODE"));
  }	
 }
 
+string filelist_local::owner(string file)
+{
+  return FXFile::owner(file.c_str()).text();
+}
+string filelist_local::group(string file)
+{
+  return FXFile::group(file.c_str()).text();
+}
+
+bool filelist_local::owner(string file,string ownername,bool recursive)
+{
+FXTRACE((5,"MODE"));
+ if(!recursive)
+ {
+ 	//return FXFile::owner(file.c_str(),mod);
+ }
+ else
+ {
+ 	//FXFile::owner(file.c_str());
+	string path=file+SEPARATOR;
+	
+ 	if(FXFile::isDirectory(path.c_str()))
+	{
+
+	struct stat status;
+	struct dirent *dp;
+	DIR *dirp;
+
+
+	dirp=opendir(path.c_str());	
+
+	 while((dp=readdir(dirp))!=NULL)
+	 {
+		if(dp->d_name[0]!='.' || (dp->d_name[1]!='\0' && (dp->d_name[1]!='.' || dp->d_name[2]!='\0')))
+			{
+	   
+				string file=path;
+				file.append(dp->d_name);
+				owner(file,ownername,true);
+				
+			}
+	 }
+	
+	  closedir(dirp);
+	 }
+ 
+ 
+ }	
+}
+
+bool filelist_local::group(string file,string groupname,bool recursive)
+{
+FXTRACE((5,"MODE"));
+ if(!recursive)
+ {
+ 	//return FXFile::owner(file.c_str(),mod);
+ }
+ else
+ {
+ 	//FXFile::mode(file.c_str(),mod);
+	string path=file+SEPARATOR;
+	
+ 	if(FXFile::isDirectory(path.c_str()))
+	{
+
+	struct stat status;
+	struct dirent *dp;
+	DIR *dirp;
+
+
+	dirp=opendir(path.c_str());	
+
+	 while((dp=readdir(dirp))!=NULL)
+	 {
+		if(dp->d_name[0]!='.' || (dp->d_name[1]!='\0' && (dp->d_name[1]!='.' || dp->d_name[2]!='\0')))
+			{
+	   
+				string file=path;
+				file.append(dp->d_name);
+				group(file,groupname,true);
+				
+			}
+	 }
+	
+	  closedir(dirp);
+	 }
+ 
+ 
+ }	
+}
+
+
 int filelist_local::quit(void)
 {
 return 0;
