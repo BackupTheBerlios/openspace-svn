@@ -1713,6 +1713,7 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 	if (exta == "")
 	    extb = "zzzzz";
 
+
 	p = (const unsigned char *) exta.c_str ();
 	q = (const unsigned char *) extb.c_str ();
 
@@ -1742,6 +1743,12 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 
 	while (1)
 	{
+
+	if(!*p)
+		break;
+	if(!*q)
+		break;
+			
 	    if (strcase)
 	    {
 		if (*p > *q)
@@ -1768,7 +1775,7 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 		    else
 			return 1;
 	    }
-
+		
 	    p++;
 	    q++;
 	}
