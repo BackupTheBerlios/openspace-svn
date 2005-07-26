@@ -22,6 +22,9 @@
 #include <sstream>
 #include <sys/mount.h>
 
+#include <sys/types.h>
+#include <pwd.h>
+#include <grp.h>
 
 
 vector<string> name;
@@ -509,11 +512,17 @@ bool filelist_local::owner(string file,string ownername,bool recursive)
 FXTRACE((5,"MODE"));
  if(!recursive)
  {
- 	//return FXFile::owner(file.c_str(),mod);
+ 
+ 
+ passwd* p=getpwnam(ownername.c_str());
+ return chown(file.c_str(), p->pw_uid,-1);
+ 	
  }
  else
  {
- 	//FXFile::owner(file.c_str());
+	 passwd* p=getpwnam(ownername.c_str());
+	 chown(file.c_str(), p->pw_uid,-1);
+
 	string path=file+SEPARATOR;
 	
  	if(FXFile::isDirectory(path.c_str()))
@@ -550,11 +559,15 @@ bool filelist_local::group(string file,string groupname,bool recursive)
 FXTRACE((5,"MODE"));
  if(!recursive)
  {
- 	//return FXFile::owner(file.c_str(),mod);
+  ::group *grp=getgrnam(groupname.c_str());
+  return chown(file.c_str(),-1, grp->gr_gid);
+ 
+ 	
  }
  else
  {
- 	//FXFile::mode(file.c_str(),mod);
+ 	::group *grp=getgrnam(groupname.c_str());
+ 	chown(file.c_str(),-1, grp->gr_gid);
 	string path=file+SEPARATOR;
 	
  	if(FXFile::isDirectory(path.c_str()))

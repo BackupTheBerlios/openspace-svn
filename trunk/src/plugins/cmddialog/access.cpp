@@ -101,6 +101,8 @@ recursive=true;
 		while(src[i]!="")
 		{
 		fb->mode(src[0],mode,recursive);
+		fb->owner(src[0],user->getText().text(),recursive);
+		fb->group(src[0],grp->getText().text(),recursive);
 		i++;
 		}
  
