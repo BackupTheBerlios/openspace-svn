@@ -41,7 +41,10 @@ public:
 	bool group(string file,string groupname,bool recursive=false);
 	string info(void);	
 	int quit(void);
-	
+	string symlink (string path);
+        bool symlink (string src,string dst);
+        bool hardlink (string src,string dst);
+        int supportedfunctions(void);
 	
 	void totalsize(string path,unsigned long &  size);
 	int copymove(thread_elem* te,bool copy=true);

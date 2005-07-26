@@ -599,8 +599,25 @@ FXTRACE((5,"MODE"));
  }	
 }
 
+    string filelist_local::symlink (string path)
+    {
+    	return FXFile::symlink(path.c_str()).text();
+    }
+    bool filelist_local::symlink (string src,string dst)
+    {
+    	return FXFile::symlink(src.c_str(),dst.c_str());
+    }
+    bool filelist_local::hardlink (string src,string dst)
+    {
+    	return FXFile::link(src.c_str(),dst.c_str());
+    }
+    int filelist_local::supportedfunctions(void)
+    {
+    
+    }
 
-int filelist_local::quit(void)
+
+int quit(void)
 {
 return 0;
 }
