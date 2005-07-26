@@ -618,8 +618,12 @@ this->type=path.substr(0,pos);
 
 //label=new FXLabel (p,this->path.c_str());
 	info = new FXLabel (p, fb->info ().c_str ());
+FXDockSite *docksite=new FXDockSite(p,LAYOUT_SIDE_TOP|LAYOUT_FILL_X);
+ FXToolBarShell *dragshell1=new FXToolBarShell(this,FRAME_RAISED);
+FXToolBar* toolbar=new FXToolBar(docksite,dragshell1,LAYOUT_DOCK_NEXT|LAYOUT_SIDE_TOP|LAYOUT_FILL_X|FRAME_RAISED);
+  new FXToolBarGrip(toolbar,toolbar,FXToolBar::ID_TOOLBARGRIP,TOOLBARGRIP_DOUBLE);
 
-	bottomframe = new FXHorizontalFrame (p, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+	bottomframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
 	textfield = new FXTextField (bottomframe, 30, this, filelist::ID_TEXTFIELD_REG);
 
 	new FXButton (bottomframe, "", osicons[15], this, filelist::ID_TEXTFIELD_REG, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
