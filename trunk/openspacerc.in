@@ -57,7 +57,7 @@
 		</view_calc>
 		
 		<edit_image>
-			<exec>qiv {f}</exec>
+			<exec>gimp-2.0 {f}</exec>
 		</edit_image>
 		
 		<view_image>
@@ -148,7 +148,7 @@
 		
 		<image>
 			<icon>image.gif</icon>
-			<command>view_image</command>
+			<default>view_image</default>
 			<types>
 				<png>
 					<default>view_image</default>
