@@ -450,15 +450,10 @@ string filelist::getdefaultcommand (string name, bool resolve = true)
 	key = "";
     if (ext != "")
     {
-
-
-	string
-	    str = "/types/";
+	string  str = "/types/";
 	ext = ext.replace (ext.find ("/"), 1, str);
 	key = conf->readonestring ("/OpenspaceConfig/file_types/" + ext + "/default");
     }
-
-
 
     if (key == "")
     {
@@ -466,18 +461,12 @@ string filelist::getdefaultcommand (string name, bool resolve = true)
 	key = conf->readonestring ("/OpenspaceConfig/file_types/" + ext + "/default");
     }
 
-
-
-    string
-	res;
+    string res;
 
     if (key == "")
     {
 	key = conf->readonestring ("/OpenspaceConfig/file_types_speical/all/default");
     }
-
-
-
 
     if (resolve)
     {
@@ -547,6 +536,12 @@ FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSE
 
     captionfont1 = new FXFont (getApp (), "times", 8);
     captionfont1->create ();
+    
+    captionfont2 = new FXFont (getApp (), "arial", 9);
+    captionfont2->create ();
+    
+    setFont (captionfont2);
+    
     fxmessage (pt.server.c_str ());
 
     osicons = specialicons;
@@ -864,7 +859,7 @@ filelist::opendir (string dir)
 	    }
 
 
-	    if (os_file.size < thumb_size)
+	    if (os_file.size < thumb_size && (this->getListStyle() & ICONLIST_BIG_ICONS))
 	    {
 
 

@@ -48,8 +48,7 @@ class filelist:public FXIconList
     FXMenuPane *popupmenu;
     FXMenuPane *popupwindow;
     string commands_tab[50];	//IMPORTANT
-    FXFont *captionfont;
-    FXFont *captionfont1;
+    FXFont *captionfont,*captionfont1,*captionfont2;
     FXTextField *textfield;
     FXOptionMenu *sortmenu;
     FXPopup *sortpop;

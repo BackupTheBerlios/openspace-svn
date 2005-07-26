@@ -297,8 +297,9 @@ MainWindow::onChangeView (FXObject * sender, FXSelector sel, void *)
     if (id == ID_CHANGE_VIEW_SMALL)
 	
     {
-	f->setFont (f->captionfont1);
+	f->setFont (f->captionfont2);
 	f->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
+	f->refresh();
     }
     
     else if (id == ID_CHANGE_VIEW_BIG)
@@ -306,13 +307,15 @@ MainWindow::onChangeView (FXObject * sender, FXSelector sel, void *)
     {
 	f->setFont (f->captionfont);
 	f->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
+	f->refresh();
     }
     
     else if (id = ID_CHANGE_VIEW_DETAILS)
 	
     {
-	f->setFont (f->captionfont1);
+	f->setFont (f->captionfont2);
 	f->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
+	f->refresh();
     }
 }
 
