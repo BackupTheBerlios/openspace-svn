@@ -613,11 +613,11 @@ FXTRACE((5,"MODE"));
     }
     int filelist_local::supportedfunctions(void)
     {
-    
+        return 666;
     }
 
 
-int quit(void)
+int filelist_local::quit(void)
 {
 return 0;
 }
