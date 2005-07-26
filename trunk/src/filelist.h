@@ -34,6 +34,8 @@ class filelist:public FXIconList
 	ID_REMOVE,
 	ID_REFRESH,
 	ID_MAXIMIZE,
+	ID_CLIP_COPY,
+	ID_CLIP_PASTE,
 	ID_LAST,
     };
 
@@ -122,6 +124,13 @@ class filelist:public FXIconList
     long onBeginDrag (FXObject *, FXSelector, void *);
     long onEndDrag (FXObject *, FXSelector, void *);
     long onDragged (FXObject *, FXSelector, void *);
+    
+  long onClipboardLost(FXObject*,FXSelector,void*);
+  long onClipboardGained(FXObject*,FXSelector,void*);
+  long onClipboardRequest(FXObject*,FXSelector,void*);
+  
+  long onCmdCopySel(FXObject*,FXSelector,void*);
+  long onCmdPasteSel(FXObject*,FXSelector,void*);  
 
     void filelist::selectitem (void);
     void filelist::refresh (void);

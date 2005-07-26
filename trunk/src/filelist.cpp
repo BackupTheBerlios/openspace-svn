@@ -55,9 +55,16 @@ FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
 	FXMAPFUNC (SEL_DND_LEAVE, 0, filelist::onDNDLeave),
 	FXMAPFUNC (SEL_DND_DROP, 0, filelist::onDNDDrop),
 	FXMAPFUNC (SEL_DND_MOTION, 0, filelist::onDNDMotion),
-	FXMAPFUNC (SEL_DND_REQUEST, 0, filelist::onDNDRequest), FXMAPFUNC (SEL_BEGINDRAG, 0, filelist::onBeginDrag), FXMAPFUNC (SEL_ENDDRAG, 0, filelist::onEndDrag),};
-
-
+	FXMAPFUNC (SEL_DND_REQUEST, 0, filelist::onDNDRequest),
+	FXMAPFUNC (SEL_BEGINDRAG, 0, filelist::onBeginDrag), 
+	FXMAPFUNC (SEL_ENDDRAG, 0, filelist::onEndDrag),
+	FXMAPFUNC(SEL_COMMAND,filelist::ID_CLIP_COPY,filelist::onCmdCopySel),
+	FXMAPFUNC(SEL_COMMAND,filelist::ID_CLIP_PASTE,filelist::onCmdPasteSel),
+	FXMAPFUNC(SEL_CLIPBOARD_LOST,0,filelist::onClipboardLost),
+	FXMAPFUNC(SEL_CLIPBOARD_GAINED,0,filelist::onClipboardGained),
+	FXMAPFUNC(SEL_CLIPBOARD_REQUEST,0,filelist::onClipboardRequest)
+	
+};
 
 FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
      bool filelist::ascend = true;
@@ -347,6 +354,148 @@ getfiletype (string name)
 //----------------------------------------------------  
 
 
+// We now really do have the clipboard, keep clipped text
+long filelist::onClipboardGained(FXObject* sender,FXSelector sel,void* ptr){
+  FXIconList::onClipboardGained(sender,sel,ptr);
+   fxmessage("AA\n");
+  return 1;
+  }
+
+
+// We lost the clipboard, free clipped text
+long filelist::onClipboardLost(FXObject* sender,FXSelector sel,void* ptr){
+  FXIconList::onClipboardLost(sender,sel,ptr);
+   fxmessage("BB\n");
+  //clipped.clear();
+  return 1;
+  }
+
+
+// Somebody wants our clipped text
+long filelist::onClipboardRequest(FXObject* sender,FXSelector sel,void* ptr){
+  FXEvent *event=(FXEvent*)ptr; FXuchar *data; FXuint len;
+ fxmessage("CC\n");
+/*
+  // Perhaps the target wants to supply its own data for the clipboard
+  if(FXFrame::onClipboardRequest(sender,sel,ptr)) return 1;
+
+  // Return clipped text
+  if(event->target==stringType || event->target==textType){
+    len=clipped.length();
+    FXCALLOC(&data,FXuchar,len+1);
+    if(options&TEXTFIELD_PASSWD){
+      memset((FXchar*)data,'*',len);      // We shall not reveal the password!
+      }
+    else{
+      memcpy(data,clipped.text(),len);
+      }
+#ifndef WIN32
+    setDNDData(FROM_CLIPBOARD,event->target,data,len);
+#else
+    setDNDData(FROM_CLIPBOARD,event->target,data,len+1);
+#endif
+    return 1;
+    }
+*/
+
+  	  len = dragfiles.length ();
+	    FXMEMDUP (&data, dragfiles.text (), FXuchar, len);
+	    setDNDData (FROM_DRAGNDROP, event->target, data, len);
+
+  return 0;
+  }
+
+long filelist::onCmdCopySel(FXObject*,FXSelector,void*)
+{
+fxmessage("COPY");
+  FXDragType types[1];
+    types[0]=urilistType;
+
+    if(acquireClipboard(types,1))
+    {
+    fxmessage("ok");
+	dragfiles = FXString::null;
+	for (int i = 0; i < getNumItems (); i++)
+	{
+	    if (isItemSelected (i))
+	    {
+		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+		string name = oslistitem->osf.name;
+		string fullname = path + SEPARATOR + name;
+		if (name != "." && name != "..")
+		{
+		    if (!dragfiles.empty ())
+			dragfiles += "\r\n";
+			 dragfiles += FXURL::fileToURL (fullname.c_str ());
+		}
+	    }	   
+	}
+
+    }
+  return 1;
+  }
+
+
+// Paste
+long filelist::onCmdPasteSel(FXObject*,FXSelector,void*){
+
+    FXuchar *data;
+    FXuint len;
+
+fxmessage("PASTE");
+    // Get uri-list of files being dropped
+    if (getDNDData (FROM_CLIPBOARD, urilistType, data, len))
+    {
+	FXRESIZE (&data, FXuchar, len + 1);
+	data[len] = '\0';
+	FXchar *p, *q;
+	p = q = (FXchar *) data;
+
+	vector < string > vec;
+
+	while (*p)
+	{
+	    while (*q && *q != '\r')
+		q++;
+	    FXString url (p, q - p);
+	    FXString filesrc (FXURL::fileFromURL (url));
+	    vec.push_back (filesrc.text ());
+	    if (*q == '\r')
+		q += 2;
+	    p = q;
+	}
+
+	int selit = vec.size ();
+	string *srclist = new string[selit + 1];
+
+	int ind = 0;
+	for (int i = 0; i < vec.size (); i++)
+	{
+	    srclist[ind] = vec[i];
+	    ind++;
+	}
+	srclist[ind] = "";
+	string com_name;
+	if (dropaction == DRAG_MOVE)
+	    com_name = "move";
+	else if (dropaction == DRAG_COPY)
+	    com_name = "copy";
+
+
+	string options = "download";
+	FXTRACE ((5, "copy/move/remove"));
+	thread_elem *el = new thread_elem (fb, com_name, options, srclist, path);
+	start_thread (el);
+
+
+
+	FXFREE (&data);
+	return 1;
+    }
+
+    return 0;
+   
+  }
 
 //-----FILELIST----------------------------------------------------------------------------------------------------------------------------------------- 
 
@@ -451,6 +600,8 @@ FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSE
 //bind keys
     FXAccelTable *table = getShell ()->getAccelTable ();
     table->addAccel (MKUINT (KEY_a, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_SELECT_ALL));
+    table->addAccel (MKUINT (KEY_c, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_COPY));
+    table->addAccel (MKUINT (KEY_v, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_PASTE));
     table->addAccel (MKUINT (KEY_F5, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REFRESH));
     table->addAccel (MKUINT (KEY_Delete, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REMOVE));
 
