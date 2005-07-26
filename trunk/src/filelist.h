@@ -130,7 +130,10 @@ class filelist:public FXIconList
   long onClipboardRequest(FXObject*,FXSelector,void*);
   
   long onCmdCopySel(FXObject*,FXSelector,void*);
-  long onCmdPasteSel(FXObject*,FXSelector,void*);  
+  long onCmdPasteSel(FXObject*,FXSelector,void*); 
+  
+   
+    void dropData(bool clipboard);
 
     void filelist::selectitem (void);
     void filelist::refresh (void);

@@ -149,72 +149,19 @@ filelist::onDNDMotion (FXObject * sender, FXSelector sel, void *ptr)
 long
 filelist::onDNDDrop (FXObject * sender, FXSelector sel, void *ptr)
 {
-    FXuchar *data;
-    FXuint len;
-
     // Cancel open up timer
 //  getApp()->removeTimeout(this,ID_OPENTIMER);
 
     // Stop scrolling
     stopAutoScroll ();
 
-    // Restore original directory
-    //setDirectory(orgdirectory);
 
     // Perhaps target wants to deal with it
     if (FXIconList::onDNDDrop (sender, sel, ptr))
 	return 1;
-
-    // Get uri-list of files being dropped
-    if (getDNDData (FROM_DRAGNDROP, urilistType, data, len))
-    {
-	FXRESIZE (&data, FXuchar, len + 1);
-	data[len] = '\0';
-	FXchar *p, *q;
-	p = q = (FXchar *) data;
-
-	vector < string > vec;
-
-	while (*p)
-	{
-	    while (*q && *q != '\r')
-		q++;
-	    FXString url (p, q - p);
-	    FXString filesrc (FXURL::fileFromURL (url));
-	    vec.push_back (filesrc.text ());
-	    if (*q == '\r')
-		q += 2;
-	    p = q;
-	}
-
-	int selit = vec.size ();
-	string *srclist = new string[selit + 1];
-
-	int ind = 0;
-	for (int i = 0; i < vec.size (); i++)
-	{
-	    srclist[ind] = vec[i];
-	    ind++;
-	}
-	srclist[ind] = "";
-	string com_name;
-	if (dropaction == DRAG_MOVE)
-	    com_name = "move";
-	else if (dropaction == DRAG_COPY)
-	    com_name = "copy";
-
-
-	string options = "download";
-	FXTRACE ((5, "copy/move/remove"));
-	thread_elem *el = new thread_elem (fb, com_name, options, srclist, path);
-	start_thread (el);
-
-
-
-	FXFREE (&data);
-	return 1;
-    }
-
+	dropData(false);
+	
+	
     return 0;
 }
 
@@ -375,28 +322,6 @@ long filelist::onClipboardLost(FXObject* sender,FXSelector sel,void* ptr){
 long filelist::onClipboardRequest(FXObject* sender,FXSelector sel,void* ptr){
   FXEvent *event=(FXEvent*)ptr; FXuchar *data; FXuint len;
  fxmessage("CC\n");
-/*
-  // Perhaps the target wants to supply its own data for the clipboard
-  if(FXFrame::onClipboardRequest(sender,sel,ptr)) return 1;
-
-  // Return clipped text
-  if(event->target==stringType || event->target==textType){
-    len=clipped.length();
-    FXCALLOC(&data,FXuchar,len+1);
-    if(options&TEXTFIELD_PASSWD){
-      memset((FXchar*)data,'*',len);      // We shall not reveal the password!
-      }
-    else{
-      memcpy(data,clipped.text(),len);
-      }
-#ifndef WIN32
-    setDNDData(FROM_CLIPBOARD,event->target,data,len);
-#else
-    setDNDData(FROM_CLIPBOARD,event->target,data,len+1);
-#endif
-    return 1;
-    }
-*/
 
   	  len = dragfiles.length ();
 	    FXMEMDUP (&data, dragfiles.text (), FXuchar, len);
@@ -437,14 +362,26 @@ fxmessage("COPY");
 
 
 // Paste
-long filelist::onCmdPasteSel(FXObject*,FXSelector,void*){
-
-    FXuchar *data;
-    FXuint len;
-
+long filelist::onCmdPasteSel(FXObject*,FXSelector,void*)
+{
 fxmessage("PASTE");
+dropData(true);
+}
+
+ void filelist::dropData(bool clipboard)
+ {
+ 
+ 
+  FXuchar *data;
+    FXuint len;
+FXDNDOrigin origin;
+	if(clipboard)
+	origin=FROM_CLIPBOARD;
+	else
+	origin=FROM_DRAGNDROP;
+
     // Get uri-list of files being dropped
-    if (getDNDData (FROM_CLIPBOARD, urilistType, data, len))
+    if (getDNDData (origin, urilistType, data, len))
     {
 	FXRESIZE (&data, FXuchar, len + 1);
 	data[len] = '\0';
@@ -490,12 +427,12 @@ fxmessage("PASTE");
 
 
 	FXFREE (&data);
-	return 1;
+
     }
 
-    return 0;
-   
-  }
+ 
+ 
+ }
 
 //-----FILELIST----------------------------------------------------------------------------------------------------------------------------------------- 
 
