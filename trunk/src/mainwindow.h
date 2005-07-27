@@ -124,6 +124,16 @@ class MainWindow:public FXMainWindow
     preferences *pref;
     float ratio;
 
+
+  FXToolBarShell    *dragshell1;              // Shell for floating menubar
+  FXToolBarShell    *dragshell2;              // Shell for floating toolbar
+  FXToolBarShell    *dragshell3;              // Shell for floating toolbar
+  FXToolBarShell    *dragshell4;              // Shell for floating toolbar
+  FXDockSite        *topdock;
+  FXDockSite        *bottomdock;
+  FXDockSite        *leftdock;
+  FXDockSite        *rightdock;
+
 };
 
 

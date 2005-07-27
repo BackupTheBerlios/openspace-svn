@@ -217,6 +217,23 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
 	    }
 	}
     }
+    
+    
+    
+  
+    topdock=new FXDockSite(this,LAYOUT_SIDE_TOP|LAYOUT_FILL_X);
+    bottomdock=new FXDockSite(this,LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X);
+    leftdock=new FXDockSite(this,LAYOUT_SIDE_LEFT|LAYOUT_FILL_Y);
+    rightdock=new FXDockSite(this,LAYOUT_SIDE_RIGHT|LAYOUT_FILL_Y);
+  
+    
+
+    FXToolBarShell *dragshell1=new FXToolBarShell(this,FRAME_RAISED);
+    FXToolBar* toolbar=new FXToolBar(topdock,dragshell1,LAYOUT_DOCK_NEXT|LAYOUT_SIDE_TOP|FRAME_RAISED);
+    new FXToolBarGrip(toolbar,toolbar,FXToolBar::ID_TOOLBARGRIP,TOOLBARGRIP_DOUBLE);
+    
+    
+    
     FXVerticalFrame * ff = new FXVerticalFrame (this, LAYOUT_FILL_X | LAYOUT_FILL_Y);
     controlframe = new FXVerticalFrame (ff, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     splitter = new FXSplitter (ff, LAYOUT_FILL_X | SPLITTER_TRACKING | LAYOUT_FILL_Y);
@@ -231,19 +248,19 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     leftframe = new FXVerticalFrame (left, LAYOUT_FILL_X | LAYOUT_FILL_Y);
     rightcontrolframe = new FXVerticalFrame (right, LAYOUT_FILL_X);
     rightframe = new FXVerticalFrame (right, LAYOUT_FILL_X | LAYOUT_FILL_Y);
-    FXHorizontalFrame * buttonsframe = new FXHorizontalFrame (controlframe, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (buttonsframe, "", osicons[7], this, MainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (buttonsframe, "", osicons[0], this, MainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (buttonsframe, "", osicons[9], this, MainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXSeparator (buttonsframe, SEPARATOR_NONE);
-    new FXSeparator (buttonsframe, SEPARATOR_NONE);
-    new FXButton (buttonsframe, "", osicons[12], this, MainWindow::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (buttonsframe, "", osicons[13], this, MainWindow::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (buttonsframe, "", osicons[14], this, MainWindow::ID_CHANGE_VIEW_DETAILS, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXSeparator (buttonsframe, SEPARATOR_NONE);
-    new FXSeparator (buttonsframe, SEPARATOR_NONE);
-    new FXButton (buttonsframe, "\tconfiguration", osicons[20], this, MainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (buttonsframe, "", osicons[18], this, MainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+ //   FXHorizontalFrame * buttonsframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", osicons[7], this, MainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", osicons[0], this, MainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", osicons[9], this, MainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXSeparator (toolbar, SEPARATOR_NONE);
+    new FXSeparator (toolbar, SEPARATOR_NONE);
+    new FXButton (toolbar, "", osicons[12], this, MainWindow::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", osicons[13], this, MainWindow::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", osicons[14], this, MainWindow::ID_CHANGE_VIEW_DETAILS, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXSeparator (toolbar, SEPARATOR_NONE);
+    new FXSeparator (toolbar, SEPARATOR_NONE);
+    new FXButton (toolbar, "\tconfiguration", osicons[20], this, MainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", osicons[18], this, MainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     string dir = parseDir (conf->readonestring ("/OpenspaceConfig/leftdir/dir"));
     string type = conf->readonestring ("/OpenspaceConfig/leftdir/type");
     pathtype pt (dir, type);
