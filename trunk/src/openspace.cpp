@@ -6,7 +6,7 @@
 //nothing special here, create and execute main window
 int main (int argc, char **argv)
 {
-    fxTraceLevel = 15;
+    fxTraceLevel = 12;
     FXApp *application = new FXApp ("openspace", NULL);
     application->init (argc, argv);
     fxmessage (argv[0]);
