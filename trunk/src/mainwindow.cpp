@@ -230,8 +230,8 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
 
     FXToolBarShell *dragshell1=new FXToolBarShell(this,FRAME_RAISED);
     FXToolBar* toolbar=new FXToolBar(topdock,dragshell1,LAYOUT_DOCK_NEXT|LAYOUT_SIDE_TOP|FRAME_RAISED);
-    new FXToolBarGrip(toolbar,toolbar,FXToolBar::ID_TOOLBARGRIP,TOOLBARGRIP_DOUBLE);
-    
+    new FXToolBarGrip(toolbar,toolbar,FXToolBar::ID_TOOLBARGRIP,TOOLBARGRIP_SINGLE);
+ 
     
     
     FXVerticalFrame * ff = new FXVerticalFrame (this, LAYOUT_FILL_X | LAYOUT_FILL_Y);
@@ -884,17 +884,25 @@ MainWindow::onTimer (FXObject *, FXSelector, void *)
 	    telem->mutex.unlock ();
 	    if (end)		//when telem ended
 	    {
+	    filelist * fil=(filelist *) telem->filel;
+	    string::size_type pos = telem->options.find ("download");	
+	    bool download=false;
+	      if (pos != string::npos)
+	      {
+	      download=true;
+	      fxmessage("\nDOWNLOAD\n");
+	      }
+	    
 		if (telem->command == "init")
 		    
 		{
 		    FXTRACE ((5, "INIT \n"));
-		    filelist * fil = (filelist *) telem->filel;
 		    fil->init ();
 		}
 		if (telem->command == "copy")
 		    
 		{
-		    if (left_frame->f->active)
+		    if ((left_frame->f==fil && download==false) || (download==true && right_frame->f==fil))
 			right_frame->f->refresh ();
 		    
 		    else
@@ -904,11 +912,7 @@ MainWindow::onTimer (FXObject *, FXSelector, void *)
 		else if (telem->command == "remove")
 		    
 		{
-		    if (left_frame->f->active)
-			left_frame->f->refresh ();
-		    
-		    else
-			right_frame->f->refresh ();
+			fil->refresh();
 		}
 		
 		else if (telem->command == "move")
@@ -918,15 +922,13 @@ MainWindow::onTimer (FXObject *, FXSelector, void *)
 		    left_frame->f->refresh ();
 		}
 		string options = telem->options;	// get special options
-		string::size_type pos = options.find ("rescan");	// when we need to rescan directory after command finish
+		pos = options.find ("rescan");	// when we need to rescan directory after command finish
 		if (pos != string::npos)
 		    
 		{
-		    if (left_frame->f->active)
-			left_frame->f->refresh ();
-		    
-		    else
-			right_frame->f->refresh ();
+		 
+			fil->refresh ();
+		  
 		}
 		pos = telem->options.find ("capture");	// when we need to capture data from standard output from executed program
 		if (pos != string::npos)
