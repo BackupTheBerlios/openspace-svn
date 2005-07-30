@@ -636,12 +636,17 @@ FXToolBar* toolbar=new FXToolBar(docksite,dragshell1,LAYOUT_DOCK_NEXT|LAYOUT_SID
 	new FXButton (bottomframe, "", osicons[21], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 
 	dial = NULL;
+	processing=false;
 	this->pt = new pathtype (pt);
-
-	processing = true;
-	thread_elem *el = new thread_elem (fb, "init", "none");
-	start_thread (el);
-
+	//if(type!="local")
+	if(1)
+	{
+		processing = true;
+		thread_elem *el = new thread_elem (fb, "init", "none");
+		start_thread (el);
+	}
+	else
+	init();
 
 
     }
@@ -657,10 +662,12 @@ filelist::~filelist ()
 
 //--------------------------------------------------------------------
 //initializing fuction, get availible headers from filelist plugin
-void
-filelist::init (void)
+void filelist::init ()
 {
-    processing = false;
+
+	if(!processing)
+	fb->init (&vector_name, &vector_type,&vector_width, *pt, conf);
+	    
     for (int i = 0; i < vector_name.size (); i++)
     {
 	fxmessage (vector_name[i].c_str ());
@@ -682,16 +689,20 @@ filelist::init (void)
     new FXOption (sortpop, "extension", NULL, this, ID_SORT_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
 
     sortmenu = new FXOptionMenu (bottomframe, sortpop, LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
+   
+   if(processing)
     sortmenu->create ();
+    
     bottomframe->recalc ();
+     processing = false;
     opendir (this->path);
-
+    
+   
 }
 
 
 //button pressed
-long
-filelist::keyPress (FXObject * sender, FXSelector sel, void *ptr)
+long filelist::keyPress (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXTRACE ((5, "KEY PRESSED\n"));
 
@@ -1661,8 +1672,7 @@ filelist::start_thread (thread_elem * te)
 }
 
 //thread function
-void *
-filelist::thread_func (void *data)
+void *filelist::thread_func (void *data)
 {
 
     thread_elem *el = (thread_elem *) data;
