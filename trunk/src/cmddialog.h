@@ -5,7 +5,8 @@
 
 class cmddialog:public FXDialogBox
 {
-  FXDECLARE (cmddialog) public:
+  FXDECLARE (cmddialog) 
+  public:
     FXVerticalFrame * contents;
     FXHorizontalFrame *buttons;
   protected:

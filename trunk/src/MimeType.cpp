@@ -8,13 +8,11 @@ using namespace std;
 
 #include "MimeType.h"
 
-bool
-    MimeType::isInitialized = false;
+bool MimeType::isInitialized = false;
 map < string, string > MimeType::mimeMap;
 map < string, string > MimeType::mimeCache;
 
-bool
-MimeType::_matches (string pattern, string ext)
+bool MimeType::_matches (string pattern, string ext)
 {
 
     if (pattern[0] == '*')
@@ -36,8 +34,7 @@ MimeType::_matches (string pattern, string ext)
 
 }
 
-string
-MimeType::getMimeFromName (string name)
+string MimeType::getMimeFromName (string name)
 {
 
     if (!isInitialized)
@@ -94,8 +91,7 @@ MimeType::getMimeFromName (string name)
 
 }
 
-void
-MimeType::__initialize (void)
+void MimeType::__initialize (void)
 {
 
     if (isInitialized)

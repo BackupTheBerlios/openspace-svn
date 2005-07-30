@@ -125,14 +125,14 @@ class MainWindow:public FXMainWindow
     float ratio;
 
 
-  FXToolBarShell    *dragshell1;              // Shell for floating menubar
-  FXToolBarShell    *dragshell2;              // Shell for floating toolbar
-  FXToolBarShell    *dragshell3;              // Shell for floating toolbar
-  FXToolBarShell    *dragshell4;              // Shell for floating toolbar
-  FXDockSite        *topdock;
-  FXDockSite        *bottomdock;
-  FXDockSite        *leftdock;
-  FXDockSite        *rightdock;
+    FXToolBarShell *dragshell1;	// Shell for floating menubar
+    FXToolBarShell *dragshell2;	// Shell for floating toolbar
+    FXToolBarShell *dragshell3;	// Shell for floating toolbar
+    FXToolBarShell *dragshell4;	// Shell for floating toolbar
+    FXDockSite *topdock;
+    FXDockSite *bottomdock;
+    FXDockSite *leftdock;
+    FXDockSite *rightdock;
 
 };
 
@@ -184,8 +184,7 @@ class Frame
     FXButton *toclose;
     FXButton *firstbutton;
 
-     Frame (FXComposite * cp,
-	    FXComposite * p, pathtype pt, FXObject * tgt, int position, vector < thread_elem * >*thread_vec, map < string, file_type * >*file_type_settings, FXGIFIcon ** specialicons);
+     Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, int position, vector < thread_elem * >*thread_vec, map < string, file_type * >*file_type_settings, FXGIFIcon ** specialicons);
     void generate_menu (string path, FXObject * tgt);
 
     ~Frame ()

@@ -48,7 +48,7 @@ class filelist:public FXIconList
     FXMenuPane *popupmenu;
     FXMenuPane *popupwindow;
     string commands_tab[50];	//IMPORTANT
-    FXFont *captionfont,*captionfont1,*captionfont2;
+    FXFont *captionfont, *captionfont1, *captionfont2;
     FXTextField *textfield;
     FXOptionMenu *sortmenu;
     FXPopup *sortpop;
@@ -83,10 +83,9 @@ class filelist:public FXIconList
 
 
 
-
     FXDragAction dropaction;	// Drop action
     FXString dragfiles;		// Dragged files
-
+    FXToolBar *toolbar;
 
 
      filelist ()
@@ -123,16 +122,16 @@ class filelist:public FXIconList
     long onBeginDrag (FXObject *, FXSelector, void *);
     long onEndDrag (FXObject *, FXSelector, void *);
     long onDragged (FXObject *, FXSelector, void *);
-    
-  long onClipboardLost(FXObject*,FXSelector,void*);
-  long onClipboardGained(FXObject*,FXSelector,void*);
-  long onClipboardRequest(FXObject*,FXSelector,void*);
-  
-  long onCmdCopySel(FXObject*,FXSelector,void*);
-  long onCmdPasteSel(FXObject*,FXSelector,void*); 
-  
-   
-    void dropData(bool clipboard);
+
+    long onClipboardLost (FXObject *, FXSelector, void *);
+    long onClipboardGained (FXObject *, FXSelector, void *);
+    long onClipboardRequest (FXObject *, FXSelector, void *);
+
+    long onCmdCopySel (FXObject *, FXSelector, void *);
+    long onCmdPasteSel (FXObject *, FXSelector, void *);
+
+
+    void dropData (bool clipboard);
 
     void filelist::selectitem (void);
     void filelist::refresh (void);

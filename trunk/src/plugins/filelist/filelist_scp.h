@@ -14,47 +14,47 @@
 
 
 
-class filelist_scp : public filelist_base
+class filelist_scp:public filelist_base
 {
-string dir;
-string display_size;
-int fieldsnum;
-string *fields;
+    string dir;
+    string display_size;
+    int fieldsnum;
+    string *fields;
 
 
-int p[2];
-int o[2];
+    int p[2];
+    int o[2];
 
-char    readbuffer[20];
+    char readbuffer[20];
 
-int nbytes;
+    int nbytes;
 
-int end;
+    int end;
 
-string prompt;
+    string prompt;
 
 
-public:
-	
-	int osopendir(string dir);
-	osfile osreaddir(void);
-	int mkdir(string dir, int mode);
-	int copy(thread_elem* te);
-	int move(thread_elem* te);
-	int remove(thread_elem* te);
-	int rename(string orgname,string newname);
-	int init(string **name,unsigned int **type,unsigned int **width,pathtype pt,configure *conf);
-	unsigned int mode(string file);
-	bool mode(string file,unsigned int,bool recursive=false);
-	string info(void);
-	int quit(void);
-	
-	void totalsize(string path,unsigned long &  size);
-	int copymove(thread_elem* te,bool copy=true);
-	
-	bool getprompt(void);
-	
-	
+  public:
+
+    int osopendir (string dir);
+    osfile osreaddir (void);
+    int mkdir (string dir, int mode);
+    int copy (thread_elem * te);
+    int move (thread_elem * te);
+    int remove (thread_elem * te);
+    int rename (string orgname, string newname);
+    int init (string ** name, unsigned int **type, unsigned int **width, pathtype pt, configure * conf);
+    unsigned int mode (string file);
+    bool mode (string file, unsigned int, bool recursive = false);
+    string info (void);
+    int quit (void);
+
+    void totalsize (string path, unsigned long &size);
+    int copymove (thread_elem * te, bool copy = true);
+
+    bool getprompt (void);
+
+
 };
 
 

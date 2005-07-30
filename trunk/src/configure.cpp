@@ -56,8 +56,7 @@ configure::~configure ()
 
 }
 
-string
-configure::readonestring (string path)
+string configure::readonestring (string path)
 {
 
     xmlChar *xpath = (xmlChar *) path.c_str ();
@@ -100,8 +99,7 @@ configure::readonestring (string path)
 }
 
 
-bool
-configure::removestring (string path)
+bool configure::removestring (string path)
 {
 
     xmlChar *xpath = (xmlChar *) path.c_str ();
@@ -153,8 +151,7 @@ configure::removestring (string path)
 }
 
 
-bool
-configure::saveonestring (string path, string value)
+bool configure::saveonestring (string path, string value)
 {
 
     xmlChar *xpath = (xmlChar *) path.c_str ();
@@ -214,8 +211,7 @@ configure::saveonestring (string path, string value)
 }
 
 
-bool
-configure::addstring (string path, string node, string value)
+bool configure::addstring (string path, string node, string value)
 {
 
     xmlChar *xpath = (xmlChar *) path.c_str ();
@@ -261,8 +257,7 @@ configure::addstring (string path, string node, string value)
 
 
 
-int
-configure::openxpath (string path)
+int configure::openxpath (string path)
 {
 
     xmlChar *xpath = (xmlChar *) path.c_str ();
@@ -294,8 +289,7 @@ configure::openxpath (string path)
 
 }
 
-string
-configure::getnextnode ()
+string configure::getnextnode ()
 {
 
 
@@ -319,8 +313,7 @@ configure::getnextnode ()
 }
 
 
-string
-configure::getnextstring ()
+string configure::getnextstring ()
 {
 
 
@@ -345,8 +338,7 @@ configure::getnextstring ()
 
 }
 
-int
-configure::countxpath (string path)
+int configure::countxpath (string path)
 {
     int counter = 0;
     openxpath (path);

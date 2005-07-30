@@ -56,15 +56,10 @@ FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
 	FXMAPFUNC (SEL_DND_DROP, 0, filelist::onDNDDrop),
 	FXMAPFUNC (SEL_DND_MOTION, 0, filelist::onDNDMotion),
 	FXMAPFUNC (SEL_DND_REQUEST, 0, filelist::onDNDRequest),
-	FXMAPFUNC (SEL_BEGINDRAG, 0, filelist::onBeginDrag), 
+	FXMAPFUNC (SEL_BEGINDRAG, 0, filelist::onBeginDrag),
 	FXMAPFUNC (SEL_ENDDRAG, 0, filelist::onEndDrag),
-	FXMAPFUNC(SEL_COMMAND,filelist::ID_CLIP_COPY,filelist::onCmdCopySel),
-	FXMAPFUNC(SEL_COMMAND,filelist::ID_CLIP_PASTE,filelist::onCmdPasteSel),
-	FXMAPFUNC(SEL_CLIPBOARD_LOST,0,filelist::onClipboardLost),
-	FXMAPFUNC(SEL_CLIPBOARD_GAINED,0,filelist::onClipboardGained),
-	FXMAPFUNC(SEL_CLIPBOARD_REQUEST,0,filelist::onClipboardRequest)
-	
-};
+	FXMAPFUNC (SEL_COMMAND, filelist::ID_CLIP_COPY, filelist::onCmdCopySel),
+	FXMAPFUNC (SEL_COMMAND, filelist::ID_CLIP_PASTE, filelist::onCmdPasteSel), FXMAPFUNC (SEL_CLIPBOARD_LOST, 0, filelist::onClipboardLost), FXMAPFUNC (SEL_CLIPBOARD_GAINED, 0, filelist::onClipboardGained), FXMAPFUNC (SEL_CLIPBOARD_REQUEST, 0, filelist::onClipboardRequest)};
 
 FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
      bool filelist::ascend = true;
@@ -83,8 +78,7 @@ FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
 
 
 // Handle drag-and-drop leave, restore current directory prior to drag
-long
-filelist::onDNDLeave (FXObject * sender, FXSelector sel, void *ptr)
+long filelist::onDNDLeave (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXIconList::onDNDLeave (sender, sel, ptr);
     // getApp()->removeTimeout(this,ID_OPENTIMER);
@@ -95,8 +89,7 @@ filelist::onDNDLeave (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // Handle drag-and-drop motion
-long
-filelist::onDNDMotion (FXObject * sender, FXSelector sel, void *ptr)
+long filelist::onDNDMotion (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXEvent *event = (FXEvent *) ptr;
     FXint index = -1;
@@ -146,8 +139,7 @@ filelist::onDNDMotion (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // Handle drag-and-drop drop
-long
-filelist::onDNDDrop (FXObject * sender, FXSelector sel, void *ptr)
+long filelist::onDNDDrop (FXObject * sender, FXSelector sel, void *ptr)
 {
     // Cancel open up timer
 //  getApp()->removeTimeout(this,ID_OPENTIMER);
@@ -159,16 +151,15 @@ filelist::onDNDDrop (FXObject * sender, FXSelector sel, void *ptr)
     // Perhaps target wants to deal with it
     if (FXIconList::onDNDDrop (sender, sel, ptr))
 	return 1;
-	dropData(false);
-	
-	
+    dropData (false);
+
+
     return 0;
 }
 
 
 // Somebody wants our dragged data
-long
-filelist::onDNDRequest (FXObject * sender, FXSelector sel, void *ptr)
+long filelist::onDNDRequest (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXEvent *event = (FXEvent *) ptr;
     FXuchar *data;
@@ -203,8 +194,7 @@ filelist::onDNDRequest (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // Start a drag operation
-long
-filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
+long filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
 {
     fxmessage ("\nBEGIN DRAG\n");
     register FXint i;
@@ -237,8 +227,7 @@ filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // End drag operation
-long
-filelist::onEndDrag (FXObject * sender, FXSelector sel, void *ptr)
+long filelist::onEndDrag (FXObject * sender, FXSelector sel, void *ptr)
 {
     if (FXIconList::onEndDrag (sender, sel, ptr))
 	return 1;
@@ -250,8 +239,7 @@ filelist::onEndDrag (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // Dragged stuff around
-long
-filelist::onDragged (FXObject * sender, FXSelector sel, void *ptr)
+long filelist::onDragged (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXEvent *event = (FXEvent *) ptr;
     FXDragAction action;
@@ -284,8 +272,7 @@ filelist::onDragged (FXObject * sender, FXSelector sel, void *ptr)
 
 
 //return file type for given name
-string
-getfiletype (string name)
+string getfiletype (string name)
 {
 
     transform (name.begin (), name.end (), name.begin (), tolower);
@@ -302,43 +289,48 @@ getfiletype (string name)
 
 
 // We now really do have the clipboard, keep clipped text
-long filelist::onClipboardGained(FXObject* sender,FXSelector sel,void* ptr){
-  FXIconList::onClipboardGained(sender,sel,ptr);
-   fxmessage("AA\n");
-  return 1;
-  }
+long filelist::onClipboardGained (FXObject * sender, FXSelector sel, void *ptr)
+{
+    FXIconList::onClipboardGained (sender, sel, ptr);
+    fxmessage ("AA\n");
+    return 1;
+}
 
 
 // We lost the clipboard, free clipped text
-long filelist::onClipboardLost(FXObject* sender,FXSelector sel,void* ptr){
-  FXIconList::onClipboardLost(sender,sel,ptr);
-   fxmessage("BB\n");
-  //clipped.clear();
-  return 1;
-  }
+long filelist::onClipboardLost (FXObject * sender, FXSelector sel, void *ptr)
+{
+    FXIconList::onClipboardLost (sender, sel, ptr);
+    fxmessage ("BB\n");
+    //clipped.clear();
+    return 1;
+}
 
 
 // Somebody wants our clipped text
-long filelist::onClipboardRequest(FXObject* sender,FXSelector sel,void* ptr){
-  FXEvent *event=(FXEvent*)ptr; FXuchar *data; FXuint len;
- fxmessage("CC\n");
-
-  	  len = dragfiles.length ();
-	    FXMEMDUP (&data, dragfiles.text (), FXuchar, len);
-	    setDNDData (FROM_DRAGNDROP, event->target, data, len);
-
-  return 0;
-  }
-
-long filelist::onCmdCopySel(FXObject*,FXSelector,void*)
+long filelist::onClipboardRequest (FXObject * sender, FXSelector sel, void *ptr)
 {
-fxmessage("COPY");
-  FXDragType types[1];
-    types[0]=urilistType;
+    FXEvent *event = (FXEvent *) ptr;
+    FXuchar *data;
+    FXuint len;
+    fxmessage ("CC\n");
 
-    if(acquireClipboard(types,1))
+    len = dragfiles.length ();
+    FXMEMDUP (&data, dragfiles.text (), FXuchar, len);
+    setDNDData (FROM_DRAGNDROP, event->target, data, len);
+
+    return 0;
+}
+
+long filelist::onCmdCopySel (FXObject *, FXSelector, void *)
+{
+    fxmessage ("COPY");
+    FXDragType types[1];
+    types[0] = urilistType;
+
+    if (acquireClipboard (types, 1))
     {
-    fxmessage("ok");
+	fxmessage ("ok");
 	dragfiles = FXString::null;
 	for (int i = 0; i < getNumItems (); i++)
 	{
@@ -351,34 +343,34 @@ fxmessage("COPY");
 		{
 		    if (!dragfiles.empty ())
 			dragfiles += "\r\n";
-			 dragfiles += FXURL::fileToURL (fullname.c_str ());
+		    dragfiles += FXURL::fileToURL (fullname.c_str ());
 		}
-	    }	   
+	    }
 	}
 
     }
-  return 1;
-  }
+    return 1;
+}
 
 
 // Paste
-long filelist::onCmdPasteSel(FXObject*,FXSelector,void*)
+long filelist::onCmdPasteSel (FXObject *, FXSelector, void *)
 {
-fxmessage("PASTE");
-dropData(true);
+    fxmessage ("PASTE");
+    dropData (true);
 }
 
- void filelist::dropData(bool clipboard)
- {
- 
- 
-  FXuchar *data;
+void filelist::dropData (bool clipboard)
+{
+
+
+    FXuchar *data;
     FXuint len;
-FXDNDOrigin origin;
-	if(clipboard)
-	origin=FROM_CLIPBOARD;
-	else
-	origin=FROM_DRAGNDROP;
+    FXDNDOrigin origin;
+    if (clipboard)
+	origin = FROM_CLIPBOARD;
+    else
+	origin = FROM_DRAGNDROP;
 
     // Get uri-list of files being dropped
     if (getDNDData (origin, urilistType, data, len))
@@ -430,9 +422,9 @@ FXDNDOrigin origin;
 
     }
 
- 
- 
- }
+
+
+}
 
 //-----FILELIST----------------------------------------------------------------------------------------------------------------------------------------- 
 
@@ -444,13 +436,11 @@ FXDNDOrigin origin;
 string filelist::getdefaultcommand (string name, bool resolve = true)
 {
 
-    string
-	ext = getfiletype (name);
-    string
-	key = "";
+    string ext = getfiletype (name);
+    string key = "";
     if (ext != "")
     {
-	string  str = "/types/";
+	string str = "/types/";
 	ext = ext.replace (ext.find ("/"), 1, str);
 	key = conf->readonestring ("/OpenspaceConfig/file_types/" + ext + "/default");
     }
@@ -481,11 +471,9 @@ string filelist::getdefaultcommand (string name, bool resolve = true)
 	    FXTRACE ((5, "INTERNAL"));
 	    return "INTERNAL";
 	}
-	string
-	    fullname = "\"" + path + SEPARATOR + name + "\"";
+	string fullname = "\"" + path + SEPARATOR + name + "\"";
 
-	int
-	    pos = res.find ("{f}");
+	int pos = res.find ("{f}");
 	res.replace (pos, fullname.length (), fullname);
 	return res;
     }
@@ -494,8 +482,7 @@ string filelist::getdefaultcommand (string name, bool resolve = true)
 }
 
 
-void
-filelist::create ()
+void filelist::create ()
 {
 
     FXIconList::create ();
@@ -515,6 +502,9 @@ filelist::create ()
 filelist::filelist (FXComposite * p, pathtype pt, vector < thread_elem * >*thread_vec, map < string, file_type * >*file_type_settings, FXGIFIcon ** specialicons):
 FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
 {
+
+
+
     flags |= FLAG_ENABLED | FLAG_DROPTARGET;
     popupmenu = NULL;
     sortpop = NULL;
@@ -536,12 +526,12 @@ FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSE
 
     captionfont1 = new FXFont (getApp (), "times", 8);
     captionfont1->create ();
-    
+
     captionfont2 = new FXFont (getApp (), "arial", 9);
     captionfont2->create ();
-    
+
     setFont (captionfont2);
-    
+
     fxmessage (pt.server.c_str ());
 
     osicons = specialicons;
@@ -618,10 +608,10 @@ this->type=path.substr(0,pos);
 
 //label=new FXLabel (p,this->path.c_str());
 	info = new FXLabel (p, fb->info ().c_str ());
-FXDockSite *docksite=new FXDockSite(p,LAYOUT_SIDE_TOP|LAYOUT_FILL_X);
- FXToolBarShell *dragshell1=new FXToolBarShell(this,FRAME_RAISED);
-FXToolBar* toolbar=new FXToolBar(docksite,dragshell1,LAYOUT_DOCK_NEXT|LAYOUT_SIDE_TOP|LAYOUT_FILL_X|FRAME_RAISED);
-  new FXToolBarGrip(toolbar,toolbar,FXToolBar::ID_TOOLBARGRIP,TOOLBARGRIP_DOUBLE);
+	FXDockSite *docksite = new FXDockSite (p, LAYOUT_SIDE_TOP | LAYOUT_FILL_X);
+	FXToolBarShell *dragshell1 = new FXToolBarShell (this, FRAME_RAISED);
+	toolbar = new FXToolBar (docksite, dragshell1, LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | LAYOUT_FILL_X | FRAME_RAISED);
+	new FXToolBarGrip (toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE);
 
 	bottomframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
 	textfield = new FXTextField (bottomframe, 30, this, filelist::ID_TEXTFIELD_REG);
@@ -636,17 +626,17 @@ FXToolBar* toolbar=new FXToolBar(docksite,dragshell1,LAYOUT_DOCK_NEXT|LAYOUT_SID
 	new FXButton (bottomframe, "", osicons[21], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 
 	dial = NULL;
-	processing=false;
+	processing = false;
 	this->pt = new pathtype (pt);
 	//if(type!="local")
-	if(1)
+	if (1)
 	{
-		processing = true;
-		thread_elem *el = new thread_elem (fb, "init", "none");
-		start_thread (el);
+	    processing = true;
+	    thread_elem *el = new thread_elem (fb, "init", "none");
+	    start_thread (el);
 	}
 	else
-	init();
+	    init ();
 
 
     }
@@ -665,9 +655,9 @@ filelist::~filelist ()
 void filelist::init ()
 {
 
-	if(!processing)
-	fb->init (&vector_name, &vector_type,&vector_width, *pt, conf);
-	    
+    if (!processing)
+	fb->init (&vector_name, &vector_type, &vector_width, *pt, conf);
+
     for (int i = 0; i < vector_name.size (); i++)
     {
 	fxmessage (vector_name[i].c_str ());
@@ -689,15 +679,15 @@ void filelist::init ()
     new FXOption (sortpop, "extension", NULL, this, ID_SORT_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
 
     sortmenu = new FXOptionMenu (bottomframe, sortpop, LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
-   
-   if(processing)
-    sortmenu->create ();
-    
+
+    if (processing)
+	sortmenu->create ();
+
     bottomframe->recalc ();
-     processing = false;
+    processing = false;
     opendir (this->path);
-    
-   
+
+
 }
 
 
@@ -739,8 +729,7 @@ long filelist::keyPress (FXObject * sender, FXSelector sel, void *ptr)
 }
 
 //copy/move/remove function
-void
-filelist::copymoveremove (string com_name)
+void filelist::copymoveremove (string com_name)
 {
     int selit = 0;
 
@@ -785,8 +774,7 @@ filelist::copymoveremove (string com_name)
 }
 
 //opendir
-void
-filelist::opendir (string dir)
+void filelist::opendir (string dir)
 {
 
 
@@ -874,7 +862,7 @@ filelist::opendir (string dir)
 	    }
 
 
-	    if (os_file.size < thumb_size && (this->getListStyle() & ICONLIST_BIG_ICONS))
+	    if (os_file.size < thumb_size && (this->getListStyle () & ICONLIST_BIG_ICONS))
 	    {
 
 
@@ -965,8 +953,7 @@ filelist::opendir (string dir)
 }
 
 
-long
-filelist::setFocus (FXObject * obj, FXSelector sel, void *ptr)
+long filelist::setFocus (FXObject * obj, FXSelector sel, void *ptr)
 {
 
     active = true;
@@ -976,8 +963,7 @@ filelist::setFocus (FXObject * obj, FXSelector sel, void *ptr)
     chdir (path.c_str ());
 }
 
-long
-filelist::lostFocus (FXObject * obj, FXSelector sel, void *ptr)
+long filelist::lostFocus (FXObject * obj, FXSelector sel, void *ptr)
 {
 //active=false;
     setBackColor (FXRGB (220, 220, 220));
@@ -987,8 +973,7 @@ filelist::lostFocus (FXObject * obj, FXSelector sel, void *ptr)
 
 
 //when we enter string in the text field and execute command for regexp select etc
-long
-filelist::parseTextField (FXObject * sender, FXSelector sel, void *)
+long filelist::parseTextField (FXObject * sender, FXSelector sel, void *)
 {
 
     if (processing)
@@ -1035,8 +1020,7 @@ filelist::parseTextField (FXObject * sender, FXSelector sel, void *)
 }
 
 //double click on file/direcotry in filelist
-long
-filelist::openfile (FXObject * sender, FXSelector, void *)
+long filelist::openfile (FXObject * sender, FXSelector, void *)
 {
 
     if (processing)
@@ -1141,8 +1125,7 @@ filelist::openfile (FXObject * sender, FXSelector, void *)
 
 //----------------------------------------------------  
 // go up dir, 3rd button of mouse 
-long
-filelist::gotoparentdir (FXObject *, FXSelector, void *)
+long filelist::gotoparentdir (FXObject *, FXSelector, void *)
 {
     if (processing)
 	return 0;
@@ -1158,8 +1141,7 @@ filelist::gotoparentdir (FXObject *, FXSelector, void *)
 
 //----------------------------------------------------   
 //poup menu
-long
-filelist::onPopup (FXObject *, FXSelector, void *ptr)
+long filelist::onPopup (FXObject *, FXSelector, void *ptr)
 {
 
     if (processing)
@@ -1343,8 +1325,7 @@ filelist::onPopup (FXObject *, FXSelector, void *ptr)
 
 			    comm_s.append (res);
 
-			    new FXButton (shutterItem->getContent (),
-					  res.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+			    new FXButton (shutterItem->getContent (), res.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 			    commands_tab[command_num++] = comm_s.c_str ();
 
 
@@ -1364,8 +1345,7 @@ filelist::onPopup (FXObject *, FXSelector, void *ptr)
 
 		    comm_s.append (res);
 
-		    new FXButton (shutterItem->getContent (), res.c_str (), 0,
-				  this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+		    new FXButton (shutterItem->getContent (), res.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 		    commands_tab[command_num++] = comm_s.c_str ();
 
 		}
@@ -1395,8 +1375,7 @@ filelist::onPopup (FXObject *, FXSelector, void *ptr)
 
 //----------------------------------------------------  
 // choose command from popoup menu
-long
-filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
+long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 {
     if (processing)
 	return 0;
@@ -1619,8 +1598,7 @@ filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 
 
 //execute function(copying files etc) as thread 
-void
-filelist::start_thread (thread_elem * te)
+void filelist::start_thread (thread_elem * te)
 {
 
     te->filel = (void *) this;
@@ -1722,8 +1700,7 @@ void *filelist::thread_func (void *data)
 
 //----------------------------------------------------   
 
-void
-filelist::refresh (void)
+void filelist::refresh (void)
 {
     if (processing)
 	return;
@@ -1732,8 +1709,7 @@ filelist::refresh (void)
 
 //----------------------------------------------------   
 //select item using right mouse button
-void
-filelist::selectitem ()
+void filelist::selectitem ()
 {
     if (processing)
 	return;
@@ -1771,13 +1747,10 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 {
 
 
-    os_ListItem *
-	a = (os_ListItem *) pa;
-    os_ListItem *
-	b = (os_ListItem *) pb;
+    os_ListItem *a = (os_ListItem *) pa;
+    os_ListItem *b = (os_ListItem *) pb;
 
-    filelist *
-	fl = (filelist *) a->list;
+    filelist *fl = (filelist *) a->list;
 
     if (b->osf.type & FOLDER && !(a->osf.type & FOLDER))
 	return 1;
@@ -1789,10 +1762,8 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 	 if(diff) 
 		return diff;
 		*/
-    register const unsigned char *
-	p;
-    register const unsigned char *
-	q;
+    register const unsigned char *p;
+    register const unsigned char *q;
 
     if (fl->sort_nr == 0)	//name
     {
@@ -1801,12 +1772,10 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
     }
     else if (fl->sort_nr == -1)	//extension sorting
     {
-	string
-	    exta = getfiletype (a->getText ().text ());
+	string exta = getfiletype (a->getText ().text ());
 	if (exta == "")
 	    exta = "zzzzz";
-	string
-	    extb = getfiletype (b->getText ().text ());
+	string extb = getfiletype (b->getText ().text ());
 	if (exta == "")
 	    extb = "zzzzz";
 
@@ -1841,11 +1810,11 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 	while (1)
 	{
 
-	if(!*p)
+	    if (!*p)
 		break;
-	if(!*q)
+	    if (!*q)
 		break;
-			
+
 	    if (strcase)
 	    {
 		if (*p > *q)
@@ -1872,7 +1841,7 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 		    else
 			return 1;
 	    }
-		
+
 	    p++;
 	    q++;
 	}
@@ -1887,8 +1856,7 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 
 //--------------------------------------------------------------------
 //click on filelist header (change sorting)
-long
-filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
+long filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
 {
     if (processing)
 	return 0;
@@ -1930,8 +1898,7 @@ filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
 }
 
 //execute command from cmddialog plugin and hide this plugin window
-long
-filelist::onCommand (FXObject *, FXSelector, void *ptr)
+long filelist::onCommand (FXObject *, FXSelector, void *ptr)
 {
 
     if (dial->exec () != -1)
@@ -1945,16 +1912,14 @@ filelist::onCommand (FXObject *, FXSelector, void *ptr)
 }
 
 //cancel cmddialog
-long
-filelist::onCommandCancel (FXObject *, FXSelector, void *ptr)
+long filelist::onCommandCancel (FXObject *, FXSelector, void *ptr)
 {
     dial->hide ();
     delete dial;
 }
 
 //update info about selected files
-long
-filelist::click (FXObject *, FXSelector, void *ptr)
+long filelist::click (FXObject *, FXSelector, void *ptr)
 {
     int count = 0;
     long unsigned int size = 0;
@@ -1981,8 +1946,7 @@ filelist::click (FXObject *, FXSelector, void *ptr)
 
 }
 
-long
-filelist::onMaximize (FXObject * sender, FXSelector, void *)
+long filelist::onMaximize (FXObject * sender, FXSelector, void *)
 {
 
     if (filelist_opposite->getWidth () == 0)

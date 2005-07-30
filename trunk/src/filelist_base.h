@@ -30,9 +30,9 @@ class filelist_base
     virtual string info (void) = 0;
     virtual void totalsize (string path, unsigned long &size) = 0;
     virtual string symlink (string path) = 0;
-    virtual bool symlink (string src,string dst) = 0;
-    virtual bool hardlink (string src,string dst) = 0;
-    virtual int supportedfunctions(void)=0;
+    virtual bool symlink (string src, string dst) = 0;
+    virtual bool hardlink (string src, string dst) = 0;
+    virtual int supportedfunctions (void) = 0;
     virtual int quit (void) = 0;
 
 };

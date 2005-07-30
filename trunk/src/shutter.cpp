@@ -4,7 +4,8 @@
 
 FXDEFMAP (shutter) shutterMap[] =
 {
-FXMAPFUNC (SEL_MOUSEWHEEL, 0, shutter::onMouseWheel), FXMAPFUNC (SEL_COMMAND, shutter::ID_OPEN_SHUTTERITEM, shutter::onOpenItem),};
+FXMAPFUNC (SEL_MOUSEWHEEL, 0, shutter::onMouseWheel), 
+FXMAPFUNC (SEL_COMMAND, shutter::ID_OPEN_SHUTTERITEM, shutter::onOpenItem),};
 
 FXIMPLEMENT (shutter, FXShutter, shutterMap, ARRAYNUMBER (shutterMap))
 //-----SHUTTER------------------------------------------------------------------------------------------------------------------------------------------
@@ -19,8 +20,7 @@ FXShutter (p, x, 6667, FRAME_NONE | LAYOUT_FILL_Y | LAYOUT_FILL_X | LAYOUT_TOP |
 //----------------------------------------------------
 
 
-long
-shutter::onMouseWheel (FXObject * sender, FXSelector, void *ptr)
+long shutter::onMouseWheel (FXObject * sender, FXSelector, void *ptr)
 {
 
     FXEvent *event = (FXEvent *) ptr;
@@ -53,8 +53,7 @@ shutter::onMouseWheel (FXObject * sender, FXSelector, void *ptr)
 
 //----------------------------------------------------
 
-long
-shutter::onOpenItem (FXObject * sender, FXSelector sel, void *ptr)
+long shutter::onOpenItem (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXShutter::onOpenItem (sender, sel, ptr);
 
@@ -65,8 +64,7 @@ shutter::onOpenItem (FXObject * sender, FXSelector sel, void *ptr)
     return 1;
 }
 
-int
-shutter::getheight ()
+int shutter::getheight ()
 {
     int height_size = 0;
     FXShutterItem *test = (FXShutterItem *) this->getFirst ();

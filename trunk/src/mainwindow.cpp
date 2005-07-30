@@ -12,46 +12,45 @@ using namespace std;
 #include "informationpanel.h"
 #include "configure.h"
 #include "oslistitem.h"
-    
+
 #ifdef WIN32
 #define SEPARATOR "\\"
 #else /*  */
 #include <dlfcn.h>
 #define SEPARATOR "/"
 #endif /*  */
-    using namespace FX;
-FXDEFMAP (MainWindow) MainWindowMap[] = 
+using namespace FX;
+FXDEFMAP (MainWindow) MainWindowMap[] =
 {
-    
-	//________Message_Type_____________________ID____________Message_Handler_______  
-	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_DIRCH, MainWindow::onChangeDir), 
+
+    //________Message_Type_____________________ID____________Message_Handler_______  
+   	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_DIRCH, MainWindow::onChangeDir),
 	// FXMAPFUNC(SEL_ENTER, MainWindow::ID_DIRCH,   MainWindow::onListNextDir),
 	// FXMAPFUNC(SEL_LEAVE, MainWindow::ID_DIRCH,   MainWindow::onListNextDir),
-FXMAPFUNC (SEL_RIGHTBUTTONRELEASE, MainWindow::ID_DIR, MainWindow::onListDirs), FXMAPFUNC (SEL_COMMAND, MainWindow::ID_DIR, MainWindow::onOpenDir), FXMAPFUNC (SEL_COMMAND,
-																					 MainWindow::
-																					 ID_CONFIGURE,
-																					 MainWindow::
-																					 onOpenConfigure),
-	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_ABOUT, MainWindow::onAbout), FXMAPFUNCS (SEL_LEFTBUTTONRELEASE, MainWindow::ID_TOLEFT, MainWindow::ID_TORIGHT, MainWindow::onChangeList),
-	FXMAPFUNCS (SEL_COMMAND, MainWindow::ID_OVERWRITE, MainWindow::ID_SKIP_ALL, MainWindow::onOverwrite), FXMAPFUNC (SEL_COMMAND, MainWindow::ID_NEWFRAME, MainWindow::onNewFrame),
-	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_NEW_NETWORK, MainWindow::onNewNetworkFrame), FXMAPFUNCS (SEL_COMMAND, 666, 668, MainWindow::onNotify), FXMAPFUNC (SEL_TIMEOUT,
-																					    MainWindow::
-																					    ID_TIMER,
-																					    MainWindow::
-																					    onTimer),
-	FXMAPFUNCS (SEL_COMMAND, MainWindow::ID_CHANGE_VIEW_SMALL, MainWindow::ID_CHANGE_VIEW_DETAILS, MainWindow::onChangeView), FXMAPFUNC (SEL_COMMAND, MainWindow::ID_CANCEL,
-																		       MainWindow::cancel),
-	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_COMMANDS_SHOW, MainWindow::commandsShow), FXMAPFUNC (SEL_CONFIGURE, 0, MainWindow::onConfigure), FXMAPFUNC (SEL_UPDATE, 0, MainWindow::onUpdate), };
-FXIMPLEMENT (MainWindow, FXMainWindow, MainWindowMap, ARRAYNUMBER (MainWindowMap))  
+	FXMAPFUNC (SEL_RIGHTBUTTONRELEASE, MainWindow::ID_DIR, MainWindow::onListDirs), 
+	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_DIR, MainWindow::onOpenDir),
+	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_CONFIGURE, MainWindow::onOpenConfigure),
+	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_ABOUT, MainWindow::onAbout),
+	FXMAPFUNCS (SEL_LEFTBUTTONRELEASE, MainWindow::ID_TOLEFT, MainWindow::ID_TORIGHT, MainWindow::onChangeList),
+	FXMAPFUNCS (SEL_COMMAND, MainWindow::ID_OVERWRITE, MainWindow::ID_SKIP_ALL, MainWindow::onOverwrite),
+	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_NEWFRAME, MainWindow::onNewFrame),
+	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_NEW_NETWORK, MainWindow::onNewNetworkFrame),
+	FXMAPFUNCS (SEL_COMMAND, 666, 668, MainWindow::onNotify),
+	FXMAPFUNC (SEL_TIMEOUT, MainWindow::ID_TIMER, MainWindow::onTimer),
+	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_COMMANDS_SHOW, MainWindow::commandsShow),
+	FXMAPFUNC (SEL_CONFIGURE, 0, MainWindow::onConfigure),
+	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_CANCEL, MainWindow::cancel), 
+	FXMAPFUNCS (SEL_COMMAND, MainWindow::ID_CHANGE_VIEW_SMALL, MainWindow::ID_CHANGE_VIEW_DETAILS, MainWindow::onChangeView), 
+	FXMAPFUNC (SEL_UPDATE, 0, MainWindow::onUpdate)};
+
+FXIMPLEMENT (MainWindow, FXMainWindow, MainWindowMap, ARRAYNUMBER (MainWindowMap))
 //load icon from file and put in the array
-     void
-     MainWindow::loadicon (string src) 
+     void MainWindow::loadicon (string src)
 {
     static unsigned int counter = 0;
     FXFileStream stream;
     osicons[counter] = new FXGIFIcon (getApp (), NULL);
     if (stream.open (src.c_str (), FXStreamLoad))
-	
     {
 	osicons[counter]->loadPixels (stream);
 	stream.close ();
@@ -62,7 +61,7 @@ FXIMPLEMENT (MainWindow, FXMainWindow, MainWindowMap, ARRAYNUMBER (MainWindowMap
 
 
     // read color definied as FF FF FF and return FXColor  
-    FXColor readcolor (string col) 
+FXColor readcolor (string col)
 {
     if (col == "")
 	return FXRGB (0, 0, 0);
@@ -71,13 +70,12 @@ FXIMPLEMENT (MainWindow, FXMainWindow, MainWindowMap, ARRAYNUMBER (MainWindowMap
     int z1 = 0;
     FXString rgbcolor[3];
     while (z1 != -1)
-	
     {
 	z1 = color.find (" ", 0);
 	int i = 0;
 	if (z1 == -1)
 	    rgbcolor[cc].append (color.text (), color.length ());
-	
+
 	else
 	    rgbcolor[cc].append (color.text (), z1);
 	color.remove (0, z1 + 1);
@@ -88,7 +86,7 @@ FXIMPLEMENT (MainWindow, FXMainWindow, MainWindowMap, ARRAYNUMBER (MainWindowMap
 
 
 //the same as above but defualt color is white
-    FXColor readcolor2 (string col) 
+FXColor readcolor2 (string col)
 {
     if (col == "")
 	return FXRGB (255, 255, 255);
@@ -97,13 +95,12 @@ FXIMPLEMENT (MainWindow, FXMainWindow, MainWindowMap, ARRAYNUMBER (MainWindowMap
     int z1 = 0;
     FXString rgbcolor[3];
     while (z1 != -1)
-	
     {
 	z1 = color.find (" ", 0);
 	int i = 0;
 	if (z1 == -1)
 	    rgbcolor[cc].append (color.text (), color.length ());
-	
+
 	else
 	    rgbcolor[cc].append (color.text (), z1);
 	color.remove (0, z1 + 1);
@@ -112,16 +109,16 @@ FXIMPLEMENT (MainWindow, FXMainWindow, MainWindowMap, ARRAYNUMBER (MainWindowMap
     return FXRGB (FXIntVal (rgbcolor[0]), FXIntVal (rgbcolor[1]), FXIntVal (rgbcolor[2]));
 }
 
-string MainWindow::parseDir (string dir) 
+string MainWindow::parseDir (string dir)
 {
     if (dir == "{homedir}")
 	return FXFile::getHomeDirectory ().text ();
-    
+
     else
 	return dir;
 }
 
-bool MainWindow::loadMimeSettings (string path, string type) 
+bool MainWindow::loadMimeSettings (string path, string type)
 {
     string res2 = conf->readonestring (path + "/icon");
     string colorstr = conf->readonestring (path + "/color");
@@ -129,14 +126,12 @@ bool MainWindow::loadMimeSettings (string path, string type)
     string backcolorstr = conf->readonestring (path + "/backcolor");
     FXColor backcolor = readcolor2 (backcolorstr);
     if (res2 != "")
-	
     {
 	FXFileStream stream;
 	string path = conf->readonestring ("/OpenspaceConfig/path") + "/icons/" + res2;
-	FXIcon * osicon = NULL;
+	FXIcon *osicon = NULL;
 	osicon = new FXGIFIcon (getApp (), NULL);
 	if (stream.open (path.c_str (), FXStreamLoad))
-	    
 	{
 	    osicon->loadPixels (stream);
 	    stream.close ();
@@ -151,7 +146,7 @@ bool MainWindow::loadMimeSettings (string path, string type)
 
 
 //-----MAIN WINDOW---------------------------------------------------------------------------------------------------------------------------         
-MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0) 
+MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0)
 {
     new FXToolTip (getApp (), TOOLTIP_NORMAL);
     pane = NULL;
@@ -160,10 +155,8 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     pref = new preferences (this);
     string res = conf->readonestring ("/OpenspaceConfig/version");
     FXTRACE ((1, "VERSION %s\n", res.c_str ()));
-    int
-	w = atoi (conf->readonestring ("/OpenspaceConfig/mainwindow/width").c_str ());
-    int
-	h = atoi (conf->readonestring ("/OpenspaceConfig/mainwindow/height").c_str ());
+    int w = atoi (conf->readonestring ("/OpenspaceConfig/mainwindow/width").c_str ());
+    int h = atoi (conf->readonestring ("/OpenspaceConfig/mainwindow/height").c_str ());
     resize (w, h);
     string s = conf->readonestring ("/OpenspaceConfig/path") + "icons/directory.gif";
     loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/directory.gif");
@@ -190,13 +183,11 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/max.gif");
     loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/min.gif");
     osicons[23] = NULL;
-    
+
 // read icons for file types
-	if (conf->openxpath ("/OpenspaceConfig/file_types") != -1)
-	
+    if (conf->openxpath ("/OpenspaceConfig/file_types") != -1)
     {
 	while (1)
-	    
 	{
 	    string res = conf->getnextnode ();
 	    if (res == "")
@@ -204,10 +195,8 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
 	    loadMimeSettings ("/OpenspaceConfig/file_types/" + res, res);
 	    configure conflocal = *conf;
 	    if (conflocal.openxpath ("/OpenspaceConfig/file_types/" + res + "/types") != -1)
-		
 	    {
 		while (1)
-		    
 		{
 		    string res2 = conflocal.getnextnode ();
 		    if (res2 == "")
@@ -217,38 +206,39 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
 	    }
 	}
     }
-    
-    
-    
-  
-    topdock=new FXDockSite(this,LAYOUT_SIDE_TOP|LAYOUT_FILL_X);
-    bottomdock=new FXDockSite(this,LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X);
-    leftdock=new FXDockSite(this,LAYOUT_SIDE_LEFT|LAYOUT_FILL_Y);
-    rightdock=new FXDockSite(this,LAYOUT_SIDE_RIGHT|LAYOUT_FILL_Y);
-  
-    
 
-    FXToolBarShell *dragshell1=new FXToolBarShell(this,FRAME_RAISED);
-    FXToolBar* toolbar=new FXToolBar(topdock,dragshell1,LAYOUT_DOCK_NEXT|LAYOUT_SIDE_TOP|FRAME_RAISED);
-    new FXToolBarGrip(toolbar,toolbar,FXToolBar::ID_TOOLBARGRIP,TOOLBARGRIP_SINGLE);
- 
-    
-    
-    FXVerticalFrame * ff = new FXVerticalFrame (this, LAYOUT_FILL_X | LAYOUT_FILL_Y);
+
+
+
+    topdock = new FXDockSite (this, LAYOUT_SIDE_TOP | LAYOUT_FILL_X);
+    bottomdock = new FXDockSite (this, LAYOUT_SIDE_BOTTOM | LAYOUT_FILL_X);
+    leftdock = new FXDockSite (this, LAYOUT_SIDE_LEFT | LAYOUT_FILL_Y);
+    rightdock = new FXDockSite (this, LAYOUT_SIDE_RIGHT | LAYOUT_FILL_Y);
+
+
+
+    FXToolBarShell *dragshell1 = new FXToolBarShell (this, FRAME_RAISED);
+    FXToolBar *toolbar = new FXToolBar (topdock, dragshell1,
+					LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | FRAME_RAISED);
+    new FXToolBarGrip (toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_SINGLE);
+
+
+
+    FXVerticalFrame *ff = new FXVerticalFrame (this, LAYOUT_FILL_X | LAYOUT_FILL_Y);
     controlframe = new FXVerticalFrame (ff, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     splitter = new FXSplitter (ff, LAYOUT_FILL_X | SPLITTER_TRACKING | LAYOUT_FILL_Y);
     left = new FXVerticalFrame (splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, w / 2);
     right = new FXVerticalFrame (splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN);
     if (conf->readonestring ("/OpenspaceConfig/panels") == "single")
 	ratio = 0;
-    
+
     else
 	ratio = 1.0 / 2.0;
     leftcontrolframe = new FXVerticalFrame (left, LAYOUT_FILL_X);
     leftframe = new FXVerticalFrame (left, LAYOUT_FILL_X | LAYOUT_FILL_Y);
     rightcontrolframe = new FXVerticalFrame (right, LAYOUT_FILL_X);
     rightframe = new FXVerticalFrame (right, LAYOUT_FILL_X | LAYOUT_FILL_Y);
- //   FXHorizontalFrame * buttonsframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    //   FXHorizontalFrame * buttonsframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", osicons[7], this, MainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", osicons[0], this, MainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", osicons[9], this, MainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -279,81 +269,71 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
 
 //---------------------------------------------------- 
 // open configure window
-    long
-MainWindow::onOpenConfigure (FXObject * sender, FXSelector sel, void *) 
+long MainWindow::onOpenConfigure (FXObject * sender, FXSelector sel, void *)
 {
     FXTRACE ((5, "CONFIGURE\n"));
     if (pref->shown ())
 	pref->hide ();
-    
+
     else
 	pref->show (PLACEMENT_OWNER);
 }
 
 
 //about
-    long
-MainWindow::onAbout (FXObject * sender, FXSelector sel, void *) 
+long MainWindow::onAbout (FXObject * sender, FXSelector sel, void *)
 {
-    FXMessageBox about (this, "About Openspace",
-			 "Openspace File Browser V0.0.1 ALPHA\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org)\n\nCopyright (C) Mateusz Dworak (compbatant@t-nas.org)", osicons[19],
-			 MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+    FXMessageBox about (this, "About Openspace", "Openspace File Browser V0.0.1 ALPHA\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org)\n\nCopyright (C) Mateusz Dworak (compbatant@t-nas.org)", osicons[19], MBOX_OK | DECOR_TITLE | DECOR_BORDER);
     about.execute ();
-} 
+}
+
     //change view type: big/small/detailes 
-    long
-MainWindow::onChangeView (FXObject * sender, FXSelector sel, void *) 
+long MainWindow::onChangeView (FXObject * sender, FXSelector sel, void *)
 {
     FXushort id = FXSELID (sel);
-    filelist * f;
+    filelist *f;
     if (left_frame->f->active)
 	f = left_frame->f;
-    
+
     else
 	f = right_frame->f;
     if (id == ID_CHANGE_VIEW_SMALL)
-	
     {
 	f->setFont (f->captionfont2);
 	f->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
-	f->refresh();
+	f->refresh ();
     }
-    
+
     else if (id == ID_CHANGE_VIEW_BIG)
-	
     {
 	f->setFont (f->captionfont);
 	f->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
-	f->refresh();
+	f->refresh ();
     }
-    
+
     else if (id = ID_CHANGE_VIEW_DETAILS)
-	
     {
 	f->setFont (f->captionfont2);
 	f->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
-	f->refresh();
+	f->refresh ();
     }
 }
 
 
 //new frame
-    long
-MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr) 
+long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
 {
     string dir;
     string type;
     string str_server;
     string str_user;
     if (networkframe == NULL)
-	
     {
 	dir = parseDir (conf->readonestring ("/OpenspaceConfig/defaultdir/dir"));
 	type = conf->readonestring ("/OpenspaceConfig/defaultdir/type");
     }
-    
+
     else
-	
     {
 	dir = "/";
 	type = "scp";
@@ -365,7 +345,8 @@ MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
 	controlframe->recalc ();
     }
     pathtype pt (dir, type, str_server, str_user);
-    Frame * fr = new Frame (controlframe, leftframe, pt, this, 0, &thread_vec, &file_type_settings, osicons);
+    Frame *fr = new Frame (controlframe, leftframe, pt, this, 0, &thread_vec,
+			   &file_type_settings, osicons);
     fr->frame->create ();
     fr->hf->create ();
     controlframe->recalc ();
@@ -373,11 +354,9 @@ MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
 
 
 //show or hide frame where we can set login/pass/etc for connecting do remote filesystem
-    long
-MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *) 
+long MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 {
     if (networkframe == NULL)
-	
     {
 	networkframe = new FXHorizontalFrame (controlframe, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXLabel (networkframe, "server:");
@@ -386,7 +365,8 @@ MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 	user = new FXTextField (networkframe, 20);
 	new FXLabel (networkframe, "pass:", osicons[10]);
 	password = new FXTextField (networkframe, 20);
-	FXComboBox * combobox = new FXComboBox (networkframe, 4, NULL, 0, FRAME_THICK | LAYOUT_SIDE_TOP | COMBOBOX_STATIC);
+	FXComboBox *combobox = new FXComboBox (networkframe, 4, NULL, 0,
+					       FRAME_THICK | LAYOUT_SIDE_TOP | COMBOBOX_STATIC);
 	combobox->setNumVisible (2);
 	combobox->appendItem ("scp");
 	combobox->appendItem ("ftp");
@@ -394,9 +374,8 @@ MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 	networkframe->create ();
 	networkframe->recalc ();
     }
-    
+
     else
-	
     {
 	networkframe->hide ();
 	delete networkframe;
@@ -407,7 +386,7 @@ MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 
 
 //----------------------------------------------------   
-    MainWindow::~MainWindow () 
+MainWindow::~MainWindow ()
 {
     delete pref;
     delete conf;
@@ -415,34 +394,32 @@ MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 
 
 //----------------------------------------------------   
-    void
-MainWindow::create () 
+void MainWindow::create ()
 {
     FXMainWindow::create ();
     show (PLACEMENT_SCREEN);
-} 
+}
+
 //---------------------------------------------------- 
 //show or hide frame containing informaitions about copying/moving files
-    long
-MainWindow::commandsShow (FXObject * sender, FXSelector, void *ptr) 
+long MainWindow::commandsShow (FXObject * sender, FXSelector, void *ptr)
 {
     if (infoframe->shown ())
 	infoframe->hide ();
-    
+
     else
 	infoframe->show ();
 }
 
 
 //executed when we change directory clicking directory name in popoup window 
-    long
-MainWindow::onChangeDir (FXObject * sender, FXSelector, void *ptr) 
+long MainWindow::onChangeDir (FXObject * sender, FXSelector, void *ptr)
 {
-    filelist * fil = current_frame->f;
+    filelist *fil = current_frame->f;
     FXTRACE ((5, "CHANGE DIR\n", fil->path.c_str ()));
-    FXMenuCommand * mc = (FXMenuCommand *) sender;
-    FXEvent * event = (FXEvent *) ptr;
-    FXWindow * win = (FXWindow *) mc->getParent ();
+    FXMenuCommand *mc = (FXMenuCommand *) sender;
+    FXEvent *event = (FXEvent *) ptr;
+    FXWindow *win = (FXWindow *) mc->getParent ();
     int x = win->getX ();
     int y = win->getY ();
     string p = fil->path;
@@ -453,25 +430,23 @@ MainWindow::onChangeDir (FXObject * sender, FXSelector, void *ptr)
     current_frame->f->opendir (current_path);
     current_frame->generate_menu (current_path, this);
     popupDir (current_frame->f, current_path, x, y);
-} 
+}
+
 //popup with dir names when we click right button in dir path
-    int
-MainWindow::popupDir (filelist * current_filelist, string path, int x, int y) 
+int MainWindow::popupDir (filelist * current_filelist, string path, int x, int y)
 {
     vector < string > vec;
     for (int i = 0; i < current_filelist->getNumItems (); i++)
-	
     {
-	os_ListItem * oslistitem = (os_ListItem *) current_filelist->getItem (i);
+	os_ListItem *oslistitem = (os_ListItem *) current_filelist->getItem (i);
 	if (oslistitem->osf.type & FOLDER)
-	    
 	{
 	    string name = oslistitem->osf.name;
 	    if (name != "." && name != ".." && name[0] != '.')
 		vec.push_back (name);
 	}
     }
-    
+
 /*
 
 	if(current_filelist->fb->osopendir(path)==-1)
@@ -493,14 +468,12 @@ MainWindow::popupDir (filelist * current_filelist, string path, int x, int y)
 		vec.push_back (os_file.name);		
 	}
 
-*/ 
+*/
     unsigned int indx;
     if (vec.size () > 0)
-	
     {
 	sort (vec.begin (), vec.end ());
 	if (filemenu)
-	    
 	{
 	    filemenu->popdown ();
 	    delete filemenu;
@@ -508,7 +481,6 @@ MainWindow::popupDir (filelist * current_filelist, string path, int x, int y)
 	}
 	filemenu = new FXMenuPane (this);
 	for (indx = 0; indx < vec.size (); indx++)
-	    
 	{
 	    new FXMenuCommand (filemenu, vec[indx].c_str (), osicons[0], this, MainWindow::ID_DIRCH);
 	}
@@ -519,32 +491,28 @@ MainWindow::popupDir (filelist * current_filelist, string path, int x, int y)
 
 
 //currently nothing ;p
-    long
-MainWindow::onListNextDir (FXObject * sender, FXSelector sel, void *ptr) 
+long MainWindow::onListNextDir (FXObject * sender, FXSelector sel, void *ptr)
 {
-} 
+}
+
 //popup with directory names when we click right button in path
-    long
-MainWindow::onListDirs (FXObject * sender, FXSelector, void *ptr) 
+long MainWindow::onListDirs (FXObject * sender, FXSelector, void *ptr)
 {
     FXTRACE ((5, "LIST DIRS\n"));
-    FXButton * bt = (FXButton *) sender;
-    box * boxel = (box *) bt->getUserData ();
-    box * boxbackup = boxel;
+    FXButton *bt = (FXButton *) sender;
+    box *boxel = (box *) bt->getUserData ();
+    box *boxbackup = boxel;
     current_frame = boxel->fr;
     if (boxel->fr != right_frame && boxel->fr != left_frame)
 	return 0;
     string path = "";
     while (boxel->prebutton != NULL)
-	
     {
 	boxel = (box *) boxel->prebutton->getUserData ();
     }
     while (boxel != NULL)
-	
     {
 	if (boxel == boxbackup)
-	    
 	{
 	    path.append (boxel->bt->getText ().text ());
 	    break;
@@ -554,21 +522,20 @@ MainWindow::onListDirs (FXObject * sender, FXSelector, void *ptr)
     }
     current_frame->f->path = path;
     current_frame->f->opendir (path);
-    FXEvent * event = (FXEvent *) ptr;
+    FXEvent *event = (FXEvent *) ptr;
     int x = event->root_x;
     int y = event->root_y;
     popupDir (current_frame->f, path, x, y);
-} 
+}
+
 //change position or close frame
-    long
-MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr) 
+long MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
 {
-    FXButton * bt = (FXButton *) sender;
-    box * boxel = (box *) bt->getUserData ();
+    FXButton *bt = (FXButton *) sender;
+    box *boxel = (box *) bt->getUserData ();
     FXushort id = FXSELID (sel);
     int pos = -1;
     if (id == ID_TOCLOSE)
-	
     {
 	boxel->fr->f->fb->quit ();
 	delete boxel->fr->hf;
@@ -576,18 +543,15 @@ MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
 	sender = NULL;
 	return 1;
     }
-    
+
     else
-	
     {
 	if (id == ID_TORIGHT)
-	    
 	{
 	    pos = 1;
 	}
     }
     if (pos == -1)
-	
     {
 	boxel->fr->frame->reparent (leftframe);
 	boxel->fr->hf->reparent (leftcontrolframe);
@@ -599,9 +563,8 @@ MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
 	left_frame = boxel->fr;
 	left_frame->frame->show ();
     }
-    
+
     else
-	
     {
 	boxel->fr->frame->reparent (rightframe);
 	boxel->fr->hf->reparent (rightcontrolframe);
@@ -624,15 +587,13 @@ MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
 
 
 //notify from filelist
-    long
-MainWindow::onNotify (FXObject * sender, FXSelector sel, void *ptr) 
+long MainWindow::onNotify (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXTRACE ((5, "NOTIFY\n"));
     FXushort id = FXSELID (sel);
     if (id == 667)
-	
     {
-	string * file_ptr = (string *) ptr;
+	string *file_ptr = (string *) ptr;
 	string file = *file_ptr;
 	FXTRACE ((5, "change to directory %s\n", file.c_str ()));
 	delete file_ptr;
@@ -642,14 +603,13 @@ MainWindow::onNotify (FXObject * sender, FXSelector sel, void *ptr)
 	dir = "/";
 	type = "tar";
 	pathtype pt (dir, type, str_server);
-	Frame * fr;
+	Frame *fr;
 	if (left_frame->f->active)
 	    fr = new Frame (leftcontrolframe, leftframe, pt, this, -1, &thread_vec, &file_type_settings, osicons);
-	
+
 	else
 	    fr = new Frame (rightcontrolframe, rightframe, pt, this, -1, &thread_vec, &file_type_settings, osicons);
 	if (left_frame->f->active)
-	    
 	{
 	    left_frame->hf->reparent (controlframe);
 	    left_frame->toleft->show ();
@@ -659,9 +619,8 @@ MainWindow::onNotify (FXObject * sender, FXSelector sel, void *ptr)
 	    left_frame = fr;
 	    left_frame->frame->show ();
 	}
-	
+
 	else
-	    
 	{
 	    right_frame->hf->reparent (controlframe);
 	    right_frame->toleft->show ();
@@ -679,28 +638,26 @@ MainWindow::onNotify (FXObject * sender, FXSelector sel, void *ptr)
 	rightframe->recalc ();
 	leftframe->recalc ();
     }
-    
+
     else if (id == 666)		//directory change, for example user clicked double on direcotry, or clicked with 3rd button to go to parent dir
     {
 	if (left_frame->f->active)
 	    left_frame->generate_menu (left_frame->f->path, this);
-	
+
 	else
 	    right_frame->generate_menu (right_frame->f->path, this);
     }
-    
+
     else if (id == 668)
-	
     {
 	if (left->getWidth () == 0 || right->getWidth () == 0)
 	    left->setWidth (getWidth () / 2);
-	
+
 	else
-	    
 	{
 	    if (left_frame->f == (filelist *) sender)
 		left->setWidth (right->getWidth () + left->getWidth ());
-	    
+
 	    else
 		left->setWidth (0);
 	}
@@ -709,26 +666,22 @@ MainWindow::onNotify (FXObject * sender, FXSelector sel, void *ptr)
 
 
 //pressed button in path
-    long
-MainWindow::onOpenDir (FXObject * sender, FXSelector, void *ptr) 
+long MainWindow::onOpenDir (FXObject * sender, FXSelector, void *ptr)
 {
     FXTRACE ((5, "OPEN DIR\n"));
-    FXButton * bt = (FXButton *) sender;
-    box * boxel = (box *) bt->getUserData ();
-    box * boxbackup = boxel;
+    FXButton *bt = (FXButton *) sender;
+    box *boxel = (box *) bt->getUserData ();
+    box *boxbackup = boxel;
     if (boxel->fr != right_frame && boxel->fr != left_frame)
 	return 0;
     string path = "";
     while (boxel->prebutton != NULL)
-	
     {
 	boxel = (box *) boxel->prebutton->getUserData ();
     }
     while (boxel != NULL)
-	
     {
 	if (boxel == boxbackup)
-	    
 	{
 	    break;
 	}
@@ -746,43 +699,35 @@ MainWindow::onOpenDir (FXObject * sender, FXSelector, void *ptr)
 //executed cyclically to update informations about progress of copying/moving/deleteing files
 //using vector of special objects thread_elem to read from them information and to write request
 //for example stoping copying.
-    long
-MainWindow::onTimer (FXObject *, FXSelector, void *) 
+long MainWindow::onTimer (FXObject *, FXSelector, void *)
 {
     vector < thread_elem * >::iterator iter;
     unsigned int indx;
     for (iter = thread_vec.begin (); iter != thread_vec.end (); iter++)
-	
     {
 	bool end = false;
-	informationpanel * infp;
-	thread_elem * telem = *iter;
+	informationpanel *infp;
+	thread_elem *telem = *iter;
 	if (telem->mutex.trylock ())
-	    
 	{
 	    if (telem->gui == NULL)
-		
 	    {
 		infp = new informationpanel (infoframe, telem->command);
 		telem->gui = (void *) infp;
 		if (telem->command == "copy" || telem->command == "move" || telem->command == "remove")
-		    
 		{
 		    infp->bu->setUserData (telem);
 		    infp->bu->setSelector (MainWindow::ID_CANCEL);
 		    infp->bu->setTarget (this);
 		}
-		
+
 		else if (telem->command == "execute")
-		    
 		{
 		    string show_commands = conf->readonestring ("/OpenspaceConfig/show_commands");
 		    if (show_commands == "true")
-			
 		    {
-			FXFont * font = new FXFont (getApp (), "Arial", 8);
+			FXFont *font = new FXFont (getApp (), "Arial", 8);
 			if (font)
-			    
 			{
 			    font->create ();
 			    infp->lab0->setFont (font);
@@ -790,27 +735,25 @@ MainWindow::onTimer (FXObject *, FXSelector, void *)
 			infp->lab0->setText (telem->src->c_str ());
 			infp->frame->recalc ();
 		    }
-		    
+
 		    else
 			infp->frame->hide ();
 		}
-		
+
 		else if (telem->command == "init")
-		    
 		{
 		    string text = "connecting ... ";
 		    infp->lab0->setText (text.c_str ());
 		    infp->frame->recalc ();
 		}
 	    }
-	    
-		//popup with question about skipping or overwriting file
-		if (telem->question == true)
-		
+	    //popup with question about skipping or overwriting file
+	    if (telem->question == true)
 	    {
 		telem->question = false;
 		telem->pane = new FXMenuPane (this);
-		FXButton * but = new FXButton (telem->pane, "overwrite", NULL, this, ID_OVERWRITE);
+		FXButton *but = new FXButton (telem->pane, "overwrite", NULL, this,
+					      ID_OVERWRITE);
 		but->setUserData (telem);
 		but = new FXButton (telem->pane, "skip", NULL, this, ID_SKIP);
 		but->setUserData (telem);
@@ -821,10 +764,8 @@ MainWindow::onTimer (FXObject *, FXSelector, void *)
 		telem->pane->create ();
 		telem->pane->popup (NULL, this->getX () + 300, this->getY () + 300, but->getWidth (), 100);
 	    }
-	    
-		//when command is copy or move update information about progress
-		if (telem->command == "copy" || telem->command == "move")
-		
+	    //when command is copy or move update information about progress
+	    if (telem->command == "copy" || telem->command == "move")
 	    {
 		infp = (informationpanel *) telem->gui;
 		string info = "total size: " + numtostring (telem->total_size);
@@ -847,9 +788,8 @@ MainWindow::onTimer (FXObject *, FXSelector, void *)
 		info.append (" ETA: " + ntos (eta));
 		infp->lab2->setText (info.c_str ());
 	    }
-	    
+
 	    else if (telem->command == "remove")
-		
 	    {
 		infp = (informationpanel *) telem->gui;
 		string info = "Removing: " + telem->act_file_name;
@@ -857,24 +797,21 @@ MainWindow::onTimer (FXObject *, FXSelector, void *)
 		infp->lab0->setText (info.c_str ());
 		infp->frame->recalc ();
 	    }
-	    
+
 	    else if (telem->command == "execute")
-		
 	    {
 		string::size_type pos = telem->options.find ("capture");
 		if (pos != string::npos)
-		    
 		{
 		    char readbuf[80];
 		    int k = 0;
 		    while (read (telem->p[0], readbuf, 1) > 0 && k++ < 2000)
-			
 		    {
 			string s = "";
 			s = s + readbuf[0];
 			if (s == "!")
 			    telem->end = true;
-			
+
 			else
 			    telem->dst = telem->dst + readbuf[0];
 		    }
@@ -884,39 +821,35 @@ MainWindow::onTimer (FXObject *, FXSelector, void *)
 	    telem->mutex.unlock ();
 	    if (end)		//when telem ended
 	    {
-	    filelist * fil=(filelist *) telem->filel;
-	    string::size_type pos = telem->options.find ("download");	
-	    bool download=false;
-	      if (pos != string::npos)
-	      {
-	      download=true;
-	      fxmessage("\nDOWNLOAD\n");
-	      }
-	    
+		filelist *fil = (filelist *) telem->filel;
+		string::size_type pos = telem->options.find ("download");
+		bool download = false;
+		if (pos != string::npos)
+		{
+		    download = true;
+		    fxmessage ("\nDOWNLOAD\n");
+		}
+
 		if (telem->command == "init")
-		    
 		{
 		    FXTRACE ((5, "INIT \n"));
 		    fil->init ();
 		}
 		if (telem->command == "copy")
-		    
 		{
-		    if ((left_frame->f==fil && download==false) || (download==true && right_frame->f==fil))
+		    if ((left_frame->f == fil && download == false) || (download == true && right_frame->f == fil))
 			right_frame->f->refresh ();
-		    
+
 		    else
 			left_frame->f->refresh ();
 		}
-		
+
 		else if (telem->command == "remove")
-		    
 		{
-			fil->refresh();
+		    fil->refresh ();
 		}
-		
+
 		else if (telem->command == "move")
-		    
 		{
 		    right_frame->f->refresh ();
 		    left_frame->f->refresh ();
@@ -924,29 +857,26 @@ MainWindow::onTimer (FXObject *, FXSelector, void *)
 		string options = telem->options;	// get special options
 		pos = options.find ("rescan");	// when we need to rescan directory after command finish
 		if (pos != string::npos)
-		    
 		{
-		 
-			fil->refresh ();
-		  
+
+		    fil->refresh ();
+
 		}
 		pos = telem->options.find ("capture");	// when we need to capture data from standard output from executed program
 		if (pos != string::npos)
-		    
 		{
 		    telem->pane = new FXMenuPane (this);
-		    FXLabel * lab = new FXLabel (telem->pane, telem->dst.c_str ());
+		    FXLabel *lab = new FXLabel (telem->pane, telem->dst.c_str ());
 		    telem->pane->create ();
 		    telem->pane->popup (NULL, this->getX (), this->getY (), lab->getWidth (), lab->getHeight ());
 		}
-		
-		    //cleanup
-		    delete ((informationpanel *) telem->gui);
+		//cleanup
+		delete ((informationpanel *) telem->gui);
 		telem->gui = NULL;
 		infoframe->recalc ();
-		
-		    //erase from vector and delete telem;   
-		    thread_vec.erase (iter);
+
+		//erase from vector and delete telem;   
+		thread_vec.erase (iter);
 		delete telem;
 		break;
 	    }
@@ -959,34 +889,29 @@ MainWindow::onTimer (FXObject *, FXSelector, void *)
 
 //when we choose in popup if we want overwrite or skip
 //notify about this filelist plugin using telem
-    long
-MainWindow::onOverwrite (FXObject * sender, FXSelector sel, void *) 
+long MainWindow::onOverwrite (FXObject * sender, FXSelector sel, void *)
 {
     FXushort id = FXSELID (sel);
-    FXButton * but = (FXButton *) sender;
-    thread_elem * te = (thread_elem *) but->getUserData ();
+    FXButton *but = (FXButton *) sender;
+    thread_elem *te = (thread_elem *) but->getUserData ();
     te->mutex.lock ();
     if (id == ID_OVERWRITE)
-	
     {
 	te->overwrite = true;
     }
-    
+
     else if (id == ID_SKIP)
-	
     {
 	te->overwrite = false;
     }
-    
+
     else if (ID_OVERWRITE_ALL)
-	
     {
 	te->overwrite = true;
 	te->all = true;
     }
-    
+
     else if (id == ID_SKIP_ALL)
-	
     {
 	te->overwrite = false;
 	te->all = true;
@@ -999,85 +924,81 @@ MainWindow::onOverwrite (FXObject * sender, FXSelector sel, void *)
 
 
 //NEED TO CHANGE THIS
-    long
-MainWindow::onConfigure (FXObject * sender, FXSelector sel, void *ptr) 
+long MainWindow::onConfigure (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXMainWindow::onConfigure (sender, sel, ptr);
     float widthpanel = this->getWidth () * ratio;
     left->setWidth ((int) widthpanel);
-    
-	//fxmessage("RESIZE RESIZE \n\n");
-} long
-MainWindow::onUpdate (FXObject * sender, FXSelector sel, void *ptr) 
+
+    //fxmessage("RESIZE RESIZE \n\n");
+} long MainWindow::onUpdate (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXMainWindow::onUpdate (sender, sel, ptr);
     float l = left->getWidth ();
     float r = right->getWidth ();
     float w = getWidth ();
     ratio = (float) l / (float) w;
-    
-	//FXTRACE((5,"UPDATE %f\n",ratio));
-} 
+
+    //FXTRACE((5,"UPDATE %f\n",ratio));
+}
+
 //telem is canceled
-    long
-MainWindow::cancel (FXObject * sender, FXSelector, void *) 
+long MainWindow::cancel (FXObject * sender, FXSelector, void *)
 {
-    FXButton * but = (FXButton *) sender;
-    thread_elem * te = (thread_elem *) but->getUserData ();
+    FXButton *but = (FXButton *) sender;
+    thread_elem *te = (thread_elem *) but->getUserData ();
     te->mutex.lock ();
     te->cancel = true;
     te->mutex.unlock ();
-} 
+}
+
 //-----FRAME---------------------------------------------------------------------------------------------------------------------------         
-    Frame::Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, int position = 0, vector < thread_elem * >*thread_vec =
-		    NULL, map < string, file_type * >*file_type_settings = NULL, FXGIFIcon ** specialicons = NULL ) 
+Frame::Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, int position = 0, vector < thread_elem * >*thread_vec = NULL, map < string, file_type * >*file_type_settings = NULL, FXGIFIcon ** specialicons = NULL)
 {
     this->pathdir = pt.dir;
     this->type = pt.type;
     string path = pathdir;
     hf = new FXHorizontalFrame (cp, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     pathdir = path;
-    
+
 //generate_menu(path,tgt);
-	int
-	z = 0;
-    FXButton * prebutton = NULL;
-    FXButton * nextbutton = NULL;
+    int z = 0;
+    FXButton *prebutton = NULL;
+    FXButton *nextbutton = NULL;
     toleft = new FXButton (hf, "", specialicons[4], tgt, MainWindow::ID_TOLEFT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     toleft->setUserData (new box (this, NULL, NULL, NULL));
     toclose = new FXButton (hf, "", specialicons[5], tgt, MainWindow::ID_TOCLOSE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     toclose->setUserData (new box (this, NULL, NULL, NULL));
     toright = new FXButton (hf, "", specialicons[6], tgt, MainWindow::ID_TORIGHT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     toright->setUserData (new box (this, NULL, NULL, NULL));
-    
+
 //new FXLabel (hf," ");
-	if (position != 0)
-	
+    if (position != 0)
     {
 	toleft->hide ();
 	toclose->hide ();
 	toright->hide ();
     }
     while (z != -1)
-	
     {
 	string path_element = "";
 	z = path.find (SEPARATOR, 1);
 	if (z == -1)
 	    path_element.append (path);
-	
+
 	else
 	    path_element.append (path.substr (0, z));
 	path.erase (0, z);
-	FXButton * bt = new FXButton (hf, path_element.c_str (), NULL, tgt, MainWindow::ID_DIR, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+	FXButton *bt = new FXButton (hf, path_element.c_str (), NULL, tgt,
+				     MainWindow::ID_DIR, FRAME_THICK, 0, 0, 0, 0, 0, 0,
+				     0, 0);
 	bt->setBackColor (FXRGB (145, 134, 201));
 	if (prebutton != NULL)
-	    
 	{
-	    box * boxel = (box *) prebutton->getUserData ();
+	    box *boxel = (box *) prebutton->getUserData ();
 	    boxel->nextbutton = bt;
 	}
-	
+
 	else
 	    firstbutton = bt;
 	bt->setUserData (new box (this, prebutton, bt, NULL));
@@ -1087,7 +1008,6 @@ MainWindow::cancel (FXObject * sender, FXSelector, void *)
     frame = new FXVerticalFrame (p, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     f = new filelist (frame, pt, thread_vec, file_type_settings, specialicons);
     if (position == 0)
-	
     {
 	frame->hide ();
     }
@@ -1095,21 +1015,19 @@ MainWindow::cancel (FXObject * sender, FXSelector, void *)
 
 
 //generate buttons path for given path
-    void
-Frame::generate_menu (string path, FXObject * tgt) 
+void Frame::generate_menu (string path, FXObject * tgt)
 {
     FXTRACE ((5, "GENERATE MENU path %s ", path.c_str ()));
     if (path[0] == '/' && path[1] == '/')
 	path.erase (0, 1);
-    box * boxel = (box *) firstbutton->getUserData ();
-    box * boxbackup = boxel;
+    box *boxel = (box *) firstbutton->getUserData ();
+    box *boxbackup = boxel;
     while (boxel)
-	
     {
-	box * boxel_del = boxel;
+	box *boxel_del = boxel;
 	if (boxel->nextbutton != NULL)
 	    boxel = (box *) boxel->nextbutton->getUserData ();
-	
+
 	else
 	    boxel = NULL;
 	delete boxel_del->bt;
@@ -1119,34 +1037,32 @@ Frame::generate_menu (string path, FXObject * tgt)
     }
     this->pathdir = path;
     int z = 0;
-    FXButton * prebutton = NULL;
-    FXButton * nextbutton = NULL;
+    FXButton *prebutton = NULL;
+    FXButton *nextbutton = NULL;
     while (z != -1)
-	
     {
 	string path_element = "";
 	z = path.find (SEPARATOR, 1);
 	if (z == -1)
 	    path_element.append (path);
-	
+
 	else
 	    path_element.append (path.substr (0, z));
 	path.erase (0, z);
-	FXButton * bt = new FXButton (hf, path_element.c_str (), NULL, tgt, MainWindow::ID_DIR, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+	FXButton *bt = new FXButton (hf, path_element.c_str (), NULL, tgt,
+				     MainWindow::ID_DIR, FRAME_THICK, 0, 0, 0, 0, 0, 0,
+				     0, 0);
 	bt->setBackColor (FXRGB (145, 134, 201));
 	bt->create ();
 	if (prebutton != NULL)
-	    
 	{
-	    box * boxel = (box *) prebutton->getUserData ();
+	    box *boxel = (box *) prebutton->getUserData ();
 	    boxel->nextbutton = bt;
 	}
-	
+
 	else
 	    firstbutton = bt;
 	bt->setUserData (new box (this, prebutton, bt, NULL));
 	prebutton = bt;
     }
 }
-
-

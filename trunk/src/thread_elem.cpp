@@ -38,8 +38,7 @@ thread_elem::thread_elem ()
 }
 
 //number to string in human readable units
-string
-numtostring (unsigned long k)
+string numtostring (unsigned long k)
 {
 
 
@@ -64,8 +63,7 @@ numtostring (unsigned long k)
 }
 
 //number to string
-string
-ntos (unsigned long k)
+string ntos (unsigned long k)
 {
     char chstr[20];
     sprintf (chstr, "%d", k);
