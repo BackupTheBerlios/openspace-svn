@@ -46,11 +46,11 @@ export pluginname="libfilelist$name.la";
 
 grep "libfilelist$name.la" Makefile.am > /dev/null
  
-if [ $? ]
-then
-echo "already in Makefile"
-exit
-fi
+#if [ $? ]
+#then
+#echo "already in Makefile"
+#exit
+#fi
 
 awk '{ if($1=="pkglib_LTLIBRARIES=") {print $0, ENVIRON["pluginname"] } else print}' Makefile.am > tmpfile
 cp tmpfile Makefile.am
