@@ -40,7 +40,6 @@ FXDEFMAP (MainWindow) MainWindowMap[] =
 	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_COMMANDS_SHOW, MainWindow::commandsShow),
 	FXMAPFUNC (SEL_CONFIGURE, 0, MainWindow::onConfigure),
 	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_CANCEL, MainWindow::cancel), 
-	FXMAPFUNCS (SEL_COMMAND, MainWindow::ID_CHANGE_VIEW_SMALL, MainWindow::ID_CHANGE_VIEW_DETAILS, MainWindow::onChangeView), 
 	FXMAPFUNC (SEL_UPDATE, 0, MainWindow::onUpdate)};
 
 FXIMPLEMENT (MainWindow, FXMainWindow, MainWindowMap, ARRAYNUMBER (MainWindowMap))
@@ -242,11 +241,7 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     new FXButton (toolbar, "", osicons[7], this, MainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", osicons[0], this, MainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", osicons[9], this, MainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXSeparator (toolbar, SEPARATOR_NONE);
-    new FXSeparator (toolbar, SEPARATOR_NONE);
-    new FXButton (toolbar, "", osicons[12], this, MainWindow::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", osicons[13], this, MainWindow::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", osicons[14], this, MainWindow::ID_CHANGE_VIEW_DETAILS, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+   
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXButton (toolbar, "\tconfiguration", osicons[20], this, MainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -293,37 +288,7 @@ long MainWindow::onAbout (FXObject * sender, FXSelector sel, void *)
     about.execute ();
 }
 
-    //change view type: big/small/detailes 
-long MainWindow::onChangeView (FXObject * sender, FXSelector sel, void *)
-{
-    FXushort id = FXSELID (sel);
-    filelist *f;
-    if (left_frame->f->active)
-	f = left_frame->f;
 
-    else
-	f = right_frame->f;
-    if (id == ID_CHANGE_VIEW_SMALL)
-    {
-	f->setFont (f->captionfont2);
-	f->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
-	f->refresh ();
-    }
-
-    else if (id == ID_CHANGE_VIEW_BIG)
-    {
-	f->setFont (f->captionfont);
-	f->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
-	f->refresh ();
-    }
-
-    else if (id = ID_CHANGE_VIEW_DETAILS)
-    {
-	f->setFont (f->captionfont2);
-	f->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
-	f->refresh ();
-    }
-}
 
 
 //new frame
@@ -833,6 +798,12 @@ long MainWindow::onTimer (FXObject *, FXSelector, void *)
 	    telem->mutex.unlock ();
 	    if (end)		//when telem ended
 	    {
+	    
+		if(telem->error)
+		{
+		FXMessageBox about (this, "error", telem->msg.c_str(), NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+  		about.execute ();	    
+		}
 		filelist *fil = (filelist *) telem->filel;
 		string::size_type pos = telem->options.find ("download");
 		bool download = false;

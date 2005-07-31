@@ -28,6 +28,7 @@ class thread_elem
     string *src;
     string dst;
     string options;
+    string msg;
     int p[2];
     time_t *tim;
 
@@ -49,6 +50,7 @@ class thread_elem
     bool answer;
     bool overwrite;
     bool all;
+    bool error;
     pthread_t pid;
     FXMenuPane *pane;
 

@@ -44,9 +44,6 @@ class MainWindow:public FXMainWindow
 	ID_OVERWRITE_ALL,
 	ID_SKIP,
 	ID_SKIP_ALL,
-	ID_CHANGE_VIEW_SMALL,
-	ID_CHANGE_VIEW_BIG,
-	ID_CHANGE_VIEW_DETAILS,
 	ID_ABOUT,
 	ID_CONFIGURE,
 	ID_LAST,
@@ -71,7 +68,6 @@ class MainWindow:public FXMainWindow
     long MainWindow::commandsShow (FXObject * sender, FXSelector, void *);
     long MainWindow::onListNextDir (FXObject * sender, FXSelector, void *);
     long MainWindow::onOverwrite (FXObject * sender, FXSelector, void *);
-    long MainWindow::onChangeView (FXObject * sender, FXSelector, void *);
     long MainWindow::onAbout (FXObject * sender, FXSelector sel, void *);
     long MainWindow::onOpenConfigure (FXObject * sender, FXSelector sel, void *);
     long MainWindow::onUpdate (FXObject * sender, FXSelector sel, void *);

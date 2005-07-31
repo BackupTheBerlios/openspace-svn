@@ -36,6 +36,9 @@ class filelist:public FXIconList
 	ID_MAXIMIZE,
 	ID_CLIP_COPY,
 	ID_CLIP_PASTE,
+	ID_CHANGE_VIEW_SMALL,
+	ID_CHANGE_VIEW_BIG,
+	ID_CHANGE_VIEW_DETAILS,
 	ID_LAST,
     };
 
@@ -141,6 +144,7 @@ class filelist:public FXIconList
     static void *filelist::thread_func (void *data);
     static FXint cmp (const FXIconItem * a, const FXIconItem * b);
     void filelist::init (void);
+    long onChangeView (FXObject * sender, FXSelector, void *);
 
 
 };

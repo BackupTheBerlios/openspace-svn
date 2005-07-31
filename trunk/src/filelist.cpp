@@ -59,7 +59,13 @@ FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
 	FXMAPFUNC (SEL_BEGINDRAG, 0, filelist::onBeginDrag),
 	FXMAPFUNC (SEL_ENDDRAG, 0, filelist::onEndDrag),
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_CLIP_COPY, filelist::onCmdCopySel),
-	FXMAPFUNC (SEL_COMMAND, filelist::ID_CLIP_PASTE, filelist::onCmdPasteSel), FXMAPFUNC (SEL_CLIPBOARD_LOST, 0, filelist::onClipboardLost), FXMAPFUNC (SEL_CLIPBOARD_GAINED, 0, filelist::onClipboardGained), FXMAPFUNC (SEL_CLIPBOARD_REQUEST, 0, filelist::onClipboardRequest)};
+	FXMAPFUNC (SEL_COMMAND, filelist::ID_CLIP_PASTE, filelist::onCmdPasteSel), 
+	FXMAPFUNC (SEL_CLIPBOARD_LOST, 0, filelist::onClipboardLost), 
+	FXMAPFUNC (SEL_CLIPBOARD_GAINED, 0, filelist::onClipboardGained), 
+	FXMAPFUNC (SEL_CLIPBOARD_REQUEST, 0, filelist::onClipboardRequest),
+	FXMAPFUNCS (SEL_COMMAND, filelist::ID_CHANGE_VIEW_SMALL, filelist::ID_CHANGE_VIEW_DETAILS, filelist::onChangeView),
+	
+	};
 
 FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
      bool filelist::ascend = true;
@@ -613,17 +619,26 @@ this->type=path.substr(0,pos);
 	toolbar = new FXToolBar (docksite, dragshell1, LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | LAYOUT_FILL_X | FRAME_RAISED);
 	new FXToolBarGrip (toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE);
 
-	bottomframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-	textfield = new FXTextField (bottomframe, 30, this, filelist::ID_TEXTFIELD_REG);
+	//bottomframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+	textfield = new FXTextField (toolbar, 30, this, filelist::ID_TEXTFIELD_REG);
 
-	new FXButton (bottomframe, "", osicons[15], this, filelist::ID_TEXTFIELD_REG, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-	new FXButton (bottomframe, "Go", 0, this, filelist::ID_TEXTFIELD_GO, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-	new FXButton (bottomframe, "Get", 0, this, filelist::ID_TEXTFIELD_GET, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXButton (toolbar, "", osicons[15], this, filelist::ID_TEXTFIELD_REG, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXButton (toolbar, "Go", 0, this, filelist::ID_TEXTFIELD_GO, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXButton (toolbar, "Get", 0, this, filelist::ID_TEXTFIELD_GET, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 
 	if (conf->readonestring ("/OpenspaceConfig/panels") == "single")
-	    new FXButton (bottomframe, "", osicons[22], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	    new FXButton (toolbar, "", osicons[22], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 	else
-	new FXButton (bottomframe, "", osicons[21], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXButton (toolbar, "", osicons[21], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+
+
+
+    new FXSeparator (toolbar, SEPARATOR_NONE);
+    new FXSeparator (toolbar, SEPARATOR_NONE);
+    new FXButton (toolbar, "", osicons[13], this, filelist::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", osicons[12], this, filelist::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", osicons[14], this, filelist::ID_CHANGE_VIEW_DETAILS, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+
 
 	dial = NULL;
 	processing = false;
@@ -678,12 +693,12 @@ void filelist::init ()
 
     new FXOption (sortpop, "extension", NULL, this, ID_SORT_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
 
-    sortmenu = new FXOptionMenu (bottomframe, sortpop, LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
+    sortmenu = new FXOptionMenu (toolbar, sortpop, LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
 
     if (processing)
 	sortmenu->create ();
 
-    bottomframe->recalc ();
+    toolbar->recalc ();
     processing = false;
     opendir (this->path);
 
@@ -1971,3 +1986,31 @@ long filelist::onMaximize (FXObject * sender, FXSelector, void *)
     }
     notifyparent->handle (this, FXSEL (SEL_COMMAND, 668), NULL);
 }
+
+    //change view type: big/small/detailes 
+long filelist::onChangeView (FXObject * sender, FXSelector sel, void *)
+{
+    FXushort id = FXSELID (sel);
+
+    if (id == ID_CHANGE_VIEW_SMALL)
+    {
+	setFont (captionfont2);
+	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
+	refresh ();
+    }
+
+    else if (id == ID_CHANGE_VIEW_BIG)
+    {
+	setFont (captionfont);
+	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
+	refresh ();
+    }
+
+    else if (id = ID_CHANGE_VIEW_DETAILS)
+    {
+	setFont (captionfont2);
+	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
+	refresh ();
+    }
+}
+

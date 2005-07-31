@@ -309,6 +309,13 @@ int filelist_local::remove (thread_elem * te)
 
 	c++;
     }
+    if(canc)
+    {
+    te->error=true;
+    te->msg="operation failed";
+    }
+    
+    
     delete[]te->src;
     te->src = NULL;
 
@@ -333,7 +340,7 @@ int filelist_local::rename (string orgname, string newname)
 	return true;
     if (errno != EXDEV)
 	return false;
-
+	
 #else
     if (!FXFile::exists (oldfile))
 	return false;
@@ -402,6 +409,12 @@ int filelist_local::copymove (thread_elem * te, bool copy)
 
 	c++;
     }
+    if(canc)
+    {
+    te->error=true;
+    te->msg="operation failed";
+    }
+    
     delete[]te->src;
     te->src = NULL;
 }

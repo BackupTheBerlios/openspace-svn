@@ -27,8 +27,10 @@ thread_elem::thread_elem (void *fb, string command, string options, string * src
     overwrite = false;
     cancel = false;
     all = false;
+    error = false;
 
     act_file_name = "";
+    msg="operation failed";
 
 }
 
