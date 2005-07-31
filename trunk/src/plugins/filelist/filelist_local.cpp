@@ -462,7 +462,7 @@ string filelist_local::info (void)
 }
 
 
-unsigned int filelist_local::mode (string file)
+int filelist_local::mode (string file)
 {
     struct stat status;
     return !file.empty () && (::stat (file.c_str (), &status) == 0) ? status.st_mode : 0;

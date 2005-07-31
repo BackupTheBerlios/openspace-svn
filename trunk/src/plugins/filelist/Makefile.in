@@ -180,10 +180,10 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-pkglib_LTLIBRARIES = libfilelistlocal.la
-libfilelistlocal_la_SOURCES = filelist_local.cpp filelist_local.h OSFXFile.cpp ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h
+pkglib_LTLIBRARIES = libfilelistlocal.la 
 INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
 libfilelistlocal_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs`  
+libfilelistlocal_la_SOURCES = filelist_local.cpp filelist_local.h OSFXFile.cpp ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h
 all: all-am
 
 .SUFFIXES:

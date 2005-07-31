@@ -33,7 +33,7 @@ class filelist_local:public filelist_base
     int remove (thread_elem * te);
     int rename (string orgname, string newname);
     int init (vector < string > *vector_name, vector < int >*vector_type, vector < int >*vector_width, pathtype pt, configure * conf);
-    unsigned int mode (string file);
+    int mode (string file);
     string owner (string file);
     string group (string file);
     bool mode (string file, unsigned int, bool recursive = false);

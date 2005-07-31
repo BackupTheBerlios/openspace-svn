@@ -1,4 +1,4 @@
-pkglib_LTLIBRARIES= libfilelistlocal.la
+pkglib_LTLIBRARIES= libfilelistlocal.la 
 pkglibdir=$(datadir)/openspace/plugins/filelist
 INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
 
