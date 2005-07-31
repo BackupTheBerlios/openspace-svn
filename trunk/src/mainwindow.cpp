@@ -255,10 +255,16 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     string type = conf->readonestring ("/OpenspaceConfig/leftdir/type");
     pathtype pt (dir, type);
     left_frame = new Frame (leftcontrolframe, leftframe, pt, this, -1, &thread_vec, &file_type_settings, osicons);
+    left_frame->f->toolbar->dock(topdock);	
+    left_frame->f->toolbar->hide();
     dir = parseDir (conf->readonestring ("/OpenspaceConfig/rightdir/dir"));
     type = conf->readonestring ("/OpenspaceConfig/rightdir/type");
     pathtype pt2 (dir, type);
     right_frame = new Frame (rightcontrolframe, rightframe, pt2, this, -1, &thread_vec, &file_type_settings, osicons);
+   
+    right_frame->f->toolbar->dock(topdock);  
+
+    
     left_frame->f->filelist_opposite = right_frame->f;
     right_frame->f->filelist_opposite = left_frame->f;
     infoframe = new FXVerticalFrame (ff, LAYOUT_FILL_X);
@@ -347,8 +353,12 @@ long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
     pathtype pt (dir, type, str_server, str_user);
     Frame *fr = new Frame (controlframe, leftframe, pt, this, 0, &thread_vec,
 			   &file_type_settings, osicons);
+			   			   
     fr->frame->create ();
     fr->hf->create ();
+    fr->f->toolbar->dock(topdock);	
+    fr->f->toolbar->hide();
+    
     controlframe->recalc ();
 }
 
@@ -556,6 +566,7 @@ long MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
 	boxel->fr->frame->reparent (leftframe);
 	boxel->fr->hf->reparent (leftcontrolframe);
 	left_frame->hf->reparent (controlframe);
+	left_frame->f->toolbar->hide();
 	left_frame->toleft->show ();
 	left_frame->toright->show ();
 	left_frame->toclose->show ();
@@ -569,6 +580,7 @@ long MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
 	boxel->fr->frame->reparent (rightframe);
 	boxel->fr->hf->reparent (rightcontrolframe);
 	right_frame->hf->reparent (controlframe);
+	right_frame->f->toolbar->hide();
 	right_frame->toleft->show ();
 	right_frame->toright->show ();
 	right_frame->toclose->show ();

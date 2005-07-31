@@ -958,7 +958,9 @@ long filelist::setFocus (FXObject * obj, FXSelector sel, void *ptr)
 
     active = true;
     filelist_opposite->active = false;
-
+    filelist_opposite->toolbar->hide();	
+    toolbar->show();
+    toolbar->recalc();	
     setBackColor (FXRGB (255, 255, 255));
     chdir (path.c_str ());
 }
