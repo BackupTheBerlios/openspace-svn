@@ -56,7 +56,8 @@ am_openspace_OBJECTS = cmddialog.$(OBJEXT) filetype.$(OBJEXT) \
 	openspace.$(OBJEXT) preferences.$(OBJEXT) configure.$(OBJEXT) \
 	informationpanel.$(OBJEXT) oslistitem.$(OBJEXT) \
 	shutter.$(OBJEXT) filelist.$(OBJEXT) mainwindow.$(OBJEXT) \
-	pathtype.$(OBJEXT) thread_elem.$(OBJEXT) MimeType.$(OBJEXT)
+	pathtype.$(OBJEXT) thread_elem.$(OBJEXT) \
+	sharedobjects.$(OBJEXT) MimeType.$(OBJEXT)
 openspace_OBJECTS = $(am_openspace_OBJECTS)
 openspace_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
@@ -212,6 +213,7 @@ openspace_SOURCES = cmddialog.cpp \
 	filelist.h \
 	osfile.h \
 	sharedobjects.h \
+	sharedobjects.cpp \
 	MimeType.h \
 	MimeType.cpp
 
@@ -323,6 +325,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/oslistitem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pathtype.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/preferences.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sharedobjects.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/shutter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/thread_elem.Po@am__quote@
 

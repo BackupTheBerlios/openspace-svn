@@ -26,6 +26,7 @@ openspace_SOURCES = cmddialog.cpp \
 	filelist.h \
 	osfile.h \
 	sharedobjects.h \
+	sharedobjects.cpp \
 	MimeType.h \
 	MimeType.cpp
 
