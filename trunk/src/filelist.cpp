@@ -583,6 +583,11 @@ this->type=path.substr(0,pos);
 
     active = false;
 
+	FXDockSite *docksite = new FXDockSite (p, LAYOUT_SIDE_TOP | LAYOUT_FILL_X);
+	FXToolBarShell *dragshell1 = new FXToolBarShell (this, FRAME_RAISED);
+	toolbar = new FXToolBar (docksite, dragshell1, LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | LAYOUT_FILL_X | FRAME_RAISED);
+	new FXToolBarGrip (toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE);
+
 
     string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/filelist/libfilelist" + this->type;
 
@@ -614,10 +619,7 @@ this->type=path.substr(0,pos);
 
 //label=new FXLabel (p,this->path.c_str());
 	info = new FXLabel (p, fb->info ().c_str ());
-	FXDockSite *docksite = new FXDockSite (p, LAYOUT_SIDE_TOP | LAYOUT_FILL_X);
-	FXToolBarShell *dragshell1 = new FXToolBarShell (this, FRAME_RAISED);
-	toolbar = new FXToolBar (docksite, dragshell1, LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | LAYOUT_FILL_X | FRAME_RAISED);
-	new FXToolBarGrip (toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE);
+	
 
 	//bottomframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
 	textfield = new FXTextField (toolbar, 30, this, filelist::ID_TEXTFIELD_REG);
