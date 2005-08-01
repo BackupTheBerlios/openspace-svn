@@ -514,6 +514,7 @@ long MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
     {
 	boxel->fr->f->fb->quit ();
 	delete boxel->fr->hf;
+	delete boxel->fr->f->toolbar;
 	delete boxel->fr->frame;
 	sender = NULL;
 	return 1;
