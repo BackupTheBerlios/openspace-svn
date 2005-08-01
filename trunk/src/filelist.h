@@ -51,7 +51,7 @@ class filelist:public FXIconList
     FXMenuPane *popupmenu;
     FXMenuPane *popupwindow;
     string commands_tab[50];	//IMPORTANT
-    FXFont *captionfont, *captionfont1, *captionfont2;
+   
     FXTextField *textfield;
     FXOptionMenu *sortmenu;
     FXPopup *sortpop;
@@ -83,6 +83,7 @@ class filelist:public FXIconList
     int popup_y;
 
     cmddialog *dial;
+    objectmanager *objmanager;
 
 
 

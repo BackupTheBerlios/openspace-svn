@@ -527,16 +527,9 @@ FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSE
     table->addAccel (MKUINT (KEY_F5, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REFRESH));
     table->addAccel (MKUINT (KEY_Delete, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REMOVE));
 
-    captionfont = new FXFont (getApp (), "arial", 9, FONTWEIGHT_BOLD);
-    captionfont->create ();
+    objmanager=objectmanager::instance(getApp());
 
-    captionfont1 = new FXFont (getApp (), "times", 8);
-    captionfont1->create ();
-
-    captionfont2 = new FXFont (getApp (), "arial", 9);
-    captionfont2->create ();
-
-    setFont (captionfont2);
+    setFont (objmanager->captionfont2);
 
     fxmessage (pt.server.c_str ());
 
@@ -568,7 +561,7 @@ this->type=path.substr(0,pos);
     if (style == "big icons")
     {
 	this->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
-	setFont (captionfont);
+	setFont (objmanager->captionfont);
     }
     else if (style == "small icons")
 	this->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
@@ -1996,21 +1989,21 @@ long filelist::onChangeView (FXObject * sender, FXSelector sel, void *)
 
     if (id == ID_CHANGE_VIEW_SMALL)
     {
-	setFont (captionfont2);
+	setFont (objmanager->captionfont2);
 	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
 	refresh ();
     }
 
     else if (id == ID_CHANGE_VIEW_BIG)
     {
-	setFont (captionfont);
+	setFont (objmanager->captionfont);
 	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
 	refresh ();
     }
 
     else if (id = ID_CHANGE_VIEW_DETAILS)
     {
-	setFont (captionfont2);
+	setFont (objmanager->captionfont2);
 	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
 	refresh ();
     }

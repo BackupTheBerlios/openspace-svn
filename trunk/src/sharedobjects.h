@@ -16,9 +16,14 @@ FXColor readcolor2 (string col);
 class objectmanager 
 {
   public:
-      static objectmanager* instance();
+      static objectmanager* instance(FXApp *app);
+       FXFont *captionfont, *captionfont1, *captionfont2;
+       FXApp *app;
+      
+      
+      
   protected:
-      objectmanager();
+      objectmanager(FXApp *app);
       objectmanager(const objectmanager&);
       objectmanager& operator= (const objectmanager&);
   private:

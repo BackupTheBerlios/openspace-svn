@@ -22,6 +22,7 @@ FXIMPLEMENT(os_ListItem,FXIconItem,NULL,0)
 
 os_ListItem::os_ListItem(FXIconList *list,osfile osf, FXColor col, FXColor backcol,FXIcon* ic1,FXIcon* ic2):FXIconItem(osf.name.c_str(),ic1,ic2,NULL),osf(osf)
 {
+
 this->list=list;
 color=col;
 backcolor=backcol;
@@ -108,8 +109,8 @@ void os_ListItem::drawDetails(const FXIconList* list,FXDC& dc,FXint x,FXint y,FX
 	
 		
 //=============CHANGES==========================================
-   FXFont *font=((filelist*)list)->captionfont;
-   FXFont *font1=((filelist*)list)->captionfont1; 
+   FXFont *font=((filelist*)list)->objmanager->captionfont;
+   FXFont *font1=((filelist*)list)->objmanager->captionfont1; 
  
  
   register FXint len,dw,s,space,xt,yt,xi,yi;
@@ -225,8 +226,8 @@ void os_ListItem::drawDetails(const FXIconList* list,FXDC& dc,FXint x,FXint y,FX
 
 
 FXint os_ListItem::getHeight(const FXIconList* list) const {
-FXFont *font=((filelist*)list)->captionfont;
-FXFont *font1=((filelist*)list)->captionfont1;
+FXFont *font=((filelist*)list)->objmanager->captionfont;
+FXFont *font1=((filelist*)list)->objmanager->captionfont1;
 
   register FXuint options=list->getListStyle();
   register FXint ih=0,th=0,h=0,firstth=0;
@@ -265,8 +266,8 @@ FXFont *font1=((filelist*)list)->captionfont1;
 
 FXint os_ListItem::hitItem(const FXIconList* list,FXint rx,FXint ry,FXint rw,FXint rh) const {
 
-FXFont *font=((filelist*)list)->captionfont;
-FXFont *font1=((filelist*)list)->captionfont1;
+FXFont *font=((filelist*)list)->objmanager->captionfont;
+FXFont *font1=((filelist*)list)->objmanager->captionfont1;
 
  register FXint iw=0,tw=0,ih=0,th=0,ss=0,ix,iy,tx,ty,w,h,sp,tlen;
   register FXuint options=list->getListStyle();
