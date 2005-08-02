@@ -59,9 +59,8 @@ class filelist:public FXIconList
      vector < string > header_vec;
     FXHorizontalFrame *bottomframe;
 
-     vector < thread_elem * >*thread_vec;
-     map < string, file_type * >*file_type_settings;
-    FXGIFIcon **osicons;
+     
+     FXIcon **specialicons;
 
      vector < string > vector_name;
      vector < int >vector_type;
@@ -98,7 +97,7 @@ class filelist:public FXIconList
     virtual ~ filelist ();
 
 //==============================================
-    filelist (FXComposite * p, pathtype pt, vector < thread_elem * >*thread_vec, map < string, file_type * >*file_type_settings, FXGIFIcon ** specialicons);
+    filelist (FXComposite * p, pathtype pt);
 //==============================================
 
     virtual void create ();

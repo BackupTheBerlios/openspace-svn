@@ -84,7 +84,7 @@ class MainWindow:public FXMainWindow
      MainWindow ()
     {
     }
-    void MainWindow::loadicon (string src);
+    void MainWindow::loadicons (string dir);
 
     FXVerticalFrame *leftframe;
     FXVerticalFrame *rightframe;
@@ -106,9 +106,7 @@ class MainWindow:public FXMainWindow
 
 
 
-    vector < thread_elem * >thread_vec;
-    map < string, file_type * >file_type_settings;
-    FXGIFIcon *osicons[30];	//IMPORTANT!!!
+    
 
 
     Frame *fr;
@@ -129,7 +127,7 @@ class MainWindow:public FXMainWindow
     FXDockSite *bottomdock;
     FXDockSite *leftdock;
     FXDockSite *rightdock;
-
+objectmanager *objmanager;
 };
 
 
@@ -180,7 +178,7 @@ class Frame
     FXButton *toclose;
     FXButton *firstbutton;
 
-     Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, int position, vector < thread_elem * >*thread_vec, map < string, file_type * >*file_type_settings, FXGIFIcon ** specialicons);
+     Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, int position);
     void generate_menu (string path, FXObject * tgt);
 
     ~Frame ()

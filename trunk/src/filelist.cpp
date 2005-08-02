@@ -505,7 +505,7 @@ void filelist::create ()
 
 //--------------------------------------------------------------------------------
 
-filelist::filelist (FXComposite * p, pathtype pt, vector < thread_elem * >*thread_vec, map < string, file_type * >*file_type_settings, FXGIFIcon ** specialicons):
+filelist::filelist (FXComposite * p, pathtype pt):
 FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
 {
 
@@ -533,10 +533,11 @@ FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSE
 
     fxmessage (pt.server.c_str ());
 
-    osicons = specialicons;
+    specialicons = objmanager->specialicons;
+    //osicons = objmanager->osicons;
 
-    this->file_type_settings = file_type_settings;
-    this->thread_vec = thread_vec;
+    //this->file_type_settings = objmanager->file_type_settings;
+    //this->thread_vec = objmanager->thread_vec;
 /*
 int pos=path.find(":");
 fxmessage("PATH=");
@@ -616,23 +617,23 @@ this->type=path.substr(0,pos);
 
 	//bottomframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
 	textfield = new FXTextField (toolbar, 30, this, filelist::ID_TEXTFIELD_REG);
-
-	new FXButton (toolbar, "", osicons[15], this, filelist::ID_TEXTFIELD_REG, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	
+	new FXButton (toolbar, "", objmanager->osicons["pattern"], this, filelist::ID_TEXTFIELD_REG, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXButton (toolbar, "Go", 0, this, filelist::ID_TEXTFIELD_GO, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXButton (toolbar, "Get", 0, this, filelist::ID_TEXTFIELD_GET, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 
 	if (conf->readonestring ("/OpenspaceConfig/panels") == "single")
-	    new FXButton (toolbar, "", osicons[22], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	    new FXButton (toolbar, "", objmanager->osicons["min"], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 	else
-	new FXButton (toolbar, "", osicons[21], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXButton (toolbar, "", objmanager->osicons["max"], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 
 
 
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
-    new FXButton (toolbar, "", osicons[13], this, filelist::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", osicons[12], this, filelist::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", osicons[14], this, filelist::ID_CHANGE_VIEW_DETAILS, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["smallicons"], this, filelist::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["bigicons"], this, filelist::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["details"], this, filelist::ID_CHANGE_VIEW_DETAILS, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
 
 
 	dial = NULL;
@@ -833,8 +834,8 @@ void filelist::opendir (string dir)
 	{
 	    color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types_special/dir/color"));
 	    backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types_special/dir/backcolor"));
-	    icon = osicons[1];
-	    icon2 = osicons[0];
+	    icon = specialicons[1];
+	    icon2 = specialicons[0];
 	}
 	else
 	{
@@ -843,12 +844,12 @@ void filelist::opendir (string dir)
 	    file_type *filet = NULL;
 	    if (ext != "")
 	    {
-		filet = (*file_type_settings)[ext];
+		filet = objmanager->file_type_settings[ext];
 		if (filet == NULL)
 		{
 		    ext = ext.substr (0, ext.find ("/"));
 
-		    filet = (*file_type_settings)[ext];
+		    filet = objmanager->file_type_settings[ext];
 		}
 
 	    }
@@ -865,8 +866,8 @@ void filelist::opendir (string dir)
 	    }
 	    else
 	    {
-		icon = osicons[3];
-		icon2 = osicons[2];
+		icon = specialicons[3];
+		icon2 = specialicons[2];
 		color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types_special/all/color"));
 		backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types_special/all/backcolor"));
 	    }
@@ -1196,7 +1197,7 @@ long filelist::onPopup (FXObject *, FXSelector, void *ptr)
 	    configure conflocal = *conf;
 	    //shutterItem = new FXShutterItem(shutterFrame,res.c_str(),NULL,      FRAME_SUNKEN|LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT,0,0,0,0,0,0,0,0,0,0);
 	    // shutterItem = new FXShutterItem(shutterFrame,res.c_str(),osicons[8],FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT,0,0,0,0,0,0,0,0,0,0);
-	    shutterItem = new FXShutterItem (shutterFrame, res.c_str (), osicons[8], FRAME_NONE | LAYOUT_FILL_X | LAYOUT_FILL_Y | LAYOUT_TOP | LAYOUT_LEFT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	    shutterItem = new FXShutterItem (shutterFrame, res.c_str (), objmanager->osicons["execute"], FRAME_NONE | LAYOUT_FILL_X | LAYOUT_FILL_Y | LAYOUT_TOP | LAYOUT_LEFT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 	    FXButton *but = shutterItem->getButton ();
 	    FXVerticalFrame *content = shutterItem->getContent ();
@@ -1616,7 +1617,7 @@ void filelist::start_thread (thread_elem * te)
 
     te->filel = (void *) this;
 
-    thread_vec->push_back (te);
+   objmanager->thread_vec.push_back (te);
 
 
     if (te->command == "execute" && te->options == "capture")
@@ -1971,13 +1972,13 @@ long filelist::onMaximize (FXObject * sender, FXSelector, void *)
     if (maximize)
     {
 	fxmessage ("zapis single");
-	bt->setIcon (osicons[22]);
+	bt->setIcon (objmanager->osicons["min"]);
 	conf->saveonestring ("/OpenspaceConfig/panels", "single");
     }
     else
     {
 	fxmessage ("zapis double");
-	bt->setIcon (osicons[21]);
+	bt->setIcon (objmanager->osicons["max"]);
 	conf->saveonestring ("/OpenspaceConfig/panels", "double");
     }
     notifyparent->handle (this, FXSEL (SEL_COMMAND, 668), NULL);

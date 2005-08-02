@@ -206,11 +206,13 @@ void os_ListItem::drawDetails(const FXIconList* list,FXDC& dc,FXint x,FXint y,FX
     else{
       dc.drawIcon(bigIcon,xi,y+4+font->getFontHeight());
       }
-     if(osf.type&EXECUTABLE && !(osf.type&FOLDER))	
-      dc.drawIcon(((filelist*)list)->osicons[16],xi,y+4+font->getFontHeight());
+     if(osf.type&EXECUTABLE && !(osf.type&FOLDER))
+     {       
+     dc.drawIcon(((filelist*)list)->specialicons[4],xi,y+4+font->getFontHeight());
+     }
      else if(osf.type&SYMLINK)
      {
-       dc.drawIcon(((filelist*)list)->osicons[17],xi,y+4+font->getFontHeight());
+       dc.drawIcon(((filelist*)list)->specialicons[5],xi,y+4+font->getFontHeight());
      }
      
      if(osf.content!="")

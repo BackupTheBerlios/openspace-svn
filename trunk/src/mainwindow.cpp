@@ -7,11 +7,16 @@ using namespace std;
 // #include "FXPNGIcon.h"
 #include "thread_elem.h"
 #include "filelist.h"
-#include "mainwindow.h"
 #include "sharedobjects.h"
+#include "mainwindow.h"
 #include "informationpanel.h"
 #include "configure.h"
 #include "oslistitem.h"
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <dirent.h>
 
 #ifdef WIN32
 #define SEPARATOR "\\"
@@ -44,18 +49,82 @@ FXDEFMAP (MainWindow) MainWindowMap[] =
 
 FXIMPLEMENT (MainWindow, FXMainWindow, MainWindowMap, ARRAYNUMBER (MainWindowMap))
 //load icon from file and put in the array
-     void MainWindow::loadicon (string src)
+void MainWindow::loadicons (string icondir)
 {
-    static unsigned int counter = 0;
-    FXFileStream stream;
-    osicons[counter] = new FXGIFIcon (getApp (), NULL);
-    if (stream.open (src.c_str (), FXStreamLoad))
-    {
-	osicons[counter]->loadPixels (stream);
-	stream.close ();
-	osicons[counter]->create ();
-    }
-    counter++;
+
+ objmanager=objectmanager::instance(getApp());
+ fxmessage("\nDIR=");
+fxmessage(icondir.c_str());    
+
+FXIconSource *source = new FXIconSource (getApp ());
+FXString fil=icondir.c_str();
+FXString name=fil+"directory.gif";
+objmanager->specialicons[0] =  source->loadIcon (name);
+objmanager->specialicons[0]->create();
+name=fil+"big_directory.gif";
+objmanager->specialicons[1] =  source->loadIcon (name);
+objmanager->specialicons[1]->create();
+name=fil+"unknown.gif";
+objmanager->specialicons[2] =  source->loadIcon (name);
+objmanager->specialicons[2]->create();
+name=fil+"big_unknown.gif";
+objmanager->specialicons[3] =  source->loadIcon (name);
+objmanager->specialicons[3]->create();
+name=fil+"executable.gif";
+objmanager->specialicons[4] =  source->loadIcon (name);
+objmanager->specialicons[4]->create();
+name=fil+"symlink.gif";
+objmanager->specialicons[5] =  source->loadIcon (name);
+objmanager->specialicons[5]->create();
+
+if(objmanager->specialicons[0]!=NULL)
+fxmessage("\n\noki\n\n");
+
+
+
+fxmessage("WOOT=");
+fxmessage(string(icondir + "directory.gif").c_str());
+
+	    struct stat status;
+	    struct dirent *dp;
+	    DIR *dirp;
+
+	    dirp = opendir (icondir.c_str ());
+
+	    while ((dp = readdir (dirp)) != NULL)
+	    {
+		if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
+		{
+		string name=dp->d_name;
+			if (name.length () >= 3 && name.substr (name.length () - 3, 3) == "gif")
+			{
+		   	 string file = icondir;
+		   	 file.append (name);	
+			string shortname=name.substr (0,name.length () - 4);
+			 fxmessage("\nFILE=");
+			 fxmessage(file.c_str());
+			 fxmessage("\nName=");
+			 fxmessage(shortname.c_str());  
+			
+			 
+			
+		    	 FXFileStream stream;
+  		    	 objmanager->osicons[shortname] = new FXGIFIcon (getApp (), NULL);
+   				 if (stream.open (file.c_str (), FXStreamLoad))
+ 				 {
+					objmanager->osicons[shortname]->loadPixels (stream);
+					stream.close ();
+					objmanager->osicons[shortname]->create ();
+					fxmessage("OK");
+  				 }		
+			}
+		    
+		}
+	    }
+
+	    closedir (dirp);
+
+   
 }
 
 
@@ -135,7 +204,7 @@ bool MainWindow::loadMimeSettings (string path, string type)
 	    osicon->loadPixels (stream);
 	    stream.close ();
 	    osicon->create ();
-	    file_type_settings[type] = new file_type (osicon, color, backcolor);
+	    objmanager->file_type_settings[type] = new file_type (osicon, color, backcolor);
 	    fxmessage ("\n");
 	    fxmessage (type.c_str ());
 	    fxmessage ("\n");
@@ -147,17 +216,22 @@ bool MainWindow::loadMimeSettings (string path, string type)
 //-----MAIN WINDOW---------------------------------------------------------------------------------------------------------------------------         
 MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0)
 {
+
+
+    objmanager=objectmanager::instance(getApp());
+    
     new FXToolTip (getApp (), TOOLTIP_NORMAL);
     pane = NULL;
     filemenu = NULL;
     conf = new configure ();
     pref = new preferences (this);
+    loadicons(conf->readonestring ("/OpenspaceConfig/path") + "icons/");
     string res = conf->readonestring ("/OpenspaceConfig/version");
     FXTRACE ((1, "VERSION %s\n", res.c_str ()));
     int w = atoi (conf->readonestring ("/OpenspaceConfig/mainwindow/width").c_str ());
     int h = atoi (conf->readonestring ("/OpenspaceConfig/mainwindow/height").c_str ());
     resize (w, h);
-    string s = conf->readonestring ("/OpenspaceConfig/path") + "icons/directory.gif";
+/*
     loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/directory.gif");
     loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/big_directory.gif");
     loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/unknown.gif");
@@ -182,7 +256,7 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/max.gif");
     loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/min.gif");
     osicons[23] = NULL;
-
+*/
 // read icons for file types
     if (conf->openxpath ("/OpenspaceConfig/file_types") != -1)
     {
@@ -221,8 +295,12 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
 					LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | FRAME_RAISED);
     new FXToolBarGrip (toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_SINGLE);
 
-
-
+    /*
+    objmanager->thread_vec=&thread_vec;
+    objmanager->file_type_settings=&file_type_settings;
+    objmanager->specialicons=specialicons;
+    objmanager->osicons=osicons;
+    */
     FXVerticalFrame *ff = new FXVerticalFrame (this, LAYOUT_FILL_X | LAYOUT_FILL_Y);
     controlframe = new FXVerticalFrame (ff, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     splitter = new FXSplitter (ff, LAYOUT_FILL_X | SPLITTER_TRACKING | LAYOUT_FILL_Y);
@@ -238,24 +316,24 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     rightcontrolframe = new FXVerticalFrame (right, LAYOUT_FILL_X);
     rightframe = new FXVerticalFrame (right, LAYOUT_FILL_X | LAYOUT_FILL_Y);
     //   FXHorizontalFrame * buttonsframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", osicons[7], this, MainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", osicons[0], this, MainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", osicons[9], this, MainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["plus"], this, MainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["directory"], this, MainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["network"], this, MainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
    
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
-    new FXButton (toolbar, "\tconfiguration", osicons[20], this, MainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", osicons[18], this, MainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\tconfiguration", objmanager->osicons["configure"], this, MainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["foxmini"], this, MainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     string dir = parseDir (conf->readonestring ("/OpenspaceConfig/leftdir/dir"));
     string type = conf->readonestring ("/OpenspaceConfig/leftdir/type");
     pathtype pt (dir, type);
-    left_frame = new Frame (leftcontrolframe, leftframe, pt, this, -1, &thread_vec, &file_type_settings, osicons);
+    left_frame = new Frame (leftcontrolframe, leftframe, pt, this, -1);
     left_frame->f->toolbar->dock(topdock);	
     left_frame->f->toolbar->hide();
     dir = parseDir (conf->readonestring ("/OpenspaceConfig/rightdir/dir"));
     type = conf->readonestring ("/OpenspaceConfig/rightdir/type");
     pathtype pt2 (dir, type);
-    right_frame = new Frame (rightcontrolframe, rightframe, pt2, this, -1, &thread_vec, &file_type_settings, osicons);
+    right_frame = new Frame (rightcontrolframe, rightframe, pt2, this, -1);
    
     right_frame->f->toolbar->dock(topdock);  
 
@@ -284,7 +362,7 @@ long MainWindow::onOpenConfigure (FXObject * sender, FXSelector sel, void *)
 //about
 long MainWindow::onAbout (FXObject * sender, FXSelector sel, void *)
 {
-    FXMessageBox about (this, "About Openspace", "Openspace File Browser V0.0.1 ALPHA\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org)\n\nCopyright (C) Mateusz Dworak (compbatant@t-nas.org)", osicons[19], MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+    FXMessageBox about (this, "About Openspace", "Openspace File Browser V0.0.1 ALPHA\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org)\n\nCopyright (C) Mateusz Dworak (compbatant@t-nas.org)", objmanager->osicons["foxbig"], MBOX_OK | DECOR_TITLE | DECOR_BORDER);
     about.execute ();
 }
 
@@ -316,8 +394,7 @@ long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
 	controlframe->recalc ();
     }
     pathtype pt (dir, type, str_server, str_user);
-    Frame *fr = new Frame (controlframe, leftframe, pt, this, 0, &thread_vec,
-			   &file_type_settings, osicons);
+    Frame *fr = new Frame (controlframe, leftframe, pt, this, 0);
 			   			   
     fr->frame->create ();
     fr->hf->create ();
@@ -336,9 +413,9 @@ long MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 	networkframe = new FXHorizontalFrame (controlframe, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXLabel (networkframe, "server:");
 	server = new FXTextField (networkframe, 20);
-	new FXLabel (networkframe, "user:", osicons[11]);
+	new FXLabel (networkframe, "user:", objmanager->osicons["user"]);
 	user = new FXTextField (networkframe, 20);
-	new FXLabel (networkframe, "pass:", osicons[10]);
+	new FXLabel (networkframe, "pass:", objmanager->osicons["password"]);
 	password = new FXTextField (networkframe, 20);
 	FXComboBox *combobox = new FXComboBox (networkframe, 4, NULL, 0,
 					       FRAME_THICK | LAYOUT_SIDE_TOP | COMBOBOX_STATIC);
@@ -457,7 +534,7 @@ int MainWindow::popupDir (filelist * current_filelist, string path, int x, int y
 	filemenu = new FXMenuPane (this);
 	for (indx = 0; indx < vec.size (); indx++)
 	{
-	    new FXMenuCommand (filemenu, vec[indx].c_str (), osicons[0], this, MainWindow::ID_DIRCH);
+	    new FXMenuCommand (filemenu, vec[indx].c_str (), objmanager->osicons["directory"], this, MainWindow::ID_DIRCH);
 	}
 	filemenu->create ();
 	filemenu->popup (NULL, x, y, 0, 0);
@@ -583,10 +660,10 @@ long MainWindow::onNotify (FXObject * sender, FXSelector sel, void *ptr)
 	pathtype pt (dir, type, str_server);
 	Frame *fr;
 	if (left_frame->f->active)
-	    fr = new Frame (leftcontrolframe, leftframe, pt, this, -1, &thread_vec, &file_type_settings, osicons);
+	    fr = new Frame (leftcontrolframe, leftframe, pt, this, -1);
 
 	else
-	    fr = new Frame (rightcontrolframe, rightframe, pt, this, -1, &thread_vec, &file_type_settings, osicons);
+	    fr = new Frame (rightcontrolframe, rightframe, pt, this, -1);
 	if (left_frame->f->active)
 	{
 	    left_frame->hf->reparent (controlframe);
@@ -681,7 +758,7 @@ long MainWindow::onTimer (FXObject *, FXSelector, void *)
 {
     vector < thread_elem * >::iterator iter;
     unsigned int indx;
-    for (iter = thread_vec.begin (); iter != thread_vec.end (); iter++)
+    for (iter = objmanager->thread_vec.begin (); iter != objmanager->thread_vec.end (); iter++)
     {
 	bool end = false;
 	informationpanel *infp;
@@ -860,7 +937,7 @@ long MainWindow::onTimer (FXObject *, FXSelector, void *)
 		infoframe->recalc ();
 
 		//erase from vector and delete telem;   
-		thread_vec.erase (iter);
+		objmanager->thread_vec.erase (iter);
 		delete telem;
 		break;
 	    }
@@ -937,7 +1014,7 @@ long MainWindow::cancel (FXObject * sender, FXSelector, void *)
 }
 
 //-----FRAME---------------------------------------------------------------------------------------------------------------------------         
-Frame::Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, int position = 0, vector < thread_elem * >*thread_vec = NULL, map < string, file_type * >*file_type_settings = NULL, FXGIFIcon ** specialicons = NULL)
+Frame::Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, int position = 0)
 {
     this->pathdir = pt.dir;
     this->type = pt.type;
@@ -949,11 +1026,15 @@ Frame::Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, in
     int z = 0;
     FXButton *prebutton = NULL;
     FXButton *nextbutton = NULL;
-    toleft = new FXButton (hf, "", specialicons[4], tgt, MainWindow::ID_TOLEFT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    
+    objectmanager*objmanager=objectmanager::instance(cp->getApp());
+
+          
+    toleft = new FXButton (hf, "",objmanager->osicons["left"], tgt, MainWindow::ID_TOLEFT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     toleft->setUserData (new box (this, NULL, NULL, NULL));
-    toclose = new FXButton (hf, "", specialicons[5], tgt, MainWindow::ID_TOCLOSE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    toclose = new FXButton (hf, "", objmanager->osicons["close"], tgt, MainWindow::ID_TOCLOSE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     toclose->setUserData (new box (this, NULL, NULL, NULL));
-    toright = new FXButton (hf, "", specialicons[6], tgt, MainWindow::ID_TORIGHT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    toright = new FXButton (hf, "", objmanager->osicons["right"], tgt, MainWindow::ID_TORIGHT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     toright->setUserData (new box (this, NULL, NULL, NULL));
 
 //new FXLabel (hf," ");
@@ -990,7 +1071,7 @@ Frame::Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, in
     }
     this->position = position;
     frame = new FXVerticalFrame (p, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    f = new filelist (frame, pt, thread_vec, file_type_settings, specialicons);
+    f = new filelist (frame, pt);
     if (position == 0)
     {
 	frame->hide ();
