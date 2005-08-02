@@ -1338,8 +1338,8 @@ long filelist::onPopup (FXObject *, FXSelector, void *ptr)
 			    comm_s.append (res);
 
 			    new FXButton (shutterItem->getContent (), res.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-			    commands_tab[command_num++] = comm_s.c_str ();
-
+			    commands_tab.push_back(comm_s.c_str ());
+			    command_num++;
 
 			}
 
@@ -1358,7 +1358,8 @@ long filelist::onPopup (FXObject *, FXSelector, void *ptr)
 		    comm_s.append (res);
 
 		    new FXButton (shutterItem->getContent (), res.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-		    commands_tab[command_num++] = comm_s.c_str ();
+		    commands_tab.push_back(comm_s.c_str ());
+		    command_num++;
 
 		}
 

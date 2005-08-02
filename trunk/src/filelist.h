@@ -50,7 +50,7 @@ class filelist:public FXIconList
     FXLabel *info;
     FXMenuPane *popupmenu;
     FXMenuPane *popupwindow;
-    string commands_tab[50];	//IMPORTANT
+    vector < string > commands_tab;
    
     FXTextField *textfield;
     FXOptionMenu *sortmenu;
