@@ -42,6 +42,7 @@ FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
 	FXMAPFUNC (SEL_DOUBLECLICKED, filelist::ID_ICO, filelist::openfile),
 	FXMAPFUNC (SEL_CLICKED, filelist::ID_ICO, filelist::click),
 	FXMAPFUNC (SEL_MIDDLEBUTTONPRESS, filelist::ID_ICO, filelist::gotoparentdir),
+	FXMAPFUNC (SEL_COMMAND, filelist::ID_PARENTDIR, filelist::gotoparentdir),
 	FXMAPFUNC (SEL_RIGHTBUTTONRELEASE, filelist::ID_ICO, filelist::onPopup),
 	FXMAPFUNCS (SEL_COMMAND, filelist::ID_TEXTFIELD_REG, filelist::ID_TEXTFIELD_GET, filelist::parseTextField),
 	FXMAPFUNCS (SEL_COMMAND, filelist::ID_LAST, filelist::ID_LAST + 50, filelist::file_operation),
@@ -50,6 +51,7 @@ FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_MAXIMIZE, filelist::onMaximize),
 	FXMAPFUNC (SEL_COMMAND, cmddialog::ID_COMMAND, filelist::onCommand),
 	FXMAPFUNC (SEL_COMMAND, cmddialog::ID_CANCEL_COMMAND, filelist::onCommandCancel),
+	FXMAPFUNC (SEL_COMMAND, filelist::ID_HOME, filelist::onGoHome),
 	FXMAPFUNC (SEL_DRAGGED, 0, filelist::onDragged),
 	FXMAPFUNC (SEL_DND_ENTER, 0, filelist::onDNDEnter),
 	FXMAPFUNC (SEL_DND_LEAVE, 0, filelist::onDNDLeave),
@@ -58,10 +60,10 @@ FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
 	FXMAPFUNC (SEL_DND_REQUEST, 0, filelist::onDNDRequest),
 	FXMAPFUNC (SEL_BEGINDRAG, 0, filelist::onBeginDrag),
 	FXMAPFUNC (SEL_ENDDRAG, 0, filelist::onEndDrag),
-	FXMAPFUNC (SEL_COMMAND, filelist::ID_CLIP_COPY, filelist::onCmdCopySel),
+	FXMAPFUNCS (SEL_COMMAND, filelist::ID_CLIP_COPY,filelist::ID_CLIP_CUT, filelist::onCmdCopySel),
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_CLIP_PASTE, filelist::onCmdPasteSel), 
-	FXMAPFUNC (SEL_CLIPBOARD_LOST, 0, filelist::onClipboardLost), 
-	FXMAPFUNC (SEL_CLIPBOARD_GAINED, 0, filelist::onClipboardGained), 
+	//FXMAPFUNC (SEL_CLIPBOARD_LOST, 0, filelist::onClipboardLost), 
+	//FXMAPFUNC (SEL_CLIPBOARD_GAINED, 0, filelist::onClipboardGained), 
 	FXMAPFUNC (SEL_CLIPBOARD_REQUEST, 0, filelist::onClipboardRequest),
 	FXMAPFUNCS (SEL_COMMAND, filelist::ID_CHANGE_VIEW_SMALL, filelist::ID_CHANGE_VIEW_DETAILS, filelist::onChangeView),
 	
@@ -323,19 +325,40 @@ long filelist::onClipboardRequest (FXObject * sender, FXSelector sel, void *ptr)
 
     len = dragfiles.length ();
     FXMEMDUP (&data, dragfiles.text (), FXuchar, len);
-    setDNDData (FROM_DRAGNDROP, event->target, data, len);
-
+    setDNDData (FROM_CLIPBOARD, event->target, data, len);
+//ZMIANA
     return 0;
 }
 
-long filelist::onCmdCopySel (FXObject *, FXSelector, void *)
+long filelist::onCmdCopySel (FXObject *, FXSelector sel, void *ptr)
 {
+    
     fxmessage ("COPY");
     FXDragType types[1];
     types[0] = urilistType;
 
     if (acquireClipboard (types, 1))
     {
+   
+    FXushort id = FXSELID (sel);
+
+    if (id == ID_CLIP_COPY)
+    {
+    fxmessage("TYLKO KOPIUJ");
+    dropaction=DRAG_COPY;
+    }
+    else if (id == ID_CLIP_CUT)
+    {
+    fxmessage("TYLKO PRZENIES");
+    dropaction=DRAG_MOVE;
+    }
+    
+    
+     //FXEvent *event = (FXEvent *) ptr;
+     //handleDrag (event->root_x, event->root_y, dropaction);
+     
+filelist_opposite->dropaction=dropaction;
+
 	fxmessage ("ok");
 	dragfiles = FXString::null;
 	for (int i = 0; i < getNumItems (); i++)
@@ -350,6 +373,10 @@ long filelist::onCmdCopySel (FXObject *, FXSelector, void *)
 		    if (!dragfiles.empty ())
 			dragfiles += "\r\n";
 		    dragfiles += FXURL::fileToURL (fullname.c_str ());
+		     fxmessage("\nplik: ");
+	   	 fxmessage(fullname.c_str());
+	    	fxmessage("\n");
+		    
 		}
 	    }
 	}
@@ -360,8 +387,11 @@ long filelist::onCmdCopySel (FXObject *, FXSelector, void *)
 
 
 // Paste
-long filelist::onCmdPasteSel (FXObject *, FXSelector, void *)
+long filelist::onCmdPasteSel (FXObject *, FXSelector sel, void *)
 {
+
+
+
     fxmessage ("PASTE");
     dropData (true);
 }
@@ -377,10 +407,11 @@ void filelist::dropData (bool clipboard)
 	origin = FROM_CLIPBOARD;
     else
 	origin = FROM_DRAGNDROP;
-
+fxmessage("KOPIUJEMY");
     // Get uri-list of files being dropped
     if (getDNDData (origin, urilistType, data, len))
     {
+fxmessage("TAK");    
 	FXRESIZE (&data, FXuchar, len + 1);
 	data[len] = '\0';
 	FXchar *p, *q;
@@ -408,7 +439,13 @@ void filelist::dropData (bool clipboard)
 	{
 	    srclist[ind] = vec[i];
 	    ind++;
+	    fxmessage("\n");
+	    fxmessage(srclist[ind].c_str());
+	    fxmessage("\n");
 	}
+	fxmessage("\nPATH=");
+	fxmessage(path.c_str());
+	
 	srclist[ind] = "";
 	string com_name;
 	if (dropaction == DRAG_MOVE)
@@ -427,8 +464,8 @@ void filelist::dropData (bool clipboard)
 	FXFREE (&data);
 
     }
-
-
+dropaction=DRAG_MOVE;
+filelist_opposite->dropaction=dropaction=DRAG_MOVE;
 
 }
 
@@ -523,6 +560,7 @@ FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSE
     FXAccelTable *table = getShell ()->getAccelTable ();
     table->addAccel (MKUINT (KEY_a, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_SELECT_ALL));
     table->addAccel (MKUINT (KEY_c, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_COPY));
+    table->addAccel (MKUINT (KEY_x, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_CUT));
     table->addAccel (MKUINT (KEY_v, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_PASTE));
     table->addAccel (MKUINT (KEY_F5, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REFRESH));
     table->addAccel (MKUINT (KEY_Delete, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REMOVE));
@@ -631,9 +669,15 @@ this->type=path.substr(0,pos);
 
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
-    new FXButton (toolbar, "", objmanager->osicons["smallicons"], this, filelist::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", objmanager->osicons["bigicons"], this, filelist::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["bigicons"], this, filelist::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["smallicons"], this, filelist::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", objmanager->osicons["details"], this, filelist::ID_CHANGE_VIEW_DETAILS, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["reload"], this, filelist::ID_REFRESH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["home"], this, filelist::ID_HOME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["dirup"], this, filelist::ID_PARENTDIR, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["copy"], this, filelist::ID_CLIP_COPY, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["cut"], this, filelist::ID_CLIP_CUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["paste"], this, filelist::ID_CLIP_PASTE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
 
 
 	dial = NULL;
@@ -966,6 +1010,8 @@ void filelist::opendir (string dir)
 
 long filelist::setFocus (FXObject * obj, FXSelector sel, void *ptr)
 {
+
+fxmessage("\n FOCUS\n");
 
     active = true;
     filelist_opposite->active = false;
@@ -2011,3 +2057,7 @@ long filelist::onChangeView (FXObject * sender, FXSelector sel, void *)
     }
 }
 
+long filelist::onGoHome (FXObject * sender, FXSelector, void *)
+{
+    opendir(FXFile::getHomeDirectory ().text ());
+}

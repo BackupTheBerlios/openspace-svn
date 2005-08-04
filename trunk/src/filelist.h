@@ -35,10 +35,13 @@ class filelist:public FXIconList
 	ID_REFRESH,
 	ID_MAXIMIZE,
 	ID_CLIP_COPY,
+	ID_CLIP_CUT,
 	ID_CLIP_PASTE,
 	ID_CHANGE_VIEW_SMALL,
 	ID_CHANGE_VIEW_BIG,
 	ID_CHANGE_VIEW_DETAILS,
+	ID_HOME,
+	ID_PARENTDIR,
 	ID_LAST,
     };
 
@@ -116,6 +119,7 @@ class filelist:public FXIconList
     long filelist::parseTextField (FXObject * sender, FXSelector, void *);
     long filelist::keyPress (FXObject * sender, FXSelector, void *);
     long filelist::onMaximize (FXObject * sender, FXSelector, void *);
+    long filelist::onGoHome (FXObject * sender, FXSelector, void *);
 
     long onDNDEnter (FXObject *, FXSelector, void *);
     long onDNDLeave (FXObject *, FXSelector, void *);
