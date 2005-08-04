@@ -336,6 +336,12 @@ long filelist::onCmdCopySel (FXObject *, FXSelector sel, void *ptr)
     fxmessage ("COPY");
     FXDragType types[1];
     types[0] = urilistType;
+    
+   filelist *fil;
+   if (active)
+	fil = this;
+    else
+	fil = filelist_opposite;
 
     if (acquireClipboard (types, 1))
     {
@@ -361,13 +367,13 @@ filelist_opposite->dropaction=dropaction;
 
 	fxmessage ("ok");
 	dragfiles = FXString::null;
-	for (int i = 0; i < getNumItems (); i++)
+	for (int i = 0; i < fil->getNumItems (); i++)
 	{
-	    if (isItemSelected (i))
+	    if (fil->isItemSelected (i))
 	    {
-		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+		os_ListItem *oslistitem = (os_ListItem *) fil->getItem (i);
 		string name = oslistitem->osf.name;
-		string fullname = path + SEPARATOR + name;
+		string fullname = fil->path + SEPARATOR + name;
 		if (name != "." && name != "..")
 		{
 		    if (!dragfiles.empty ())
@@ -398,6 +404,12 @@ long filelist::onCmdPasteSel (FXObject *, FXSelector sel, void *)
 
 void filelist::dropData (bool clipboard)
 {
+
+   filelist *fil;
+   if (active)
+	fil = this;
+    else
+	fil = filelist_opposite;
 
 
     FXuchar *data;
@@ -456,7 +468,7 @@ fxmessage("TAK");
 
 	string options = "download";
 	FXTRACE ((5, "copy/move/remove"));
-	thread_elem *el = new thread_elem (fb, com_name, options, srclist, path);
+	thread_elem *el = new thread_elem (fb, com_name, options, srclist, fil->path);
 	start_thread (el);
 
 
