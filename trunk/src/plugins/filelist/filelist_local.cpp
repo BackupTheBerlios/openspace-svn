@@ -68,6 +68,8 @@ int filelist_local::init (vector < string > *vector_name, vector < int >*vector_
 
 	    if (res == "size")
 		vector_type->push_back (1);
+	    else if(res == "accessed")
+	    	vector_type->push_back (2);	
 	    else
 		vector_type->push_back (0);
 

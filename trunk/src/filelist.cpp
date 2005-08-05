@@ -20,6 +20,8 @@ using namespace std;
 #include <fxkeys.h>
 
 
+#include <time.h>
+
 
 #include "sharedobjects.h"
 
@@ -1868,10 +1870,17 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
     }
     else
     {
+    fxmessage("\nnr=%d",fl->sort_nr);
+    
 
-	p = (const unsigned char *) a->osf.attrib[fl->sort_nr].c_str ();
-	q = (const unsigned char *) b->osf.attrib[fl->sort_nr].c_str ();
+	p = (const unsigned char *) a->osf.attrib[fl->sort_nr-1].c_str ();
+	q = (const unsigned char *) b->osf.attrib[fl->sort_nr-1].c_str ();
+	fxmessage((const char*)p);
+    fxmessage((const char*)q);
+	
     }
+    
+    
     if (fl->vector_type[fl->sort_nr] == 1)	//size      
     {
 
@@ -1886,6 +1895,29 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 	    return 1;
 
     }
+    else if(fl->vector_type[fl->sort_nr] == 2)  //date
+    {
+    
+    
+       struct tm tm1;
+       struct tm tm2;
+
+       strptime((const char*)p, "%H:%M %d/%m/%y", &tm1);
+       strptime((const char*)q, "%H:%M %d/%m/%y", &tm2);
+    
+      if(mktime(&tm1)>mktime(&tm2)) 
+      {
+      fxmessage("1");
+      	return 1;
+      }
+      else if(mktime(&tm1)<mktime(&tm2))
+      {
+      fxmessage("x");
+      	return -1;    
+      }
+      else
+      	return 0;
+    } 
     else			//string
     {
 
