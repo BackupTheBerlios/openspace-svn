@@ -262,8 +262,8 @@
 				<header>size</header>
 				<header>owner</header>
 				<header>group</header>
-				<header>accessed</header>
 				<header>mode</header>
+				<header>modified</header>
 				
 				
 			</headers>
@@ -283,8 +283,11 @@
 					<width>80</width>
 				</mode>
 				<accessed>
-					<width>200</width>
+					<width>100</width>
 				</accessed>
+				<modified>
+					<width>100</width>
+				</modified>
 			</properties>
 			<thumbs>
 				<size>100000</size>
@@ -310,7 +313,7 @@
 					<width>80</width>
 				</owner>
 				<accessed>
-					<width>200</width>
+					<width>100</width>
 				</accessed>
 			</properties>
 		</scp>

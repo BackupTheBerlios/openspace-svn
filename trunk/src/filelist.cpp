@@ -1870,13 +1870,13 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
     }
     else
     {
-    fxmessage("\nnr=%d",fl->sort_nr);
+  //  fxmessage("\nnr=%d",fl->sort_nr);
     
 
 	p = (const unsigned char *) a->osf.attrib[fl->sort_nr-1].c_str ();
 	q = (const unsigned char *) b->osf.attrib[fl->sort_nr-1].c_str ();
-	fxmessage((const char*)p);
-    fxmessage((const char*)q);
+	//fxmessage((const char*)p);
+    	//fxmessage((const char*)q);
 	
     }
     
@@ -1904,19 +1904,24 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 
        strptime((const char*)p, "%H:%M %d/%m/%y", &tm1);
        strptime((const char*)q, "%H:%M %d/%m/%y", &tm2);
+    time_t t1=mktime(&tm1);
+    time_t t2=mktime(&tm2);
+   
+   //if(ascend)
+   //fxmessage("A");
     
-      if(mktime(&tm1)>mktime(&tm2)) 
-      {
-      fxmessage("1");
-      	return 1;
-      }
-      else if(mktime(&tm1)<mktime(&tm2))
-      {
-      fxmessage("x");
-      	return -1;    
-      }
-      else
-      	return 0;
+      if(t1>t2) 
+      	if(ascend)
+      	  return 1;
+	else  
+	  return -1;
+      else  if(t1<t2)	
+      	if(ascend)
+      	  return -1;
+	else  
+	  return 1;
+      else 
+      	return 0;		      
     } 
     else			//string
     {
@@ -1997,10 +2002,11 @@ long filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
     {
 	num = (int) ptr;
     }
-
+fxmessage("nr=%d\n",num);
     if (num == sort_nr)
     {
 	ascend = !ascend;
+	fxmessage("zmiana trybu\n");
     }
     else
     {

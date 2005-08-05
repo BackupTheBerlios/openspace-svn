@@ -68,7 +68,7 @@ int filelist_local::init (vector < string > *vector_name, vector < int >*vector_
 
 	    if (res == "size")
 		vector_type->push_back (1);
-	    else if(res == "accessed")
+	    else if(res == "accessed" || res == "modified" || res == "created")
 	    	vector_type->push_back (2);	
 	    else
 		vector_type->push_back (0);
@@ -170,13 +170,11 @@ osfile filelist_local::osreaddir ()
 	else if (fields[i + 1] == "group")
 	    os_file.attrib[i] = FXFile::group (os_file.name.c_str ()).text ();
 	else if (fields[i + 1] == "accessed")
-	{
-	    //time_t tt=(time_t)FXFile::accessed(os_file.name.c_str());
-	    //os_file.attrib[i]=ctime(&tt);
 	    os_file.attrib[i] = FXFile::time ("%H:%M %d/%m/%y", FXFile::accessed (os_file.name.c_str ())).text ();
-
-	    //delete &tt;
-	}
+	else if (fields[i + 1] == "created")
+	    os_file.attrib[i] = FXFile::time ("%H:%M %d/%m/%y", FXFile::created (os_file.name.c_str ())).text (); 
+	else if (fields[i + 1] == "modified")
+ 	    os_file.attrib[i] = FXFile::time ("%H:%M %d/%m/%y", FXFile::modified (os_file.name.c_str ())).text ();       
 	else if (fields[i + 1] == "mode")
 	{
 
