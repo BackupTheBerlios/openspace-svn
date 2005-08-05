@@ -1230,7 +1230,7 @@ long filelist::onPopup (FXObject *, FXSelector, void *ptr)
     if (processing)
 	return 0;
 
-
+commands_tab.clear();
 
     FXEvent *event = (FXEvent *) ptr;
     selectitem ();
