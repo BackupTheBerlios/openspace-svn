@@ -675,21 +675,35 @@ this->type=path.substr(0,pos);
 	new FXButton (toolbar, "Go", 0, this, filelist::ID_TEXTFIELD_GO, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXButton (toolbar, "Get", 0, this, filelist::ID_TEXTFIELD_GET, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 
+    new FXSeparator (toolbar, SEPARATOR_NONE);
+    new FXSeparator (toolbar, SEPARATOR_GROOVE);
+    new FXSeparator (toolbar, SEPARATOR_NONE);
+	
 	if (conf->readonestring ("/OpenspaceConfig/panels") == "single")
 	    new FXButton (toolbar, "", objmanager->osicons["min"], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 	else
 	new FXButton (toolbar, "", objmanager->osicons["max"], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-
-
-
+  
     new FXSeparator (toolbar, SEPARATOR_NONE);
+    new FXSeparator (toolbar, SEPARATOR_GROOVE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
+    
     new FXButton (toolbar, "", objmanager->osicons["bigicons"], this, filelist::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", objmanager->osicons["smallicons"], this, filelist::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", objmanager->osicons["details"], this, filelist::ID_CHANGE_VIEW_DETAILS, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+  
+    new FXSeparator (toolbar, SEPARATOR_NONE);
+    new FXSeparator (toolbar, SEPARATOR_GROOVE);
+    new FXSeparator (toolbar, SEPARATOR_NONE);
+    
     new FXButton (toolbar, "", objmanager->osicons["reload"], this, filelist::ID_REFRESH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", objmanager->osicons["home"], this, filelist::ID_HOME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", objmanager->osicons["dirup"], this, filelist::ID_PARENTDIR, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+   
+    new FXSeparator (toolbar, SEPARATOR_NONE);
+    new FXSeparator (toolbar, SEPARATOR_GROOVE);
+    new FXSeparator (toolbar, SEPARATOR_NONE);
+   
     new FXButton (toolbar, "", objmanager->osicons["copy"], this, filelist::ID_CLIP_COPY, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", objmanager->osicons["cut"], this, filelist::ID_CLIP_CUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", objmanager->osicons["paste"], this, filelist::ID_CLIP_PASTE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
