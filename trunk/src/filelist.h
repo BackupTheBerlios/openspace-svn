@@ -120,6 +120,7 @@ class filelist:public FXIconList
     long filelist::keyPress (FXObject * sender, FXSelector, void *);
     long filelist::onMaximize (FXObject * sender, FXSelector, void *);
     long filelist::onGoHome (FXObject * sender, FXSelector, void *);
+    long filelist::setKeys (void);
 
     long onDNDEnter (FXObject *, FXSelector, void *);
     long onDNDLeave (FXObject *, FXSelector, void *);

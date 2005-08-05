@@ -337,12 +337,7 @@ long filelist::onCmdCopySel (FXObject *, FXSelector sel, void *ptr)
     FXDragType types[1];
     types[0] = urilistType;
     
-   filelist *fil;
-   if (active)
-	fil = this;
-    else
-	fil = filelist_opposite;
-
+ 
     if (acquireClipboard (types, 1))
     {
    
@@ -367,13 +362,13 @@ filelist_opposite->dropaction=dropaction;
 
 	fxmessage ("ok");
 	dragfiles = FXString::null;
-	for (int i = 0; i < fil->getNumItems (); i++)
+	for (int i = 0; i < getNumItems (); i++)
 	{
-	    if (fil->isItemSelected (i))
+	    if (isItemSelected (i))
 	    {
-		os_ListItem *oslistitem = (os_ListItem *) fil->getItem (i);
+		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
 		string name = oslistitem->osf.name;
-		string fullname = fil->path + SEPARATOR + name;
+		string fullname = path + SEPARATOR + name;
 		if (name != "." && name != "..")
 		{
 		    if (!dragfiles.empty ())
@@ -468,7 +463,7 @@ fxmessage("TAK");
 
 	string options = "download";
 	FXTRACE ((5, "copy/move/remove"));
-	thread_elem *el = new thread_elem (fb, com_name, options, srclist, fil->path);
+	thread_elem *el = new thread_elem (fb, com_name, options, srclist, path);
 	start_thread (el);
 
 
@@ -553,6 +548,20 @@ void filelist::create ()
 }
 
 //--------------------------------------------------------------------------------
+//bind keys
+long filelist::setKeys (void)
+{
+
+    FXAccelTable *table = getShell ()->getAccelTable ();
+    table->addAccel (MKUINT (KEY_a, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_SELECT_ALL));
+    table->addAccel (MKUINT (KEY_c, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_COPY));
+    table->addAccel (MKUINT (KEY_x, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_CUT));
+    table->addAccel (MKUINT (KEY_v, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_PASTE));
+    table->addAccel (MKUINT (KEY_F5, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REFRESH));
+    table->addAccel (MKUINT (KEY_Delete, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REMOVE));
+
+}
+
 
 filelist::filelist (FXComposite * p, pathtype pt):
 FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
@@ -564,18 +573,12 @@ FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSE
     popupmenu = NULL;
     sortpop = NULL;
 
-
+    setKeys();
 
     dropaction = DRAG_MOVE;
 
-//bind keys
-    FXAccelTable *table = getShell ()->getAccelTable ();
-    table->addAccel (MKUINT (KEY_a, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_SELECT_ALL));
-    table->addAccel (MKUINT (KEY_c, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_COPY));
-    table->addAccel (MKUINT (KEY_x, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_CUT));
-    table->addAccel (MKUINT (KEY_v, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_PASTE));
-    table->addAccel (MKUINT (KEY_F5, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REFRESH));
-    table->addAccel (MKUINT (KEY_Delete, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REMOVE));
+
+   
 
     objmanager=objectmanager::instance(getApp());
 
@@ -766,32 +769,25 @@ long filelist::keyPress (FXObject * sender, FXSelector sel, void *ptr)
     if (processing)
 	return 0;
 
-    filelist *fil;
-    if (active)
-	fil = this;
-    else
-	fil = filelist_opposite;
-
-
 
     FXushort id = FXSELID (sel);
 
     if (id == ID_SELECT_ALL)
     {
-	for (int i = 0; i < fil->getNumItems (); i++)
+	for (int i = 0; i < getNumItems (); i++)
 	{
 	    string name = getItem (i)->getText ().text ();
 	    if (name != "." && name != "..")
-		fil->selectItem (i);
+		selectItem (i);
 	}
     }
     else if (id == ID_REFRESH)
     {
-	fil->refresh ();
+	refresh ();
     }
     else if (id == ID_REMOVE)
     {
-	fil->copymoveremove ("remove");
+	copymoveremove ("remove");
     }
 }
 
@@ -1024,7 +1020,7 @@ long filelist::setFocus (FXObject * obj, FXSelector sel, void *ptr)
 {
 
 fxmessage("\n FOCUS\n");
-
+setKeys();
     active = true;
     filelist_opposite->active = false;
     filelist_opposite->toolbar->hide();	
