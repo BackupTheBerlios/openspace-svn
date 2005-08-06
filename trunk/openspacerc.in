@@ -320,6 +320,13 @@
 				</accessed>
 			</properties>
 		</scp>
+		<search>
+			<properties>
+				<name>
+					<width>400</width>					
+				</name>
+			</properties>	
+		</search>
 		
 		
 	</filelist>

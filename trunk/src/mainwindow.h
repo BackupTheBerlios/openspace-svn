@@ -46,6 +46,7 @@ class MainWindow:public FXMainWindow
 	ID_SKIP_ALL,
 	ID_ABOUT,
 	ID_CONFIGURE,
+	ID_NEW_SEARCH,
 	ID_LAST,
     };
 
@@ -60,6 +61,7 @@ class MainWindow:public FXMainWindow
     long MainWindow::onChangeList (FXObject * sender, FXSelector, void *);
     long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *);
     long MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *);
+    long MainWindow::onNewSearchFrame (FXObject * sender, FXSelector, void *);
     long MainWindow::onNotify (FXObject * sender, FXSelector, void *);
     long MainWindow::onOpenDir (FXObject * sender, FXSelector, void *);
     long MainWindow::onTimer (FXObject *, FXSelector, void *);
@@ -95,7 +97,8 @@ class MainWindow:public FXMainWindow
     FXVerticalFrame *leftcontrolframe;
     FXVerticalFrame *left;
     FXVerticalFrame *right;
-    FXHorizontalFrame *networkframe;
+    FXHorizontalFrame *networkframe, *searchframe;
+    FXTextField *search_path,*search_filefilter;
 
     FXSplitter *splitter;
     FXMenuPane *filemenu;
@@ -127,6 +130,9 @@ class MainWindow:public FXMainWindow
     FXDockSite *bottomdock;
     FXDockSite *leftdock;
     FXDockSite *rightdock;
+    
+    FXComboBox *filelisttypecombobox;
+    
 objectmanager *objmanager;
 };
 

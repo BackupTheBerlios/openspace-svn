@@ -80,7 +80,7 @@ FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
 // Handle drag-and-drop enter, remember current directory
      long filelist::onDNDEnter (FXObject * sender, FXSelector sel, void *ptr)
 {
-    fxmessage ("DRAAAAAAAAAAAGI");
+    fxmessage ("DRAAAAAAAAAAAGING");
     FXIconList::onDNDEnter (sender, sel, ptr);
     //orgdirectory=getDirectory();
     return 1;
@@ -714,7 +714,7 @@ this->type=path.substr(0,pos);
 	dial = NULL;
 	processing = false;
 	this->pt = new pathtype (pt);
-	
+fxmessage("WTF???\n");	
 	
 	
 	
@@ -901,8 +901,7 @@ void filelist::copymoveremove (string com_name)
 
 
     FXTRACE ((5, "copy/move/remove"));
-    thread_elem *el = new thread_elem (fil, com_name, options, srclist,
-				       filelist_opposite->path);
+    thread_elem *el = new thread_elem (fil, com_name, options, srclist,filelist_opposite->path);
     start_thread (el);
 }
 

@@ -160,9 +160,6 @@ cmddialog (w, fb, src)
     grp->setNumVisible (5);
 
 
-
-
-
     if (fb->mode (src[0]) & S_IRUSR)
 	ur->setCheck ();
     if (fb->mode (src[0]) & S_IWUSR)
@@ -186,7 +183,6 @@ cmddialog (w, fb, src)
 
 
 
-
     // User names (sorted in ascending order)
     struct passwd *pwde;
     while ((pwde = getpwent ()))
@@ -195,12 +191,10 @@ cmddialog (w, fb, src)
 
     }
     endpwent ();
-
     user->setSortFunc (FXList::ascending);
     user->sortItems ();
     string own = fb->owner (src[0]);
     user->setCurrentItem (user->findItem (own.c_str ()));
-
 
     // Group names (sorted in ascending order)
     struct group *grpe;
@@ -213,7 +207,6 @@ cmddialog (w, fb, src)
     grp->sortItems ();
     string grou = fb->group (src[0]);
     grp->setCurrentItem (grp->findItem (grou.c_str ()));
-
 
 }
 

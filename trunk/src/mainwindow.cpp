@@ -40,6 +40,7 @@ FXDEFMAP (MainWindow) MainWindowMap[] =
 	FXMAPFUNCS (SEL_COMMAND, MainWindow::ID_OVERWRITE, MainWindow::ID_SKIP_ALL, MainWindow::onOverwrite),
 	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_NEWFRAME, MainWindow::onNewFrame),
 	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_NEW_NETWORK, MainWindow::onNewNetworkFrame),
+	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_NEW_SEARCH, MainWindow::onNewSearchFrame),
 	FXMAPFUNCS (SEL_COMMAND, 666, 668, MainWindow::onNotify),
 	FXMAPFUNC (SEL_TIMEOUT, MainWindow::ID_TIMER, MainWindow::onTimer),
 	FXMAPFUNC (SEL_COMMAND, MainWindow::ID_COMMANDS_SHOW, MainWindow::commandsShow),
@@ -231,32 +232,7 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     int w = atoi (conf->readonestring ("/OpenspaceConfig/mainwindow/width").c_str ());
     int h = atoi (conf->readonestring ("/OpenspaceConfig/mainwindow/height").c_str ());
     resize (w, h);
-/*
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/directory.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/big_directory.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/unknown.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/big_unknown.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/left.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/close.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/right.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/plus.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/execute.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/network.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/password.gif");	//10
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/user.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/smallicons.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/bigicons.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/details.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/pattern.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/executable.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/symlink.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/foxmini.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/foxbig.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/configure.gif");	//20
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/max.gif");
-    loadicon (conf->readonestring ("/OpenspaceConfig/path") + "icons/min.gif");
-    osicons[23] = NULL;
-*/
+
 // read icons for file types
     if (conf->openxpath ("/OpenspaceConfig/file_types") != -1)
     {
@@ -295,12 +271,7 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
 					LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | FRAME_RAISED);
     new FXToolBarGrip (toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_SINGLE);
 
-    /*
-    objmanager->thread_vec=&thread_vec;
-    objmanager->file_type_settings=&file_type_settings;
-    objmanager->specialicons=specialicons;
-    objmanager->osicons=osicons;
-    */
+
     FXVerticalFrame *ff = new FXVerticalFrame (this, LAYOUT_FILL_X | LAYOUT_FILL_Y);
     controlframe = new FXVerticalFrame (ff, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     splitter = new FXSplitter (ff, LAYOUT_FILL_X | SPLITTER_TRACKING | LAYOUT_FILL_Y);
@@ -319,9 +290,12 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     new FXButton (toolbar, "", objmanager->osicons["plus"], this, MainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", objmanager->osicons["directory"], this, MainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", objmanager->osicons["network"], this, MainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "", objmanager->osicons["search"], this, MainWindow::ID_NEW_SEARCH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
    
     new FXSeparator (toolbar, SEPARATOR_NONE);
+    new FXSeparator (toolbar, SEPARATOR_GROOVE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
+    
     new FXButton (toolbar, "\tconfiguration", objmanager->osicons["configure"], this, MainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", objmanager->osicons["foxmini"], this, MainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     string dir = parseDir (conf->readonestring ("/OpenspaceConfig/leftdir/dir"));
@@ -342,6 +316,7 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     right_frame->f->filelist_opposite = left_frame->f;
     infoframe = new FXVerticalFrame (ff, LAYOUT_FILL_X);
     networkframe = NULL;
+    searchframe = NULL;
     getApp ()->addTimeout (this, ID_TIMER, 200);
 }
 
@@ -376,21 +351,38 @@ long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
     string type;
     string str_server;
     string str_user;
-    if (networkframe == NULL)
+    if (networkframe == NULL && searchframe == NULL)
     {
 	dir = parseDir (conf->readonestring ("/OpenspaceConfig/defaultdir/dir"));
 	type = conf->readonestring ("/OpenspaceConfig/defaultdir/type");
     }
-
     else
     {
+	
+	
+	if (networkframe == NULL) //search
+	{
+	str_server = "find " + string(search_path->getText().text()) + " -name \"" + string(search_filefilter->getText().text()) +"\"" ;
 	dir = "/";
-	type = "scp";
+	type= "search";
+	
+	searchframe->hide ();
+	delete searchframe;
+	searchframe = NULL;
+	}
+	else			//network
+	{
+	dir = "/";
+	type = filelisttypecombobox->getText().text();
 	str_server = server->getText ().text ();
 	str_user = user->getText ().text ();
+	
 	networkframe->hide ();
 	delete networkframe;
 	networkframe = NULL;
+	}
+	
+	
 	controlframe->recalc ();
     }
     pathtype pt (dir, type, str_server, str_user);
@@ -417,11 +409,25 @@ long MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 	user = new FXTextField (networkframe, 20);
 	new FXLabel (networkframe, "pass:", objmanager->osicons["password"]);
 	password = new FXTextField (networkframe, 20);
-	FXComboBox *combobox = new FXComboBox (networkframe, 4, NULL, 0,
+	filelisttypecombobox = new FXComboBox (networkframe, 4, NULL, 0,
 					       FRAME_THICK | LAYOUT_SIDE_TOP | COMBOBOX_STATIC);
-	combobox->setNumVisible (2);
-	combobox->appendItem ("scp");
-	combobox->appendItem ("ftp");
+					       
+	int count=0;				       
+	if (conf->openxpath ("/OpenspaceConfig/filelist") != -1)
+   	{
+	    while (1)
+	    {
+	    string res = conf->getnextnode ();
+	        if (res == "")
+		break;	
+		filelisttypecombobox->appendItem (res.c_str());
+		count++;
+	    }				       
+	}				       
+					       
+					       
+	filelisttypecombobox->setNumVisible (count);
+
 	new FXButton (networkframe, "connect", NULL, this, MainWindow::ID_NEWFRAME, FRAME_RAISED, 0, 0, 0, 0, 0, 0, 0, 0);
 	networkframe->create ();
 	networkframe->recalc ();
@@ -432,6 +438,36 @@ long MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 	networkframe->hide ();
 	delete networkframe;
 	networkframe = NULL;
+	controlframe->recalc ();
+    }
+}
+
+
+long MainWindow::onNewSearchFrame (FXObject * sender, FXSelector, void *)
+{
+    if (searchframe == NULL)
+    {
+	searchframe = new FXHorizontalFrame (controlframe, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXLabel (searchframe, "path: ");
+	search_path=new FXTextField (searchframe, 20);
+		if (left_frame->f->active)
+		search_path->setText(left_frame->f->path.c_str());
+		else
+		search_path->setText(right_frame->f->path.c_str());
+		
+		
+	new FXLabel (searchframe, "file filter: ");
+	search_filefilter=new FXTextField (searchframe, 20);
+	new FXButton (searchframe, "search", NULL, this, MainWindow::ID_NEWFRAME, FRAME_RAISED, 0, 0, 0, 0, 0, 0, 0, 0);
+	searchframe->create ();
+	searchframe->recalc ();
+    }
+
+    else
+    {
+	searchframe->hide ();
+	delete searchframe;
+	searchframe = NULL;
 	controlframe->recalc ();
     }
 }
