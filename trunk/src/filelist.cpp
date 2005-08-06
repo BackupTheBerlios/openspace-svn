@@ -714,6 +714,58 @@ this->type=path.substr(0,pos);
 	dial = NULL;
 	processing = false;
 	this->pt = new pathtype (pt);
+	
+	
+	
+	
+	
+	
+    vector_name.push_back ("name");
+    string wi;
+
+    if ((wi = conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/name/width")) != "")
+	vector_width.push_back (atoi (wi.c_str ()));
+    else
+	vector_width.push_back (100);
+
+    vector_type.push_back (0);
+
+
+    int counter = 1;
+
+   // display_size = conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/name/display");
+
+    if (conf->openxpath ("/OpenspaceConfig/filelist/"+type+"/headers/header") != -1)
+    {
+	while (1)
+	{
+	    string res = conf->getnextstring ();
+	    if (res == "")
+		break;
+
+	    if ((wi = conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/" + res + "/width")) != "")
+		vector_width.push_back (atoi (wi.c_str ()));
+	    else
+		vector_width.push_back (40);
+
+
+	    vector_name.push_back (res);
+
+	    string fieldtype=conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/" + res + "/type");
+	    	    
+	    if (fieldtype == "size")
+		vector_type.push_back (1);
+	    else if(fieldtype == "date")
+	    	vector_type.push_back (2);	
+	    else
+		vector_type.push_back (0);
+
+	    counter++;
+	}
+    }
+	
+	
+	
 	//if(type!="local")
 	if (1)
 	{
@@ -741,8 +793,10 @@ filelist::~filelist ()
 void filelist::init ()
 {
 
+
+
     if (!processing)
-	fb->init (&vector_name, &vector_type, &vector_width, *pt, conf);
+	fb->init (&vector_name,*pt, conf);
 
     for (int i = 0; i < vector_name.size (); i++)
     {
@@ -1773,7 +1827,7 @@ void *filelist::thread_func (void *data)
     else if (el->command == "init")
     {
 
-	fb->init (&filel->vector_name, &filel->vector_type, &filel->vector_width, (*(filel->pt)), conf);
+	fb->init (&filel->vector_name, (*(filel->pt)), conf);
 
     }
 

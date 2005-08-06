@@ -32,7 +32,7 @@ class filelist_local:public filelist_base
     int move (thread_elem * te);
     int remove (thread_elem * te);
     int rename (string orgname, string newname);
-    int init (vector < string > *vector_name, vector < int >*vector_type, vector < int >*vector_width, pathtype pt, configure * conf);
+    int init (vector < string > *vector_name, pathtype pt, configure * conf);
     int mode (string file);
     string owner (string file);
     string group (string file);

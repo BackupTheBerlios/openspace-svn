@@ -29,55 +29,12 @@
 
 vector < string > name;
 
-int filelist_local::init (vector < string > *vector_name, vector < int >*vector_type, vector < int >*vector_width, pathtype pt, configure * conf)
+int filelist_local::init (vector < string > *vector_name,pathtype pt, configure * conf)
 {
 
     configure conflocal = *conf;
 
-    vector_name->push_back ("name");
-    string wi;
 
-    if ((wi = conflocal.readonestring ("/OpenspaceConfig/filelist/local/properties/name/width")) != "")
-	vector_width->push_back (atoi (wi.c_str ()));
-    else
-	vector_width->push_back (100);
-
-    vector_type->push_back (0);
-
-
-    int counter = 1;
-
-    display_size = conflocal.readonestring ("/OpenspaceConfig/filelist/local/properties/name/display");
-
-    if (conflocal.openxpath ("/OpenspaceConfig/filelist/local/headers/header") != -1)
-    {
-	while (1)
-	{
-	    string res = conflocal.getnextstring ();
-	    if (res == "")
-		break;
-
-	    if ((wi = conflocal.readonestring ("/OpenspaceConfig/filelist/local/properties/" + res + "/width")) != "")
-		vector_width->push_back (atoi (wi.c_str ()));
-	    else
-		vector_width->push_back (40);
-
-
-	    vector_name->push_back (res);
-
-
-	    if (res == "size")
-		vector_type->push_back (1);
-	    else if(res == "accessed" || res == "modified" || res == "created")
-	    	vector_type->push_back (2);	
-	    else
-		vector_type->push_back (0);
-
-
-
-	    counter++;
-	}
-    }
 
 
 

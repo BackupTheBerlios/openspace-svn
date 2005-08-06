@@ -270,11 +270,12 @@
 			<style>big icons</style>
 			<properties>
 				<name>
-					<width>180</width>
+					<width>180</width>					
 				</name>
 				<size>
 					<width>80</width>
 					<display>MB</display>
+					<type>size</type>
 				</size>
 				<owner>
 					<width>80</width>
@@ -284,9 +285,11 @@
 				</mode>
 				<accessed>
 					<width>100</width>
+					<type>date</type>
 				</accessed>
 				<modified>
 					<width>100</width>
+					<type>date</type>
 				</modified>
 			</properties>
 			<thumbs>
