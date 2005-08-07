@@ -1,0 +1,6 @@
+video:mplayer xine
+video/quicktime:mplayer xine
+video/x-msvideo:mpayer xine
+video/mpeg:mplayer xine
+image/bmp:gimp qiv
+application/pdf:acroread xpdf

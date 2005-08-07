@@ -3,7 +3,7 @@
 #include <map>
 #include <vector>
 #include <list>
-#include <algorithm>
+
 
 using namespace std;
 
@@ -285,7 +285,7 @@ long filelist::onDragged (FXObject * sender, FXSelector sel, void *ptr)
 string getfiletype (string name)
 {
 
-    transform (name.begin (), name.end (), name.begin (), tolower);
+    //std::transform (name.begin (), name.end (), name.begin (), std::tolower);
 
     string r = MimeType::getMimeFromName (name);
 

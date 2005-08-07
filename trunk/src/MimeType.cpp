@@ -3,6 +3,8 @@
 #include <map>
 #include <iostream>
 #include <fstream>
+#include <list>
+#include <algorithm>
 
 using namespace std;
 
@@ -36,6 +38,7 @@ bool MimeType::_matches (string pattern, string ext)
 
 string MimeType::getMimeFromName (string name)
 {
+//transform (name.begin (), name.end (), name.begin (), tolower);
 
     if (!isInitialized)
 	__initialize ();

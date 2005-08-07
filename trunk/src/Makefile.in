@@ -57,7 +57,7 @@ am_openspace_OBJECTS = cmddialog.$(OBJEXT) filetype.$(OBJEXT) \
 	informationpanel.$(OBJEXT) oslistitem.$(OBJEXT) \
 	shutter.$(OBJEXT) filelist.$(OBJEXT) mainwindow.$(OBJEXT) \
 	pathtype.$(OBJEXT) thread_elem.$(OBJEXT) \
-	sharedobjects.$(OBJEXT) MimeType.$(OBJEXT)
+	sharedobjects.$(OBJEXT) MimeType.$(OBJEXT) MimeApp.$(OBJEXT)
 openspace_OBJECTS = $(am_openspace_OBJECTS)
 openspace_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
@@ -215,7 +215,9 @@ openspace_SOURCES = cmddialog.cpp \
 	sharedobjects.h \
 	sharedobjects.cpp \
 	MimeType.h \
-	MimeType.cpp
+	MimeType.cpp \
+	MimeApp.h \
+	MimeApp.cpp
 
 SUBDIRS = plugins
 INCLUDES = -I$(top_srcdir)/src `WANT_FOX="1.4" fox-config --cflags`  `xml2-config  --cflags`  \
@@ -314,6 +316,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MimeApp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MimeType.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cmddialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/configure.Po@am__quote@

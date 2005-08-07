@@ -1,3 +1,3 @@
-EXTRA_DIST = openspacerc
-sysconf_DATA=openspacerc
+EXTRA_DIST = openspacerc mimeapp
+sysconf_DATA=openspacerc mimeapp
 SUBDIRS = src icons

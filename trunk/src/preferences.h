@@ -2,6 +2,7 @@
 #define PREFERENCES_H
 
 #include "sharedobjects.h"
+#include "MimeApp.h"
 
 #include <vector>
 #include <string>
@@ -57,7 +58,7 @@ class preferences:public FXDialogBox
     FXComboBox *filetypedefaultbox;
     string filetypestring;
 
-
+    MimeApp *mimeapp;
 
 
 
@@ -74,6 +75,7 @@ class preferences:public FXDialogBox
 	ID_NEW_COMMAND,
 	ID_NEW_FILETYPE,
 	ID_REMOVE_COMMAND,
+	ID_MIME_APP,
 	ID_LAST,
     };
 
@@ -84,6 +86,7 @@ class preferences:public FXDialogBox
     long preferences::onFileTypeChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::onRemoveCommand (FXObject * sender, FXSelector sel, void *);
+    long preferences::onOpenMimeApp (FXObject * sender, FXSelector sel, void *);
 
     virtual ~ preferences ();
 };
