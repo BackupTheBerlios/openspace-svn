@@ -200,7 +200,7 @@
 			<color>0 100 100</color>
 		</executable>
 		<all>
-			<default>view_txt</default>
+			<default>open_text_plain</default>
 		</all>	
 	</file_types_special>
 	
