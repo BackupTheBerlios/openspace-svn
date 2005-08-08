@@ -1,6 +1,14 @@
 video:mplayer xine
-video/quicktime:mplayer xine
-video/x-msvideo:mpayer xine
-video/mpeg:mplayer xine
-image/bmp:gimp qiv
-application/pdf:acroread xpdf
+image:qiv gimp gimp-2.0
+audio:xmms freeamp
+application/pdf:xpdf acroread
+application/vnd.ms-powerpoint:ooffice
+application/vnd.sun.xml.calc:ooffice
+application/vnd.sun.xml.writer:ooffice
+application/vnd.ms-excel:ooffice
+text/plain:nedit scite gvim
+application/ogg:xmms freeamp
+text/x-c++src:nedit scite gvim
+application/x-bittorrent:azerus
+application/x-abiword:abiword-2.0 abiword
+text/html:opera firefox dillo

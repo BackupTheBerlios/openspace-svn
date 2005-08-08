@@ -13,6 +13,8 @@ using namespace std;
 #include "configure.h"
 #include "oslistitem.h"
 
+#include "FirstRun.h"
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -54,8 +56,7 @@ void MainWindow::loadicons (string icondir)
 {
 
  objmanager=objectmanager::instance(getApp());
- fxmessage("\nDIR=");
-fxmessage(icondir.c_str());    
+   
 
 FXIconSource *source = new FXIconSource (getApp ());
 FXString fil=icondir.c_str();
@@ -78,13 +79,6 @@ name=fil+"symlink.gif";
 objmanager->specialicons[5] =  source->loadIcon (name);
 objmanager->specialicons[5]->create();
 
-if(objmanager->specialicons[0]!=NULL)
-fxmessage("\n\noki\n\n");
-
-
-
-fxmessage("WOOT=");
-fxmessage(string(icondir + "directory.gif").c_str());
 
 	    struct stat status;
 	    struct dirent *dp;
@@ -102,11 +96,7 @@ fxmessage(string(icondir + "directory.gif").c_str());
 		   	 string file = icondir;
 		   	 file.append (name);	
 			string shortname=name.substr (0,name.length () - 4);
-			 fxmessage("\nFILE=");
-			 fxmessage(file.c_str());
-			 fxmessage("\nName=");
-			 fxmessage(shortname.c_str());  
-			
+					
 			 
 			
 		    	 FXFileStream stream;
@@ -116,8 +106,7 @@ fxmessage(string(icondir + "directory.gif").c_str());
 					objmanager->osicons[shortname]->loadPixels (stream);
 					stream.close ();
 					objmanager->osicons[shortname]->create ();
-					fxmessage("OK");
-  				 }		
+				 }		
 			}
 		    
 		}
@@ -206,9 +195,6 @@ bool MainWindow::loadMimeSettings (string path, string type)
 	    stream.close ();
 	    osicon->create ();
 	    objmanager->file_type_settings[type] = new file_type (osicon, color, backcolor);
-	    fxmessage ("\n");
-	    fxmessage (type.c_str ());
-	    fxmessage ("\n");
 	}
     }
 }
@@ -318,6 +304,15 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     networkframe = NULL;
     searchframe = NULL;
     getApp ()->addTimeout (this, ID_TIMER, 200);
+
+	if(conf->readonestring ("/OpenspaceConfig/first_run")=="true")
+	{
+		conf->saveonestring ("/OpenspaceConfig/first_run","false");
+		
+		FirstRun* first_run;
+		first_run=new FirstRun(this);
+		first_run->show (PLACEMENT_SCREEN);
+	}
 }
 
 
@@ -325,6 +320,7 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
 // open configure window
 long MainWindow::onOpenConfigure (FXObject * sender, FXSelector sel, void *)
 {
+
     FXTRACE ((5, "CONFIGURE\n"));
     if (pref->shown ())
 	pref->hide ();

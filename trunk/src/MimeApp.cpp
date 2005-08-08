@@ -38,28 +38,21 @@ FXIMPLEMENT (MimeApp, FXDialogBox, MimeAppMap, ARRAYNUMBER (MimeAppMap)) MimeApp
     FXButton *but2 = new FXButton (hori, "SAVE", NULL, this,ID_SAVE);
     FXButton *but3 = new FXButton (hori, "NEXT", NULL, this,ID_NEXT);
 
-string file=file + PATH_CFG + SEPARATOR + "mimeapp";
+ string file=file + PATH_CFG + SEPARATOR + "mimeapp";
  ifstream ifs (file.c_str(), ios::in);
-
 
     while (!ifs.eof ())
     {
-
 	string tmp;
 	getline (ifs, tmp);
 
 	if (tmp == "" || tmp[0] == '#')
 	    continue;
-
 	mime_vector.push_back(tmp);
-
     }
-
     ifs.close ();
-
-
  iter = mime_vector.begin ();
- fill();
+ fill(*iter);
 
 }
 
@@ -95,23 +88,21 @@ long MimeApp::onNextPrevious(FXObject * sender, FXSelector sel, void *)
 		iter--;
 	}
 	
-	fill();
+	fill(*iter);
 
-
-	
-	
 
 }
-void MimeApp::fill(void)
+void MimeApp::fill(string tmp)
 {
 
-string tmp=*iter;
+	//string tmp=*iter;
 	string mime, program;
 	mime = tmp.substr (0, tmp.find (":"));
+	program = tmp.substr (tmp.find (":") + 1);
 
 	mime_label->setText(mime.c_str());
 
-	program = tmp.substr (tmp.find (":") + 1);
+	
 	fxmessage(mime.c_str());
 	
 	programsbox->clearItems();
@@ -138,7 +129,7 @@ string tmp=*iter;
 
 void MimeApp::save(string mime, string program)
 {
-	
+	fxmessage("save=%s\n",mime.c_str());
 	string::size_type pos=mime.find("/");
 	
 	string mime_major;
@@ -152,11 +143,15 @@ void MimeApp::save(string mime, string program)
 	{
 		mime_major=mime.substr(0,pos);	
 		mime_minor=mime.substr(pos+1);
+		fxmessage("MIME=%s--%s\n",mime_major.c_str(),mime_minor.c_str());
+		
 	
 		command_name+=mime_major+"_"+mime_minor;
 	
 		reg2 = conf->readonestring ("/OpenspaceConfig/file_types/" + mime_major + "/default");
-		if(reg2!=command_name)
+		string command_major = conf->readonestring ("/OpenspaceConfig/commands/" + reg2 + "/exec");
+		
+		if(command_major!=command_exec && reg2!=command_name)
 		{
 			if(!conf->saveonestring ("/OpenspaceConfig/file_types/" + mime + "types/default",command_name))
 			{
@@ -180,7 +175,13 @@ void MimeApp::save(string mime, string program)
 		string reg = conf->readonestring ("/OpenspaceConfig/file_types/" + mime + "/default");
 		if(reg=="" || reg!=command_name)
 		{
-			conf->saveonestring ("/OpenspaceConfig/file_types/" + mime + "/default",command_name);
+			if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime)=="")
+				conf->addstring ("/OpenspaceConfig/file_types", mime,"");
+			if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime+"/default")=="")
+				conf->addstring ("/OpenspaceConfig/file_types/"+mime,"default","");	
+				
+			conf->saveonestring ("/OpenspaceConfig/file_types/" + mime + "/default",
+			command_name);
 			
 			
 		}

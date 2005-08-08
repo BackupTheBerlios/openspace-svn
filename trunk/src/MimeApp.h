@@ -37,8 +37,8 @@ class MimeApp:public FXDialogBox
     long MimeApp::onSave (FXObject * sender, FXSelector sel, void *);
     long MimeApp::onNextPrevious(FXObject * sender, FXSelector sel, void *);
     
-    void MimeApp::fill(void);
-    void MimeApp::save(string mime, string program);
+    void MimeApp::fill(string tmp);
+    static void MimeApp::save(string mime, string program);
     
 
     virtual ~ MimeApp ();

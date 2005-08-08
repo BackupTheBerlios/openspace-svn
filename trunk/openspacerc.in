@@ -2,6 +2,7 @@
 <OpenspaceConfig>
 	<version>0.0.1</version>
 	<path>@prefix@/share/@PACKAGE@/</path>
+	<first_run>true</first_run>
 	
  	<mainwindow>
 		<width>868</width>
