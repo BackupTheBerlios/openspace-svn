@@ -71,3 +71,15 @@ string ntos (unsigned long k)
     sprintf (chstr, "%d", k);
     return chstr;
 }
+
+string mime2xml(string str)
+{
+	for(int i=0;str[i]!= '\0';i++)
+	{
+	 	if(str[i]=='+')
+		str[i]='P';
+	}
+
+
+return str;
+}

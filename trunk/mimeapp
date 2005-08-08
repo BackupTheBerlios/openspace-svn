@@ -1,6 +1,7 @@
 video:mplayer xine
 image:qiv gimp gimp-2.0
 audio:xmms freeamp
+image/x-xcf:gimp gimp-2.0
 application/pdf:xpdf acroread
 application/vnd.ms-powerpoint:ooffice
 application/vnd.sun.xml.calc:ooffice
@@ -11,3 +12,9 @@ application/ogg:xmms freeamp
 application/x-bittorrent:azerus
 application/x-abiword:abiword-2.0 abiword
 text/html:opera firefox dillo
+application/xhtml+xml:opera firefox dillo
+text/x-c++src:nedit scite gvim
+application/x-dia-diagram:dia
+application/x-blender:blender
+application/x-executable:wine
+application/x-gnumeric:gnumeric

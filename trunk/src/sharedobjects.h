@@ -16,6 +16,8 @@ string ntos (unsigned long k);
 string numtostring (unsigned long k);
 FXColor readcolor (string col);
 FXColor readcolor2 (string col);
+string mime2xml(string str);
+
 
 class objectmanager 
 {

@@ -9,6 +9,7 @@
 using namespace std;
 
 #include "MimeType.h"
+#include "sharedobjects.h"
 
 bool MimeType::isInitialized = false;
 map < string, string > MimeType::mimeMap;
@@ -44,7 +45,7 @@ string MimeType::getMimeFromName (string name)
 	__initialize ();
 
     if (mimeCache[name] != "")
-	return mimeCache[name];
+	return mime2xml(mimeCache[name]);
 
     string ext;
 
@@ -90,7 +91,7 @@ string MimeType::getMimeFromName (string name)
 
     mimeCache[name] = rv;
 
-    return rv;
+    return mime2xml(rv);
 
 }
 

@@ -48,7 +48,7 @@ FXIMPLEMENT (MimeApp, FXDialogBox, MimeAppMap, ARRAYNUMBER (MimeAppMap)) MimeApp
 
 	if (tmp == "" || tmp[0] == '#')
 	    continue;
-	mime_vector.push_back(tmp);
+	mime_vector.push_back(mime2xml(tmp));
     }
     ifs.close ();
  iter = mime_vector.begin ();
@@ -97,8 +97,8 @@ void MimeApp::fill(string tmp)
 
 	//string tmp=*iter;
 	string mime, program;
-	mime = tmp.substr (0, tmp.find (":"));
-	program = tmp.substr (tmp.find (":") + 1);
+	mime = tmp.substr (0, tmp.rfind (":"));
+	program = tmp.substr (tmp.rfind (":") + 1);
 
 	mime_label->setText(mime.c_str());
 
