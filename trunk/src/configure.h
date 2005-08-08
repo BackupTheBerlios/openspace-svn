@@ -15,7 +15,8 @@ class configure
     configure::configure ();
     configure::configure (configure & conf);
     configure::~configure ();
-
+    
+    bool initialized(void);
     string readonestring (string path);
     bool configure::saveonestring (string path, string value);
     bool configure::addstring (string path, string node, string value);
@@ -24,6 +25,8 @@ class configure
     string configure::getnextnode (void);
     int configure::countxpath (string path);
     bool configure::removestring (string path);
+    
+  private:  
     string file;
     xmlDocPtr doc;
 

@@ -8,7 +8,6 @@ application/vnd.sun.xml.writer:ooffice
 application/vnd.ms-excel:ooffice
 text/plain:nedit scite gvim
 application/ogg:xmms freeamp
-text/x-c++src:nedit scite gvim
 application/x-bittorrent:azerus
 application/x-abiword:abiword-2.0 abiword
 text/html:opera firefox dillo

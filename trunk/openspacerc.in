@@ -44,26 +44,11 @@
 			<exec>nedit</exec>
 		</nedit>
 		
-		<view_txt>
-			<exec>nedit {f}</exec>
-		</view_txt>		
-		<view_pdf>
-			<exec>xpdf {f}</exec>
-		</view_pdf>
-		<view_doc>
-			<exec>oowriter {f}</exec>
-		</view_doc>
-		<view_calc>
-			<exec>oocalc {f}</exec>
-		</view_calc>
+	
 		
 		<edit_image>
 			<exec>gimp-2.0 {f}</exec>
 		</edit_image>
-		
-		<view_image>
-			<exec>qiv {f}</exec>
-		</view_image>
 		
 		<view_tar>
 			<exec>tar tf {f}</exec>
@@ -93,12 +78,7 @@
 			<options>rescan</options>
 		</unzip>
 		
-		<play_video>
-			<exec>mplayer -vo xv {f}</exec>
-		</play_video>
-		<play_music>
-			<exec>xmms -e {f}</exec>
-		</play_music>
+		
 		
 		<copy>
 			<exec>INTERNAL</exec>
@@ -149,10 +129,8 @@
 		
 		<image>
 			<icon>image.gif</icon>
-			<default>view_image</default>
 			<types>
 				<png>
-					<default>view_image</default>
 						<commands>
 							<command>edit_image</command>
 							<command>view_image</command>
@@ -165,37 +143,30 @@
 		
 		<video>
 			<icon>movie.gif</icon>
-			<default>play_video</default>
 		</video>
 		
 		<audio>
 			<icon>music.gif</icon>
-			<default>play_music</default>
 		</audio>
 		
 		<application>
 			<types>
 				<pdf>
-					<default>view_pdf</default>
 					<icon>doc.gif</icon>	
 					
 				</pdf>
 				
 				<vnd.sun.xml.writer>
-					<default>view_doc</default>
 					<icon>word.gif</icon>	
 				</vnd.sun.xml.writer>
 				
 				<msword>
-					<default>view_doc</default>
 					<icon>word.gif</icon>	
 				</msword>
 				<vnd.sun.xml.calc>
-					<default>view_doc</default>
 					<icon>word.gif</icon>	
 				</vnd.sun.xml.calc>
 				<vnd.ms-excel>
-					<default>view_doc</default>
 					<icon>word.gif</icon>					
 				</vnd.ms-excel>
 				<x-sharedlib>

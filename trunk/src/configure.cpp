@@ -351,3 +351,12 @@ int configure::countxpath (string path)
     }
     return counter;
 }
+
+bool configure::initialized(void)
+{
+	if(!doc)
+	return false;
+	else
+	return true;
+
+}

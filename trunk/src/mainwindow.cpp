@@ -211,6 +211,13 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     pane = NULL;
     filemenu = NULL;
     conf = new configure ();
+    if(!conf->initialized())
+    {
+   // FXMessageBox box(getApp (), "error", "Configuration file is broken :|", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+    //box.execute ();
+    fxmessage("CONFIGURATION FILE IS BROKEN");
+    exit(-1);
+    }
     pref = new preferences (this);
     loadicons(conf->readonestring ("/OpenspaceConfig/path") + "icons/");
     string res = conf->readonestring ("/OpenspaceConfig/version");
