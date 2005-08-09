@@ -1,6 +1,8 @@
 #ifndef FILELIST_search
 #define FILELIST_search
 #include "../../filelist_base.h"
+#include "filelist_local.h"
+
 class filelist_search:public filelist_base
 {
   public:
@@ -12,6 +14,7 @@ class filelist_search:public filelist_base
   vector < string > files;
   int count;
   int filesnum;
+  filelist_local *fil_local;
   
     int filelist_search::osopendir (string dir);
     osfile filelist_search::osreaddir (void);

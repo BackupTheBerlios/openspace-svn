@@ -4,6 +4,8 @@
 #define EXPORTFUNCTION extern "C"
 #endif
 #include "filelist_search.h"
+
+
 int filelist_search::osopendir (string dir)
 {
 
@@ -49,14 +51,18 @@ int filelist_search::move (thread_elem * te)
 }
 int filelist_search::remove (thread_elem * te)
 {
+return fil_local->remove(te);
 }
 int filelist_search::rename (string orgname, string newname)
 {
-
+	return fil_local->rename(orgname,newname);
 }
 int filelist_search::init (vector < string > *vector_name, pathtype pt, configure * conf)
 {
+
 fxmessage("INIT");
+fil_local=new filelist_local();
+
 filesnum=0;
 count=0;
     pipe = popen (pt.server.c_str(), "r");
@@ -83,23 +89,27 @@ count=0;
 }
 int filelist_search::mode (string file)
 {
+return fil_local->mode(file);
 }
 string filelist_search::owner (string file)
 {
-return "";
+return fil_local->owner(file);
 }
 string filelist_search::group (string file)
 {
-return "";
+return fil_local->group(file);
 }
-bool filelist_search::mode (string file, unsigned int, bool recursive)
+bool filelist_search::mode (string file, unsigned int mod, bool recursive)
 {
+return fil_local->mode(file,mod,recursive);
 }
-bool filelist_search::owner (string file, string, bool recursive)
+bool filelist_search::owner (string file, string ow, bool recursive)
 {
+return fil_local->owner(file,ow,recursive);
 }
-bool filelist_search::group (string file, string, bool recursive)
+bool filelist_search::group (string file, string gr, bool recursive)
 {
+return fil_local->group(file,gr,recursive);
 }
 string filelist_search::info (void)
 {
