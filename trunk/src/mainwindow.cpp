@@ -91,22 +91,16 @@ objmanager->specialicons[5]->create();
 		if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
 		{
 		string name=dp->d_name;
-			if (name.length () >= 3 && name.substr (name.length () - 3, 3) == "gif")
+			if (name.length () >= 3 && (name.substr (name.length () - 3, 3) == "gif" || name.substr (name.length () - 3, 3) == "png"))
 			{
 		   	 string file = icondir;
 		   	 file.append (name);	
 			string shortname=name.substr (0,name.length () - 4);
-					
-			 
-			
-		    	 FXFileStream stream;
-  		    	 objmanager->osicons[shortname] = new FXGIFIcon (getApp (), NULL);
-   				 if (stream.open (file.c_str (), FXStreamLoad))
- 				 {
-					objmanager->osicons[shortname]->loadPixels (stream);
-					stream.close ();
-					objmanager->osicons[shortname]->create ();
-				 }		
+			fxmessage("FILE NAME=%s\n",file.c_str());
+			 FXString fil_name=file.c_str();
+  		    	 objmanager->osicons[shortname] = source->loadIcon (fil_name);
+   			 objmanager->osicons[shortname]->create ();
+	
 			}
 		    
 		}

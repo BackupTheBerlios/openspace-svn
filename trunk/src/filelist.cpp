@@ -1141,9 +1141,12 @@ fxmessage("\n FOCUS\n");
 setKeys();
     active = true;
     filelist_opposite->active = false;
-    filelist_opposite->toolbar->hide();	
+    filelist_opposite->toolbar->hide();
+    filelist_opposite->toolbar2->hide();		
     toolbar->show();
     toolbar->recalc();	
+    toolbar2->show();
+    toolbar2->recalc();
     setBackColor (FXRGB (255, 255, 255));
     chdir (path.c_str ());
 }
@@ -1501,6 +1504,8 @@ commands_tab.clear();
 
 			    configure conflocal2 = conflocal;
 			    string res2 = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/exec");
+			    string command_text = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/text");
+			    if(command_text=="")command_text=res;
 			    if (res2 == "INTERNAL")
 				comm_s = "IC_";
 			    else if (res2 == "PLUGIN")
@@ -1510,7 +1515,7 @@ commands_tab.clear();
 
 			    comm_s.append (res);
 
-			    new FXButton (shutterItem->getContent (), res.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+			    new FXButton (shutterItem->getContent (), command_text.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 			    commands_tab.push_back(comm_s.c_str ());
 			    command_num++;
 
@@ -1521,6 +1526,8 @@ commands_tab.clear();
 
 		    configure conflocal2 = conflocal;
 		    string res2 = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/exec");
+		    string command_text = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/text");
+		    if(command_text=="")command_text=res;
 		    if (res2 == "INTERNAL")
 			comm_s = "IC_";
 		    else if (res2 == "PLUGIN")
@@ -1530,7 +1537,7 @@ commands_tab.clear();
 
 		    comm_s.append (res);
 
-		    new FXButton (shutterItem->getContent (), res.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+		    new FXButton (shutterItem->getContent (), command_text.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 		    commands_tab.push_back(comm_s.c_str ());
 		    command_num++;
 

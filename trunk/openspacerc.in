@@ -39,6 +39,7 @@
 		<run_shell>
 			<exec>aterm -transparent -foreground white -bg black -cr red -sl 500  -trsb -shading 80</exec>
 			<icon>run_shell.gif</icon>
+			<text>terminal</text>
 		</run_shell>	
 		
 		<nedit>
@@ -101,6 +102,7 @@
 		</rename>
 		<other>
 			<exec>INTERNAL</exec>
+			<icon>other.png</icon>
 		</other>
 		<ls>
 			<exec>ls</exec>
@@ -126,6 +128,7 @@
   
   	<button_commands>
 		<command>run_shell</command>
+		<command>other</command>
 	</button_commands>
   	<file_types>
 		
