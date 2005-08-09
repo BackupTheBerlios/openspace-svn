@@ -54,6 +54,7 @@ class filelist:public FXIconList
     FXMenuPane *popupmenu;
     FXMenuPane *popupwindow;
     vector < string > commands_tab;
+    vector < string > button_commands_tab;
    
     FXTextField *textfield;
     FXOptionMenu *sortmenu;
@@ -91,7 +92,7 @@ class filelist:public FXIconList
 
     FXDragAction dropaction;	// Drop action
     FXString dragfiles;		// Dragged files
-    FXToolBar *toolbar;
+    FXToolBar *toolbar,*toolbar2;
 
 
      filelist ()

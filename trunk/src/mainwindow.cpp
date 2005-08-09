@@ -260,9 +260,10 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
 
 
     FXToolBarShell *dragshell1 = new FXToolBarShell (this, FRAME_RAISED);
-    FXToolBar *toolbar = new FXToolBar (topdock, dragshell1,
-					LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | FRAME_RAISED);
+    FXToolBar *toolbar = new FXToolBar (topdock, dragshell1,LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | FRAME_RAISED);
     new FXToolBarGrip (toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_SINGLE);
+    
+    	
 
 
     FXVerticalFrame *ff = new FXVerticalFrame (this, LAYOUT_FILL_X | LAYOUT_FILL_Y);
@@ -291,19 +292,24 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     
     new FXButton (toolbar, "\tconfiguration", objmanager->osicons["configure"], this, MainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", objmanager->osicons["foxmini"], this, MainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+  
+  
     string dir = parseDir (conf->readonestring ("/OpenspaceConfig/leftdir/dir"));
     string type = conf->readonestring ("/OpenspaceConfig/leftdir/type");
     pathtype pt (dir, type);
     left_frame = new Frame (leftcontrolframe, leftframe, pt, this, -1);
     left_frame->f->toolbar->dock(topdock);	
     left_frame->f->toolbar->hide();
+    left_frame->f->toolbar2->dock(rightdock);	
+    left_frame->f->toolbar2->hide();
+    
     dir = parseDir (conf->readonestring ("/OpenspaceConfig/rightdir/dir"));
     type = conf->readonestring ("/OpenspaceConfig/rightdir/type");
     pathtype pt2 (dir, type);
     right_frame = new Frame (rightcontrolframe, rightframe, pt2, this, -1);
    
     right_frame->f->toolbar->dock(topdock);  
-
+    right_frame->f->toolbar2->dock(rightdock); 
     
     left_frame->f->filelist_opposite = right_frame->f;
     right_frame->f->filelist_opposite = left_frame->f;
@@ -395,6 +401,9 @@ long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
     fr->hf->create ();
     fr->f->toolbar->dock(topdock);	
     fr->f->toolbar->hide();
+    fr->f->toolbar2->dock(rightdock);	
+    fr->f->toolbar2->hide();
+    
     
     controlframe->recalc ();
 }
@@ -631,6 +640,7 @@ long MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
 	boxel->fr->f->fb->quit ();
 	delete boxel->fr->hf;
 	delete boxel->fr->f->toolbar;
+	delete boxel->fr->f->toolbar2;
 	delete boxel->fr->frame;
 	sender = NULL;
 	return 1;
@@ -649,6 +659,7 @@ long MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
 	boxel->fr->hf->reparent (leftcontrolframe);
 	left_frame->hf->reparent (controlframe);
 	left_frame->f->toolbar->hide();
+	left_frame->f->toolbar2->hide();
 	left_frame->toleft->show ();
 	left_frame->toright->show ();
 	left_frame->toclose->show ();
@@ -663,6 +674,7 @@ long MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
 	boxel->fr->hf->reparent (rightcontrolframe);
 	right_frame->hf->reparent (controlframe);
 	right_frame->f->toolbar->hide();
+	right_frame->f->toolbar2->hide();
 	right_frame->toleft->show ();
 	right_frame->toright->show ();
 	right_frame->toclose->show ();

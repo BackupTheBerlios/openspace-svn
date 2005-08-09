@@ -638,6 +638,55 @@ this->type=path.substr(0,pos);
 	new FXToolBarGrip (toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE);
 
 
+        toolbar2 = new FXToolBar (docksite, dragshell1,LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | FRAME_RAISED);
+        new FXToolBarGrip (toolbar2, toolbar2, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_SINGLE);
+
+
+int command_num=0;
+
+
+if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
+    {
+    fxmessage("OTWARTE\n\n");
+	while (1)
+	{
+	    string res = conf->getnextstring ();
+	    fxmessage("BB\n\n");
+	    if (res == "")
+	    break;
+	   	string name=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/icon");
+		string shortname=name.substr (0,name.length () - 4);
+		//fxmessage("\nUUUUUUUUU=%s %s\n",res.c_str(),shortname.c_str());
+		
+		
+		
+			string comm_s;
+			  configure conflocal2 = *conf;
+			    string res2 = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/exec");
+			    if (res2 == "INTERNAL")
+				comm_s = "IC_";
+			    else if (res2 == "PLUGIN")
+				comm_s = "PL_";
+			    else
+				comm_s = "EC_";
+
+			    comm_s.append (res);
+			if(name=="")
+			new FXButton (toolbar2, res.c_str (), NULL, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+			else
+			new FXButton (toolbar2, "", objmanager->osicons[shortname], this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+			
+			
+			button_commands_tab.push_back(comm_s.c_str ());
+		        command_num++;
+
+	    
+	}
+  }
+
+
+
+
     string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/filelist/libfilelist" + this->type;
 
 
@@ -1516,16 +1565,28 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 {
     if (processing)
 	return 0;
+	
+	
 
     FXushort id = FXSELID (sel);
-
-
+    
     string com_type;
-    com_type.append (commands_tab[id - ID_LAST].c_str (), 2);
-
-    string com_name = commands_tab[id - ID_LAST];
-    com_name.erase (0, 3);
     string key;
+    string com_name;
+    
+    if(((FXWindow*)obj)->getParent()==toolbar2)
+    {
+    com_type.append (button_commands_tab[id - ID_LAST].c_str (), 2);
+    com_name = button_commands_tab[id - ID_LAST];
+    }
+    else
+    {   
+    com_type.append (commands_tab[id - ID_LAST].c_str (), 2);
+    com_name = commands_tab[id - ID_LAST];
+    }
+    
+    com_name.erase (0, 3);
+    
 
     //int k=getCurrentItem();
     //string filename=path + SEPARATOR + getItemText(k).text();     
@@ -1664,6 +1725,7 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 	if (res == "")
 	    return 0;
 
+	if(popupmenu)
 	popupmenu->popdown ();
 
 
@@ -1727,8 +1789,8 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 
 
 
-
-    popupmenu->popdown ();
+	if(popupmenu)
+  	   popupmenu->popdown ();
 
 
 }

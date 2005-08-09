@@ -38,6 +38,7 @@
 	
 		<run_shell>
 			<exec>aterm -transparent -foreground white -bg black -cr red -sl 500  -trsb -shading 80</exec>
+			<icon>run_shell.gif</icon>
 		</run_shell>	
 		
 		<nedit>
@@ -123,7 +124,9 @@
 		
 	</commands>
   
-  
+  	<button_commands>
+		<command>run_shell</command>
+	</button_commands>
   	<file_types>
 		
 		
