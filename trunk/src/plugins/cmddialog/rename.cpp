@@ -43,20 +43,21 @@ class rename_cmddialog:public cmddialog
     rename_cmddialog ()
     {
     }
-    rename_cmddialog (FXWindow * w, filelist_base * fb, string * src);
+    rename_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src);
 
 
     virtual int rename_cmddialog::exec (void)
     {
 	int error = 0;
-	int i = 0;
-	while (src[i] != "")
-	{
+	vector < string >::iterator iter;
+	int i=0;
+    	for (iter = src.begin (); iter != src.end(); iter++)
+    	{
 	    string newname = dir + SEPARATOR + vec[i]->getText ().text ();
-	    if (fb->rename (src[i], newname) == false)
+	    if (fb->rename (*iter, newname) == false)
 	    {
 		error = -1;
-		string err = "can't rename " + src[i] + " to " + newname;
+		string err = "can't rename " + *iter + " to " + newname;
 
 		FXLabel *lab = new FXLabel (contents, err.c_str ());
 		lab->create ();
@@ -64,11 +65,10 @@ class rename_cmddialog:public cmddialog
 		this->resize (this->getWidth (), this->getHeight () + lab->getHeight ());
 
 	    }
-	    //fxmessage(vec[i]->getText().text());
-	    i++;
+	i++;
 	}
 
-// for (indx = 0; indx < vec.size(); indx++)
+
 	return error;
 
     }
@@ -81,25 +81,29 @@ class rename_cmddialog:public cmddialog
 FXDEFMAP (rename_cmddialog) rename_cmddialogMap[] =
 {
 FXMAPFUNC (SEL_COMMAND, rename_cmddialog::ID_ENTER, rename_cmddialog::press),};
-FXIMPLEMENT (rename_cmddialog, cmddialog, rename_cmddialogMap, ARRAYNUMBER (rename_cmddialogMap)) rename_cmddialog::rename_cmddialog (FXWindow * w, filelist_base * fb, string * src):
+FXIMPLEMENT (rename_cmddialog, cmddialog, rename_cmddialogMap, ARRAYNUMBER (rename_cmddialogMap)) 
+
+rename_cmddialog::rename_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src):
 cmddialog (w, fb, src)
 {
 
-    int i = 0;
 
-    while (src[i] != "")
+    vector < string >::iterator iter;
+
+    for (iter = src.begin (); iter != src.end(); iter++)
     {
+  
 
-	dir = FXFile::directory (src[i].c_str ()).text ();
+	dir = FXFile::directory (iter->c_str ()).text ();
 	//fxmessage(dir.c_str());
 	//fxmessage("\n woho");
-	FXString name = FXFile::name (src[i].c_str ());
+	FXString name = FXFile::name (iter->c_str ());
 	new FXLabel (contents, name);
 	FXTextField *text = new FXTextField (contents, 25, this, ID_ENTER);
 	text->setFocus ();
 	text->setText (name);
 	vec.push_back (text);
-	i++;
+
     }
 
 
@@ -118,7 +122,7 @@ long rename_cmddialog::press (FXObject * sender, FXSelector, void *)
 
 
 
-EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, string * src)
+EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src)
 {
     return new rename_cmddialog (w, fb, src);
 }

@@ -426,7 +426,7 @@ fxmessage("TAK");
 	FXchar *p, *q;
 	p = q = (FXchar *) data;
 
-	vector < string > vec;
+	vector < string > src;
 
 	while (*p)
 	{
@@ -434,28 +434,13 @@ fxmessage("TAK");
 		q++;
 	    FXString url (p, q - p);
 	    FXString filesrc (FXURL::fileFromURL (url));
-	    vec.push_back (filesrc.text ());
+	    src.push_back (filesrc.text ());
 	    if (*q == '\r')
 		q += 2;
 	    p = q;
 	}
 
-	int selit = vec.size ();
-	string *srclist = new string[selit + 1];
 
-	int ind = 0;
-	for (int i = 0; i < vec.size (); i++)
-	{
-	    srclist[ind] = vec[i];
-	    ind++;
-	    fxmessage("\n");
-	    fxmessage(srclist[ind].c_str());
-	    fxmessage("\n");
-	}
-	fxmessage("\nPATH=");
-	fxmessage(path.c_str());
-	
-	srclist[ind] = "";
 	string com_name;
 	if (dropaction == DRAG_MOVE)
 	    com_name = "move";
@@ -465,7 +450,7 @@ fxmessage("TAK");
 
 	string options = "download";
 	FXTRACE ((5, "copy/move/remove"));
-	thread_elem *el = new thread_elem (fb, com_name, options, srclist, path);
+	thread_elem *el = new thread_elem (fb, com_name, options, src, path);
 	start_thread (el);
 
 
@@ -921,20 +906,17 @@ void filelist::copymoveremove (string com_name)
 	    selit++;
     }
 
-    string *srclist = new string[selit + 1];
 
-    int ind = 0;
+    vector<string> src;
     for (int c = 0; c < getNumItems (); c++)
     {
 	if (isItemSelected (c))
 	{
-	    srclist[ind] = path + SEPARATOR + getItemText (c).text ();
-	    ind++;
+	    src.push_back( path + SEPARATOR + getItemText (c).text ());
 	}
 
 
     }
-    srclist[ind] = "";
 
     string options;
     filelist_base *fil = fb;
@@ -950,7 +932,7 @@ void filelist::copymoveremove (string com_name)
 
 
     FXTRACE ((5, "copy/move/remove"));
-    thread_elem *el = new thread_elem (fil, com_name, options, srclist,filelist_opposite->path);
+    thread_elem *el = new thread_elem (fil, com_name, options, src,filelist_opposite->path);
     start_thread (el);
 }
 
@@ -1274,7 +1256,9 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 	if (res != "")
 	{
 	    string options = conf->readonestring ("/OpenspaceConfig/commands/" + key + "/options");
-	    thread_elem *el = new thread_elem (fb, "execute", options, new string (res));
+	    vector<string> src;
+	    src.push_back(res);
+	    thread_elem *el = new thread_elem (fb, "execute", options, src);
 	    start_thread (el);
 	}
 	else if (oslistitem->osf.type & EXECUTABLE)
@@ -1297,9 +1281,9 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 		    if (pos != string::npos)
 		    {
 			str2.replace (pos, fullname.length (), fullname);
-
-			thread_elem *el = new thread_elem (fb, "execute", options,
-							   new string (str2));
+			vector<string> src;
+			src.push_back(str2);
+			thread_elem *el = new thread_elem (fb, "execute", options,  src);
 			start_thread (el);
 		    }
 		}
@@ -1631,8 +1615,9 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 
 		    comm.replace (pos, fullname.length (), fullname);
 		}
-		thread_elem *el = new thread_elem (fb, "execute", options,
-						   new string (comm));
+		vector<string> src;
+		src.push_back(comm);
+		thread_elem *el = new thread_elem (fb, "execute", options,src);
 		start_thread (el);
 	    }
 	}
@@ -1643,8 +1628,9 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 	    int pos = res.find ("{f}");
 	    if (pos == -1)
 	    {
-		thread_elem *el = new thread_elem (fb, "execute", options,
-						   new string (res));
+	    vector<string> src;
+	    src.push_back(res);
+		thread_elem *el = new thread_elem (fb, "execute", options, src);
 		start_thread (el);
 	    }
 	}
@@ -1758,25 +1744,20 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 		    selit++;
 	    }
 
-	    string *srclist = new string[selit + 1];
-
-	    int ind = 0;
+	
+	    vector < string > src;
 	    for (int c = 0; c < getNumItems (); c++)
 	    {
 		if (isItemSelected (c))
 		{
-		    srclist[ind] = path + SEPARATOR + getItemText (c).text ();
-		    ind++;
+		    src.push_back(path + SEPARATOR + getItemText (c).text ());
 		}
-
-
 	    }
-	    srclist[ind] = "";
+	
 
-
-	    cmddialog *(*gg) (FXWindow *, filelist_base * fb, string * src);
-	    gg = (cmddialog * (*)(FXWindow *, filelist_base * fb, string * src)) fxdllSymbol (dllhandle, "get_cmddialog");
-	    dial = gg (this, fb, srclist);
+	    cmddialog *(*gg) (FXWindow *, filelist_base * fb, vector < string > src);
+	    gg = (cmddialog * (*)(FXWindow *, filelist_base * fb, vector < string > src)) fxdllSymbol (dllhandle, "get_cmddialog");
+	    dial = gg (this, fb, src);
 	    dial->create ();
 
 
@@ -1828,7 +1809,7 @@ void filelist::start_thread (thread_elem * te)
 
 	    //if(execl("/bin/ls","ls",NULL)== -1)perror("execl");
 
-	    system (te->src->c_str ());
+	    system (te->src[0].c_str ());
 	    /*
 	       ;
 	     */
@@ -1889,7 +1870,7 @@ void *filelist::thread_func (void *data)
 	//n = 1;
 	//ioctl(pipefd[0], FIOBIO, &n);
 	//el->pipe = popen(el->src->c_str(), "r");
-	system (el->src->c_str ());
+	system (el->src[0].c_str ());
 
     }
     else if (el->command == "init")

@@ -4,7 +4,7 @@
 
 
 FXIMPLEMENT (cmddialog, FXDialogBox, NULL, 0) 
-cmddialog::cmddialog (FXWindow * owner, filelist_base * fb, string * src):
+cmddialog::cmddialog (FXWindow * owner, filelist_base * fb, vector < string > src):
 FXDialogBox (owner, "command", DECOR_TITLE | DECOR_BORDER)
 {
 

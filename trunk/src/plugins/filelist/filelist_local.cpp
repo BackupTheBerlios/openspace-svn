@@ -249,13 +249,15 @@ int filelist_local::remove (thread_elem * te)
     int c = 0;
     bool canc = false;
 
+    vector < string >::iterator iter;
 
-    while (te->src[c] != "")
+    for (iter = te->src.begin (); iter != te->src.end(); iter++)
     {
+  
 	if (!canc)
 	{
 
-	    string sr = te->src[c];
+	    string sr = (*iter);
 	    if (FXFile::isDirectory (sr.c_str ()))
 		sr.append (SEPARATOR);
 	    FXTRACE ((5, "REMOVE: %s", sr.c_str ()));
@@ -273,8 +275,8 @@ int filelist_local::remove (thread_elem * te)
     }
     
     
-    delete[]te->src;
-    te->src = NULL;
+   // delete[]te->src;
+    //te->src = NULL;
 
 }
 
@@ -319,10 +321,13 @@ int filelist_local::copymove (thread_elem * te, bool copy)
     unsigned long size = 0;
 
     int c = 0;
-    while (te->src[c] != "")
-    {
+    
+    
+     vector < string >::iterator iter;
 
-	string sr = te->src[c];
+    for (iter = te->src.begin (); iter != te->src.end(); iter++)
+    {
+	string sr = (*iter);
 	if (FXFile::isDirectory (sr.c_str ()))
 	    sr.append (SEPARATOR);
 	totalsize (sr, size);
@@ -335,16 +340,18 @@ int filelist_local::copymove (thread_elem * te, bool copy)
     bool canc = false;
     c = 0;
 
-    while (te->src[c] != "")
+
+
+    for (iter = te->src.begin (); iter != te->src.end(); iter++)
     {
 	if (!canc)
 	{
 	    string ds = te->dst;
 	    ds.append (SEPARATOR);
-	    ds.append (FXFile::name (te->src[c].c_str ()).text ());
+	    ds.append (FXFile::name (iter->c_str ()).text ());
 
 
-	    string sr = te->src[c];
+	    string sr = (*iter);
 	    if (FXFile::isDirectory (sr.c_str ()))
 		sr.append (SEPARATOR);
 
@@ -372,8 +379,8 @@ int filelist_local::copymove (thread_elem * te, bool copy)
     te->msg="operation failed";
     }
     
-    delete[]te->src;
-    te->src = NULL;
+    //delete[]te->src;
+    //te->src = NULL;
 }
 
 

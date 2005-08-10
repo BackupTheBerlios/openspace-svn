@@ -1,7 +1,7 @@
 #include "thread_elem.h"
 
 
-thread_elem::thread_elem (void *fb, string command, string options, string * src, string dst)
+thread_elem::thread_elem (void *fb, string command, string options, vector<string> src, string dst)
 {
     str1 = "start";
     gui = NULL;

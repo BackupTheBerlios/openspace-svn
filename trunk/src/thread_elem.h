@@ -16,7 +16,7 @@ class thread_elem
   public:
 
     thread_elem ();
-    thread_elem (void *fb, string command, string options, string * src = NULL, string dst = "");
+    thread_elem (void *fb, string command, string options, vector<string> src=vector<string>(), string dst = "");
 
 
     FXMutex mutex;
@@ -25,7 +25,7 @@ class thread_elem
     void *filel;
 
     string command;
-    string *src;
+    vector<string> src;
     string dst;
     string options;
     string msg;

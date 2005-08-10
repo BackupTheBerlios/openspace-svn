@@ -832,7 +832,7 @@ long MainWindow::onTimer (FXObject *, FXSelector, void *)
 			    font->create ();
 			    infp->lab0->setFont (font);
 			}
-			infp->lab0->setText (telem->src->c_str ());
+			infp->lab0->setText (telem->src[0].c_str ());
 			infp->frame->recalc ();
 		    }
 

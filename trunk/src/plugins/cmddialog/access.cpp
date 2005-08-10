@@ -72,7 +72,7 @@ class access_cmddialog:public cmddialog
     access_cmddialog ()
     {
     }
-    access_cmddialog (FXWindow * w, filelist_base * fb, string * src);
+    access_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src);
 
     virtual int access_cmddialog::exec (void)
     {
@@ -100,13 +100,15 @@ class access_cmddialog:public cmddialog
 	bool recursive = false;
 	if (rec->getCheck ())
 	    recursive = true;
-	int i = 0;
-	while (src[i] != "")
-	{
-	    fb->mode (src[0], mode, recursive);
-	    fb->owner (src[0], user->getText ().text (), recursive);
-	    fb->group (src[0], grp->getText ().text (), recursive);
-	    i++;
+	
+	vector < string >::iterator iter;
+
+    	for (iter = src.begin (); iter != src.end(); iter++)
+   	{
+	    fb->mode (*iter, mode, recursive);
+	    fb->owner (*iter, user->getText ().text (), recursive);
+	    fb->group (*iter, grp->getText ().text (), recursive);
+	
 	}
 
     }
@@ -119,16 +121,16 @@ class access_cmddialog:public cmddialog
 FXDEFMAP (access_cmddialog) access_cmddialogMap[] =
 {
 FXMAPFUNC (SEL_COMMAND, access_cmddialog::ID_PRESS, access_cmddialog::press),};
-FXIMPLEMENT (access_cmddialog, cmddialog, access_cmddialogMap, ARRAYNUMBER (access_cmddialogMap)) access_cmddialog::access_cmddialog (FXWindow * w, filelist_base * fb, string * src):
+FXIMPLEMENT (access_cmddialog, cmddialog, access_cmddialogMap, ARRAYNUMBER (access_cmddialogMap)) 
+
+access_cmddialog::access_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src):
 cmddialog (w, fb, src)
 {
 
-    int i = 0;
-    while (src[i] != "")
+   vector < string >::iterator iter;
+    for (iter = src.begin (); iter != src.end(); iter++)
     {
-	new FXLabel (contents, src[i].c_str ());
-	fxmessage ("LAB");
-	i++;
+	new FXLabel (contents, iter->c_str ());
     }
 
     FXHorizontalFrame *accessframe = new FXHorizontalFrame (contents, LAYOUT_FILL_X | LAYOUT_FILL_Y);
@@ -219,7 +221,7 @@ long access_cmddialog::press (FXObject * sender, FXSelector, void *)
 
 
 
-EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, string * src)
+EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src)
 {
     return new access_cmddialog (w, fb, src);
 }

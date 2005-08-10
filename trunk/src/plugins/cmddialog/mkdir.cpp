@@ -30,7 +30,7 @@ class special_cmddialog:public cmddialog
     special_cmddialog ()
     {
     }
-    special_cmddialog (FXWindow * w, filelist_base * fb, string * src);
+    special_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src);
 
     virtual int special_cmddialog::exec (void)
     {
@@ -46,7 +46,9 @@ class special_cmddialog:public cmddialog
 FXDEFMAP (special_cmddialog) special_cmddialogMap[] =
 {
 FXMAPFUNC (SEL_COMMAND, special_cmddialog::ID_ENTER, special_cmddialog::press),};
-FXIMPLEMENT (special_cmddialog, cmddialog, special_cmddialogMap, ARRAYNUMBER (special_cmddialogMap)) special_cmddialog::special_cmddialog (FXWindow * w, filelist_base * fb, string * src):
+FXIMPLEMENT (special_cmddialog, cmddialog, special_cmddialogMap, ARRAYNUMBER (special_cmddialogMap)) 
+
+special_cmddialog::special_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src):
 cmddialog (w, fb, src)
 {
 
@@ -68,7 +70,7 @@ long special_cmddialog::press (FXObject * sender, FXSelector, void *)
 
 
 
-EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, string * src)
+EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src)
 {
     return new special_cmddialog (w, fb, src);
 }

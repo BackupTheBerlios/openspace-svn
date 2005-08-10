@@ -14,7 +14,7 @@ class cmddialog:public FXDialogBox
     {
     }
   public:
-     cmddialog (FXWindow * owner, filelist_base * fb = NULL, string * src = NULL);
+     cmddialog (FXWindow * owner, filelist_base * fb = NULL, vector < string > src=vector < string >());
     virtual int exec (void)
     {
     };
@@ -22,7 +22,7 @@ class cmddialog:public FXDialogBox
 
     virtual ~ cmddialog ();
     filelist_base *fb;
-    string *src;
+    vector < string > src;
     FXButton *ok;
     FXButton *cancel;
 
