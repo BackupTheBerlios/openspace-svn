@@ -26,7 +26,7 @@ osfile filelist_search::osreaddir (void)
 	    os_file.attrib[1] = "";
 	    
 	    count++;
-	    
+	  fxmessage("\nN=%s",os_file.name.c_str());  
 	    return os_file;
 
     }
@@ -55,7 +55,18 @@ return fil_local->remove(te);
 }
 int filelist_search::rename (string orgname, string newname)
 {
-	return fil_local->rename(orgname,newname);
+
+	int ret=fil_local->rename(orgname,newname);
+	if(ret)
+	{
+		vector < string >::iterator iter = find(files.begin(), files.end(), orgname.substr(2)); // Search the list.
+		if (iter != files.end())
+		{
+  		(*iter)=newname.substr(2);
+		}
+	}
+
+	return ret;
 }
 int filelist_search::init (vector < string > *vector_name, pathtype pt, configure * conf)
 {
