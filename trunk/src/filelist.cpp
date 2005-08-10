@@ -312,6 +312,7 @@ long filelist::onClipboardLost (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXIconList::onClipboardLost (sender, sel, ptr);
     fxmessage ("BB\n");
+    dragfiles=FXString::null;
     //clipped.clear();
     return 1;
 }
@@ -402,12 +403,6 @@ long filelist::onCmdPasteSel (FXObject *, FXSelector sel, void *)
 void filelist::dropData (bool clipboard)
 {
 
-   filelist *fil;
-   if (active)
-	fil = this;
-    else
-	fil = filelist_opposite;
-
 
     FXuchar *data;
     FXuint len;
@@ -447,12 +442,31 @@ fxmessage("TAK");
 	else if (dropaction == DRAG_COPY)
 	    com_name = "copy";
 
-
-	string options = "download";
+    filelist_base *fil = fb;
+    string options;
+    if (this->type == "local" && filelist_opposite->dragfiles!=FXString::null)
+    {
+     options = "upload";
+     fil = filelist_opposite->fb;
+     
+	fxmessage("DAJEMY OPOSITA \n");
+    }
+    else 
+    {
+    options = "download";
+    }
+    
+    if(this->type=="local" || filelist_opposite->type=="local" || com_name=="romove")
+    {
 	FXTRACE ((5, "copy/move/remove"));
-	thread_elem *el = new thread_elem (fb, com_name, options, src, path);
+	thread_elem *el = new thread_elem (fil, com_name, options, src, path);
 	start_thread (el);
-
+    }
+    else
+    {
+    FXMessageBox about (this, "error", "copying/moving beetwen VFS not implemented (yet ;p)", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+    about.execute ();
+    }	
 
 
 	FXFREE (&data);
@@ -924,16 +938,28 @@ void filelist::copymoveremove (string com_name)
 
     if (this->type == "local" && com_name != "remove")
     {
-	options = "upload";
-	fil = filelist_opposite->fb;
-    }
-    else
 	options = "download";
+	fil = filelist_opposite->fb;
+	fxmessage("DAJEMY OPOSITA \n");
+    }
+    else  //type other than local
+	options = "upload";
 
 
+
+    if(this->type=="local" || filelist_opposite->type=="local" || com_name=="romove")
+    {
     FXTRACE ((5, "copy/move/remove"));
     thread_elem *el = new thread_elem (fil, com_name, options, src,filelist_opposite->path);
     start_thread (el);
+    }
+    else
+    {
+    FXMessageBox about (this, "error", "copying/moving beetwen VFS not implemented (yet ;p)", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+    about.execute ();
+    }	
+
+  
 }
 
 //opendir

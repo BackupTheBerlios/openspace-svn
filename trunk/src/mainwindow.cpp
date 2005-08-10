@@ -927,7 +927,8 @@ long MainWindow::onTimer (FXObject *, FXSelector, void *)
 		FXMessageBox about (this, "error", telem->msg.c_str(), NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
   		about.execute ();	    
 		}
-		filelist *fil = (filelist *) telem->filel;
+		filelist *fil = (filelist*) telem->filel;
+		
 		string::size_type pos = telem->options.find ("download");
 		bool download = false;
 		if (pos != string::npos)
@@ -943,11 +944,11 @@ long MainWindow::onTimer (FXObject *, FXSelector, void *)
 		}
 		if (telem->command == "copy")
 		{
-		    if ((left_frame->f == fil && download == false) || (download == true && right_frame->f == fil))
-			right_frame->f->refresh ();
+		    if ((left_frame->f->fb == telem->fb && download == true) || (download == false && right_frame->f->fb == telem->fb))
+			left_frame->f->refresh ();
 
 		    else
-			left_frame->f->refresh ();
+			right_frame->f->refresh ();
 		}
 
 		else if (telem->command == "remove")
