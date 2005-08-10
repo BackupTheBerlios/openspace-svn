@@ -1,18 +1,18 @@
 video:mplayer xine
-image:qiv gimp gimp-2.0
-audio:xmms freeamp
-image/x-xcf:gimp gimp-2.0
-application/pdf:xpdf acroread
-application/vnd.ms-powerpoint:ooffice
-application/vnd.sun.xml.calc:ooffice
-application/vnd.sun.xml.writer:ooffice
-application/vnd.ms-excel:ooffice
+image:qiv gimp gimp-2.0 gimp-2.2
+audio:xmms freeamp bmp
+image/x-xcf:gimp gimp-2.0 gimp-2.2
+application/pdf:xpdf acroread kpdf gpdf
+application/vnd.ms-powerpoint:ooffice ooffice2
+application/vnd.sun.xml.calc:ooffice ooffice2
+application/vnd.sun.xml.writer:ooffice ooffice2
+application/vnd.ms-excel:ooffice ooffice2
 text/plain:nedit scite gvim
-application/ogg:xmms freeamp
-application/x-bittorrent:azerus
+application/ogg:xmms freeamp bmp
+application/x-bittorrent:azerus btdownloadcurses.py
 application/x-abiword:abiword-2.0 abiword
-text/html:opera firefox dillo
-application/xhtml+xml:opera firefox dillo
+text/html:opera firefox dillo mozilla
+application/xhtml+xml:opera firefox dillo mozilla
 text/x-c++src:nedit scite gvim
 application/x-dia-diagram:dia
 application/x-blender:blender

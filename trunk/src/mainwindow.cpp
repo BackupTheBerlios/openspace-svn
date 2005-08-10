@@ -464,6 +464,7 @@ long MainWindow::onNewSearchFrame (FXObject * sender, FXSelector, void *)
 		
 	new FXLabel (searchframe, "file filter: ");
 	search_filefilter=new FXTextField (searchframe, 20);
+	search_filefilter->setText("*");
 	new FXButton (searchframe, "search", NULL, this, MainWindow::ID_NEWFRAME, FRAME_RAISED, 0, 0, 0, 0, 0, 0, 0, 0);
 	searchframe->create ();
 	searchframe->recalc ();

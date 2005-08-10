@@ -44,10 +44,32 @@ int filelist_search::mkdir (string dir, int mode)
 int filelist_search::copy (thread_elem * te)
 {
 fxmessage("COPY\n"); 
+	string::size_type pos = te->options.find ("download");
+	if (pos == string::npos) //upload only supported
+	{
+	return fil_local->copy(te);
+	}
+	else
+	{
+	 te->error=true;
+         te->msg="operation not allowed";
+	}
 
 }
 int filelist_search::move (thread_elem * te)
 {
+fxmessage("COPY\n"); 
+	string::size_type pos = te->options.find ("download");
+	if (pos == string::npos) //upload only supported
+	{
+	return fil_local->move(te);
+	}
+	else
+	{
+	 te->error=true;
+         te->msg="operation not allowed";
+	}
+
 }
 int filelist_search::remove (thread_elem * te)
 {
