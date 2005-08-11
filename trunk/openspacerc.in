@@ -100,6 +100,15 @@
 		<rename>
 			<exec>PLUGIN</exec>
 		</rename>
+		<clone>
+			<exec>PLUGIN</exec>
+		</clone>
+		<symlink>
+			<exec>PLUGIN</exec>
+		</symlink>
+		<editsymlink>
+			<exec>PLUGIN</exec>
+		</editsymlink>
 		<other>
 			<exec>INTERNAL</exec>
 			<icon>other.png</icon>
@@ -218,6 +227,9 @@
 			<command>access</command>
 			<command>remove</command>
 			<command>rename</command>
+			<command>clone</command>
+			<command>symlink</command>
+			<command>editsymlink</command>
 			<command>special</command>
 			<command>totalsize</command>
 			<command>new_file</command>
@@ -314,6 +326,9 @@
 			<mkdir>mkdir</mkdir>
 			<access>access</access>
 			<rename>rename</rename>
+			<clone>clone</clone>
+			<symlink>symlink</symlink>
+			<editsymlink>editsymlink</editsymlink>
 		</cmddialog>
 	</plugins>
 	

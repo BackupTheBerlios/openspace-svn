@@ -96,7 +96,7 @@ objmanager->specialicons[5]->create();
 		   	 string file = icondir;
 		   	 file.append (name);	
 			string shortname=name.substr (0,name.length () - 4);
-			fxmessage("FILE NAME=%s\n",file.c_str());
+			
 			 FXString fil_name=file.c_str();
   		    	 objmanager->osicons[shortname] = source->loadIcon (fil_name);
    			 objmanager->osicons[shortname]->create ();

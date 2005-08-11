@@ -264,6 +264,7 @@ int filelist_local::remove (thread_elem * te)
 
 	    if (OSFXFile::remove (sr.c_str (), te) == FALSE)
 		canc = true;
+		//fxmessage("\n\nREMOVE=%s\n\n",sr.c_str());
 	}
 
 	c++;
