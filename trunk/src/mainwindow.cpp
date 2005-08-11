@@ -702,7 +702,7 @@ long MainWindow::onNotify (FXObject * sender, FXSelector sel, void *ptr)
 	string type;
 	string str_server = file;
 	dir = "/";
-	type = "tar";
+	type = "archive";
 	pathtype pt (dir, type, str_server);
 	Frame *fr;
 	if (left_frame->f->active)

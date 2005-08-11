@@ -7,13 +7,11 @@ class filelist_search:public filelist_base
 {
   public:
   
-  
-  
   FILE *pipe;
   char readbuf[1024];
   vector < string > files;
-  int count;
-  int filesnum;
+  vector < string >::iterator iter;
+
   filelist_local *fil_local;
   
     int filelist_search::osopendir (string dir);

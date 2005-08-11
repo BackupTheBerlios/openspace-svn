@@ -16,23 +16,24 @@ osfile filelist_search::osreaddir (void)
 {
     osfile os_file;
 
-    if(count!=filesnum)
-    {
+if(iter!=files.end())
+{
+
 	    os_file.type = 0;
-	    os_file.name = files[count];
+	    os_file.name = *iter;
 	    os_file.size = 300;
 	    os_file.attrib = new string[2];
 	    os_file.attrib[0] = "300";
 	    os_file.attrib[1] = "";
 	    
-	    count++;
-	  fxmessage("\nN=%s",os_file.name.c_str());  
+	    iter++;
+	    fxmessage("\nN=%s",os_file.name.c_str());  
 	    return os_file;
+}		    
 
-    }
+
     
     os_file.name = "";
-    count=0;
     return os_file;
     
 
@@ -96,8 +97,7 @@ int filelist_search::init (vector < string > *vector_name, pathtype pt, configur
 fxmessage("INIT");
 fil_local=new filelist_local();
 
-filesnum=0;
-count=0;
+
     pipe = popen (pt.server.c_str(), "r");
  fxmessage(pt.server.c_str());  
     if (pipe != NULL)
@@ -110,13 +110,13 @@ count=0;
 	    string path = readbuf;
 	    path = path.substr (0, path.length () - 1);
 	    files.push_back(path);
-	    filesnum++;
+	   
 	}
 
 	pclose (pipe);
     }
     
-
+iter=files.begin();
     
 
 }
