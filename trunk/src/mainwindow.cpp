@@ -661,6 +661,7 @@ long MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
 	left_frame->frame->hide ();
 	left_frame = boxel->fr;
 	left_frame->frame->show ();
+	
     }
 
     else
@@ -682,6 +683,8 @@ long MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
     boxel->fr->toleft->hide ();
     boxel->fr->toright->hide ();
     boxel->fr->toclose->hide ();
+    boxel->fr->f->handle (this, FXSEL (SEL_FOCUSIN, filelist::ID_ICO), NULL);
+    
     rightframe->recalc ();
     leftframe->recalc ();
 }
@@ -717,8 +720,10 @@ long MainWindow::onNotify (FXObject * sender, FXSelector sel, void *ptr)
 	    left_frame->toright->show ();
 	    left_frame->toclose->show ();
 	    left_frame->frame->hide ();
+	    left_frame->f->toolbar->hide();
+	    left_frame->f->toolbar2->hide();
 	    left_frame = fr;
-	    left_frame->frame->show ();
+ 
 	}
 
 	else
@@ -728,14 +733,27 @@ long MainWindow::onNotify (FXObject * sender, FXSelector sel, void *ptr)
 	    right_frame->toright->show ();
 	    right_frame->toclose->show ();
 	    right_frame->frame->hide ();
+	    right_frame->f->toolbar->hide();
+	    right_frame->f->toolbar2->hide();
 	    right_frame = fr;
-	    right_frame->frame->show ();
+	
+	    
 	}
 	controlframe->recalc ();
 	fr->frame->create ();
 	fr->hf->create ();
+	fr->frame->show ();
+	fr->f->toolbar->dock(topdock);  
+        fr->f->toolbar2->dock(rightdock);
+	
 	left_frame->f->filelist_opposite = right_frame->f;
 	right_frame->f->filelist_opposite = left_frame->f;
+	
+	if(left_frame->f->active)
+	left_frame->f->handle (this, FXSEL (SEL_FOCUSIN, filelist::ID_ICO), NULL);
+	else
+	right_frame->f->handle (this, FXSEL (SEL_FOCUSIN, filelist::ID_ICO), NULL);
+	
 	rightframe->recalc ();
 	leftframe->recalc ();
     }

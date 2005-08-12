@@ -522,6 +522,11 @@ string filelist::getdefaultcommand (string name, bool resolve = true)
 	    FXTRACE ((5, "INTERNAL"));
 	    return "INTERNAL";
 	}
+	else if(res == "VFS")
+	{
+	 FXTRACE ((5, "VFS"));
+	    return "VFS";
+	}
 	string fullname = "\"" + path + SEPARATOR + name + "\"";
 
 	int pos = res.find ("{f}");
@@ -666,6 +671,8 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 				comm_s = "IC_";
 			    else if (res2 == "PLUGIN")
 				comm_s = "PL_";
+			    else if(res2 == "VFS")
+			    	comm_s = "VF_";
 			    else
 				comm_s = "EC_";
 
@@ -701,11 +708,11 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     void *dllhandle = fxdllOpen (plugin_path.c_str ());
     if (dllhandle)
     {
-	fxmessage ("zalADOWANY :)");
+	
 	filelist_base *(*gg) (void);
 	gg = (filelist_base * (*)(void)) fxdllSymbol (dllhandle, "get_filelist");
 	fb = gg ();
-
+	fxmessage ("ZALADOWANY :)");
 
 
 
@@ -762,10 +769,6 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 	dial = NULL;
 	processing = false;
 	this->pt = new pathtype (pt);
-fxmessage("WTF???\n");	
-	
-	
-	
 	
 	
     vector_name.push_back ("name");
@@ -848,7 +851,7 @@ void filelist::init ()
 
     for (int i = 0; i < vector_name.size (); i++)
     {
-	fxmessage (vector_name[i].c_str ());
+
 	appendHeader (vector_name[i].c_str (), NULL, vector_width[i]);
 	unsigned int test = vector_type[i];
 	header_vec.push_back (vector_name[i]);
@@ -1269,16 +1272,13 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 	string key = getdefaultcommand (name, false);
 
 
-	if (res == "INTERNAL")	//internal command, open new window for virtual file system
+	if (res == "VFS")	//internal command, open new window for virtual file system
 	{
-	    if (key == "open_tar_bz2")
-	    {
 		int c = getCurrentItem ();
 		string *file = new string (path + SEPARATOR + getItemText (c).text ());
 		notifyparent->handle (this, FXSEL (SEL_COMMAND, 667), (void *) file);
-	    }
-	    return 0;
 	}
+	
 	if (res != "")
 	{
 	    string options = conf->readonestring ("/OpenspaceConfig/commands/" + key + "/options");
@@ -1520,6 +1520,8 @@ commands_tab.clear();
 				comm_s = "IC_";
 			    else if (res2 == "PLUGIN")
 				comm_s = "PL_";
+			    else if(res2 == "VFS")
+			    	comm_s = "VF_";	
 			    else
 				comm_s = "EC_";
 
@@ -1542,6 +1544,8 @@ commands_tab.clear();
 			comm_s = "IC_";
 		    else if (res2 == "PLUGIN")
 			comm_s = "PL_";
+		    else if(res2 == "VFS")
+			comm_s = "VF_";	
 		    else
 			comm_s = "EC_";
 
@@ -1725,14 +1729,7 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 	    fxmessage ("umount");
 	    fxmessage (sr.c_str ());
 	}
-	else if (com_name == "open_tar_bz2")
-	{
-	    int c = getCurrentItem ();
-	    string *file = new string (path + SEPARATOR + getItemText (c).text ());
-	    notifyparent->handle (this, FXSEL (SEL_COMMAND, 667), (void *) file);
-	}
-
-
+	    
 
     }
 
@@ -1798,6 +1795,13 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 	}
 
 
+    }
+    else if (com_type == "VF")
+    {
+      	int c = getCurrentItem ();
+	string *file = new string (path + SEPARATOR + getItemText (c).text ());
+	notifyparent->handle (this, FXSEL (SEL_COMMAND, 667), (void *) file);
+       
     }
 
 

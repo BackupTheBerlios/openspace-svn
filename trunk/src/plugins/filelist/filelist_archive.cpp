@@ -69,7 +69,10 @@ type="z";
 else
 type="j";
 
-command="tar xf" + type + " " + archive_filename;
+command="tar tf" + type + " " + archive_filename;
+fxmessage("COMMAND=%s\n",command.c_str());
+
+pipe = popen(command.c_str(), "r");
 
 if (pipe != NULL)
     {
@@ -95,9 +98,11 @@ int filelist_archive::mode (string file)
 }
 string filelist_archive::owner (string file)
 {
+return "";
 }
 string filelist_archive::group (string file)
 {
+return "";
 }
 bool filelist_archive::mode (string file, unsigned int, bool recursive)
 {
@@ -110,12 +115,14 @@ bool filelist_archive::group (string file, string, bool recursive)
 }
 string filelist_archive::info (void)
 {
+return "";
 }
 void filelist_archive::totalsize (string path, unsigned long &size)
 {
 }
 string filelist_archive::symlink (string path)
 {
+return "";
 }
 bool filelist_archive::symlink (string src, string dst)
 {

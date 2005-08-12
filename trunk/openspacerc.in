@@ -132,6 +132,10 @@
 		<show_thumbs>
 			<exec>gqview {f}</exec>
 		</show_thumbs>
+		<vfs_archive>
+			<exec>VFS</exec>
+		</vfs_archive>
+		
 		
 	</commands>
   
@@ -191,7 +195,7 @@
 					<icon>script.gif</icon>
 				</x-shellscript>
 				<x-bzip-compressed-tar>
-					<default>extract_tar_bz2</default>
+					<default>vfs_archive</default>
 					<icon>compressed.gif</icon>
 					<commands>
 							<command>view_tar_bz2</command>
@@ -215,7 +219,7 @@
 			<color>0 100 100</color>
 		</executable>
 		<all>
-			<default>open_text_plain</default>
+			<default>open_text</default>
 		</all>	
 	</file_types_special>
 	
@@ -287,6 +291,7 @@
 			</thumbs>
 		</local>
 		<scp>
+			<type>network</type>
 			<headers>
 				<header>size</header>
 				<header>owner</header>
@@ -311,12 +316,22 @@
 			</properties>
 		</scp>
 		<search>
+			<type>search</type>
 			<properties>
 				<name>
 					<width>400</width>					
 				</name>
 			</properties>	
 		</search>
+		<vfs_archive>
+			<type>vfs</type>
+			<properties>
+				<name>
+					<width>400</width>					
+				</name>
+			</properties>	
+		</vfs_archive>
+		
 		
 		
 	</filelist>
