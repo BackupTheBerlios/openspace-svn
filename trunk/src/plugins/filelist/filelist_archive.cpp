@@ -6,32 +6,61 @@
 #include "filelist_archive.h"
 int filelist_archive::osopendir (string dir)
 {
+fxmessage("OPENDIR");
+this->dir=dir;
+iter=files.begin();
 }
 osfile filelist_archive::osreaddir (void)
 {
 
 osfile os_file;
 
-if(iter!=files.end())
+while(iter!=files.end())
 {
+os_file.name=*iter;
+	string modfile=os_file.name.substr(0,os_file.name.length () - 1);
+	fxmessage("\nMOD=%s",modfile.c_str());
+	string::size_type pos=modfile.rfind("/");
+	if (pos != string::npos)
+	{
+		string dirf="/"+os_file.name.substr(0,pos);
+		
+		fxmessage("\nDIR=%s  DIRF=%s",dir.c_str(),dirf.c_str()); 
+		if(dirf!=dir)
+		{
+		iter++;
+		continue;
+		}
+		else
+		os_file.name=os_file.name.substr(pos+1);
+		
+		
+		
+	}
+	else if(dir!="/")
+	{
+	iter++;
+	continue;
+	}
 
 	    os_file.type = 0;
-	    os_file.name = *iter;
 	    os_file.size = 300;
 	    os_file.attrib = new string[2];
 	    os_file.attrib[0] = "300";
 	    os_file.attrib[1] = "";
 	    
 	    string s = os_file.name.substr (os_file.name.length () - 1, 1);
-	    fxmessage (s.c_str ());
 
 	    if (s == "/")
+	    {
+	        os_file.name = os_file.name.substr (0,os_file.name.length () - 1);
 		os_file.type = FOLDER;
+	    }
 	    else
 		os_file.type = 0;
 	    
 	    iter++;
-	    fxmessage("\nN=%s",os_file.name.c_str());  
+	    //fxmessage("\nN=%s",os_file.name.c_str());  
 	    return os_file;
 }		    
 

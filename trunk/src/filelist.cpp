@@ -1245,8 +1245,12 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 	    dir = dir;
 	}
 	else
-	    dir = dir + SEPARATOR + getItemText (k).text ();
-
+	{
+		if(dir!="/")
+	  	   dir = dir + SEPARATOR + getItemText (k).text ();
+	   	else
+		   dir = dir + getItemText (k).text ();
+	}
 
 
 
@@ -1277,6 +1281,7 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 		int c = getCurrentItem ();
 		string *file = new string (path + SEPARATOR + getItemText (c).text ());
 		notifyparent->handle (this, FXSEL (SEL_COMMAND, 667), (void *) file);
+		return 0;
 	}
 	
 	if (res != "")
@@ -2253,4 +2258,7 @@ long filelist::onChangeView (FXObject * sender, FXSelector sel, void *)
 long filelist::onGoHome (FXObject * sender, FXSelector, void *)
 {
     opendir(FXFile::getHomeDirectory ().text ());
+    path=FXFile::getHomeDirectory ().text ();
+    notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
+    
 }
