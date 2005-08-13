@@ -11,6 +11,7 @@ class filelist_archive:public filelist_base
     vector < string > files;
     vector < string >::iterator iter;
     string dir;
+    string type;
     
     int filelist_archive::osopendir (string dir);
     osfile filelist_archive::osreaddir (void);

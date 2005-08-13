@@ -75,6 +75,22 @@ int filelist_archive::mkdir (string dir, int mode)
 }
 int filelist_archive::copy (thread_elem * te)
 {
+	string::size_type pos = te->options.find ("upload");
+	if (pos != string::npos)
+	{
+		 vector < string >::iterator iter;
+
+   		 for (iter = te->src.begin (); iter != te->src.end(); iter++)
+   		 {
+			string sr = (*iter);
+			string command="tar xf" + type + " " + archive_filename + " " + sr;
+			system(command.c_str());
+   		 }
+
+	
+	}
+	
+te->end=true;
 }
 int filelist_archive::move (thread_elem * te)
 {
@@ -91,7 +107,6 @@ archive_filename = pt.server;
 
 
 string  command;
-string type;
 
 if (archive_filename.length () >= 6 && archive_filename.substr (archive_filename.length () - 6, 6) == "tar.gz")
 type="z";

@@ -321,9 +321,7 @@ int filelist_local::copymove (thread_elem * te, bool copy)
 
     unsigned long size = 0;
 
-    int c = 0;
-    
-    
+ 
      vector < string >::iterator iter;
 
     for (iter = te->src.begin (); iter != te->src.end(); iter++)
@@ -333,13 +331,11 @@ int filelist_local::copymove (thread_elem * te, bool copy)
 	    sr.append (SEPARATOR);
 	totalsize (sr, size);
 
-	c++;
     }
 
     te->total_size = size;
 
     bool canc = false;
-    c = 0;
 
 
 
@@ -372,16 +368,13 @@ int filelist_local::copymove (thread_elem * te, bool copy)
 
 	}
 
-	c++;
     }
     if(canc)
     {
     te->error=true;
     te->msg="operation failed";
     }
-    
-    //delete[]te->src;
-    //te->src = NULL;
+
 }
 
 
