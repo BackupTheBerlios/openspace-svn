@@ -83,7 +83,8 @@ int filelist_archive::copy (thread_elem * te)
    		 for (iter = te->src.begin (); iter != te->src.end(); iter++)
    		 {
 			string sr = (*iter);
-			string command="tar xf" + type + " " + archive_filename + " " + sr;
+			sr=sr.substr(1,sr.length()-1);
+			string command="cd " +te->dst +" && tar xf" + type + " " + archive_filename + " " + sr;
 			system(command.c_str());
    		 }
 

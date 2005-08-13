@@ -201,7 +201,16 @@ long filelist::onDNDRequest (FXObject * sender, FXSelector sel, void *ptr)
     return 0;
 }
 
-
+string filelist::returnpath(string dirname)
+{
+	string ret;
+	if(path==SEPARATOR)
+	ret=SEPARATOR + dirname;
+	else
+	ret=path + SEPARATOR + dirname;
+	
+	return ret;
+}
 
 // Start a drag operation
 long filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
@@ -220,7 +229,7 @@ long filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
 
 		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
 		string name = oslistitem->osf.name;
-		string fullname = path + SEPARATOR + name;
+		string fullname = returnpath(name);
 		if (name != "." && name != "..")
 		{
 		    if (!dragfiles.empty ())
@@ -371,7 +380,7 @@ filelist_opposite->dropaction=dropaction;
 	    {
 		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
 		string name = oslistitem->osf.name;
-		string fullname = path + SEPARATOR + name;
+		string fullname =returnpath(name);
 		if (name != "." && name != "..")
 		{
 		    if (!dragfiles.empty ())
@@ -527,7 +536,7 @@ string filelist::getdefaultcommand (string name, bool resolve = true)
 	 FXTRACE ((5, "VFS"));
 	    return "VFS";
 	}
-	string fullname = "\"" + path + SEPARATOR + name + "\"";
+	string fullname = "\"" + returnpath(name) + "\"";
 
 	int pos = res.find ("{f}");
 	res.replace (pos, fullname.length (), fullname);
@@ -929,7 +938,7 @@ void filelist::copymoveremove (string com_name)
     {
 	if (isItemSelected (c))
 	{
-	    src.push_back( path + SEPARATOR + getItemText (c).text ());
+	    src.push_back( returnpath(getItemText (c).text ()));
 	}
 
 
@@ -1058,7 +1067,7 @@ void filelist::opendir (string dir)
 	    {
 
 
-		string file = dir + SEPARATOR + os_file.name;
+		string file = returnpath( os_file.name);
 		FXString fil = file.c_str ();
 		FXIconSource *source = new FXIconSource (getApp ());
 		FXIcon *ico = NULL;
@@ -1246,10 +1255,7 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 	}
 	else
 	{
-		if(dir!="/")
-	  	   dir = dir + SEPARATOR + getItemText (k).text ();
-	   	else
-		   dir = dir + getItemText (k).text ();
+		dir=returnpath(getItemText(k).text());
 	}
 
 
@@ -1263,11 +1269,8 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
     }
     else
     {
-	string dir = this->path;
-	dir.append (SEPARATOR);
-	dir.append (getItemText (k).text ());
-
-
+	string dir;
+	dir=returnpath(getItemText(k).text());
 
 
 	string name = oslistitem->osf.name;
@@ -1279,7 +1282,7 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 	if (res == "VFS")	//internal command, open new window for virtual file system
 	{
 		int c = getCurrentItem ();
-		string *file = new string (path + SEPARATOR + getItemText (c).text ());
+		string *file = new string (returnpath(getItemText (c).text ()));
 		notifyparent->handle (this, FXSEL (SEL_COMMAND, 667), (void *) file);
 		return 0;
 	}
@@ -1306,7 +1309,7 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 		if (str2 != "")
 		{
 		    string options = conf->readonestring ("/OpenspaceConfig/commands/" + str + "/options");
-		    string fullname = "\"" + path + SEPARATOR + name + "\"";
+		    string fullname = "\"" + returnpath(name) + "\"";
 
 		    string::size_type pos = str2.find ("{f}");
 		    if (pos != string::npos)
@@ -1641,7 +1644,7 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
 		string name = oslistitem->osf.name;
 
-		string fullname = path + SEPARATOR + name;
+		string fullname = returnpath(name);
 
 		int pos = res.find ("{f}");
 		string comm = res;
@@ -1700,7 +1703,7 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 	else if (com_name == "new_file")
 	{
 
-	    string sr = "touch " + path + SEPARATOR + "newfile";
+	    string sr = "touch " + returnpath("newfile");
 	    system (sr.c_str ());
 	    refresh ();
 	}
@@ -1712,7 +1715,7 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 	    {
 		if (isItemSelected (c))
 		{
-		    string sr = path + SEPARATOR + getItemText (c).text ();
+		    string sr = returnpath(getItemText (c).text ());
 		    if (FXFile::isDirectory (sr.c_str ()))
 			sr.append (SEPARATOR);
 		    fb->totalsize (sr, size);
@@ -1729,7 +1732,7 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 	else if (com_name == "umount")
 	{
 	    int c = getCurrentItem ();
-	    string sr = path + SEPARATOR + getItemText (c).text ();
+	    string sr = returnpath(getItemText (c).text ());
 	    umount2 (sr.c_str (), MNT_FORCE);
 	    fxmessage ("umount");
 	    fxmessage (sr.c_str ());
@@ -1778,7 +1781,7 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 	    {
 		if (isItemSelected (c))
 		{
-		    src.push_back(path + SEPARATOR + getItemText (c).text ());
+		    src.push_back(returnpath(getItemText (c).text ()));
 		}
 	    }
 	
@@ -1804,7 +1807,7 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
     else if (com_type == "VF")
     {
       	int c = getCurrentItem ();
-	string *file = new string (path + SEPARATOR + getItemText (c).text ());
+	string *file = new string (returnpath(getItemText (c).text ()));
 	notifyparent->handle (this, FXSEL (SEL_COMMAND, 667), (void *) file);
        
     }

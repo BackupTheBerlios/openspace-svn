@@ -151,7 +151,7 @@ class filelist:public FXIconList
     static FXint cmp (const FXIconItem * a, const FXIconItem * b);
     void filelist::init (void);
     long onChangeView (FXObject * sender, FXSelector, void *);
-
+    string returnpath(string dirname);
 
 };
 
