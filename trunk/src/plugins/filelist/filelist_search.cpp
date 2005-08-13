@@ -9,7 +9,7 @@
 int filelist_search::osopendir (string dir)
 {
 
-    
+  iter=files.begin(); 
 
 }
 osfile filelist_search::osreaddir (void)
@@ -78,14 +78,14 @@ return fil_local->remove(te);
 }
 int filelist_search::rename (string orgname, string newname)
 {
-
+fxmessage("o=%s n=%s",orgname.c_str(),newname.c_str());
 	int ret=fil_local->rename(orgname,newname);
 	if(ret)
 	{
-		vector < string >::iterator iter = find(files.begin(), files.end(), orgname.substr(2)); // Search the list.
+		vector < string >::iterator iter = find(files.begin(), files.end(), orgname.substr(1,orgname.length()-1)); // Search the list.
 		if (iter != files.end())
 		{
-  		(*iter)=newname.substr(2);
+  		(*iter)=newname.substr(1,newname.length()-1);
 		}
 	}
 
@@ -108,7 +108,7 @@ fil_local=new filelist_local();
 
 
 	    string path = readbuf;
-	    path = path.substr (0, path.length () - 1);
+	    path = path.substr (1, path.length () - 2);
 	    files.push_back(path);
 	   
 	}

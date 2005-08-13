@@ -536,8 +536,16 @@ string filelist::getdefaultcommand (string name, bool resolve = true)
 	 FXTRACE ((5, "VFS"));
 	    return "VFS";
 	}
-	string fullname = "\"" + returnpath(name) + "\"";
-
+	
+	string fullname;
+	
+	if(this->type=="local")
+		fullname = "\"" + returnpath(name) + "\"";
+	else
+	{
+		fullname = "\"/tmp/openspace/" + name + "\"";
+	}	
+	
 	int pos = res.find ("{f}");
 	res.replace (pos, fullname.length (), fullname);
 	return res;
@@ -1292,7 +1300,13 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 	    string options = conf->readonestring ("/OpenspaceConfig/commands/" + key + "/options");
 	    vector<string> src;
 	    src.push_back(res);
-	    thread_elem *el = new thread_elem (fb, "execute", options, src);
+	    string dst="";
+	  	  if(this->type!="local")
+		  {
+		    int c = getCurrentItem ();
+	    	    dst=returnpath(getItemText (c).text ());
+		  } 
+	    thread_elem *el = new thread_elem (fb, "execute", options, src,dst);
 	    start_thread (el);
 	}
 	else if (oslistitem->osf.type & EXECUTABLE)
@@ -1317,7 +1331,9 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 			str2.replace (pos, fullname.length (), fullname);
 			vector<string> src;
 			src.push_back(str2);
-			thread_elem *el = new thread_elem (fb, "execute", options,  src);
+			int c = getCurrentItem ();
+			string dst=returnpath(getItemText (c).text ());
+			thread_elem *el = new thread_elem (fb, "execute", options,  src,dst);
 			start_thread (el);
 		    }
 		}
@@ -1846,7 +1862,7 @@ void filelist::start_thread (thread_elem * te)
 
 
 	    //if(execl("/bin/ls","ls",NULL)== -1)perror("execl");
-
+		
 	    system (te->src[0].c_str ());
 	    /*
 	       ;
@@ -1908,7 +1924,39 @@ void *filelist::thread_func (void *data)
 	//n = 1;
 	//ioctl(pipefd[0], FIOBIO, &n);
 	//el->pipe = popen(el->src->c_str(), "r");
+	
+	if(el->dst=="")
 	system (el->src[0].c_str ());
+	else
+	{
+	fxmessage("AAAAAAAAAAAAAAAAATAK");
+	
+	
+	/*
+	string ss=el->src[0];
+	
+	string::size_type k,b;
+	k=ss.find("/tmp/openspace/");
+	    if (k != string::npos)
+	    {
+	
+		b=ss.find("\"",k+1);
+		if (b != string::npos)
+	   	 {
+		ss=ss.substr(k,b);
+		 }
+	    }	
+	*/
+	string dd=string("/tmp/openspace/") + FXFile::directory(el->dst.c_str()).text();
+	
+	vector<string> src;
+	src.push_back(el->dst);
+	thread_elem *el2 = new thread_elem (fb, "copy", "upload", src,dd);
+	fb->copy (el2);
+	delete el2;
+	system (el->src[0].c_str ());
+	}
+	
 
     }
     else if (el->command == "init")

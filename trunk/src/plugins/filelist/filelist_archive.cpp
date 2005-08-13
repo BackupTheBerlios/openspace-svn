@@ -75,6 +75,7 @@ int filelist_archive::mkdir (string dir, int mode)
 }
 int filelist_archive::copy (thread_elem * te)
 {
+fxmessage("ARCHIVE COPY");
 	string::size_type pos = te->options.find ("upload");
 	if (pos != string::npos)
 	{
@@ -86,6 +87,7 @@ int filelist_archive::copy (thread_elem * te)
 			sr=sr.substr(1,sr.length()-1);
 			string command="cd " +te->dst +" && tar xf" + type + " " + archive_filename + " " + sr;
 			system(command.c_str());
+			fxmessage("COMMAND=%s\n",command.c_str());
    		 }
 
 	
