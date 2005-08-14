@@ -145,13 +145,16 @@ class filelist:public FXIconList
     void filelist::selectitem (void);
     void filelist::refresh (void);
     void filelist::start_thread (thread_elem * te);
-    string filelist::getdefaultcommand (string name, bool resolve);
+    
     void filelist::copymoveremove (string com_name);
     static void *filelist::thread_func (void *data);
     static FXint cmp (const FXIconItem * a, const FXIconItem * b);
     void filelist::init (void);
     long onChangeView (FXObject * sender, FXSelector, void *);
     string returnpath(string dirname);
+    string filelist::getdefaultcommand (string name);
+    string filelist::resolvecommand(string command,string name);
+    int filelist::runCommand(string name);
 
 };
 

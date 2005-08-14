@@ -83,34 +83,34 @@
 		
 		
 		<copy>
-			<exec>INTERNAL</exec>
+			<type>INTERNAL</type>
 		</copy>
 		<move>
-			<exec>INTERNAL</exec>
+			<type>INTERNAL</type>
 		</move>
 		<mkdir>
-			<exec>PLUGIN</exec>
+			<type>PLUGIN</type>
 		</mkdir>
 		<access>
-			<exec>PLUGIN</exec>
+			<type>PLUGIN</type>
 		</access>
 		<remove>
-			<exec>INTERNAL</exec>
+			<type>INTERNAL</type>
 		</remove>
 		<rename>
-			<exec>PLUGIN</exec>
+			<type>PLUGIN</type>
 		</rename>
 		<clone>
-			<exec>PLUGIN</exec>
+			<type>PLUGIN</type>
 		</clone>
 		<symlink>
-			<exec>PLUGIN</exec>
+			<type>PLUGIN</type>
 		</symlink>
 		<editsymlink>
-			<exec>PLUGIN</exec>
+			<type>PLUGIN</type>
 		</editsymlink>
 		<other>
-			<exec>INTERNAL</exec>
+			<type>INTERNAL</type>
 			<icon>other.png</icon>
 		</other>
 		<ls>
@@ -118,13 +118,13 @@
 			<options>capture</options>
 		</ls>
 		<special>
-			<exec>INTERNAL</exec>
+			<type>INTERNAL</type>
 		</special>
 		<totalsize>
-			<exec>INTERNAL</exec>
+			<type>INTERNAL</type>
 		</totalsize>
 		<new_file>
-			<exec>INTERNAL</exec>
+			<type>INTERNAL</type>
 		</new_file>
 		<umount>
 			<exec>umount {f}</exec>
@@ -133,7 +133,8 @@
 			<exec>gqview {f}</exec>
 		</show_thumbs>
 		<vfs_archive>
-			<exec>VFS</exec>
+			<type>VFS</type>
+			<exec>archive</exec>
 		</vfs_archive>
 		
 		

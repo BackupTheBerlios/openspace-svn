@@ -492,8 +492,8 @@ filelist_opposite->dropaction=dropaction=DRAG_MOVE;
 
 
 //return default command for given filename
-// if resolve true return command with replaced {f} with valid path
-string filelist::getdefaultcommand (string name, bool resolve = true)
+
+string filelist::getdefaultcommand (string name)
 {
 
     string ext = getfiletype (name);
@@ -511,18 +511,20 @@ string filelist::getdefaultcommand (string name, bool resolve = true)
 	key = conf->readonestring ("/OpenspaceConfig/file_types/" + ext + "/default");
     }
 
-    string res;
 
     if (key == "")
     {
-	key = conf->readonestring ("/OpenspaceConfig/file_types_speical/all/default");
+	key = conf->readonestring ("/OpenspaceConfig/file_types_special/all/default");
     }
+	return key;
+}
 
-    if (resolve)
-    {
-
-	if (key != "")
-	    res = conf->readonestring ("/OpenspaceConfig/commands/" + key + "/exec");
+//return command with replaced {f} with valid path
+string filelist::resolvecommand(string command,string name)
+{
+string res;
+	if (command != "")
+	    res = conf->readonestring ("/OpenspaceConfig/commands/" + command + "/exec");
 	else
 	    return "";
 
@@ -549,10 +551,10 @@ string filelist::getdefaultcommand (string name, bool resolve = true)
 	int pos = res.find ("{f}");
 	res.replace (pos, fullname.length (), fullname);
 	return res;
-    }
-    else
-	return key;
+
+
 }
+
 
 
 void filelist::create ()
@@ -677,30 +679,14 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 	    break;
 	   	string name=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/icon");
 		string shortname=name.substr (0,name.length () - 4);
-		//fxmessage("\nUUUUUUUUU=%s %s\n",res.c_str(),shortname.c_str());
-		
-		
-		
-			string comm_s;
-			  configure conflocal2 = *conf;
-			    string res2 = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/exec");
-			    if (res2 == "INTERNAL")
-				comm_s = "IC_";
-			    else if (res2 == "PLUGIN")
-				comm_s = "PL_";
-			    else if(res2 == "VFS")
-			    	comm_s = "VF_";
-			    else
-				comm_s = "EC_";
-
-			    comm_s.append (res);
+	
 			if(name=="")
 			new FXButton (toolbar2, res.c_str (), NULL, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 			else
 			new FXButton (toolbar2, "", objmanager->osicons[shortname], this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 			
 			
-			button_commands_tab.push_back(comm_s.c_str ());
+			button_commands_tab.push_back(res);
 		        command_num++;
 
 	    
@@ -1012,6 +998,7 @@ void filelist::opendir (string dir)
 
 
 
+
     int count = 0;
     while (1)
     {
@@ -1235,6 +1222,214 @@ long filelist::parseTextField (FXObject * sender, FXSelector sel, void *)
 
 }
 
+int filelist::runCommand(string command)
+{
+
+
+string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command + "/type");
+
+
+fxmessage("COM=%s TYPE=%s",command.c_str(),command_type.c_str());
+/*
+    int k = getCurrentItem ();
+    os_ListItem *oslistitem = (os_ListItem *) getItem (k);
+    string dir=returnpath(getItemText(k).text());
+    string name = oslistitem->osf.name;	
+*/
+
+    if (command_type == "VFS")	//internal command, open new window for virtual file system
+    {
+		int c = getCurrentItem ();
+		string *file = new string (returnpath(getItemText (c).text ()));
+		notifyparent->handle (this, FXSEL (SEL_COMMAND, 667), (void *) file);
+		return 0;
+    }
+    else if (command_type == "EXTERNAL" || command_type=="")
+    {
+
+
+	string res = conf->readonestring ("/OpenspaceConfig/commands/" + command + "/exec");
+	string options = conf->readonestring ("/OpenspaceConfig/commands/" + command + "/options");
+	if (res == "")
+	    return 0;
+
+	bool anyselected = false;
+
+	for (int i = 0; i < getNumItems (); i++)
+	{
+	    if (isItemSelected (i))
+	    {
+		anyselected = true;
+		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+		string name = oslistitem->osf.name;
+
+		 string fullname = "\"" + returnpath(name) + "\"";
+
+		int pos = res.find ("{f}");
+		string comm = res;
+		if (pos != -1)
+		{
+
+		    comm.replace (pos, fullname.length (), fullname);
+		}
+		vector<string> src;
+		src.push_back(comm);
+		string dst="";
+	  	  if(this->type!="local")
+		  {
+		    int c = getCurrentItem ();
+	    	    dst=returnpath(getItemText (c).text ());
+		  } 
+		
+		thread_elem *el = new thread_elem (fb, "execute", options,src,dst);
+		start_thread (el);
+	    }
+	}
+
+	//if none element is selected and command doesnt need selected file to execute
+	if (!anyselected)
+	{
+	    int pos = res.find ("{f}");
+	    if (pos == -1)
+	    {
+	    vector<string> src;
+	    src.push_back(res);
+		thread_elem *el = new thread_elem (fb, "execute", options, src);
+		start_thread (el);
+	    }
+	}
+
+
+
+
+
+    }
+
+    else if (command_type == "INTERNAL")
+    {
+
+
+	if (command == "other")
+	{
+	    path = filelist_opposite->path;
+	    //label->setText(path.c_str());
+	    notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
+	    opendir (filelist_opposite->path);
+	}
+	else if (command == "copy" || command == "move" || command == "remove")
+	{
+	    copymoveremove (command);
+	}
+	else if (command == "new_file")
+	{
+
+	    string sr = "touch " + returnpath("newfile");
+	    system (sr.c_str ());
+	    refresh ();
+	}
+	else if (command == "totalsize")
+	{
+
+	    unsigned long size = 0;
+	    for (int c = 0; c < getNumItems (); c++)
+	    {
+		if (isItemSelected (c))
+		{
+		    string sr = returnpath(getItemText (c).text ());
+		    if (FXFile::isDirectory (sr.c_str ()))
+			sr.append (SEPARATOR);
+		    fb->totalsize (sr, size);
+
+		}
+
+
+	    }
+
+
+	    string inf = "total size: " + numtostring (size);
+	    info->setText (inf.c_str ());
+	}
+	else if (command == "umount")
+	{
+	    int c = getCurrentItem ();
+	    string sr = returnpath(getItemText (c).text ());
+	    umount2 (sr.c_str (), MNT_FORCE);
+	    fxmessage ("umount");
+	    fxmessage (sr.c_str ());
+	}
+	    
+
+    }
+
+    else if (command_type == "PLUGIN")
+    {
+	FXASSERT ((5, "PLUGIN\n"));
+	string res = conf->readonestring ("/OpenspaceConfig/plugins/cmddialog/" + command);
+
+	if (res == "")
+	    return 0;
+
+	if(popupmenu)
+	popupmenu->popdown ();
+
+
+	string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/cmddialog/lib" + res;
+#ifdef WIN32
+	plugin_path += ".dll";
+#else
+	plugin_path += ".so";
+#endif
+
+	void *dllhandle = fxdllOpen (plugin_path.c_str ());
+
+	fxmessage (fxdllError ().text ());
+
+	if (dllhandle)
+	{
+
+	    int selit = 0;
+
+	    for (int c = 0; c < getNumItems (); c++)
+	    {
+		if (isItemSelected (c))
+		    selit++;
+	    }
+
+	
+	    vector < string > src;
+	    for (int c = 0; c < getNumItems (); c++)
+	    {
+		if (isItemSelected (c))
+		{
+		    src.push_back(returnpath(getItemText (c).text ()));
+		}
+	    }
+	
+
+	    cmddialog *(*gg) (FXWindow *, filelist_base * fb, vector < string > src);
+	    gg = (cmddialog * (*)(FXWindow *, filelist_base * fb, vector < string > src)) fxdllSymbol (dllhandle, "get_cmddialog");
+	    dial = gg (this, fb, src);
+	    dial->create ();
+
+
+
+
+
+	    //dial->param();
+
+
+	    dial->show (PLACEMENT_OWNER);
+
+	}
+
+
+    }
+    
+
+
+
+}
+
 //double click on file/direcotry in filelist
 long filelist::openfile (FXObject * sender, FXSelector, void *)
 {
@@ -1243,19 +1438,16 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 	return 0;
 
     int k = getCurrentItem ();
-
-
     os_ListItem *oslistitem = (os_ListItem *) getItem (k);
-
+  
     if (oslistitem->osf.type & FOLDER)
     {
 	string dir = this->path;
 
 	if (getItemText (k) == "..")
 	{
-	    //int k=dir.contains(SEPARATOR);
 	    dir = FXFile::upLevel (dir.c_str ()).text ();
-	    //if(k>2)dir.append(SEPARATOR); 
+
 	}
 	else if (getItemText (k) == ".")
 	{
@@ -1263,84 +1455,26 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 	}
 	else
 	{
-		dir=returnpath(getItemText(k).text());
+	    dir=returnpath(getItemText(k).text());
 	}
-
-
-
-
 
 	path = dir;
 	//label->setText(path.c_str());
 	notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
 	opendir (dir);
     }
-    else
+    else if (oslistitem->osf.type & EXECUTABLE)
     {
-	string dir;
-	dir=returnpath(getItemText(k).text());
-
-
-	string name = oslistitem->osf.name;
-
-	string res = getdefaultcommand (name);
-	string key = getdefaultcommand (name, false);
-
-
-	if (res == "VFS")	//internal command, open new window for virtual file system
-	{
-		int c = getCurrentItem ();
-		string *file = new string (returnpath(getItemText (c).text ()));
-		notifyparent->handle (this, FXSEL (SEL_COMMAND, 667), (void *) file);
-		return 0;
-	}
-	
-	if (res != "")
-	{
-	    string options = conf->readonestring ("/OpenspaceConfig/commands/" + key + "/options");
-	    vector<string> src;
-	    src.push_back(res);
-	    string dst="";
-	  	  if(this->type!="local")
-		  {
-		    int c = getCurrentItem ();
-	    	    dst=returnpath(getItemText (c).text ());
-		  } 
-	    thread_elem *el = new thread_elem (fb, "execute", options, src,dst);
-	    start_thread (el);
-	}
-	else if (oslistitem->osf.type & EXECUTABLE)
-	{
-	    dir.append (" &");
-	    system (dir.c_str ());
-	}
-	else
-	{
-	    string str = conf->readonestring ("/OpenspaceConfig/file_types_special/all/default");
-	    if (str != "")
-	    {
-		string str2 = conf->readonestring ("/OpenspaceConfig/commands/" + str + "/exec");
-		if (str2 != "")
-		{
-		    string options = conf->readonestring ("/OpenspaceConfig/commands/" + str + "/options");
-		    string fullname = "\"" + returnpath(name) + "\"";
-
-		    string::size_type pos = str2.find ("{f}");
-		    if (pos != string::npos)
-		    {
-			str2.replace (pos, fullname.length (), fullname);
-			vector<string> src;
-			src.push_back(str2);
-			int c = getCurrentItem ();
-			string dst=returnpath(getItemText (c).text ());
-			thread_elem *el = new thread_elem (fb, "execute", options,  src,dst);
-			start_thread (el);
-		    }
-		}
-	    }
-	}
-
-
+    	    string command=returnpath(oslistitem->osf.name);
+	    command+=" &";
+	    system (command.c_str ());
+    }
+    else
+    {    
+    	string name = oslistitem->osf.name;
+	string command = getdefaultcommand (name);
+	runCommand(command);	
+			
     }
 
 }
@@ -1438,7 +1572,6 @@ commands_tab.clear();
 			    {
 				sp++;
 				os_ListItem *oslistitem = (os_ListItem *) getItem (i);
-				getdefaultcommand (oslistitem->osf.name);
 				string ext = getfiletype (oslistitem->osf.name);
 				string rep;
 
@@ -1537,22 +1670,11 @@ commands_tab.clear();
 			    supported_commands.pop_front ();
 
 			    configure conflocal2 = conflocal;
-			    string res2 = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/exec");
 			    string command_text = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/text");
 			    if(command_text=="")command_text=res;
-			    if (res2 == "INTERNAL")
-				comm_s = "IC_";
-			    else if (res2 == "PLUGIN")
-				comm_s = "PL_";
-			    else if(res2 == "VFS")
-			    	comm_s = "VF_";	
-			    else
-				comm_s = "EC_";
-
-			    comm_s.append (res);
-
+		
 			    new FXButton (shutterItem->getContent (), command_text.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-			    commands_tab.push_back(comm_s.c_str ());
+			    commands_tab.push_back(res.c_str ());
 			    command_num++;
 
 			}
@@ -1561,22 +1683,11 @@ commands_tab.clear();
 		    }
 
 		    configure conflocal2 = conflocal;
-		    string res2 = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/exec");
 		    string command_text = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/text");
 		    if(command_text=="")command_text=res;
-		    if (res2 == "INTERNAL")
-			comm_s = "IC_";
-		    else if (res2 == "PLUGIN")
-			comm_s = "PL_";
-		    else if(res2 == "VFS")
-			comm_s = "VF_";	
-		    else
-			comm_s = "EC_";
-
-		    comm_s.append (res);
-
+	
 		    new FXButton (shutterItem->getContent (), command_text.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-		    commands_tab.push_back(comm_s.c_str ());
+		    commands_tab.push_back(res.c_str ());
 		    command_num++;
 
 		}
@@ -1615,221 +1726,19 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 
     FXushort id = FXSELID (sel);
     
-    string com_type;
-    string key;
+
     string com_name;
     
     if(((FXWindow*)obj)->getParent()==toolbar2)
     {
-    com_type.append (button_commands_tab[id - ID_LAST].c_str (), 2);
     com_name = button_commands_tab[id - ID_LAST];
     }
     else
     {   
-    com_type.append (commands_tab[id - ID_LAST].c_str (), 2);
     com_name = commands_tab[id - ID_LAST];
     }
     
-    com_name.erase (0, 3);
-    
-
-    //int k=getCurrentItem();
-    //string filename=path + SEPARATOR + getItemText(k).text();     
-
-    if (com_type == "EC")
-    {
-	key = "EXTERNAL_COMMANDS";
-
-
-	string res = conf->readonestring ("/OpenspaceConfig/commands/" + com_name + "/exec");
-	string options = conf->readonestring ("/OpenspaceConfig/commands/" + com_name + "/options");
-	if (res == "")
-	    return 0;
-
-
-	/*thread_elem* el=new thread_elem(fb,"execute",new string(path));
-	   start_thread(el);
-	 */
-	bool anyselected = false;
-
-	for (int i = 0; i < getNumItems (); i++)
-	{
-	    if (isItemSelected (i))
-	    {
-		anyselected = true;
-		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
-		string name = oslistitem->osf.name;
-
-		string fullname = returnpath(name);
-
-		int pos = res.find ("{f}");
-		string comm = res;
-		if (pos != -1)
-		{
-
-		    comm.replace (pos, fullname.length (), fullname);
-		}
-		vector<string> src;
-		src.push_back(comm);
-		thread_elem *el = new thread_elem (fb, "execute", options,src);
-		start_thread (el);
-	    }
-	}
-
-	//if none element is selected and command doesnt need selected file to execute
-	if (!anyselected)
-	{
-	    int pos = res.find ("{f}");
-	    if (pos == -1)
-	    {
-	    vector<string> src;
-	    src.push_back(res);
-		thread_elem *el = new thread_elem (fb, "execute", options, src);
-		start_thread (el);
-	    }
-	}
-
-
-
-
-
-    }
-
-    else if (com_type == "IC")
-    {
-
-
-	if (com_name == "other")
-	{
-	    path = filelist_opposite->path;
-	    //label->setText(path.c_str());
-	    notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
-	    opendir (filelist_opposite->path);
-	}
-	else if (com_name == "copy" || com_name == "move" || com_name == "remove")
-	{
-
-
-
-
-	    copymoveremove (com_name);
-
-
-	}
-	else if (com_name == "new_file")
-	{
-
-	    string sr = "touch " + returnpath("newfile");
-	    system (sr.c_str ());
-	    refresh ();
-	}
-	else if (com_name == "totalsize")
-	{
-
-	    unsigned long size = 0;
-	    for (int c = 0; c < getNumItems (); c++)
-	    {
-		if (isItemSelected (c))
-		{
-		    string sr = returnpath(getItemText (c).text ());
-		    if (FXFile::isDirectory (sr.c_str ()))
-			sr.append (SEPARATOR);
-		    fb->totalsize (sr, size);
-
-		}
-
-
-	    }
-
-
-	    string inf = "total size: " + numtostring (size);
-	    info->setText (inf.c_str ());
-	}
-	else if (com_name == "umount")
-	{
-	    int c = getCurrentItem ();
-	    string sr = returnpath(getItemText (c).text ());
-	    umount2 (sr.c_str (), MNT_FORCE);
-	    fxmessage ("umount");
-	    fxmessage (sr.c_str ());
-	}
-	    
-
-    }
-
-    else if (com_type == "PL")
-    {
-	FXASSERT ((5, "PLUGIN\n"));
-	string res = conf->readonestring ("/OpenspaceConfig/plugins/cmddialog/" + com_name);
-
-	if (res == "")
-	    return 0;
-
-	if(popupmenu)
-	popupmenu->popdown ();
-
-
-	string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/cmddialog/lib" + res;
-#ifdef WIN32
-	plugin_path += ".dll";
-#else
-	plugin_path += ".so";
-#endif
-
-	void *dllhandle = fxdllOpen (plugin_path.c_str ());
-
-	fxmessage (fxdllError ().text ());
-
-	if (dllhandle)
-	{
-
-	    int selit = 0;
-
-	    for (int c = 0; c < getNumItems (); c++)
-	    {
-		if (isItemSelected (c))
-		    selit++;
-	    }
-
-	
-	    vector < string > src;
-	    for (int c = 0; c < getNumItems (); c++)
-	    {
-		if (isItemSelected (c))
-		{
-		    src.push_back(returnpath(getItemText (c).text ()));
-		}
-	    }
-	
-
-	    cmddialog *(*gg) (FXWindow *, filelist_base * fb, vector < string > src);
-	    gg = (cmddialog * (*)(FXWindow *, filelist_base * fb, vector < string > src)) fxdllSymbol (dllhandle, "get_cmddialog");
-	    dial = gg (this, fb, src);
-	    dial->create ();
-
-
-
-
-
-	    //dial->param();
-
-
-	    dial->show (PLACEMENT_OWNER);
-
-	}
-
-
-    }
-    else if (com_type == "VF")
-    {
-      	int c = getCurrentItem ();
-	string *file = new string (returnpath(getItemText (c).text ()));
-	notifyparent->handle (this, FXSEL (SEL_COMMAND, 667), (void *) file);
-       
-    }
-
-
-
+    runCommand(com_name);
 
 	if(popupmenu)
   	   popupmenu->popdown ();
