@@ -19,13 +19,13 @@ while(iter!=files.end())
 {
 os_file.name=*iter;
 	string modfile=os_file.name.substr(0,os_file.name.length () - 1);
-	fxmessage("\nMOD=%s",modfile.c_str());
+	//fxmessage("\nMOD=%s",modfile.c_str());
 	string::size_type pos=modfile.rfind("/");
 	if (pos != string::npos)
 	{
 		string dirf="/"+os_file.name.substr(0,pos);
 		
-		fxmessage("\nDIR=%s  DIRF=%s",dir.c_str(),dirf.c_str()); 
+		//fxmessage("\nDIR=%s  DIRF=%s",dir.c_str(),dirf.c_str()); 
 		if(dirf!=dir)
 		{
 		iter++;
@@ -76,11 +76,13 @@ int filelist_archive::mkdir (string dir, int mode)
 int filelist_archive::copy (thread_elem * te)
 {
 fxmessage("ARCHIVE COPY");
+
+ vector < string >::iterator iter;
+ 
 	string::size_type pos = te->options.find ("upload");
 	if (pos != string::npos)
 	{
-		 vector < string >::iterator iter;
-
+		
    		 for (iter = te->src.begin (); iter != te->src.end(); iter++)
    		 {
 			string sr = (*iter);
@@ -91,6 +93,42 @@ fxmessage("ARCHIVE COPY");
    		 }
 
 	
+	}
+	else //download
+	{
+		string decompress,compress,archive_filename_decompressed;
+		if(type=="z")
+		{
+			decompress="gunzip";
+			compress="gzip";
+			archive_filename_decompressed=archive_filename.substr(0,archive_filename.length()-3);
+		}
+		else //bzip2
+		{
+			decompress="bunzip2";
+			compress="bzip2";
+			archive_filename_decompressed=archive_filename.substr(0,archive_filename.length()-4);
+		}
+		
+			 for (iter = te->src.begin (); iter != te->src.end(); iter++)
+   			 {
+				string sr = (*iter);
+				string dir=FXFile::directory(sr.c_str()).text();
+				string file=this->dir.substr(1,this->dir.length()-1) + FXFile::name(sr.c_str()).text();
+								
+				string command=decompress + " " + archive_filename;
+				system(command.c_str());
+				fxmessage("COMMAND=%s\n",command.c_str());
+				command="cd " + dir + " && tar rf " + archive_filename_decompressed + " " +file;
+				system(command.c_str());
+				fxmessage("COMMAND=%s\n",command.c_str());
+				command=compress + " " + archive_filename_decompressed;
+				system(command.c_str());
+				fxmessage("COMMAND=%s\n",command.c_str());
+				
+				files.push_back(file);
+				
+		 	}
 	}
 	
 te->end=true;
