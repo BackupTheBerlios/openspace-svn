@@ -38,7 +38,7 @@ FXIMPLEMENT (MimeApp, FXDialogBox, MimeAppMap, ARRAYNUMBER (MimeAppMap)) MimeApp
     FXButton *but2 = new FXButton (hori, "SAVE", NULL, this,ID_SAVE);
     FXButton *but3 = new FXButton (hori, "NEXT", NULL, this,ID_NEXT);
 
- string file=file + PATH_CFG + SEPARATOR + "mimeapp";
+ string file = string(PATH_CFG) + string(SEPARATOR) + string("mimeapp");
  ifstream ifs (file.c_str(), ios::in);
 
     while (!ifs.eof ())
