@@ -973,7 +973,6 @@ void filelist::opendir (string dir)
 {
 
 
-
 //label->setText(dir.c_str());
     clearItems ();
 
@@ -994,14 +993,10 @@ void filelist::opendir (string dir)
 
 
 
-
-
-
-
-
     int count = 0;
     while (1)
     {
+
 	count++;
 	osfile os_file = fb->osreaddir ();
 
@@ -1013,7 +1008,7 @@ void filelist::opendir (string dir)
 	FXIcon *icon = NULL;
 	FXIcon *icon2 = NULL;
 
-
+	fxmessage("\nNAME=%s",os_file.name.c_str());
 
 	if (os_file.type & FOLDER)
 	{
@@ -1056,9 +1051,10 @@ void filelist::opendir (string dir)
 		color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types_special/all/color"));
 		backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types_special/all/backcolor"));
 	    }
-
-
-	    if (os_file.size < thumb_size && (this->getListStyle () & ICONLIST_BIG_ICONS))
+		
+	    string graphtype=ext.substr(0,5);
+			
+	    if (graphtype=="image" && os_file.size < thumb_size && (this->getListStyle () & ICONLIST_BIG_ICONS) )
 	    {
 
 
@@ -1076,41 +1072,7 @@ void filelist::opendir (string dir)
 		    icon = ico;
 		    icon2 = ico;
 		}
-		else
-		{
-
-		    /*
-		       FXStream stream;
-		       osicons[3]->savePixels(stream);      
-		       getData              
-		       ico= new FXIcon (getApp(),NULL);
-		       ico->loadPixels(stream);
-		       ico->create();
-		       stream.close();
-		     */
-		    //ico=osicons[3];
-		    /*
-		       ico= new FXIcon (getApp(),NULL);
-		       ico->setData(osicons[3]->getData(),osicons[3]->getOptions(),osicons[3]->getWidth(),osicons[3]->getHeight());
-
-
-		       icon_vec.push_back(ico);
-
-		       ico->create();
-
-		       FXDCWindow dc(ico);
-		       dc.setForeground(FXRGB(0,255,0));
-		       dc.setBackground(FXRGB(255,0,0));
-		       dc.fillRectangle(0,0,32,32);
-		       dc.drawRectangle(2,2,31,31);
-		       dc.drawLine(0,0,20,20);
-
-		       icon=ico;
-		       icon2=ico;
-		     */
-
-		}
-
+		
 	    }
 
 
@@ -1146,6 +1108,7 @@ void filelist::opendir (string dir)
 
     string inf = "files: " + ntos (count) + "   free: " + siz;
     info->setText (inf.c_str ());
+ 
 }
 
 
@@ -1222,6 +1185,108 @@ long filelist::parseTextField (FXObject * sender, FXSelector sel, void *)
 
 }
 
+void *filelist::thread_func (void *data)
+{
+
+    thread_elem *el = (thread_elem *) data;
+    filelist_base *fb = (filelist_base *) el->fb;
+
+    FXASSERT ((5, "THREAD :) %s\n", el->command.c_str ()));
+
+    filelist *filel = (filelist *) el->filel;
+
+    if (el->command == "copy")
+    {
+	fb->copy (el);
+    }
+    else if (el->command == "move")
+    {
+	fb->move (el);
+    }
+    else if (el->command == "remove")
+    {
+	fb->remove (el);
+    }
+    else if (el->command == "mkdir")
+    {
+	//fb->mkdir(el->src,0); 
+	sleep (5);
+    }
+    else if (el->command == "execute")
+    {
+    string command=el->dst;
+    	if(command=="")//command don't need files as parametr
+	{
+	system (el->src[0].c_str ());
+	}
+	else
+	{
+		bool simple_command=true;
+		int pos = command.find ("{F}");
+		if (pos != -1)
+		simple_command=false;
+		else
+		pos = command.find ("{f}");
+		
+		string tmpdir;
+		string destdir;
+		if(((filelist*)el->filel)->type!="local")
+		{
+		tmpdir=FXFile::time ("%S%H%M%d%m%y", FXFile::now()).text ();
+		destdir=string("/tmp/openspace/") + tmpdir;
+		FXFile::createDirectory(destdir.c_str(),0);
+		}
+	
+	 	 vector <string>::iterator iter;
+		 for (iter = el->src.begin (); iter != el->src.end (); iter++)
+ 		 {
+		 	if(simple_command)
+			{
+			string tmpfile=*iter;
+				if(((filelist*)el->filel)->type!="local")
+				{
+				string name=FXFile::name(iter->c_str()).text();
+				
+				tmpfile=destdir+"/"+name;
+			
+				thread_elem *el2 = new thread_elem (fb, "copy", "upload", *iter,destdir);
+				fb->copy (el2);
+				delete el2;
+				}
+				
+				string exec=command.replace (pos, iter->length (), tmpfile);	
+				fxmessage("COMMAND=%s\n",exec.c_str());			
+				system (exec.c_str ());	
+				
+			}
+		 
+		 }
+		 
+		if(((filelist*)el->filel)->type!="local")
+		{
+		FXFile::remove(destdir.c_str());
+		}
+		
+		
+	
+	
+	}
+   				
+	
+
+    }
+    else if (el->command == "init")
+    {
+
+	fb->init (&filel->vector_name, (*(filel->pt)), conf);
+
+    }
+
+
+    el->end = true;
+}
+
+
 int filelist::runCommand(string command)
 {
 
@@ -1253,82 +1318,59 @@ fxmessage("COM=%s TYPE=%s",command.c_str(),command_type.c_str());
 	if (res == "")
 	    return 0;
 	    
+       string exec=res;
     
-	int pos = res.find ("{F}");
-	if (pos != -1) 
-	{
-	string uri;
-		for (int i = 0; i < getNumItems (); i++)
-		{
-	   		if (isItemSelected (i))
-	 		{
-				
-				os_ListItem *oslistitem = (os_ListItem *) getItem (i);
-				string name = oslistitem->osf.name;
-
-				string fullname = "\"" + returnpath(name) + "\"";
-				uri=uri+" " + fullname;
-			}	
-		}
-		
-		thread_elem *el = new thread_elem (fb, "execute", options,uri);
-		start_thread (el);	
-		
-			
-	}
-	else
-	{   
-	    
-	    
-	    
-
-	bool anyselected = false;
-
-	for (int i = 0; i < getNumItems (); i++)
-	{
-	    if (isItemSelected (i))
-	    {
-		anyselected = true;
-		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
-		string name = oslistitem->osf.name;
-
-		 string fullname = "\"" + returnpath(name) + "\"";
-
-		int pos = res.find ("{f}");
-		string comm = res;
+  		bool simple_command=true;
+		int pos = exec.find ("{F}");
 		if (pos != -1)
-		{
-
-		    comm.replace (pos, fullname.length (), fullname);
-		}
-		vector<string> src;
-		src.push_back(comm);
-		string dst="";
-	  	  if(this->type!="local")
-		  {
-		    int c = getCurrentItem ();
-	    	    dst=returnpath(getItemText (c).text ());
-		  } 
+		simple_command=false;
+		else
+		pos = exec.find ("{f}");
 		
-		thread_elem *el = new thread_elem (fb, "execute", options,src,dst);
-		start_thread (el);
-	    }
-	}
-
-	//if none element is selected and command doesnt need selected file to execute
-	if (!anyselected)
-	{
-	    int pos = res.find ("{f}");
-	    if (pos == -1)
+	    if (pos == -1)//command don't need any selected files
 	    {
-	    vector<string> src;
-	    src.push_back(res);
-		thread_elem *el = new thread_elem (fb, "execute", options, src);
+	
+		thread_elem *el = new thread_elem (fb, "execute", options, res);
 		start_thread (el);
 	    }
-	}
+	    else
+	    {
+	    	vector<string> src;
 	
-	}
+		
+	    	for (int i = 0; i < getNumItems (); i++)
+		{
+	    		if (isItemSelected (i))
+	   		 {
+		 		 os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+				 string name = oslistitem->osf.name;
+				 string fullname = returnpath(name);
+				 
+				 if(simple_command==true)
+				 {
+				 thread_elem *el = new thread_elem (fb, "execute", options,fullname,exec);
+	  	 		 start_thread (el);
+				 }
+				 else			
+				 src.push_back(fullname);
+				 
+				 				 
+			 }
+	
+		 }
+		 
+		 if(simple_command==false && src.size()>0) 
+		 {
+	   	   thread_elem *el = new thread_elem (fb, "execute", options,src,command);
+	  	   start_thread (el);
+		 }
+	    
+	    }
+    
+    
+    
+    
+	    
 
 
 
@@ -1821,84 +1863,7 @@ void filelist::start_thread (thread_elem * te)
 }
 
 //thread function
-void *filelist::thread_func (void *data)
-{
 
-    thread_elem *el = (thread_elem *) data;
-    filelist_base *fb = (filelist_base *) el->fb;
-
-    FXASSERT ((5, "THREAD :) %s\n", el->command.c_str ()));
-
-    filelist *filel = (filelist *) el->filel;
-
-    if (el->command == "copy")
-    {
-	fb->copy (el);
-    }
-    else if (el->command == "move")
-    {
-	fb->move (el);
-    }
-    else if (el->command == "remove")
-    {
-	fb->remove (el);
-    }
-    else if (el->command == "mkdir")
-    {
-	//fb->mkdir(el->src,0); 
-	sleep (5);
-    }
-    else if (el->command == "execute")
-    {
-	//int n;
-	//n = 1;
-	//ioctl(pipefd[0], FIOBIO, &n);
-	//el->pipe = popen(el->src->c_str(), "r");
-	
-	if(el->dst=="")
-	system (el->src[0].c_str ());
-	else
-	{
-	fxmessage("AAAAAAAAAAAAAAAAATAK");
-	
-	
-	/*
-	string ss=el->src[0];
-	
-	string::size_type k,b;
-	k=ss.find("/tmp/openspace/");
-	    if (k != string::npos)
-	    {
-	
-		b=ss.find("\"",k+1);
-		if (b != string::npos)
-	   	 {
-		ss=ss.substr(k,b);
-		 }
-	    }	
-	*/
-	string dd=string("/tmp/openspace/") + FXFile::directory(el->dst.c_str()).text();
-	
-	vector<string> src;
-	src.push_back(el->dst);
-	thread_elem *el2 = new thread_elem (fb, "copy", "upload", src,dd);
-	fb->copy (el2);
-	delete el2;
-	system (el->src[0].c_str ());
-	}
-	
-
-    }
-    else if (el->command == "init")
-    {
-
-	fb->init (&filel->vector_name, (*(filel->pt)), conf);
-
-    }
-
-
-    el->end = true;
-}
 
 
 //----------------------------------------------------   
