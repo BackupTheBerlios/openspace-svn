@@ -1252,6 +1252,35 @@ fxmessage("COM=%s TYPE=%s",command.c_str(),command_type.c_str());
 	string options = conf->readonestring ("/OpenspaceConfig/commands/" + command + "/options");
 	if (res == "")
 	    return 0;
+	    
+    
+	int pos = res.find ("{F}");
+	if (pos != -1) 
+	{
+	string uri;
+		for (int i = 0; i < getNumItems (); i++)
+		{
+	   		if (isItemSelected (i))
+	 		{
+				
+				os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+				string name = oslistitem->osf.name;
+
+				string fullname = "\"" + returnpath(name) + "\"";
+				uri=uri+" " + fullname;
+			}	
+		}
+		
+		thread_elem *el = new thread_elem (fb, "execute", options,uri);
+		start_thread (el);	
+		
+			
+	}
+	else
+	{   
+	    
+	    
+	    
 
 	bool anyselected = false;
 
@@ -1298,7 +1327,8 @@ fxmessage("COM=%s TYPE=%s",command.c_str(),command_type.c_str());
 		start_thread (el);
 	    }
 	}
-
+	
+	}
 
 
 
@@ -1405,18 +1435,10 @@ fxmessage("COM=%s TYPE=%s",command.c_str(),command_type.c_str());
 		}
 	    }
 	
-
 	    cmddialog *(*gg) (FXWindow *, filelist_base * fb, vector < string > src);
 	    gg = (cmddialog * (*)(FXWindow *, filelist_base * fb, vector < string > src)) fxdllSymbol (dllhandle, "get_cmddialog");
 	    dial = gg (this, fb, src);
 	    dial->create ();
-
-
-
-
-
-	    //dial->param();
-
 
 	    dial->show (PLACEMENT_OWNER);
 
@@ -1425,7 +1447,6 @@ fxmessage("COM=%s TYPE=%s",command.c_str(),command_type.c_str());
 
     }
     
-
 
 
 }

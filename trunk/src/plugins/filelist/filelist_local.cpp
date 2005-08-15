@@ -195,7 +195,7 @@ int filelist_local::osopendir (string dir)
 
 	    parser >> command;
 
-	    if (command == dir || "/" + command == dir)
+	    if (command == dir)
 	    {
 
 		parser >> type;

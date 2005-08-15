@@ -17,7 +17,8 @@ class thread_elem
 
     thread_elem ();
     thread_elem (void *fb, string command, string options, vector<string> src=vector<string>(), string dst = "");
-
+    thread_elem (void *fb, string command, string options,string src, string dst = "");
+    void thread_elem::init(void);
 
     FXMutex mutex;
     void *gui;

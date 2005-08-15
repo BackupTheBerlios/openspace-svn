@@ -3,8 +3,7 @@
 
 thread_elem::thread_elem (void *fb, string command, string options, vector<string> src, string dst)
 {
-    str1 = "start";
-    gui = NULL;
+    
 
     this->command = command;
     this->src = src;
@@ -12,7 +11,37 @@ thread_elem::thread_elem (void *fb, string command, string options, vector<strin
     this->fb = fb;
     this->options = options;
 
+    init(); 
 
+}
+
+thread_elem::thread_elem (void *fb, string command, string options, string src, string dst)
+{
+    
+    vector<string> src2;
+    src2.push_back(src);
+    
+    this->command = command;
+    this->src = src2;
+    this->dst = dst;
+    this->fb = fb;
+    this->options = options;
+
+    init(); 
+
+}
+
+
+thread_elem::thread_elem ()
+{
+    gui = NULL;
+}
+
+void thread_elem::init(void)
+{
+    str1 = "start";
+    gui = NULL;
+    
     act_total_size = 0;
     total_size = 1;
     file_size = 1;
@@ -31,12 +60,6 @@ thread_elem::thread_elem (void *fb, string command, string options, vector<strin
 
     act_file_name = "";
     msg="operation failed";
-
-}
-
-thread_elem::thread_elem ()
-{
-    gui = NULL;
 }
 
 //number to string in human readable units
