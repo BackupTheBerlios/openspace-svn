@@ -1008,8 +1008,7 @@ void filelist::opendir (string dir)
 	FXIcon *icon = NULL;
 	FXIcon *icon2 = NULL;
 
-	fxmessage("\nNAME=%s",os_file.name.c_str());
-
+	
 	if (os_file.type & FOLDER)
 	{
 	    color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types_special/dir/color"));
@@ -1254,7 +1253,7 @@ void *filelist::thread_func (void *data)
 				delete el2;
 				}
 				
-				string exec=command.replace (pos, iter->length (), tmpfile);	
+				string exec=command.replace (pos, iter->length (), "\""+tmpfile+"\"");	
 				fxmessage("COMMAND=%s\n",exec.c_str());			
 				system (exec.c_str ());	
 				
