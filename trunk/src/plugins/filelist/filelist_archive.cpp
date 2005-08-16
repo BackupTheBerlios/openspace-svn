@@ -87,9 +87,39 @@ fxmessage("ARCHIVE COPY");
    		 {
 			string sr = (*iter);
 			sr=sr.substr(1,sr.length()-1);
+			
+			if(dir=="/")
+			{
 			string command="cd " +te->dst +" && tar xf" + type + " " + archive_filename + " " + sr;
 			system(command.c_str());
-			fxmessage("COMMAND=%s\n",command.c_str());
+			fxmessage("COMMAND=%s DIR=%s FILE=%s\n",command.c_str(),dir.c_str(),sr.c_str());
+			}
+			else
+			{
+			
+			string tmpdir;
+			string destdir;
+			tmpdir=FXFile::time ("%S%H%M%d%m%y", FXFile::now()).text ();
+			destdir=string("/tmp/openspace/tmp") + tmpdir;
+			FXFile::createDirectory(destdir.c_str(),0);
+			string command="cd " +destdir +" && tar xf" + type + " " + archive_filename + " " + sr;
+			system(command.c_str());
+			string tmpfile=destdir+"/"+sr;
+			string d=te->dst.c_str() + string("/")+FXFile::name(iter->c_str()).text();
+			FXFile::move(tmpfile.c_str(),d.c_str());
+			FXFile::remove(destdir.c_str());
+			
+			fxmessage("TMPFILE=%s DST=%s",tmpfile.c_str(),d.c_str());
+			
+			}
+			
+			
+			
+			
+			
+			
+		
+			
    		 }
 
 	
@@ -110,25 +140,69 @@ fxmessage("ARCHIVE COPY");
 			archive_filename_decompressed=archive_filename.substr(0,archive_filename.length()-4);
 		}
 		
+		string command=decompress + " " + archive_filename;
+		system(command.c_str());
+		
 			 for (iter = te->src.begin (); iter != te->src.end(); iter++)
    			 {
-				string sr = (*iter);
-				string dir=FXFile::directory(sr.c_str()).text();
-				string file=this->dir.substr(1,this->dir.length()-1) + FXFile::name(sr.c_str()).text();
-								
-				string command=decompress + " " + archive_filename;
+			 string file;
+			 string sr = (*iter);
+			 string dir=FXFile::directory(sr.c_str()).text();
+			 
+			 
+			 
+				if(this->dir=="/")
+				{
+				file=FXFile::name(sr.c_str()).text();
+				
+				command="cd " +dir + " && tar rf " + archive_filename_decompressed + " " +file;
 				system(command.c_str());
 				fxmessage("COMMAND=%s\n",command.c_str());
-				command="cd " + dir + " && tar rf " + archive_filename_decompressed + " " +file;
+				}
+				else
+				{
+			 
+				
+				
+				string reldir=this->dir.substr(1,this->dir.length()-1);
+				file=reldir +"/"+ FXFile::name(sr.c_str()).text();
+				
+				
+				
+				string tmpdir;
+				string destdir;
+				tmpdir=FXFile::time ("%S%H%M%d%m%y", FXFile::now()).text ();
+				destdir=string("/tmp/openspace/tmp") + tmpdir;
+			
+				FXFile::createDirectory(destdir.c_str(),0);
+				command="cd "+destdir + " && mkdir -p " + reldir;
+				system(command.c_str());
+				string d=destdir+"/" + reldir + "/" + FXFile::name(sr.c_str()).text();
+				FXFile::copy(sr.c_str(),d.c_str());
+				
+				
+				command="cd " + destdir + " && tar rf " + archive_filename_decompressed + " " +file;
 				system(command.c_str());
 				fxmessage("COMMAND=%s\n",command.c_str());
-				command=compress + " " + archive_filename_decompressed;
-				system(command.c_str());
-				fxmessage("COMMAND=%s\n",command.c_str());
+				
+	
+				FXFile::remove(destdir.c_str());
+
+				
+				
+				
+				}
+				
+				
 				
 				files.push_back(file);
 				
 		 	}
+			
+		command=compress + " " + archive_filename_decompressed;
+		system(command.c_str());
+		fxmessage("COMMAND=%s\n",command.c_str());	
+			
 	}
 	
 te->end=true;
