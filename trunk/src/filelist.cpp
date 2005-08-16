@@ -1221,12 +1221,16 @@ void *filelist::thread_func (void *data)
 	else
 	{
 		bool simple_command=true;
-		int pos = command.find ("{F}");
-		if (pos != -1)
+		string::size_type pos = command.find ("{F}");
+		if (pos != string::npos)
+		{
 		simple_command=false;
+		}
 		else
+		{
 		pos = command.find ("{f}");
-		
+		}
+
 		string tmpdir;
 		string destdir;
 		if(((filelist*)el->filel)->type!="local")
@@ -1235,12 +1239,12 @@ void *filelist::thread_func (void *data)
 		destdir=string("/tmp/openspace/") + tmpdir;
 		FXFile::createDirectory(destdir.c_str(),0);
 		}
-	
+		
+		string Flist;
 	 	 vector <string>::iterator iter;
 		 for (iter = el->src.begin (); iter != el->src.end (); iter++)
  		 {
-		 	if(simple_command)
-			{
+		 	
 			string tmpfile=*iter;
 				if(((filelist*)el->filel)->type!="local")
 				{
@@ -1252,14 +1256,26 @@ void *filelist::thread_func (void *data)
 				fb->copy (el2);
 				delete el2;
 				}
-				
-				string exec=command.replace (pos, iter->length (), "\""+tmpfile+"\"");	
+			if(simple_command)
+			{	string f="\""+tmpfile+"\"";
+				string exec=command.replace (pos, f.length (),f );	
 				fxmessage("COMMAND=%s\n",exec.c_str());			
 				system (exec.c_str ());	
 				
 			}
+			else
+			{
+			Flist=Flist+ " \""+tmpfile+"\" ";
+			}
 		 
 		 }
+			if(!simple_command)
+			{
+			string exec=command.replace (pos, Flist.length (), Flist);	
+				fxmessage("COMMAND=%s\n",exec.c_str());			
+				system (exec.c_str ());	
+			}
+		 
 		 
 		if(((filelist*)el->filel)->type!="local")
 		{
@@ -1360,7 +1376,7 @@ fxmessage("COM=%s TYPE=%s",command.c_str(),command_type.c_str());
 		 
 		 if(simple_command==false && src.size()>0) 
 		 {
-	   	   thread_elem *el = new thread_elem (fb, "execute", options,src,command);
+	   	   thread_elem *el = new thread_elem (fb, "execute", options,src,exec);
 	  	   start_thread (el);
 		 }
 	    
