@@ -43,12 +43,13 @@ dnl Checks for FOX 1.4 header files.
 AC_HEADER_STDC
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(fox-1.4/fx.h,,AC_MSG_ERROR("fox-1.4/fx.h not found"))
-
+AC_CHECK_PROG(XML2_CONFIG, xml2-config, xml2-config)
 AC_CONFIG_FILES([
 		 openspacerc
 		 Makefile
 		 src/Makefile
 		 icons/Makefile
+		 icons/default/Makefile
 		 src/plugins/Makefile
 		 src/plugins/filelist/Makefile
 		 src/plugins/cmddialog/Makefile

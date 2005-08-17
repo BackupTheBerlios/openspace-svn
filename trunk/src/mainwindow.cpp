@@ -213,7 +213,7 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     exit(-1);
     }
     pref = new preferences (this);
-    loadicons(conf->readonestring ("/OpenspaceConfig/path") + conf->readonestring ("/OpenspaceConfig/icons_theme") +"/icons/");
+    loadicons(conf->readonestring ("/OpenspaceConfig/path") +"/icons/"+conf->readonestring ("/OpenspaceConfig/icons_theme") + "/");
     string res = conf->readonestring ("/OpenspaceConfig/version");
     FXTRACE ((1, "VERSION %s\n", res.c_str ()));
     int w = atoi (conf->readonestring ("/OpenspaceConfig/mainwindow/width").c_str ());
