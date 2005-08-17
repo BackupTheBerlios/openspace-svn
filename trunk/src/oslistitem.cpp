@@ -36,7 +36,7 @@ void os_ListItem::drawDetails(const FXIconList* list,FXDC& dc,FXint x,FXint y,FX
 //=============CHANGES==========================================
 	FXString label=osf.name.c_str();
 	label.append("\t");
-		for(int i=0;osf.attrib[i]!="";i++)
+		for(int i=0;i<osf.attrib.size();i++)
 		{				
 		label.append(osf.attrib[i].c_str());
 		label.append("\t");			
@@ -136,7 +136,7 @@ void os_ListItem::drawDetails(const FXIconList* list,FXDC& dc,FXint x,FXint y,FX
     
     th=4+font->getFontHeight();
      //=============CHANGES==========================================    
-      for(int i=0;osf.attrib[i]!="";i++)
+      for(int i=0;i<osf.attrib.size();i++)
 		{		
 		th=th+4+font1->getFontHeight();	   
 		}
@@ -180,7 +180,7 @@ void os_ListItem::drawDetails(const FXIconList* list,FXDC& dc,FXint x,FXint y,FX
       if(dw) dc.drawText(xt-iw+tw-2,yt+font->getFontAscent()+2,"...",3);
    //=============CHANGES==========================================    
     dc.setFont(font1);
-      for(int i=0;osf.attrib[i]!="";i++)
+      for(int i=0;i<osf.attrib.size();i++)
 		{				
 		
 		dc.drawText(xt+2,yt+(i+2)*font->getFontAscent()+2,osf.attrib[i].c_str(),osf.attrib[i].length());
@@ -239,7 +239,7 @@ FXFont *font1=((filelist*)list)->objmanager->captionfont1;
     if(ih && th) ih+=BIG_TEXT_SPACING;
     firstth=th;
      //=============CHANGES==========================================    
-      for(int i=0;osf.attrib[i]!="";i++)
+      for(int i=0;i<osf.attrib.size();i++)
 		{		
 	       th=th+4+font1->getFontHeight();           
 		}

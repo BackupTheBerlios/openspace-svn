@@ -79,8 +79,11 @@
 			<exec>unzip {f}</exec>
 			<options>rescan</options>
 		</unzip>
-		
-		
+		<create_tar.bz2>
+			<exec>tar cjf archive.tar.bz2 {F} </exec>
+			<options>rescan</options>
+			<text>create tar.bz2</text>
+		</create_tar.bz2>
 		
 		<copy>
 			<type>INTERNAL</type>
@@ -199,9 +202,18 @@
 					<default>vfs_archive</default>
 					<icon>compressed.gif</icon>
 					<commands>
-							<command>view_tar_bz2</command>
+							<command>extract_tar_bz2</command>
 					</commands>
-				</x-bzip-compressed-tar>			
+				</x-bzip-compressed-tar>
+				<x-compressed-tar>
+					<default>vfs_archive</default>
+					<icon>compressed.gif</icon>
+					<commands>
+							<command>extract_tar_gz</command>
+					</commands>
+				</x-compressed-tar>
+				
+							
 			</types>	
 		</application>	
 		
@@ -240,6 +252,9 @@
 			<command>new_file</command>
 			<command>ls</command>
 		</common>
+		<compress>
+			<command>create_tar.bz2</command>
+		</compress>
 		
 		<panel>
 			<command>other</command>

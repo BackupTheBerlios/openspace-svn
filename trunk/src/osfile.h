@@ -2,6 +2,7 @@
 #define OSFILE
 
 #include <string>
+#include <vector>
 using namespace std;
 
 
@@ -27,7 +28,7 @@ class osfile
     string name;
     unsigned int type;
     unsigned long size;
-    string *attrib;
+    vector <string> attrib;
     string content;
 };
 

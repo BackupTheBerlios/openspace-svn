@@ -115,23 +115,21 @@ osfile filelist_local::osreaddir ()
 
 
 
-    os_file.attrib = new string[fieldsnum];
-
     for (int i = 0; i < fieldsnum - 1; i++)
     {
 
 	if (fields[i + 1] == "size")
-	    os_file.attrib[i] = numtostring (os_file.size);
+	    os_file.attrib.push_back(numtostring (os_file.size));
 	else if (fields[i + 1] == "owner")
-	    os_file.attrib[i] = FXFile::owner (os_file.name.c_str ()).text ();
+	   os_file.attrib.push_back(FXFile::owner (os_file.name.c_str ()).text ());
 	else if (fields[i + 1] == "group")
-	    os_file.attrib[i] = FXFile::group (os_file.name.c_str ()).text ();
+	   os_file.attrib.push_back(FXFile::group (os_file.name.c_str ()).text ());
 	else if (fields[i + 1] == "accessed")
-	    os_file.attrib[i] = FXFile::time ("%H:%M %d/%m/%y", FXFile::accessed (os_file.name.c_str ())).text ();
+	    os_file.attrib.push_back(FXFile::time ("%H:%M %d/%m/%y", FXFile::accessed (os_file.name.c_str ())).text ());
 	else if (fields[i + 1] == "created")
-	    os_file.attrib[i] = FXFile::time ("%H:%M %d/%m/%y", FXFile::created (os_file.name.c_str ())).text (); 
+	    os_file.attrib.push_back(FXFile::time ("%H:%M %d/%m/%y", FXFile::created (os_file.name.c_str ())).text ()); 
 	else if (fields[i + 1] == "modified")
- 	    os_file.attrib[i] = FXFile::time ("%H:%M %d/%m/%y", FXFile::modified (os_file.name.c_str ())).text ();       
+ 	    os_file.attrib.push_back(FXFile::time ("%H:%M %d/%m/%y", FXFile::modified (os_file.name.c_str ())).text ());       
 	else if (fields[i + 1] == "mode")
 	{
 
@@ -153,15 +151,11 @@ osfile filelist_local::osreaddir ()
 	    }
 
 
-	    os_file.attrib[i] = str;
+	    os_file.attrib.push_back(str);
 
 	}
 
     }
-
-
-    os_file.attrib[fieldsnum - 1] = "";
-
 
 
 

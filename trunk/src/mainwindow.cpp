@@ -1101,6 +1101,11 @@ Frame::Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, in
     toclose->setUserData (new box (this, NULL, NULL, NULL));
     toright = new FXButton (hf, "", objmanager->osicons["right"], tgt, MainWindow::ID_TORIGHT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     toright->setUserData (new box (this, NULL, NULL, NULL));
+    if(pt.server!="")
+    {
+    string lab=pt.server+": ";
+    new FXLabel(hf,lab.c_str());
+    }
 
 //new FXLabel (hf," ");
     if (position != 0)

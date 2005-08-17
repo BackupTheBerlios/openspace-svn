@@ -110,9 +110,6 @@ osfile filelist_sftp::osreaddir (void)
 
 
 
-		os_file.attrib = new string[2];
-		os_file.attrib[0] = "300";//numtostring (os_file.size);
-		os_file.attrib[1] = "";
 
 		return os_file;
 

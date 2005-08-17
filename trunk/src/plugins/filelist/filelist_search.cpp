@@ -22,10 +22,7 @@ if(iter!=files.end())
 	    os_file.type = 0;
 	    os_file.name = *iter;
 	    os_file.size = 300;
-	    os_file.attrib = new string[2];
-	    os_file.attrib[0] = "300";
-	    os_file.attrib[1] = "";
-	    
+	
 	    iter++;
 	    fxmessage("\nN=%s",os_file.name.c_str());  
 	    return os_file;

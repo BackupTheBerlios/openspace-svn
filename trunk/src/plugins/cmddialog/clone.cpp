@@ -54,10 +54,22 @@ class clone_cmddialog:public cmddialog
     	for (iter = src.begin (); iter != src.end(); iter++)
     	{
 	    string newname = dir + SEPARATOR + vec[i]->getText ().text ();
-	    if (fb->rename (*iter, newname) == false)
+	    string newonlyname= vec[i]->getText ().text ();
+	    
+	    string destdir="/tmp/openspace";
+	    string filename=FXFile::name(iter->c_str()).text();
+	    string dirname=FXFile::directory(iter->c_str()).text();
+	    
+	    thread_elem *el2 = new thread_elem (fb, "copy", "upload", *iter,destdir);
+	    fb->copy (el2);
+	    delete el2;
+	    
+	    	    
+	    
+	    if (fb->rename (destdir+"/"+filename,destdir+"/"+newonlyname) == false)
 	    {
 		error = -1;
-		string err = "can't rename " + *iter + " to " + newname;
+		string err = "can't clone " + *iter + " to " + newname;
 
 		FXLabel *lab = new FXLabel (contents, err.c_str ());
 		lab->create ();
@@ -65,6 +77,16 @@ class clone_cmddialog:public cmddialog
 		this->resize (this->getWidth (), this->getHeight () + lab->getHeight ());
 
 	    }
+	    else
+	    {
+	    
+	    el2 = new thread_elem (fb, "move", "upload", destdir+"/"+newonlyname,dirname);
+	    fb->copy (el2);
+	    delete el2;
+	    
+	    }
+	    
+	    
 	i++;
 	}
 
