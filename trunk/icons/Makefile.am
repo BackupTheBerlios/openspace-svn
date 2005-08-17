@@ -1,5 +1,5 @@
-iconsdir=$(datadir)/openspace/icons
+iconsdir=$(datadir)/openspace/icons/default
 
-icons_DATA=*.gif
+icons_DATA=*.gif *.png
 	
 	 
