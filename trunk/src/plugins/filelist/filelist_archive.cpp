@@ -75,6 +75,21 @@ int filelist_archive::mkdir (string dir, int mode)
 }
 int filelist_archive::copy (thread_elem * te)
 {
+filesoperation("copy",te);
+}
+
+int filelist_archive::move (thread_elem * te)
+{
+filesoperation("move",te);
+}
+int filelist_archive::remove (thread_elem * te)
+{
+filesoperation("remove",te);
+}
+
+int filelist_archive::filesoperation(string type,thread_elem * te)
+{
+
 fxmessage("ARCHIVE COPY");
 
  vector < string >::iterator iter;
@@ -112,17 +127,7 @@ fxmessage("ARCHIVE COPY");
 			fxmessage("TMPFILE=%s DST=%s",tmpfile.c_str(),d.c_str());
 			
 			}
-			
-			
-			
-			
-			
-			
-		
-			
-   		 }
-
-	
+		 }
 	}
 	else //download
 	{
@@ -155,6 +160,13 @@ fxmessage("ARCHIVE COPY");
 				{
 				file=FXFile::name(sr.c_str()).text();
 				
+					if(1)//overwrite
+					{
+					command="cd " +dir + " && tar --delete -f " + archive_filename_decompressed + " " +file;
+					fxmessage("COMMAND=%s\n",command.c_str());
+					system(command.c_str());
+					}
+				
 				command="cd " +dir + " && tar rf " + archive_filename_decompressed + " " +file;
 				system(command.c_str());
 				fxmessage("COMMAND=%s\n",command.c_str());
@@ -181,22 +193,26 @@ fxmessage("ARCHIVE COPY");
 				FXFile::copy(sr.c_str(),d.c_str());
 				
 				
+					if(1)//overwrite
+					{
+					command="cd " +destdir + " && tar --delete -f " + archive_filename_decompressed + " " +file;
+					fxmessage("COMMAND=%s\n",command.c_str());
+					system(command.c_str());
+					}
+				
 				command="cd " + destdir + " && tar rf " + archive_filename_decompressed + " " +file;
 				system(command.c_str());
 				fxmessage("COMMAND=%s\n",command.c_str());
 				
 	
 				FXFile::remove(destdir.c_str());
-
-				
-				
 				
 				}
 				
-				
-				
-				files.push_back(file);
-				
+					if (files.end()==find(files.begin(), files.end(), file))// Search the list.
+					{
+					files.push_back(file);	
+					}			
 		 	}
 			
 		command=compress + " " + archive_filename_decompressed;
@@ -206,13 +222,11 @@ fxmessage("ARCHIVE COPY");
 	}
 	
 te->end=true;
+
+
 }
-int filelist_archive::move (thread_elem * te)
-{
-}
-int filelist_archive::remove (thread_elem * te)
-{
-}
+
+
 int filelist_archive::rename (string orgname, string newname)
 {
 }

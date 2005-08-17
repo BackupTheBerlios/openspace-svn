@@ -34,5 +34,7 @@ class filelist_archive:public filelist_base
     bool filelist_archive::hardlink (string src, string dst);
     int filelist_archive::supportedfunctions (void);
     int filelist_archive::quit (void);
+    
+    int filelist_archive::filesoperation(string type,thread_elem * te);
 };
 #endif

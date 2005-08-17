@@ -1220,6 +1220,12 @@ void *filelist::thread_func (void *data)
 	}
 	else
 	{
+	
+		bool exportfile=false;
+		
+		if( ((filelist*)el->filel)->type!="local" && ((filelist*)el->filel)->type!="search")
+		exportfile=true;
+			
 		bool simple_command=true;
 		string::size_type pos = command.find ("{F}");
 		if (pos != string::npos)
@@ -1233,6 +1239,7 @@ void *filelist::thread_func (void *data)
 
 		string tmpdir;
 		string destdir;
+		string fbdir;
 		if(((filelist*)el->filel)->type!="local")
 		{
 		tmpdir=FXFile::time ("%S%H%M%d%m%y", FXFile::now()).text ();
@@ -1241,15 +1248,20 @@ void *filelist::thread_func (void *data)
 		}
 		
 		string Flist;
+		vector <string> Flist_vector;
+		vector <FXTime> Flist_vector_time;
+		vector <FXTime>::iterator time_iter;
+		
+		
 	 	 vector <string>::iterator iter;
 		 for (iter = el->src.begin (); iter != el->src.end (); iter++)
  		 {
 		 	
 			string tmpfile=*iter;
-				if(((filelist*)el->filel)->type!="local")
+				if(exportfile)
 				{
 				string name=FXFile::name(iter->c_str()).text();
-				
+				fbdir=FXFile::directory(iter->c_str()).text();
 				tmpfile=destdir+"/"+name;
 			
 				thread_elem *el2 = new thread_elem (fb, "copy", "upload", *iter,destdir);
@@ -1257,15 +1269,35 @@ void *filelist::thread_func (void *data)
 				delete el2;
 				}
 			if(simple_command)
-			{	string f="\""+tmpfile+"\"";
+			{	
+				FXTime t1=FXFile::modified(tmpfile.c_str());
+				string f="\""+tmpfile+"\"";
 				string exec=command.replace (pos, f.length (),f );	
 				fxmessage("COMMAND=%s\n",exec.c_str());			
-				system (exec.c_str ());	
+				system (exec.c_str ());
+				if(exportfile)
+				{	
+				FXTime t2=FXFile::modified(tmpfile.c_str());
+					if(t1!=t2)
+					{
+					thread_elem *el2 = new thread_elem (fb, "copy", "download", tmpfile,fbdir);
+					fb->copy (el2);
+					delete el2;
+					}
+				
+				}
+				
 				
 			}
 			else
 			{
 			Flist=Flist+ " \""+tmpfile+"\" ";
+				if(exportfile)
+				{
+				Flist_vector.push_back(tmpfile);
+				FXTime t1=FXFile::modified(tmpfile.c_str());
+				Flist_vector_time.push_back(t1);
+				}
 			}
 		 
 		 }
@@ -1274,10 +1306,35 @@ void *filelist::thread_func (void *data)
 			string exec=command.replace (pos, Flist.length (), Flist);	
 				fxmessage("COMMAND=%s\n",exec.c_str());			
 				system (exec.c_str ());	
+				
+				time_iter=Flist_vector_time.begin();
+				vector <string> copysrc;
+				
+				for (iter = Flist_vector.begin (); iter != Flist_vector.end (); iter++)
+ 		 		{
+					FXTime t2=FXFile::modified(iter->c_str());
+					if(t2!=*time_iter)
+					{
+					copysrc.push_back(*iter);
+					
+					}
+					time_iter++;
+				}
+				
+				
+				if(copysrc.size()>0)
+				{
+				thread_elem *el2 = new thread_elem (fb, "copy", "download",copysrc,fbdir);
+				fb->copy (el2);
+				delete el2;
+				
+				}
+				
+				
 			}
 		 
 		 
-		if(((filelist*)el->filel)->type!="local")
+		if(exportfile)
 		{
 		FXFile::remove(destdir.c_str());
 		}

@@ -291,31 +291,14 @@
 				<size>100000</size>
 			</thumbs>
 		</local>
-		<scp>
+		<sftp>
 			<type>network</type>
-			<headers>
-				<header>size</header>
-				<header>owner</header>
-				<header>group</header>
-				<header>accessed</header>
-			</headers>
 			<properties>
 				<name>
-					<width>180</width>
+					<width>400</width>					
 				</name>
-				<size>
-					<width>80</width>
-					<display>MB</display>
-				</size>
-				
-				<owner>
-					<width>80</width>
-				</owner>
-				<accessed>
-					<width>100</width>
-				</accessed>
-			</properties>
-		</scp>
+			</properties>	
+		</sftp>
 		<search>
 			<type>search</type>
 			<properties>
