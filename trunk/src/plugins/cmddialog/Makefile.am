@@ -1,4 +1,4 @@
-pkglib_LTLIBRARIES= libaccess.la libmkdir.la librename.la libclone.la libsymlink.la libeditsymlink.la
+pkglib_LTLIBRARIES= libaccess.la libmkdir.la librename.la libclone.la libsymlink.la libeditsymlink.la libcompress.la
 pkglibdir=$(datadir)/openspace/plugins/cmddialog
 INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
 
@@ -19,3 +19,6 @@ libsymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs`
 
 libeditsymlink_la_SOURCES =editsymlink.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h ../../cmddialog.cpp ../../cmddialog.h
 libeditsymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+
+libcompress_la_SOURCES =compress.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h ../../cmddialog.cpp ../../cmddialog.h
+libcompress_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 

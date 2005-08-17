@@ -519,7 +519,10 @@ long MainWindow::onChangeDir (FXObject * sender, FXSelector, void *ptr)
     int y = win->getY ();
     string p = fil->path;
     string current_path = p;
+    
+    if(current_path!="/")
     current_path.append (SEPARATOR);
+       
     current_path.append (mc->getText ().text ());
     current_frame->f->path = current_path;
     current_frame->f->opendir (current_path);

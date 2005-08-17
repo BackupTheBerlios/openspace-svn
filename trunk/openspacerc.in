@@ -79,12 +79,6 @@
 			<exec>unzip {f}</exec>
 			<options>rescan</options>
 		</unzip>
-		<create_tar.bz2>
-			<exec>tar cjf archive.tar.bz2 {F} </exec>
-			<options>rescan</options>
-			<text>create tar.bz2</text>
-		</create_tar.bz2>
-		
 		<copy>
 			<type>INTERNAL</type>
 		</copy>
@@ -109,6 +103,9 @@
 		<symlink>
 			<type>PLUGIN</type>
 		</symlink>
+		<compress>
+			<type>PLUGIN</type>
+		</compress>
 		<editsymlink>
 			<type>PLUGIN</type>
 		</editsymlink>
@@ -253,7 +250,7 @@
 			<command>ls</command>
 		</common>
 		<compress>
-			<command>create_tar.bz2</command>
+			<command>compress</command>
 		</compress>
 		
 		<panel>
@@ -343,6 +340,7 @@
 			<clone>clone</clone>
 			<symlink>symlink</symlink>
 			<editsymlink>editsymlink</editsymlink>
+			<compress>compress</compress>
 		</cmddialog>
 	</plugins>
 	

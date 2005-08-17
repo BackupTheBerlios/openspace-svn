@@ -207,7 +207,14 @@ fxmessage("ARCHIVE COPY");
 				
 					if (files.end()==find(files.begin(), files.end(), file))// Search the list.
 					{
-					files.push_back(file);	
+					string dirtest=dir+"/"+FXFile::name(file.c_str()).text();
+					fxmessage("\n\nDIRTEST=%s\n\n",dirtest.c_str());
+					
+						
+						if(FXFile::isDirectory(dirtest.c_str()))						
+						files.push_back(file+"/");
+						else
+						files.push_back(file);	
 					}
 					else	
 					{
@@ -248,7 +255,14 @@ fxmessage("ARCHIVE COPY");
 				
 					if (files.end()==find(files.begin(), files.end(), file))// Search the list.
 					{
-					files.push_back(file);	
+					string dirtest=dir+"/"+FXFile::name(file.c_str()).text();
+					fxmessage("\n\nDIRTEST=%s\n\n",dirtest.c_str());
+					
+						
+						if(FXFile::isDirectory(dirtest.c_str()))						
+						files.push_back(file+"/");
+						else
+						files.push_back(file);	
 					}
 					else
 					{	
