@@ -286,7 +286,7 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     
     new FXButton (toolbar, "\tconfiguration", objmanager->osicons["configure"], this, MainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "", objmanager->osicons["foxmini"], this, MainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-  
+    toolbar->dock(rightdock);
   
     string dir = parseDir (conf->readonestring ("/OpenspaceConfig/leftdir/dir"));
     string type = conf->readonestring ("/OpenspaceConfig/leftdir/type");
@@ -365,7 +365,23 @@ long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
 	
 	if (networkframe == NULL) //search
 	{
-	str_server = "find " + string(search_path->getText().text()) + " -name \"" + string(search_filefilter->getText().text()) +"\"" ;
+	
+	
+	string s_size_greater=search_size_greater->getText().text();
+	string s_size_less=search_size_less->getText().text();
+	string s_dir=search_path->getText().text();
+	string s_filter=search_filefilter->getText().text();
+	
+	str_server = "find "+ s_dir;
+	
+	if(s_filter!="")
+	str_server+= " -name \"" + s_filter +"\"" ;
+	if(s_size_greater!="")
+	str_server+= " -size +" + s_size_greater +"k" ;
+	if(s_size_less!="")
+	str_server+= " -size -" + s_size_less +"k" ;
+	
+	 
 	dir = "/";
 	type= "search";
 	
@@ -426,8 +442,13 @@ long MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 	    string res = conf->getnextnode ();
 	        if (res == "")
 		break;	
+		string filelist_type = conf->readonestring ("/OpenspaceConfig/filelist/"+res+"/type");
+		
+		if(filelist_type=="network")
+		{
 		filelisttypecombobox->appendItem (res.c_str());
 		count++;
+		}
 	    }				       
 	}				       
 					       
@@ -460,6 +481,11 @@ long MainWindow::onNewSearchFrame (FXObject * sender, FXSelector, void *)
 		search_path->setText(left_frame->f->path.c_str());
 		else
 		search_path->setText(right_frame->f->path.c_str());
+	new FXLabel (searchframe, "size");
+	new FXLabel (searchframe, "greater than(KB):");
+	search_size_greater=new FXTextField (searchframe, 10);
+	new FXLabel (searchframe, "less than(KB):");
+	search_size_less=new FXTextField (searchframe, 10);
 		
 		
 	new FXLabel (searchframe, "file filter: ");

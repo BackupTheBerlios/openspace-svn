@@ -98,7 +98,7 @@ class MainWindow:public FXMainWindow
     FXVerticalFrame *left;
     FXVerticalFrame *right;
     FXHorizontalFrame *networkframe, *searchframe;
-    FXTextField *search_path,*search_filefilter;
+    FXTextField *search_path,*search_filefilter,*search_size_greater,*search_size_less;
 
     FXSplitter *splitter;
     FXMenuPane *filemenu;
