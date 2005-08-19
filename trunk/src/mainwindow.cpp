@@ -93,6 +93,7 @@ objmanager->specialicons[5]->create();
 		string name=dp->d_name;
 			if (name.length () >= 3 && (name.substr (name.length () - 3, 3) == "gif" || name.substr (name.length () - 3, 3) == "png"))
 			{
+			
 		   	 string file = icondir;
 		   	 file.append (name);	
 			string shortname=name.substr (0,name.length () - 4);
@@ -180,7 +181,7 @@ bool MainWindow::loadMimeSettings (string path, string type)
     if (res2 != "")
     {
 	FXFileStream stream;
-	string path = conf->readonestring ("/OpenspaceConfig/path") + "/icons/" + res2;
+	string path = conf->readonestring ("/OpenspaceConfig/path") + "/icons/"+conf->readonestring ("/OpenspaceConfig/icons_theme")+"/" + res2;
 	FXIcon *osicon = NULL;
 	osicon = new FXGIFIcon (getApp (), NULL);
 	if (stream.open (path.c_str (), FXStreamLoad))
