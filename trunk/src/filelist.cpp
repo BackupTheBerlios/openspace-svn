@@ -512,12 +512,14 @@ string filelist::getdefaultcommand (string name)
     }
 
 
-    if (key == "")
-    {
-	key = conf->readonestring ("/OpenspaceConfig/file_types_special/all/default");
-    }
+   
 	return key;
 }
+
+
+
+	 
+ 
 
 //return command with replaced {f} with valid path
 string filelist::resolvecommand(string command,string name)
@@ -1598,17 +1600,24 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 	notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
 	opendir (dir);
     }
-    else if (oslistitem->osf.type & EXECUTABLE)
-    {
-    	    string command=returnpath(oslistitem->osf.name);
-	    command+=" &";
-	    system (command.c_str ());
-    }
     else
     {    
     	string name = oslistitem->osf.name;
 	string command = getdefaultcommand (name);
+	
+	if(command!="")
 	runCommand(command);	
+        else if (oslistitem->osf.type & EXECUTABLE)
+   	{
+    	    string command=returnpath(oslistitem->osf.name);
+	    command+=" &";
+	    system (command.c_str ());
+   	}
+	else
+	{
+	runCommand(conf->readonestring ("/OpenspaceConfig/file_types_special/all/default"));
+	
+	}
 			
     }
 
