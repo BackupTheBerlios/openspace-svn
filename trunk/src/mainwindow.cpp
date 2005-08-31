@@ -355,6 +355,7 @@ long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
     string type;
     string str_server;
     string str_user;
+    string str_pass;
     if (networkframe == NULL && searchframe == NULL)
     {
 	dir = parseDir (conf->readonestring ("/OpenspaceConfig/defaultdir/dir"));
@@ -396,7 +397,7 @@ long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
 	type = filelisttypecombobox->getText().text();
 	str_server = server->getText ().text ();
 	str_user = user->getText ().text ();
-	
+	str_pass = password->getText ().text ();
 	networkframe->hide ();
 	delete networkframe;
 	networkframe = NULL;
@@ -405,7 +406,7 @@ long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
 	
 	controlframe->recalc ();
     }
-    pathtype pt (dir, type, str_server, str_user);
+    pathtype pt (dir, type, str_server, str_user,str_pass);
     Frame *fr = new Frame (controlframe, leftframe, pt, this, 0);
 			   			   
     fr->frame->create ();

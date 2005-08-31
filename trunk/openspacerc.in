@@ -312,6 +312,14 @@
 				</name>
 			</properties>	
 		</sftp>
+		<ftp>
+			<type>network</type>
+			<properties>
+				<name>
+					<width>400</width>					
+				</name>
+			</properties>	
+		</ftp>
 		<search>
 			<type>search</type>
 			<properties>
