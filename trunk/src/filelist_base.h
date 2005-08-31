@@ -34,6 +34,10 @@ class filelist_base
     virtual bool hardlink (string src, string dst) = 0;
     virtual int supportedfunctions (void) = 0;
     virtual int quit (void) = 0;
+    virtual string getinitialdir(void)
+    {
+    return "/";
+    }
 
 };
 #endif

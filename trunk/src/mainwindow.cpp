@@ -416,6 +416,8 @@ long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
     fr->f->toolbar2->dock(rightdock);	
     fr->f->toolbar2->hide();
     
+ 
+ this->handle (fr->toleft, FXSEL (SEL_LEFTBUTTONRELEASE,ID_TOLEFT), NULL);
     
     controlframe->recalc ();
 }
@@ -432,7 +434,7 @@ long MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 	new FXLabel (networkframe, "user:", objmanager->osicons["user"]);
 	user = new FXTextField (networkframe, 20);
 	new FXLabel (networkframe, "pass:", objmanager->osicons["password"]);
-	password = new FXTextField (networkframe, 20);
+	password = new FXTextField (networkframe, 20,NULL,0,TEXTFIELD_PASSWD);
 	filelisttypecombobox = new FXComboBox (networkframe, 4, NULL, 0,
 					       FRAME_THICK | LAYOUT_SIDE_TOP | COMBOBOX_STATIC);
 					       
@@ -678,6 +680,14 @@ long MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
 	{
 	    pos = 1;
 	}
+	
+	if(left_frame->f->getWidth()==0)
+	pos=1;
+	
+	if(right_frame->f->getWidth()==0)
+	pos=-1;
+	
+	
     }
     if (pos == -1)
     {
@@ -991,6 +1001,11 @@ long MainWindow::onTimer (FXObject *, FXSelector, void *)
 		{
 		    FXTRACE ((5, "INIT \n"));
 		    fil->init ();
+		   	 if (left_frame->f->active)
+	  		  left_frame->generate_menu (fil->path, this);
+			  else
+			  right_frame->generate_menu (fil->path, this);
+			  
 		}
 		if (telem->command == "copy")
 		{

@@ -240,7 +240,7 @@ int filelist_local::move (thread_elem * te)
 
 int filelist_local::remove (thread_elem * te)
 {
-    int c = 0;
+
     bool canc = false;
 
     vector < string >::iterator iter;
@@ -261,7 +261,7 @@ int filelist_local::remove (thread_elem * te)
 		//fxmessage("\n\nREMOVE=%s\n\n",sr.c_str());
 	}
 
-	c++;
+
     }
     if(canc)
     {

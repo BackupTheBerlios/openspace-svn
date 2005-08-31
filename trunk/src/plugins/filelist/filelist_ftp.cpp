@@ -16,55 +16,15 @@
 
 int filelist_ftp::osopendir (string dir)
 {
-}
-osfile filelist_ftp::osreaddir (void)
-{
-osfile os_file;
-
-if(iter!=files.end())
-{
-	    os_file=*iter;
-	    iter++;
-	    return os_file;
-}		    
+this->dir=dir;
 
 
-    
-    os_file.name = "";
-    return os_file;
-    
-}
-int filelist_ftp::mkdir (string dir, int mode)
-{
-}
-int filelist_ftp::copy (thread_elem * te)
-{
-}
-int filelist_ftp::move (thread_elem * te)
-{
-}
-int filelist_ftp::remove (thread_elem * te)
-{
-}
-int filelist_ftp::rename (string orgname, string newname)
-{
-}
-int filelist_ftp::init (vector < string > *vector_name, pathtype pt, configure * conf)
-{
-log=new SimpleLogger;
-pftp=new PFTP(pt.server.c_str(),pt.user.c_str(),pt.password.c_str(),"",log);
-
-fxmessage("\nLOGIN=%s PASS=%s\n",pt.user.c_str(),pt.password.c_str());
-	if(pftp->isConnected())
-        {
+files.clear();
+filesMap.clear();
 	
-	fxmessage("CONNECTED :d :d :d");
-	FXString base;
-	pftp->pwd(base);
-	//FXString dir="blebla";
-	//pftp->mkDir(dir);
-	
-	
+	FXString di=dir.c_str();
+	fxmessage("DIR=%s\n",dir.c_str());
+	pftp->setDir(di);
 	
 	
 
@@ -91,7 +51,7 @@ fxmessage("\nLOGIN=%s PASS=%s\n",pt.user.c_str(),pt.password.c_str());
     //get attributes # user group size date =(3 or 4? fields) name
     while(next && (ptr-start < (int)sp))
     {
-    fxmessage("CO JEST??");
+
         next[0] = 0;
         if(next[-1] == '\r')
             next[-1] = 0;
@@ -107,7 +67,8 @@ fxmessage("\nLOGIN=%s PASS=%s\n",pt.user.c_str(),pt.password.c_str());
        osfile os_file;
        if(ptr[0]=='d')
            os_file.type = os_file.type | FOLDER;
-         
+       else	   
+           os_file.type=0;
 
        
        // item.attributes = ptr;
@@ -168,8 +129,7 @@ fxmessage("\nLOGIN=%s PASS=%s\n",pt.user.c_str(),pt.password.c_str());
             ++cursor;
         os_file.name = cursor;
 	
-	fxmessage("\nNAME=%s",os_file.name.c_str());
-	
+		
         if(ptr[0]!='d')
         {
   
@@ -185,6 +145,7 @@ fxmessage("\nLOGIN=%s PASS=%s\n",pt.user.c_str(),pt.password.c_str());
         }
 
         files.push_back(os_file);
+	filesMap[os_file.name]=os_file;
 
         ptr = next+1;
         next = strchr(ptr, '\n');
@@ -194,15 +155,81 @@ fxmessage("\nLOGIN=%s PASS=%s\n",pt.user.c_str(),pt.password.c_str());
 
     FXFREE(&buffer);
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+}
+osfile filelist_ftp::osreaddir (void)
+{
+osfile os_file;
+
+if(iter!=files.end())
+{
+	    os_file=*iter;
+	    iter++;
+	    return os_file;
+}		    
+
+
+    
+    os_file.name = "";
+    return os_file;
+    
+}
+int filelist_ftp::mkdir (string dir, int mode)
+{
+	pftp->mkDir(dir.c_str());
+}
+int filelist_ftp::copy (thread_elem * te)
+{
+}
+int filelist_ftp::move (thread_elem * te)
+{
+}
+int filelist_ftp::remove (thread_elem * te)
+{
+
+	    
+bool canc = false;
+
+    vector < string >::iterator iter;
+
+    for (iter = te->src.begin (); iter != te->src.end(); iter++)
+    {
+  
+	if (!canc)
+	{
+	    string sr = (*iter);
+	   // fxmessage("nazwa = %s\n",sr.c_str());
+	    if(filesMap[FXFile::name(sr.c_str()).text()].type&FOLDER)
+	    pftp->rmDir(sr.c_str());
+	    else
+	    pftp->del(sr.c_str());
+
+	}
+
+
+    }
+    if(canc)
+    {
+    te->error=true;
+    te->msg="operation failed";
+    }
+
+
+}
+int filelist_ftp::rename (string orgname, string newname)
+{
+}
+int filelist_ftp::init (vector < string > *vector_name, pathtype pt, configure * conf)
+{
+log=new SimpleLogger;
+pftp=new PFTP(pt.server.c_str(),pt.user.c_str(),pt.password.c_str(),"",log);
+
+	if(pftp->isConnected())
+        {	
+	fxmessage("CONNECTED :d :d :d");
+
 	}
 }
 int filelist_ftp::mode (string file)
@@ -247,6 +274,17 @@ int filelist_ftp::supportedfunctions (void)
 int filelist_ftp::quit (void)
 {
 }
+
+string filelist_ftp::getinitialdir(void)
+{
+	FXString base;
+	pftp->pwd(base);
+	
+return base.text();
+}
+
+
+
 EXPORTFUNCTION filelist_base *get_filelist (void)
 {
     FXTRACE ((5, "PLUGIN LOAD\n"));

@@ -881,6 +881,15 @@ void filelist::init ()
 
     toolbar->recalc ();
     processing = false;
+    
+    string initialdir=fb->getinitialdir();
+    if(this->path=="/" && initialdir!="/")
+    {
+    this->path=initialdir;
+    notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
+    
+    }
+    
     opendir (this->path);
 
 

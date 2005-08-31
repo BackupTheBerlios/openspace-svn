@@ -2,7 +2,7 @@
 #define FILELIST_ftp
 #include "../../filelist_base.h"
 #include "pftp.h"
-
+#include <map>
 
 class SimpleLogger : public Logger 
 {
@@ -49,9 +49,12 @@ class filelist_ftp:public filelist_base
 
 PFTP *pftp;
 SimpleLogger *log;
+string dir;
 
 vector <osfile> files;
 vector <osfile>::iterator iter;
+map <string,osfile> filesMap;
+
 
   public:
     int filelist_ftp::osopendir (string dir);
@@ -75,5 +78,6 @@ vector <osfile>::iterator iter;
     bool filelist_ftp::hardlink (string src, string dst);
     int filelist_ftp::supportedfunctions (void);
     int filelist_ftp::quit (void);
+    string filelist_ftp::getinitialdir(void);
 };
 #endif
