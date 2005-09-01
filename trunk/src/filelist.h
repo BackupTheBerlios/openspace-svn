@@ -47,6 +47,7 @@ class filelist:public FXIconList
 
 
     string path;
+    string previous_path;
     string type;
     FXWindow *notifyparent;
     FXLabel *label;
@@ -106,7 +107,7 @@ class filelist:public FXIconList
 
     virtual void create ();
 
-    void filelist::opendir (string dir);
+    bool filelist::opendir (string dir);
     long filelist::setFocus (FXObject * obj, FXSelector sel, void *ptr);
     long filelist::lostFocus (FXObject * obj, FXSelector sel, void *ptr);
     long filelist::openfile (FXObject *, FXSelector, void *);

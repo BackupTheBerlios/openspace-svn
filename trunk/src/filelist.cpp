@@ -980,18 +980,19 @@ void filelist::copymoveremove (string com_name)
 }
 
 //opendir
-void filelist::opendir (string dir)
+bool filelist::opendir (string dir)
 {
 
 
 //label->setText(dir.c_str());
-    clearItems ();
+    
 
 
     if (fb->osopendir (dir) == -1)
-	return;
-
-
+    {
+    return false;
+    }	
+clearItems ();
 
 
     for (int indx = 0; indx < icon_vec.size (); indx++)
@@ -1118,7 +1119,7 @@ void filelist::opendir (string dir)
 
     string inf = "files: " + ntos (count) + "   free: " + siz;
     info->setText (inf.c_str ());
- 
+ return true;
 }
 
 
@@ -1604,10 +1605,15 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 	    dir=returnpath(getItemText(k).text());
 	}
 
-	path = dir;
+	;
 	//label->setText(path.c_str());
+	
+	if(opendir (dir))
+	{
+	path = dir;
 	notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
-	opendir (dir);
+  	
+	}  
     }
     else
     {    
@@ -1639,12 +1645,15 @@ long filelist::gotoparentdir (FXObject *, FXSelector, void *)
     if (processing)
 	return 0;
 
-    path = FXFile::upLevel (path.c_str ()).text ();
+   string pathnew = FXFile::upLevel (path.c_str ()).text ();
     //label->setText(path.c_str());
+    
+    if(opendir (pathnew));
+    {
+    this->path = pathnew;
     notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
-    opendir (path);
-
-
+    
+    }
 }
 
 

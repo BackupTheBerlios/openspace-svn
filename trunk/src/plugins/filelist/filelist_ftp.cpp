@@ -16,18 +16,23 @@
 
 int filelist_ftp::osopendir (string dir)
 {
-this->dir=dir;
 
-
-files.clear();
-filesMap.clear();
 	
 	FXString di=dir.c_str();
 	fxmessage("DIR=%s\n",dir.c_str());
 	pftp->setDir(di);
-	
-	
+	FXString di2;
+	pftp->pwd(di2);
 
+	if(di!=di2)
+	return -1;
+
+this->dir=dir;
+
+
+filesMap.clear();
+
+	
     FXMemoryStream str;
     str.open(FXStreamSave, NULL);
 
@@ -130,28 +135,14 @@ filesMap.clear();
         os_file.name = cursor;
 	
 		
-        if(ptr[0]!='d')
-        {
-  
-            FXString name(cursor);
-            int pt = name.rfind('.');
-            if(pt >= 0)
-                name = name.right(name.length()-pt);
-            else
-                name = "";
-
-            
-            
-        }
-
-        files.push_back(os_file);
+      //  files.push_back(os_file);
 	filesMap[os_file.name]=os_file;
 
         ptr = next+1;
         next = strchr(ptr, '\n');
     }
 
-   iter=files.begin();
+   iter=filesMap.begin();
 
     FXFREE(&buffer);
 	
@@ -163,9 +154,10 @@ osfile filelist_ftp::osreaddir (void)
 {
 osfile os_file;
 
-if(iter!=files.end())
+if(iter!=filesMap.end())
 {
-	    os_file=*iter;
+	  os_file=iter->second;
+	   
 	    iter++;
 	    return os_file;
 }		    
@@ -215,7 +207,6 @@ bool canc = false;
     te->error=true;
     te->msg="operation failed";
     }
-
 
 }
 int filelist_ftp::rename (string orgname, string newname)

@@ -51,10 +51,11 @@ PFTP *pftp;
 SimpleLogger *log;
 string dir;
 
-vector <osfile> files;
-vector <osfile>::iterator iter;
+//vector <osfile> files;
+//vector <osfile>::iterator iter;
 map <string,osfile> filesMap;
-
+map <string,osfile>::iterator iter;
+typedef map <string,osfile>::value_type filevalue;
 
   public:
     int filelist_ftp::osopendir (string dir);
