@@ -9,7 +9,7 @@
 
 
 
-
+int filelist_ftp::level=0;
 
 
 
@@ -185,6 +185,10 @@ int filelist_ftp::move (thread_elem * te)
 
 void filelist_ftp::gorecursive(string file,string operation)
 {
+
+fxmessage("\nLEVEL=%d\n",level);
+
+level++;
 	   string sr = file;	
 	   string onlyname=FXFile::name(sr.c_str()).text();
 	   
@@ -211,12 +215,14 @@ void filelist_ftp::gorecursive(string file,string operation)
 	     
 	     fxmessage("KASUJE KATALOG=%s\n",sr.c_str());
 	     pftp->rmDir(sr.c_str());
+	     
 	    }
 	    else
 	    {
 	    fxmessage("KASUJE PLIK=%s\n",sr.c_str());
 	    pftp->del(sr.c_str());
 	    }	
+level--;
 
 }
 
@@ -232,6 +238,7 @@ bool canc = false;
 
     for (iter = te->src.begin (); iter != te->src.end(); iter++)
     {
+    fxmessage("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n\n\n");
 	gorecursive(*iter,"remove");
 
     }

@@ -55,6 +55,8 @@ string dir;
 map <string,osfile> filesMap;
 map <string,osfile>::iterator iter;
 
+static int level;
+
 
   public:
     int filelist_ftp::osopendir (string dir);
