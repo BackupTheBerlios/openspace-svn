@@ -51,11 +51,10 @@ PFTP *pftp;
 SimpleLogger *log;
 string dir;
 
-//vector <osfile> files;
-//vector <osfile>::iterator iter;
+
 map <string,osfile> filesMap;
 map <string,osfile>::iterator iter;
-typedef map <string,osfile>::value_type filevalue;
+
 
   public:
     int filelist_ftp::osopendir (string dir);
@@ -80,5 +79,9 @@ typedef map <string,osfile>::value_type filevalue;
     int filelist_ftp::supportedfunctions (void);
     int filelist_ftp::quit (void);
     string filelist_ftp::getinitialdir(void);
+    
+    
+    void filelist_ftp::gorecursive(string file,string operation);
+    
 };
 #endif

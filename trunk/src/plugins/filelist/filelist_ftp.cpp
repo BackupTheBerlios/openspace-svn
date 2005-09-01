@@ -178,6 +178,50 @@ int filelist_ftp::copy (thread_elem * te)
 int filelist_ftp::move (thread_elem * te)
 {
 }
+
+
+
+
+
+void filelist_ftp::gorecursive(string file,string operation)
+{
+	   string sr = file;	
+	   string onlyname=FXFile::name(sr.c_str()).text();
+	   
+	    if(filesMap[onlyname].type&FOLDER)
+	    {
+		map <string,osfile> filesMap_copy=filesMap;
+		map <string,osfile>::iterator iter_copy=this->iter;
+		
+
+	   	if(osopendir(sr)!=-1)
+		 while (1)
+   		 {	
+		 osfile os_file = osreaddir ();
+		 	if (os_file.name == "")
+	   		break;
+			
+			string dirfile=sr+"/"+os_file.name;			
+			gorecursive(dirfile,operation);
+			
+		 }
+	    	
+	     filesMap=filesMap_copy; 
+	     this->iter=iter_copy;
+	     
+	     fxmessage("KASUJE KATALOG=%s\n",sr.c_str());
+	     pftp->rmDir(sr.c_str());
+	    }
+	    else
+	    {
+	    fxmessage("KASUJE PLIK=%s\n",sr.c_str());
+	    pftp->del(sr.c_str());
+	    }	
+
+}
+
+
+
 int filelist_ftp::remove (thread_elem * te)
 {
 
@@ -188,25 +232,10 @@ bool canc = false;
 
     for (iter = te->src.begin (); iter != te->src.end(); iter++)
     {
-  
-	if (!canc)
-	{
-	    string sr = (*iter);
-	   // fxmessage("nazwa = %s\n",sr.c_str());
-	    if(filesMap[FXFile::name(sr.c_str()).text()].type&FOLDER)
-	    pftp->rmDir(sr.c_str());
-	    else
-	    pftp->del(sr.c_str());
-
-	}
-
+	gorecursive(*iter,"remove");
 
     }
-    if(canc)
-    {
-    te->error=true;
-    te->msg="operation failed";
-    }
+
 
 }
 int filelist_ftp::rename (string orgname, string newname)
@@ -270,7 +299,7 @@ string filelist_ftp::getinitialdir(void)
 {
 	FXString base;
 	pftp->pwd(base);
-	
+fxmessage("INITIAL DIR=%s\n",base.text());	
 return base.text();
 }
 

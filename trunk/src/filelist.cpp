@@ -886,7 +886,7 @@ void filelist::init ()
     if(this->path=="/" && initialdir!="/")
     {
     this->path=initialdir;
-    notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
+    //notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
     
     }
     

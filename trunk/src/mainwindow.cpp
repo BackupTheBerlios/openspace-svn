@@ -953,7 +953,7 @@ long MainWindow::onTimer (FXObject *, FXSelector, void *)
 	    {
 		infp = (informationpanel *) telem->gui;
 		string info = "Removing: " + telem->act_file_name;
-		FXTRACE ((5, "remove file %s\n", telem->act_file_name.c_str ()));
+		//FXTRACE ((5, "remove file %s\n", telem->act_file_name.c_str ()));
 		infp->lab0->setText (info.c_str ());
 		infp->frame->recalc ();
 	    }
