@@ -19,7 +19,7 @@ int filelist_ftp::osopendir (string dir)
 
 	
 	FXString di=dir.c_str();
-	fxmessage("DIR=%s\n",dir.c_str());
+	fxmessage("DIR           =%s\n",dir.c_str());
 	pftp->setDir(di);
 	FXString di2;
 	pftp->pwd(di2);
@@ -186,43 +186,55 @@ int filelist_ftp::move (thread_elem * te)
 void filelist_ftp::gorecursive(string file,string operation)
 {
 
-fxmessage("\nLEVEL=%d\n",level);
 
-level++;
+
 	   string sr = file;	
 	   string onlyname=FXFile::name(sr.c_str()).text();
 	   
 	    if(filesMap[onlyname].type&FOLDER)
 	    {
+
 		map <string,osfile> filesMap_copy=filesMap;
 		map <string,osfile>::iterator iter_copy=this->iter;
 		
-
+		fxmessage("%d ",level,sr.c_str());
 	   	if(osopendir(sr)!=-1)
+		{
+		map <string,osfile> filesMap_copy2=filesMap;
+		map <string,osfile>::iterator iter_copy2=this->iter;
 		 while (1)
    		 {	
 		 osfile os_file = osreaddir ();
 		 	if (os_file.name == "")
 	   		break;
-			
-			string dirfile=sr+"/"+os_file.name;			
+	
+			string dirfile=sr+"/"+os_file.name;
+			level++;			
 			gorecursive(dirfile,operation);
-			
+			level--;
+
 		 }
-	    	
+		 filesMap=filesMap_copy2; 
+	         this->iter=iter_copy2;
+		 
+		}
+	
 	     filesMap=filesMap_copy; 
 	     this->iter=iter_copy;
-	     
-	     fxmessage("KASUJE KATALOG=%s\n",sr.c_str());
+	    
+	     fxmessage("%d KASUJE KATALOG=%s\n",level,sr.c_str());
 	     pftp->rmDir(sr.c_str());
 	     
 	    }
 	    else
 	    {
-	    fxmessage("KASUJE PLIK=%s\n",sr.c_str());
+	     fxmessage("%d KASUJE PLIK   =%s\n",level,sr.c_str());
 	    pftp->del(sr.c_str());
 	    }	
-level--;
+	    
+
+
+return;
 
 }
 
