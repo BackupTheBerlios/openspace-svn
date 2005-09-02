@@ -106,7 +106,7 @@ class MainWindow:public FXMainWindow
     FXTextField *server;
     FXTextField *user;
     FXTextField *password;
-
+    FXTextField *port;
 
 
     

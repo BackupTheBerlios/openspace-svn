@@ -55,6 +55,9 @@ string dir;
 map <string,osfile> filesMap;
 map <string,osfile>::iterator iter;
 
+map <string,osfile> filesMapGlobal;
+map <string,osfile>::iterator iterGlobal;
+
 static int level;
 
 
@@ -82,8 +85,8 @@ static int level;
     int filelist_ftp::quit (void);
     string filelist_ftp::getinitialdir(void);
     
-    
+    int filelist_ftp::priv_osopendir (string dir,string prefix,map <string,osfile> & filesMap,map <string,osfile>::iterator & iter);
     void filelist_ftp::gorecursive(string file,string operation);
-    
+    osfile filelist_ftp::priv_osreaddir (map <string,osfile> & filesMap,map <string,osfile>::iterator & iter2);
 };
 #endif

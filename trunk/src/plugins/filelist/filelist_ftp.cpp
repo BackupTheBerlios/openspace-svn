@@ -12,25 +12,20 @@
 int filelist_ftp::level=0;
 
 
-
-
-int filelist_ftp::osopendir (string dir)
+int filelist_ftp::priv_osopendir (string dir,string prefix,map <string,osfile> & filesMap,map <string,osfile>::iterator & iter)
 {
 
-	
+filesMap.clear();
+
+
 	FXString di=dir.c_str();
-	fxmessage("DIR           =%s\n",dir.c_str());
+	fxmessage("\nDIR=%s\n",dir.c_str());
 	pftp->setDir(di);
 	FXString di2;
 	pftp->pwd(di2);
 
 	if(di!=di2)
 	return -1;
-
-this->dir=dir;
-
-
-filesMap.clear();
 
 	
     FXMemoryStream str;
@@ -70,8 +65,9 @@ filesMap.clear();
         }
 
        osfile os_file;
+       os_file.type=0;
        if(ptr[0]=='d')
-           os_file.type = os_file.type | FOLDER;
+           os_file.type = os_file.type | FOLDER; 
        else	   
            os_file.type=0;
 
@@ -132,25 +128,39 @@ filesMap.clear();
         // go for the name
         while(isspace(*cursor))
             ++cursor;
-        os_file.name = cursor;
+        os_file.name = prefix+cursor;
 	
 		
-      //  files.push_back(os_file);
 	filesMap[os_file.name]=os_file;
-
+	
+	if(prefix!="")
+	{
+	filesMapGlobal[os_file.name]=os_file;
+	}
         ptr = next+1;
         next = strchr(ptr, '\n');
     }
+ FXFREE(&buffer);
 
-   iter=filesMap.begin();
+iter=filesMap.begin();
 
-    FXFREE(&buffer);
-	
+}
 
+
+
+int filelist_ftp::osopendir (string dir)
+{
+
+
+this->dir=dir;
+
+priv_osopendir(dir,"",filesMap,iter);
+ 
 
 
 }
-osfile filelist_ftp::osreaddir (void)
+
+osfile filelist_ftp::priv_osreaddir (map <string,osfile> & filesMap,map <string,osfile>::iterator & iter)
 {
 osfile os_file;
 
@@ -166,7 +176,14 @@ if(iter!=filesMap.end())
     
     os_file.name = "";
     return os_file;
-    
+
+}
+
+
+osfile filelist_ftp::osreaddir (void)
+{
+
+  return priv_osreaddir(filesMap,iter);  
 }
 int filelist_ftp::mkdir (string dir, int mode)
 {
@@ -180,61 +197,31 @@ int filelist_ftp::move (thread_elem * te)
 }
 
 
-
-
-
 void filelist_ftp::gorecursive(string file,string operation)
 {
 
-
-
-	   string sr = file;	
-	   string onlyname=FXFile::name(sr.c_str()).text();
-	   
-	    if(filesMap[onlyname].type&FOLDER)
-	    {
-
-		map <string,osfile> filesMap_copy=filesMap;
-		map <string,osfile>::iterator iter_copy=this->iter;
+		map <string,osfile> filesMap;
+		map <string,osfile>::iterator iter;
 		
-		fxmessage("%d ",level,sr.c_str());
-	   	if(osopendir(sr)!=-1)
+	   	if(priv_osopendir(file,file+"/",filesMap,iter)!=-1)
 		{
-		map <string,osfile> filesMap_copy2=filesMap;
-		map <string,osfile>::iterator iter_copy2=this->iter;
+		
 		 while (1)
    		 {	
-		 osfile os_file = osreaddir ();
+		 osfile os_file = priv_osreaddir (filesMap,iter);
 		 	if (os_file.name == "")
 	   		break;
-	
-			string dirfile=sr+"/"+os_file.name;
-			level++;			
-			gorecursive(dirfile,operation);
-			level--;
+			
+			if(os_file.type&FOLDER)
+			{
+			gorecursive(os_file.name,operation);
+			}
 
 		 }
-		 filesMap=filesMap_copy2; 
-	         this->iter=iter_copy2;
-		 
-		}
-	
-	     filesMap=filesMap_copy; 
-	     this->iter=iter_copy;
-	    
-	     fxmessage("%d KASUJE KATALOG=%s\n",level,sr.c_str());
-	     pftp->rmDir(sr.c_str());
+
 	     
 	    }
-	    else
-	    {
-	     fxmessage("%d KASUJE PLIK   =%s\n",level,sr.c_str());
-	    pftp->del(sr.c_str());
-	    }	
-	    
 
-
-return;
 
 }
 
@@ -243,17 +230,38 @@ return;
 int filelist_ftp::remove (thread_elem * te)
 {
 
-	    
-bool canc = false;
+filesMapGlobal.clear();
 
-    vector < string >::iterator iter;
 
-    for (iter = te->src.begin (); iter != te->src.end(); iter++)
-    {
-    fxmessage("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n\n\n");
-	gorecursive(*iter,"remove");
+    vector < string >::iterator iter_files;
 
+    for (iter_files = te->src.begin (); iter_files != te->src.end(); iter_files++)
+    {     
+    	osfile os_file;
+	os_file.name=*iter_files;
+	os_file.type=filesMap[*iter_files].type;
+	filesMapGlobal[*iter_files]=os_file;
     }
+
+
+    for (iter_files = te->src.begin (); iter_files != te->src.end(); iter_files++)
+    {     
+        if(filesMap[*iter_files].type&FOLDER)
+ 	gorecursive(*iter_files,"remove");
+    }
+fxmessage("\n\n");
+for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
+    {     
+   	fxmessage("\nEL=%s",iterGlobal->first.c_str());
+	
+	if(iterGlobal->second.type&FOLDER)
+	pftp->rmDir(iterGlobal->first.c_str());
+	else
+	pftp->del(iterGlobal->first.c_str());
+	te->act_file_name=iterGlobal->first;
+	if( iterGlobal == filesMapGlobal.begin())break;
+    }
+
 
 
 }

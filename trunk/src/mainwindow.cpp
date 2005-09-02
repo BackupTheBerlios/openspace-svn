@@ -356,6 +356,7 @@ long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
     string str_server;
     string str_user;
     string str_pass;
+    string str_port;
     if (networkframe == NULL && searchframe == NULL)
     {
 	dir = parseDir (conf->readonestring ("/OpenspaceConfig/defaultdir/dir"));
@@ -398,6 +399,7 @@ long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
 	str_server = server->getText ().text ();
 	str_user = user->getText ().text ();
 	str_pass = password->getText ().text ();
+	str_port=port->getText().text();
 	networkframe->hide ();
 	delete networkframe;
 	networkframe = NULL;
@@ -406,7 +408,7 @@ long MainWindow::onNewFrame (FXObject * sender, FXSelector, void *ptr)
 	
 	controlframe->recalc ();
     }
-    pathtype pt (dir, type, str_server, str_user,str_pass);
+    pathtype pt (dir, type, str_server, str_user,str_pass,str_port);
     Frame *fr = new Frame (controlframe, leftframe, pt, this, 0);
 			   			   
     fr->frame->create ();
@@ -435,6 +437,9 @@ long MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 	user = new FXTextField (networkframe, 20);
 	new FXLabel (networkframe, "pass:", objmanager->osicons["password"]);
 	password = new FXTextField (networkframe, 20,NULL,0,TEXTFIELD_PASSWD);
+	new FXLabel (networkframe, "port:", NULL,0,TEXTFIELD_INTEGER );
+	port = new FXTextField (networkframe, 5);
+
 	filelisttypecombobox = new FXComboBox (networkframe, 4, NULL, 0,
 					       FRAME_THICK | LAYOUT_SIDE_TOP | COMBOBOX_STATIC);
 					       
