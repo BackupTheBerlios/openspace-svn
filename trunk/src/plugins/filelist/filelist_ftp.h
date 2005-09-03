@@ -58,8 +58,9 @@ map <string,osfile>::iterator iter;
 map <string,osfile> filesMapGlobal;
 map <string,osfile>::iterator iterGlobal;
 
-static int level;
-
+    static int level;
+    int fieldsnum;
+    vector < string > fields;
 
   public:
     int filelist_ftp::osopendir (string dir);

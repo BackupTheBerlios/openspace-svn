@@ -5,7 +5,7 @@
 #endif
 #include "filelist_ftp.h"
 
-
+#include <sstream>
 
 
 
@@ -56,6 +56,16 @@ filesMap.clear();
         if(next[-1] == '\r')
             next[-1] = 0;
 
+
+
+
+
+
+fxmessage("\nPTR=%s\n",ptr);
+
+
+
+
         // Some FTP servers send other lines than raw directory
         if(ptr[0] != 'd' && ptr[0] != '-')
         {
@@ -64,6 +74,8 @@ filesMap.clear();
             continue;
         }
 
+
+
        osfile os_file;
        os_file.type=0;
        if(ptr[0]=='d')
@@ -71,8 +83,35 @@ filesMap.clear();
        else	   
            os_file.type=0;
 
-       
-       // item.attributes = ptr;
+
+
+
+std::stringstream parser (ptr);
+std::string field;
+
+
+
+
+
+   string user;
+   string group;
+   string size;
+   string date;
+   string attrib;
+   string name;
+   
+parser>>attrib; 
+parser>>field;
+parser>>user;
+parser>>group;
+parser>>size;
+parser>>date;
+parser>>date;
+parser>>date;
+parser>>name;
+
+  /*     
+       attrib = ptr;
 
         char * cursor = strchr(ptr, ' ');
         *cursor = 0;
@@ -85,7 +124,7 @@ filesMap.clear();
         // go for the user
         while(isspace(*cursor))
             ++cursor;
-       // item.user = cursor;
+         user = cursor;
         // crawl over it and terminate
         while(!isspace(*cursor))
             ++cursor;
@@ -94,7 +133,7 @@ filesMap.clear();
         // go for the group
         while(isspace(*cursor))
             ++cursor;
-       // item.group = cursor;
+         group = cursor;
         // crawl over it and terminate
         while(!isspace(*cursor))
             ++cursor;
@@ -103,7 +142,7 @@ filesMap.clear();
         // go for the size
         while(isspace(*cursor))
             ++cursor;
-       // item.size = cursor;
+       size = cursor;
         // crawl over it and terminate
         while(!isspace(*cursor))
             ++cursor;
@@ -128,10 +167,41 @@ filesMap.clear();
         // go for the name
         while(isspace(*cursor))
             ++cursor;
-        os_file.name = prefix+cursor;
+	    
+*/	    
+        os_file.name = prefix+name;
 	
 		
-	filesMap[os_file.name]=os_file;
+	
+	
+	
+	
+	
+if(prefix=="")
+{	
+	
+	
+    for (int i = 0; i < fieldsnum - 1; i++)
+    {
+
+	if (fields[i + 1] == "size")
+	    os_file.attrib.push_back(size);
+	else if (fields[i + 1] == "owner")
+	   os_file.attrib.push_back(user);
+	else if (fields[i + 1] == "group")
+	   os_file.attrib.push_back(group);
+        else if (fields[i + 1] == "mode")
+	{
+        os_file.attrib.push_back(attrib);
+
+	}
+
+    }
+	
+}	
+filesMap[os_file.name]=os_file;	
+	
+	
 	
 	if(prefix!="")
 	{
@@ -273,9 +343,18 @@ for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
 }
 int filelist_ftp::rename (string orgname, string newname)
 {
+
+FXString tmp;
+pftp->sendCmd("RNFR ", FXFile::name(orgname.c_str()), tmp);
+pftp->sendCmd("RNTO ", FXFile::name(newname.c_str()), tmp);
+
 }
 int filelist_ftp::init (vector < string > *vector_name, pathtype pt, configure * conf)
 {
+
+    fieldsnum = vector_name->size ();
+    fields = (*vector_name);
+
 log=new SimpleLogger;
 pftp=new PFTP(pt.server.c_str(),pt.user.c_str(),pt.password.c_str(),"",log);
 
@@ -290,13 +369,25 @@ int filelist_ftp::mode (string file)
 }
 string filelist_ftp::owner (string file)
 {
+return ""; 
 }
 string filelist_ftp::group (string file)
 {
 return "";
 }
-bool filelist_ftp::mode (string file, unsigned int, bool recursive)
+bool filelist_ftp::mode (string file, unsigned int per, bool recursive)
 {
+fxmessage("PER=%d",per);
+FXString tmp;
+
+char chstr[20];
+sprintf (chstr, "%d", per);
+
+
+string cmd="CHMOD "+string(chstr)+" "+ file;
+pftp->sendCmd("SITE ",cmd.c_str(),tmp );
+fxmessage("\nCOMMAND=%s\n",cmd.c_str());
+
 }
 bool filelist_ftp::owner (string file, string, bool recursive)
 {
@@ -326,6 +417,7 @@ int filelist_ftp::supportedfunctions (void)
 }
 int filelist_ftp::quit (void)
 {
+pftp->logout();
 }
 
 string filelist_ftp::getinitialdir(void)

@@ -314,10 +314,31 @@
 		</sftp>
 		<ftp>
 			<type>network</type>
+			<headers>
+				<header>size</header>
+				<header>owner</header>
+				<header>group</header>
+				<header>mode</header>
+	
+			</headers>
 			<properties>
 				<name>
 					<width>400</width>					
 				</name>
+				<size>
+					<width>80</width>
+					<display>MB</display>
+					<type>size</type>
+				</size>
+				<owner>
+					<width>80</width>
+				</owner>
+				<group>
+					<width>80</width>
+				</group>
+				<mode>
+					<width>80</width>
+				</mode>
 			</properties>	
 		</ftp>
 		<search>
