@@ -61,7 +61,7 @@ map <string,osfile>::iterator iterGlobal;
     static int level;
     int fieldsnum;
     vector < string > fields;
-
+int attrib_nr;
   public:
     int filelist_ftp::osopendir (string dir);
     osfile filelist_ftp::osreaddir (void);

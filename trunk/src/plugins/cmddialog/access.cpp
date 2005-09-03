@@ -105,7 +105,9 @@ class access_cmddialog:public cmddialog
 
     	for (iter = src.begin (); iter != src.end(); iter++)
    	{
+	
 	    fb->mode (*iter, mode, recursive);
+	   
 	    fb->owner (*iter, user->getText ().text (), recursive);
 	    fb->group (*iter, grp->getText ().text (), recursive);
 	

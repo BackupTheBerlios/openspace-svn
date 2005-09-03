@@ -6,6 +6,9 @@
 #include "filelist_ftp.h"
 
 #include <sstream>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 
 
@@ -56,16 +59,6 @@ filesMap.clear();
         if(next[-1] == '\r')
             next[-1] = 0;
 
-
-
-
-
-
-fxmessage("\nPTR=%s\n",ptr);
-
-
-
-
         // Some FTP servers send other lines than raw directory
         if(ptr[0] != 'd' && ptr[0] != '-')
         {
@@ -83,15 +76,8 @@ fxmessage("\nPTR=%s\n",ptr);
        else	   
            os_file.type=0;
 
-
-
-
 std::stringstream parser (ptr);
 std::string field;
-
-
-
-
 
    string user;
    string group;
@@ -101,6 +87,9 @@ std::string field;
    string name;
    
 parser>>attrib; 
+
+attrib=attrib.substr(1,attrib.length()-1);
+
 parser>>field;
 parser>>user;
 parser>>group;
@@ -108,75 +97,19 @@ parser>>size;
 parser>>date;
 parser>>date;
 parser>>date;
-parser>>name;
 
-  /*     
-       attrib = ptr;
-
-        char * cursor = strchr(ptr, ' ');
-        *cursor = 0;
-        ++cursor;
-        while(isspace(*cursor))
-            ++cursor;
-        // skip the group number
-        while(!isspace(*cursor))
-            ++cursor;
-        // go for the user
-        while(isspace(*cursor))
-            ++cursor;
-         user = cursor;
-        // crawl over it and terminate
-        while(!isspace(*cursor))
-            ++cursor;
-        *cursor = 0;
-        ++cursor;
-        // go for the group
-        while(isspace(*cursor))
-            ++cursor;
-         group = cursor;
-        // crawl over it and terminate
-        while(!isspace(*cursor))
-            ++cursor;
-        *cursor = 0;
-        ++cursor;
-        // go for the size
-        while(isspace(*cursor))
-            ++cursor;
-       size = cursor;
-        // crawl over it and terminate
-        while(!isspace(*cursor))
-            ++cursor;
-        *cursor = 0;
-        ++cursor;
-        // go for the date
-        while(isspace(*cursor))
-            ++cursor;
-       // item.date = cursor;
-        while(!isspace(*cursor))
-            ++cursor; // over month
-        while(isspace(*cursor))
-            ++cursor; // gap
-        while(!isspace(*cursor))
-            ++cursor; // day
-        while(isspace(*cursor))
-            ++cursor; // gap
-        while(!isspace(*cursor))
-            ++cursor; // time or year
-        *cursor = 0;
-        ++cursor;
-        // go for the name
-        while(isspace(*cursor))
-            ++cursor;
-	    
-*/	    
+string n;
+while(parser>>n)
+{
+if(name!="")
+name=name+" "+n;
+else
+name=n;
+}
+ 
         os_file.name = prefix+name;
 	
-		
-	
-	
-	
-	
-	
+
 if(prefix=="")
 {	
 	
@@ -192,6 +125,7 @@ if(prefix=="")
 	   os_file.attrib.push_back(group);
         else if (fields[i + 1] == "mode")
 	{
+	attrib_nr=i;
         os_file.attrib.push_back(attrib);
 
 	}
@@ -366,6 +300,30 @@ pftp=new PFTP(pt.server.c_str(),pt.user.c_str(),pt.password.c_str(),"",log);
 }
 int filelist_ftp::mode (string file)
 {
+
+string per=filesMap[FXFile::name(file.c_str()).text()].attrib[attrib_nr];
+
+unsigned int mode = 0;
+	if (per[0]=='r')
+	    mode = mode | S_IRUSR;
+	if (per[1]=='w')
+	    mode = mode | S_IWUSR;
+	if (per[2]=='x')
+	    mode = mode | S_IXUSR;
+	if (per[3]=='r')
+	    mode = mode | S_IRGRP;
+	if (per[4]=='w')
+	    mode = mode | S_IWGRP;
+	if (per[5]=='x')
+	    mode = mode | S_IXGRP;
+	if (per[6]=='r')
+	    mode = mode | S_IROTH;
+	if (per[7]=='w')
+	    mode = mode | S_IWOTH;
+	if (per[8]=='x')
+	    mode = mode | S_IXOTH;
+return mode;
+
 }
 string filelist_ftp::owner (string file)
 {
@@ -377,12 +335,20 @@ return "";
 }
 bool filelist_ftp::mode (string file, unsigned int per, bool recursive)
 {
-fxmessage("PER=%d",per);
+
+unsigned int mode=per;
+
+int x=((mode & S_IRUSR) | (mode & S_IWUSR) | (mode & S_IXUSR))/64;
+int y=((mode & S_IRGRP) | (mode & S_IWGRP) | (mode & S_IXGRP))/8;
+int z=((mode & S_IROTH) | (mode & S_IWOTH) | (mode & S_IXOTH));	
+
+
+
 FXString tmp;
 
 char chstr[20];
-sprintf (chstr, "%d", per);
-
+sprintf (chstr, "%d%d%d", x,y,z);
+fxmessage("PER=%d",chstr);
 
 string cmd="CHMOD "+string(chstr)+" "+ file;
 pftp->sendCmd("SITE ",cmd.c_str(),tmp );
