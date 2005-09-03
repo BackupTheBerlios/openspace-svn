@@ -11,9 +11,10 @@ public:
     {
 
     }
-    virtual bool update(uint32_t bytes, const FXString & )
+    virtual bool update(uint32_t bytes, const FXString & s)
     {
-
+ fxmessage("UPDATE=%s %d\n",s.text(),bytes);
+ return true;
     }
     virtual void end(uint32_t bytes, const FXString & )
     {
@@ -34,6 +35,7 @@ public:
 
     virtual void logLine(FXString & line)
     {
+     fxmessage("LOG=%s\n",line.text());
     }
     virtual void error(FXString & error)
     {

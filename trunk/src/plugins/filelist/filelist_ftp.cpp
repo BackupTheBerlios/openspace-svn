@@ -15,6 +15,8 @@
 int filelist_ftp::level=0;
 
 
+
+
 int filelist_ftp::priv_osopendir (string dir,string prefix,map <string,osfile> & filesMap,map <string,osfile>::iterator & iter)
 {
 
@@ -193,8 +195,61 @@ int filelist_ftp::mkdir (string dir, int mode)
 {
 	pftp->mkDir(dir.c_str());
 }
+
+
+static const int BUCKETSIZE = 128;
+struct Bucket {
+    uint8_t bucket[BUCKETSIZE];
+};
+
 int filelist_ftp::copy (thread_elem * te)
 {
+
+ vector < string >::iterator iter;
+    for (iter = te->src.begin (); iter != te->src.end(); iter++)
+    {
+    
+    
+    string::size_type pos = te->options.find ("upload");
+	if (pos == string::npos)
+	{
+        FXString file=iter->c_str();
+	pftp->upload(file,0,false);
+	}
+	else 
+	{
+	
+	    string ds = te->dst;
+	    ds.append ("/");
+	    ds.append (FXFile::name (iter->c_str ()).text ());
+
+fxmessage("\nDOWNLOAD %s TO %s",iter->c_str(),ds.c_str());
+
+    FXMemoryStream str;
+    str.open(FXStreamSave, NULL);
+
+    pftp->download(iter->c_str(), str,false );
+
+    // now write it to a file
+    FXString name = ds.c_str();
+    FXuchar* buffer;
+    unsigned long sp;
+    str.takeBuffer(buffer, sp);
+
+    FXFileStream out;
+    out.open(name, FXStreamSave);
+
+    if(out.direction() != FXStreamSave)
+        return -1;
+
+    out.save(buffer, sp);
+    out.close();
+	}
+		
+    }
+
+
+
 }
 int filelist_ftp::move (thread_elem * te)
 {

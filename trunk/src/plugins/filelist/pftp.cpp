@@ -122,7 +122,7 @@ void PFTP::download(const FXString & file, FXMemoryStream & buffer, bool asc)
     getAsBytes(file, dsock, buffer);
 }
 
-void PFTP::upload(const FXString & file, const uint8_t * what, uint32_t length, int throttle, bool asc)
+void PFTP::upload(const FXString & file, int throttle, bool asc)
 {
     FXString dummy;
 
@@ -131,29 +131,39 @@ void PFTP::upload(const FXString & file, const uint8_t * what, uint32_t length, 
     if(INVALID_SOCKET == dsock)
         return;
 
-    sendCmd("STOR ", file, dummy);
 
-    int n = length;
+    uint32_t size = FXFile::size(file);
+    FXFileStream str;
+    str.open(file, FXStreamLoad);
+    
+    
+    if(str.direction() != FXStreamLoad)
+    return;
+    
+    FXString filename = FXFile::name(file);
+    sendCmd("STOR ", filename, dummy);
+
     int offset = 0;
     int delta = 128;
     int count = 0;
     int delay = 10;
 
-    monitor->start(length, file);
+    monitor->start(size, file);
 
-    while(offset < n)
+    uint32_t left = size;
+
+    while(left>0)
     {
-        if(delta > n-offset) 
-        {
-            delta = n-offset;
-        }
-
-        int sent = send(dsock, reinterpret_cast<const char *>(what+offset), delta, 0);
+	
+	FXuchar* buff=new FXuchar[delta];
+        str.load(buff,delta);
+        int sent = send(dsock, buff, delta, 0);
         if(throttle > 0)
             Sleep(1<<throttle);
 
         if(SOCKET_ERROR == sent)
         {
+
             int error = WSAGetLastError ();
             if(WSAEWOULDBLOCK == error)
 			{
@@ -174,11 +184,21 @@ void PFTP::upload(const FXString & file, const uint8_t * what, uint32_t length, 
         }
         else
         {
-           offset += delta;
+         
+	offset+=delta; 
+	 
+        left-=delta;
+	
+	if(left < delta)
+	{
+	delta=left;
+	}
+
            delay = 10;
            count = 0;
            if(!monitor->update(offset, file))
                break;
+	      
         }
     }
 

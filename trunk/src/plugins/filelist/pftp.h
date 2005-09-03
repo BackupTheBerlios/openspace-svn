@@ -71,7 +71,7 @@ public:
 
     // need to provide a feedback callback
     void download(const FXString & file, FXMemoryStream & buffer, bool asc=false);
-    void upload(const FXString & file, const uint8_t * what, uint32_t length, int throttle, bool asc=false);
+    void upload(const FXString & file, int throttle, bool asc=false);
 
     void setDir(const FXString & dir);
     void mkDir(const FXString & dir);
