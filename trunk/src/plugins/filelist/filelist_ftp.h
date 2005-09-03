@@ -86,7 +86,8 @@ static int level;
     string filelist_ftp::getinitialdir(void);
     
     int filelist_ftp::priv_osopendir (string dir,string prefix,map <string,osfile> & filesMap,map <string,osfile>::iterator & iter);
-    void filelist_ftp::gorecursive(string file,string operation);
+    void filelist_ftp::gorecursive(string file);
     osfile filelist_ftp::priv_osreaddir (map <string,osfile> & filesMap,map <string,osfile>::iterator & iter2);
+    void filelist_ftp::getRecursiveFiles(thread_elem *te);
 };
 #endif

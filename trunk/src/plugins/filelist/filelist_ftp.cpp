@@ -197,9 +197,8 @@ int filelist_ftp::move (thread_elem * te)
 }
 
 
-void filelist_ftp::gorecursive(string file,string operation)
+void filelist_ftp::gorecursive(string file)
 {
-
 		map <string,osfile> filesMap;
 		map <string,osfile>::iterator iter;
 		
@@ -214,20 +213,16 @@ void filelist_ftp::gorecursive(string file,string operation)
 			
 			if(os_file.type&FOLDER)
 			{
-			gorecursive(os_file.name,operation);
+			gorecursive(os_file.name);
 			}
-
 		 }
 
-	     
 	    }
 
 
 }
 
-
-
-int filelist_ftp::remove (thread_elem * te)
+void filelist_ftp::getRecursiveFiles(thread_elem *te)
 {
 
 filesMapGlobal.clear();
@@ -239,17 +234,28 @@ filesMapGlobal.clear();
     {     
     	osfile os_file;
 	os_file.name=*iter_files;
-	os_file.type=filesMap[*iter_files].type;
+	os_file.type=filesMap[FXFile::name(iter_files->c_str()).text()].type;
 	filesMapGlobal[*iter_files]=os_file;
+
     }
 
 
     for (iter_files = te->src.begin (); iter_files != te->src.end(); iter_files++)
     {     
-        if(filesMap[*iter_files].type&FOLDER)
- 	gorecursive(*iter_files,"remove");
+        if(filesMap[FXFile::name(iter_files->c_str()).text()].type&FOLDER)
+	{
+ 	gorecursive(*iter_files);
+	}
     }
-fxmessage("\n\n");
+
+}
+
+int filelist_ftp::remove (thread_elem * te)
+{
+getRecursiveFiles(te);
+
+    
+
 for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
     {     
    	fxmessage("\nEL=%s",iterGlobal->first.c_str());

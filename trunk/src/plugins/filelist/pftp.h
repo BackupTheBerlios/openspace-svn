@@ -86,6 +86,9 @@ public:
 
     ~PFTP();
 
+void sendCmd(const FXString cmd, const FXString & value, FXString & response);
+
+
 private:
 
     enum {
@@ -113,7 +116,7 @@ private:
     void setTransferType(bool asc);
 
     void getDataSock(void);
-    void sendCmd(const FXString cmd, const FXString & value, FXString & response);
+    
     void responseHandler(const FXString & cmd, FXString & result);
 
     // responseParser: check first digit of first line of response
