@@ -9,7 +9,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-
+#include <sys/types.h>
+#include <dirent.h>
 
 
 int filelist_ftp::level=0;
@@ -218,8 +219,10 @@ int filelist_ftp::copy (thread_elem * te)
     string::size_type pos = te->options.find ("upload");
 	if (pos == string::npos)
 	{
-        FXString file=iter->c_str();
-	pftp->upload(file,0,false);
+        FXString file=iter->c_str();	
+	goLocalRecursive(file.text());
+	pftp->setDir(this->dir.c_str());
+	
 	}
 	else 
 	{
@@ -249,13 +252,60 @@ fxmessage("\nDOWNLOAD %s TO %s",iter->c_str(),ds.c_str());
 
     out.save(buffer, sp);
     out.close();
+	}		
+    }
+}
+
+
+void filelist_ftp::goLocalRecursive (string path,string prefix)
+{
+
+    if (FXFile::isDirectory (path.c_str ()))
+    {
+	struct stat status;
+	struct dirent *dp;
+	DIR *dirp;
+
+     prefix=prefix+ FXFile::name(path.c_str()).text();
+     string fulldir=this->dir+"/"+prefix;
+     fxmessage("\nFULL=%s PRE=%s\n",fulldir.c_str(),prefix.c_str());
+     pftp->mkDir(fulldir.c_str());
+     pftp->setDir(fulldir.c_str()); 
+
+	dirp = opendir (path.c_str ());
+
+	while ((dp = readdir (dirp)) != NULL)
+	{
+	    if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
+	    {
+
+		string file = path+"/";
+		file.append (dp->d_name);
+		goLocalRecursive(file,prefix+"/");
+	    }
 	}
-		
+
+	closedir (dirp);
+    }
+    else
+    {
+    string pre=this->dir+"/"+prefix.substr(0,prefix.length()-1);
+     pftp->setDir(pre.c_str()); 
+    fxmessage("\nPRE = %s UP FILE=%s",pre.c_str(),path.c_str());
+		FXString fil=path.c_str();
+		pftp->upload(fil,0,false);    
+
     }
 
-
-
 }
+
+
+
+
+
+
+
+
 int filelist_ftp::move (thread_elem * te)
 {
 }

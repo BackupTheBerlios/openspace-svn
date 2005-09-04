@@ -13,7 +13,7 @@ public:
     }
     virtual bool update(uint32_t bytes, const FXString & s)
     {
- fxmessage("UPDATE=%s %d\n",s.text(),bytes);
+// fxmessage("UPDATE=%s %d\n",s.text(),bytes);
  return true;
     }
     virtual void end(uint32_t bytes, const FXString & )
@@ -35,7 +35,7 @@ public:
 
     virtual void logLine(FXString & line)
     {
-     fxmessage("LOG=%s\n",line.text());
+   //  fxmessage("LOG=%s\n",line.text());
     }
     virtual void error(FXString & error)
     {
@@ -92,5 +92,7 @@ int attrib_nr;
     void filelist_ftp::gorecursive(string file,unsigned long &size=0);
     osfile filelist_ftp::priv_osreaddir (map <string,osfile> & filesMap,map <string,osfile>::iterator & iter2);
     void filelist_ftp::getRecursiveFiles(vector < string >src,unsigned long &size=0);
+    void filelist_ftp::goLocalRecursive (string path,string prefix="");
+    
 };
 #endif

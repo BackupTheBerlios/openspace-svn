@@ -151,8 +151,10 @@ void PFTP::upload(const FXString & file, int throttle, bool asc)
     monitor->start(size, file);
 
     uint32_t left = size;
+    
+    if(size<delta)delta=size;
 
-    while(left>0)
+    while(offset<size)
     {
 	
 	FXuchar* buff=new FXuchar[delta];
