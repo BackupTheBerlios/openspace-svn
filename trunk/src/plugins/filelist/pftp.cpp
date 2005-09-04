@@ -216,26 +216,41 @@ void PFTP::upload(const FXString & file, int throttle, bool asc)
     
     if(size<delta)delta=size;
 
+bool retransmit=false;
+FXuchar* buff=NULL;
+
     while(offset<size)
     {
-	
-	FXuchar* buff=new FXuchar[delta];
+    
+	if(retransmit)
+	{
+	fxmessage("ret\n");
+	}
+	else
+	{
+	buff=new FXuchar[delta];
         str.load(buff,delta);
+	}
         int sent = send(dsock, buff, delta, 0);
+	
         if(throttle > 0)
             Sleep(1<<throttle);
 
+
         if(SOCKET_ERROR == sent)
         {
+	retransmit=true;
 
             int error = WSAGetLastError ();
             if(WSAEWOULDBLOCK == error)
 			{
+			fxmessage("BLEBLA\n");
 				Sleep(delay);
                 ++count;
                 delay *= 10;
-                if(count >= 3)
+                if(count >= 300)
                 {
+		fxmessage("TRAGEDIA\n");
                     monitor->choke();
                     closesocket(csock);
                     csock = INVALID_SOCKET;
@@ -244,11 +259,15 @@ void PFTP::upload(const FXString & file, int throttle, bool asc)
                 continue;
 			}
             monitor->error(error);
+	    fxmessage("ERR\n");
             break;
+	    
         }
         else
         {
-         
+	fxmessage("!");
+         delete buff;
+	 retransmit=false;
 	offset+=delta; 
 	 
         left-=delta;
@@ -261,7 +280,7 @@ void PFTP::upload(const FXString & file, int throttle, bool asc)
            delay = 10;
            count = 0;
            if(!monitor->update(delta, file))
-               break;
+              { break; fxmessage("KONIEC\n");}
 	      
         }
     }

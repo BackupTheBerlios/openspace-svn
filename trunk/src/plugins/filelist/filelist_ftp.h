@@ -44,13 +44,13 @@ te=NULL;
 
     virtual void choke()
     {
-
+fxmessage("\n\nCHOKE\n\n");
     }
 
 
     virtual void error(int error)
     {
-
+fxmessage("\n\nERROR\n\n");
     }
 
 

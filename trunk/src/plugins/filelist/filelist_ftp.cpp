@@ -390,7 +390,7 @@ void filelist_ftp::goLocalRecursive (string path,string prefix,thread_elem *te)
     fxmessage("\nPRE = %s UP FILE=%s",pre.c_str(),path.c_str());
 		FXString fil=path.c_str();
 		pftp->upload(fil,0,false);   
-		te->act_file_name=path; 
+		 
 
     }
 
