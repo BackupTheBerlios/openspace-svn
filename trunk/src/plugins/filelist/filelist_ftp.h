@@ -14,16 +14,27 @@ SimpleLogger()
 {
 te=NULL;
 }
-    virtual void start(uint32_t bytes, const FXString & )
+    virtual void start(uint32_t bytes, const FXString & name,uint32_t size)
     {
-    if(te!=NULL)
-	te->act_file_size=0;
+    	if(te!=NULL && name!="")
+   	{
+		te->act_file_size=0;
+		te->act_file_name = name.text ();
+		if(size!=0)
+		te->file_size = size;
+	}
     }
     virtual bool update(uint32_t bytes, const FXString & s)
     {
 // fxmessage("UPDATE=%s %d\n",s.text(),bytes);
      if(te!=NULL)
-	te->act_file_size+=bytes;
+     {
+	te->act_file_size+=bytes;	
+	te->act_total_size+=bytes;
+	
+	if(te->cancel==true)
+	return false;
+     }	
  return true;
     }
     virtual void end(uint32_t bytes, const FXString & )

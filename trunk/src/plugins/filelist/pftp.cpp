@@ -149,7 +149,8 @@ void PFTP::download(const FXString & file,FXString dst, bool asc)
 
 	    out.save(buffer, c);
             total+=c;
-            monitor->update(total, file);
+            if(!monitor->update(c, file))
+	    break;
         }
         else
         {
@@ -209,7 +210,7 @@ void PFTP::upload(const FXString & file, int throttle, bool asc)
     int count = 0;
     int delay = 10;
 
-    monitor->start(size, file);
+    monitor->start(size, file,size);
 
     uint32_t left = size;
     
@@ -259,7 +260,7 @@ void PFTP::upload(const FXString & file, int throttle, bool asc)
 
            delay = 10;
            count = 0;
-           if(!monitor->update(offset, file))
+           if(!monitor->update(delta, file))
                break;
 	      
         }

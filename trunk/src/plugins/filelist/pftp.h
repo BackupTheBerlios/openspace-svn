@@ -55,7 +55,7 @@ typedef unsigned int uint32_t;
 
 class Logger {
 public:
-    virtual void start(uint32_t bytes, const FXString & name) = 0;
+    virtual void start(uint32_t bytes, const FXString & name,uint32_t size=0) = 0;
     virtual bool update(uint32_t bytes, const FXString & name) = 0;
     virtual void end(uint32_t bytes, const FXString & name) = 0;
     virtual void error(int error) = 0;

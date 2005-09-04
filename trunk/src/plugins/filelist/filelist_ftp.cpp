@@ -309,9 +309,13 @@ int filelist_ftp::copy (thread_elem * te)
 
 
 getRecursiveFiles(te->src,size);
+fxmessage("\nsize=%d",size);
+
 te->total_size = size; 
 for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
-    {     
+    {   
+    if(te->cancel==true)
+    break;  
    	fxmessage("\nEL=%s",iterGlobal->first.c_str());
 	
 	if(iterGlobal->second.type&FOLDER)
@@ -325,7 +329,7 @@ for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
 	{
 	string filename=te->dst+"/"+iterGlobal->first;
 	FXFile::createDirectory(FXFile::directory(filename.c_str()),666);
-	
+	te->file_size = iterGlobal->second.size;
 	pftp->download(iterGlobal->first.c_str(),filename.c_str(),false);
 	}
 	te->act_file_name=iterGlobal->first;
@@ -344,6 +348,9 @@ for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
 
 void filelist_ftp::goLocalRecursive (string path,string prefix,thread_elem *te)
 {
+
+    if(te->cancel==true)
+    return; 
 
     if (FXFile::isDirectory (path.c_str ()))
     {
@@ -437,7 +444,7 @@ filesMapGlobal.clear();
 
 
     vector < string >::iterator iter_files;
-fxmessage("WTF?");
+
     for (iter_files = src.begin (); iter_files != src.end(); iter_files++)
     {     
     fxmessage("\nFILE NAME=%s\n",iter_files->c_str());
@@ -445,6 +452,7 @@ fxmessage("WTF?");
     	osfile os_file;
 	os_file.name=name;
 	os_file.type=filesMap[name].type;
+	os_file.size=filesMap[name].size;
 	filesMapGlobal[name]=os_file;
 
     }
@@ -505,11 +513,11 @@ int filelist_ftp::init (vector < string > *vector_name, pathtype pt, configure *
 log=new SimpleLogger;
 pftp=new PFTP(pt.server.c_str(),pt.user.c_str(),pt.password.c_str(),"",log);
 
-	if(pftp->isConnected())
+	if(pftp->isConnected() && getinitialdir()!="")
         {	
 	fxmessage("CONNECTED :d :d :d");
-
 	}
+	else return -1;
 }
 int filelist_ftp::mode (string file)
 {
