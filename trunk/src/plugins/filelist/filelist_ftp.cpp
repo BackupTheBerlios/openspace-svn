@@ -22,15 +22,16 @@ int filelist_ftp::priv_osopendir (string dir,string prefix,map <string,osfile> &
 
 filesMap.clear();
 
-
-	FXString di=dir.c_str();
-	fxmessage("\nDIR=%s\n",dir.c_str());
+fxmessage("\nSWITCH TO=%s ",dir.c_str());
+	FXString di=dir.c_str();	
 	pftp->setDir(di);
 	FXString di2;
 	pftp->pwd(di2);
 
-	if(di!=di2)
+	if(FXFile::name(di)!=FXFile::name(di2))
 	return -1;
+
+fxmessage("\nDIR=%s\n",dir.c_str());
 
 	
     FXMemoryStream str;
@@ -160,7 +161,7 @@ int filelist_ftp::osopendir (string dir)
 
 this->dir=dir;
 
-priv_osopendir(dir,"",filesMap,iter);
+return priv_osopendir(dir,"",filesMap,iter);
  
 
 
@@ -258,6 +259,8 @@ int filelist_ftp::move (thread_elem * te)
 
 void filelist_ftp::gorecursive(string file)
 {
+
+fxmessage("\nFILE=%s",file.c_str());
 		map <string,osfile> filesMap;
 		map <string,osfile>::iterator iter;
 		
@@ -291,22 +294,28 @@ filesMapGlobal.clear();
 
     for (iter_files = te->src.begin (); iter_files != te->src.end(); iter_files++)
     {     
+    
+    string name=FXFile::name(iter_files->c_str()).text();
     	osfile os_file;
-	os_file.name=*iter_files;
-	os_file.type=filesMap[FXFile::name(iter_files->c_str()).text()].type;
-	filesMapGlobal[*iter_files]=os_file;
+	os_file.name=name;
+	os_file.type=filesMap[name].type;
+	filesMapGlobal[name]=os_file;
 
     }
 
 
-    for (iter_files = te->src.begin (); iter_files != te->src.end(); iter_files++)
-    {     
-        if(filesMap[FXFile::name(iter_files->c_str()).text()].type&FOLDER)
+   for (iterGlobal=filesMapGlobal.begin();iterGlobal!=filesMapGlobal.end(); iterGlobal++)
+   {
+
+   
+        if(iterGlobal->second.type&FOLDER)
 	{
- 	gorecursive(*iter_files);
+ 	gorecursive(iterGlobal->first);
+	FXString di=this->dir.c_str();
+	pftp->setDir(di);
 	}
-    }
 
+   }
 }
 
 int filelist_ftp::remove (thread_elem * te)
@@ -323,8 +332,10 @@ for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
 	pftp->rmDir(iterGlobal->first.c_str());
 	else
 	pftp->del(iterGlobal->first.c_str());
+	
 	te->act_file_name=iterGlobal->first;
 	if( iterGlobal == filesMapGlobal.begin())break;
+	
     }
 
 
