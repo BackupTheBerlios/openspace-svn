@@ -97,6 +97,10 @@ parser>>field;
 parser>>user;
 parser>>group;
 parser>>size;
+os_file.size=atoi(size.c_str());
+
+fxmessage("\nFIL SIZ=%d",os_file.size);
+
 parser>>date;
 parser>>date;
 parser>>date;
@@ -257,7 +261,7 @@ int filelist_ftp::move (thread_elem * te)
 }
 
 
-void filelist_ftp::gorecursive(string file)
+void filelist_ftp::gorecursive(string file,unsigned long &size)
 {
 
 fxmessage("\nFILE=%s",file.c_str());
@@ -275,8 +279,10 @@ fxmessage("\nFILE=%s",file.c_str());
 			
 			if(os_file.type&FOLDER)
 			{
-			gorecursive(os_file.name);
+			gorecursive(os_file.name,size);
 			}
+			else
+			size = size + os_file.size;
 		 }
 
 	    }
@@ -284,17 +290,17 @@ fxmessage("\nFILE=%s",file.c_str());
 
 }
 
-void filelist_ftp::getRecursiveFiles(thread_elem *te)
+void filelist_ftp::getRecursiveFiles(vector < string >src,unsigned long &size)
 {
 
 filesMapGlobal.clear();
 
 
     vector < string >::iterator iter_files;
-
-    for (iter_files = te->src.begin (); iter_files != te->src.end(); iter_files++)
+fxmessage("WTF?");
+    for (iter_files = src.begin (); iter_files != src.end(); iter_files++)
     {     
-    
+    fxmessage("\nFILE NAME=%s\n",iter_files->c_str());
     string name=FXFile::name(iter_files->c_str()).text();
     	osfile os_file;
 	os_file.name=name;
@@ -310,19 +316,20 @@ filesMapGlobal.clear();
    
         if(iterGlobal->second.type&FOLDER)
 	{
- 	gorecursive(iterGlobal->first);
+ 	gorecursive(iterGlobal->first,size);
 	FXString di=this->dir.c_str();
 	pftp->setDir(di);
 	}
+	else
+	size = size + iterGlobal->second.size;
 
    }
 }
 
 int filelist_ftp::remove (thread_elem * te)
 {
-getRecursiveFiles(te);
-
-    
+unsigned long size;
+getRecursiveFiles(te->src,size);
 
 for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
     {     
@@ -408,17 +415,40 @@ int x=((mode & S_IRUSR) | (mode & S_IWUSR) | (mode & S_IXUSR))/64;
 int y=((mode & S_IRGRP) | (mode & S_IWGRP) | (mode & S_IXGRP))/8;
 int z=((mode & S_IROTH) | (mode & S_IWOTH) | (mode & S_IXOTH));	
 
-
+file=FXFile::name(file.c_str()).text();
 
 FXString tmp;
-
 char chstr[20];
 sprintf (chstr, "%d%d%d", x,y,z);
-fxmessage("PER=%d",chstr);
 
-string cmd="CHMOD "+string(chstr)+" "+ file;
-pftp->sendCmd("SITE ",cmd.c_str(),tmp );
-fxmessage("\nCOMMAND=%s\n",cmd.c_str());
+	if(recursive==false)
+	{
+	string cmd="CHMOD "+string(chstr)+" "+ file;
+	pftp->sendCmd("SITE ",cmd.c_str(),tmp );
+	}
+	else
+	{
+	unsigned long size;
+	vector < string >src;
+	src.push_back(file);
+	getRecursiveFiles(src,size);
+
+		for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
+  		  {     
+   			fxmessage("\nEL=%s",iterGlobal->first.c_str());
+			
+			string cmd="CHMOD "+string(chstr)+" "+ iterGlobal->first;
+			pftp->sendCmd("SITE ",cmd.c_str(),tmp );
+			
+			
+			if( iterGlobal == filesMapGlobal.begin())break;
+	
+   		  }
+
+	
+	}
+
+
 
 }
 bool filelist_ftp::owner (string file, string, bool recursive)
@@ -433,6 +463,25 @@ return "";
 }
 void filelist_ftp::totalsize (string path, unsigned long &size)
 {
+size=0;
+	
+	string file=FXFile::name(path.c_str()).text();
+	if(file=="")
+	file=FXFile::name(path.substr(0,path.length()-1).c_str()).text();
+	
+	
+	fxmessage("\nF=%s P=%s\n",file.c_str(),path.c_str());
+	if(filesMap[file].type&FOLDER)
+	{
+	vector < string >src;
+	src.push_back(file);
+	getRecursiveFiles(src,size);
+	}
+	else
+	size=filesMap[file].size;
+
+fxmessage("\nSIZE=%d",size);
+	
 }
 string filelist_ftp::symlink (string path)
 {
