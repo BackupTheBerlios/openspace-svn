@@ -70,7 +70,7 @@ public:
     PFTP(const FXString & server, const FXString & user, const FXString & pass, const FXString & proxy, Logger * feedback);
 
     // need to provide a feedback callback
-    void download(const FXString & file, FXMemoryStream & buffer, bool asc=false);
+    void download(const FXString & file,FXString dst, bool asc=false);
     void upload(const FXString & file, int throttle, bool asc=false);
 
     void setDir(const FXString & dir);

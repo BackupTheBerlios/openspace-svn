@@ -208,56 +208,141 @@ struct Bucket {
     uint8_t bucket[BUCKETSIZE];
 };
 
-int filelist_ftp::copy (thread_elem * te)
+
+
+
+
+
+
+
+void filelist_ftp::local_totalsize (string path, unsigned long &size)
 {
 
- vector < string >::iterator iter;
-    for (iter = te->src.begin (); iter != te->src.end(); iter++)
+    if (FXFile::isDirectory (path.c_str ()))
     {
-    
+	struct stat status;
+	struct dirent *dp;
+	DIR *dirp;
+
+
+	dirp = opendir (path.c_str ());
+
+	while ((dp = readdir (dirp)) != NULL)
+	{
+	    if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
+	    {
+
+		string file = path;
+		file.append (dp->d_name);
+#ifndef WIN32
+		lstat (file.c_str (), &status);
+#else
+		stat (file.c_str (), &status);
+#endif
+		if (S_ISDIR (status.st_mode))
+		{
+		    size = size + (unsigned int) status.st_size;
+		    file.append ("/");
+		    totalsize (file, size);
+
+		}
+		else
+		{
+		    size = size + status.st_size;
+		}
+	    }
+	}
+
+	closedir (dirp);
+    }
+    else
+    {
+	size += FXFile::size (path.c_str ());
+
+    }
+
+}
+
+
+
+
+
+
+
+int filelist_ftp::copy (thread_elem * te)
+{
+ log->te=te;
+  unsigned long size = 0;
     
     string::size_type pos = te->options.find ("upload");
 	if (pos == string::npos)
 	{
+	
+	string dir_copy=this->dir;
+	
+	 vector < string >::iterator iter;
+	 
+	 for (iter = te->src.begin (); iter != te->src.end(); iter++)
+   	 {
+	 string sr = (*iter);
+	 if (FXFile::isDirectory (sr.c_str ()))
+	    sr.append ("/");
+	 local_totalsize (sr, size);
+	 }
+
+	te->total_size = size; 
+	 
+    for (iter = te->src.begin (); iter != te->src.end(); iter++)
+    {
+	
         FXString file=iter->c_str();	
-	goLocalRecursive(file.text());
-	pftp->setDir(this->dir.c_str());
+	goLocalRecursive(file.text(),"",te);
+	pftp->setDir(dir_copy.c_str());
+	
+    }
+	this->dir=dir_copy;
 	
 	}
 	else 
 	{
+
+
+
+getRecursiveFiles(te->src,size);
+te->total_size = size; 
+for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
+    {     
+   	fxmessage("\nEL=%s",iterGlobal->first.c_str());
 	
-	    string ds = te->dst;
-	    ds.append ("/");
-	    ds.append (FXFile::name (iter->c_str ()).text ());
-
-fxmessage("\nDOWNLOAD %s TO %s",iter->c_str(),ds.c_str());
-
-    FXMemoryStream str;
-    str.open(FXStreamSave, NULL);
-
-    pftp->download(iter->c_str(), str,false );
-
-    // now write it to a file
-    FXString name = ds.c_str();
-    FXuchar* buffer;
-    unsigned long sp;
-    str.takeBuffer(buffer, sp);
-
-    FXFileStream out;
-    out.open(name, FXStreamSave);
-
-    if(out.direction() != FXStreamSave)
-        return -1;
-
-    out.save(buffer, sp);
-    out.close();
-	}		
+	if(iterGlobal->second.type&FOLDER)
+	{
+	
+	string filename=te->dst+"/"+iterGlobal->first;
+	FXFile::createDirectory(filename.c_str(),666);
+	
+	}
+	else
+	{
+	string filename=te->dst+"/"+iterGlobal->first;
+	FXFile::createDirectory(FXFile::directory(filename.c_str()),666);
+	
+	pftp->download(iterGlobal->first.c_str(),filename.c_str(),false);
+	}
+	te->act_file_name=iterGlobal->first;
+	if( iterGlobal == filesMapGlobal.begin())break;
+	
     }
+
+
+	
+
+   
+	}		
+ log->te=NULL;   
 }
 
 
-void filelist_ftp::goLocalRecursive (string path,string prefix)
+void filelist_ftp::goLocalRecursive (string path,string prefix,thread_elem *te)
 {
 
     if (FXFile::isDirectory (path.c_str ()))
@@ -281,7 +366,7 @@ void filelist_ftp::goLocalRecursive (string path,string prefix)
 
 		string file = path+"/";
 		file.append (dp->d_name);
-		goLocalRecursive(file,prefix+"/");
+		goLocalRecursive(file,prefix+"/",te);
 	    }
 	}
 
@@ -290,10 +375,15 @@ void filelist_ftp::goLocalRecursive (string path,string prefix)
     else
     {
     string pre=this->dir+"/"+prefix.substr(0,prefix.length()-1);
+    if(this->dir!=pre)
+    {
      pftp->setDir(pre.c_str()); 
+     this->dir=pre;
+    }
     fxmessage("\nPRE = %s UP FILE=%s",pre.c_str(),path.c_str());
 		FXString fil=path.c_str();
-		pftp->upload(fil,0,false);    
+		pftp->upload(fil,0,false);   
+		te->act_file_name=path; 
 
     }
 

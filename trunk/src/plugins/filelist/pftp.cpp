@@ -108,10 +108,12 @@ bool PFTP::isConnected() const
     return csock != INVALID_SOCKET;
 }
 
-void PFTP::download(const FXString & file, FXMemoryStream & buffer, bool asc)
+void PFTP::download(const FXString & file,FXString dst, bool asc)
 {
     FXString dummy;
-
+    
+    
+   
     setTransferType(asc);
     getDataSock();
 
@@ -119,7 +121,66 @@ void PFTP::download(const FXString & file, FXMemoryStream & buffer, bool asc)
         return;
 
     sendCmd("RETR ", file, dummy);
-    getAsBytes(file, dsock, buffer);
+   
+     fxmessage("FILE=%s DEST=%s\n",file.text(),dst.text());
+     
+    char buffer[BUCKET];
+    int c=0;
+
+    monitor->start(0, file);
+    uint32_t total = 0;
+    
+
+    FXFileStream out;
+    out.open(dst, FXStreamSave);
+
+    if(out.direction() != FXStreamSave)
+        return ;
+    
+
+    for(;;)
+    {
+
+        c = recv(dsock, buffer, BUCKET, 0);
+        if(0 == c)
+            break;
+        else if(c > 0)
+        {
+
+	    out.save(buffer, c);
+            total+=c;
+            monitor->update(total, file);
+        }
+        else
+        {
+            int error = WSAGetLastError ();
+            if(WSAEWOULDBLOCK == error)
+			{
+				Sleep(10);
+                continue;
+			}
+            monitor->error(error);
+            break;
+        }
+    }
+    
+    out.close();
+    
+    monitor->end(total, file);
+
+    if(shutdown(dsock, SD_BOTH))
+    {
+        int error = WSAGetLastError ();
+        monitor->error(error);
+    }
+    if(closesocket(dsock))
+    {
+        int error = WSAGetLastError ();
+        monitor->error(error);
+    }
+    dsock = INVALID_SOCKET;
+    
+    
 }
 
 void PFTP::upload(const FXString & file, int throttle, bool asc)
