@@ -1005,12 +1005,20 @@ long MainWindow::onTimer (FXObject *, FXSelector, void *)
 		if (telem->command == "init")
 		{
 		    FXTRACE ((5, "INIT \n"));
-		    fil->init ();
+		    if(fil->init ()!=false)
+		    {
 		   	 if (left_frame->f->active)
 	  		  left_frame->generate_menu (fil->path, this);
 			  else
 			  right_frame->generate_menu (fil->path, this);
-			  
+		    }
+		    else
+		    {
+		        FXMessageBox box(getApp (), "error", "Can't connect :|", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+    			box.execute ();
+		    
+		    
+		    }	  
 		}
 		if (telem->command == "copy")
 		{

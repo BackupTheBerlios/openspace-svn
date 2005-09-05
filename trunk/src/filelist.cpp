@@ -846,7 +846,7 @@ filelist::~filelist ()
 
 //--------------------------------------------------------------------
 //initializing fuction, get availible headers from filelist plugin
-void filelist::init ()
+bool filelist::init ()
 {
 
 
@@ -890,8 +890,8 @@ void filelist::init ()
     
     }
     
-    opendir (this->path);
-
+    return opendir (this->path);
+    
 
 }
 
@@ -990,6 +990,7 @@ bool filelist::opendir (string dir)
 
     if (fb->osopendir (dir) == -1)
     {
+    fxmessage("WYJEB\n");
     return false;
     }	
 clearItems ();

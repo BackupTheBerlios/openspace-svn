@@ -87,7 +87,7 @@ map <string,osfile>::iterator iterGlobal;
     static int level;
     int fieldsnum;
     vector < string > fields;
-int attrib_nr;
+
   public:
     int filelist_ftp::osopendir (string dir);
     osfile filelist_ftp::osreaddir (void);
@@ -118,5 +118,6 @@ int attrib_nr;
     void filelist_ftp::getRecursiveFiles(vector < string >src,unsigned long &size=0);
     void filelist_ftp::goLocalRecursive (string path,string prefix,thread_elem *te);
     void filelist_ftp::local_totalsize (string path, unsigned long &size);
+    int filelist_ftp::str_mode_int(string per);
 };
 #endif

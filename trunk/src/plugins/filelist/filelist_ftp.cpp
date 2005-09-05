@@ -29,7 +29,7 @@ fxmessage("\nSWITCH TO=%s ",dir.c_str());
 	FXString di2;
 	pftp->pwd(di2);
 
-	if(FXFile::name(di)!=FXFile::name(di2))
+	if(FXFile::name(di)!=FXFile::name(di2) || di2=="")
 	return -1;
 
 fxmessage("\nDIR=%s\n",dir.c_str());
@@ -106,6 +106,13 @@ parser>>date;
 parser>>date;
 parser>>date;
 
+
+os_file.user=user;
+os_file.group=group;
+os_file.mode=attrib;
+
+
+
 string n;
 while(parser>>n)
 {
@@ -132,11 +139,8 @@ if(prefix=="")
 	else if (fields[i + 1] == "group")
 	   os_file.attrib.push_back(group);
         else if (fields[i + 1] == "mode")
-	{
-	attrib_nr=i;
         os_file.attrib.push_back(attrib);
 
-	}
 
     }
 	
@@ -322,15 +326,18 @@ for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
 	{
 	
 	string filename=te->dst+"/"+iterGlobal->first;
-	FXFile::createDirectory(filename.c_str(),666);
+	FXFile::createDirectory(filename.c_str(),str_mode_int(iterGlobal->second.mode));
 	
 	}
 	else
 	{
 	string filename=te->dst+"/"+iterGlobal->first;
-	FXFile::createDirectory(FXFile::directory(filename.c_str()),666);
+	FXFile::createDirectory(FXFile::directory(filename.c_str()),str_mode_int(iterGlobal->second.mode));
 	te->file_size = iterGlobal->second.size;
+	fxmessage("\nWTF?\n");
 	pftp->download(iterGlobal->first.c_str(),filename.c_str(),false);
+	fxmessage("\nMODE=%s\n",iterGlobal->second.mode.c_str());
+	FXFile::mode(filename.c_str(),str_mode_int(iterGlobal->second.mode));
 	}
 	te->act_file_name=iterGlobal->first;
 	if( iterGlobal == filesMapGlobal.begin())break;
@@ -455,6 +462,9 @@ filesMapGlobal.clear();
 	os_file.name=name;
 	os_file.type=filesMap[name].type;
 	os_file.size=filesMap[name].size;
+	os_file.mode=filesMap[name].mode;
+	os_file.group=filesMap[name].user;
+	os_file.user=filesMap[name].group;
 	filesMapGlobal[name]=os_file;
 
     }
@@ -521,11 +531,9 @@ pftp=new PFTP(pt.server.c_str(),pt.user.c_str(),pt.password.c_str(),"",log);
 	}
 	else return -1;
 }
-int filelist_ftp::mode (string file)
+
+int filelist_ftp::str_mode_int(string per)
 {
-
-string per=filesMap[FXFile::name(file.c_str()).text()].attrib[attrib_nr];
-
 unsigned int mode = 0;
 	if (per[0]=='r')
 	    mode = mode | S_IRUSR;
@@ -546,15 +554,23 @@ unsigned int mode = 0;
 	if (per[8]=='x')
 	    mode = mode | S_IXOTH;
 return mode;
+}
+
+int filelist_ftp::mode (string file)
+{
+
+string per=filesMap[FXFile::name(file.c_str()).text()].mode;
+
+return str_mode_int(per);
 
 }
 string filelist_ftp::owner (string file)
 {
-return ""; 
+return filesMap[FXFile::name(file.c_str()).text()].user; 
 }
 string filelist_ftp::group (string file)
 {
-return "";
+return filesMap[FXFile::name(file.c_str()).text()].group;
 }
 bool filelist_ftp::mode (string file, unsigned int per, bool recursive)
 {

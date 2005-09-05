@@ -31,6 +31,12 @@ class osfile
     vector <string> attrib;
     string content;
 
+string mode;
+string user;
+string group;
+string date;
+
+
 };
 
 #endif

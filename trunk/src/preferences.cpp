@@ -251,7 +251,7 @@ long preferences::onSave (FXObject * sender, FXSelector sel, void *)
 	}
 	string options;
 	if (ct->capturecheck->getCheck ())
-	    options += "capture";
+	    options += " capture";
 	if (ct->rescancheck->getCheck ())
 	    options += " rescan";
 
