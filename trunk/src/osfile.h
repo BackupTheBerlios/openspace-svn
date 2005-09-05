@@ -30,6 +30,7 @@ class osfile
     unsigned long size;
     vector <string> attrib;
     string content;
+
 };
 
 #endif

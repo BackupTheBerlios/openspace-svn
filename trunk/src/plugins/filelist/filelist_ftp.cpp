@@ -362,6 +362,7 @@ void filelist_ftp::goLocalRecursive (string path,string prefix,thread_elem *te)
      string fulldir=this->dir+"/"+prefix;
      fxmessage("\nFULL=%s PRE=%s\n",fulldir.c_str(),prefix.c_str());
      pftp->mkDir(fulldir.c_str());
+     this->mode (fulldir,FXFile::mode(path.c_str()),false);
      pftp->setDir(fulldir.c_str()); 
 
 	dirp = opendir (path.c_str ());
@@ -389,7 +390,8 @@ void filelist_ftp::goLocalRecursive (string path,string prefix,thread_elem *te)
     }
     fxmessage("\nPRE = %s UP FILE=%s",pre.c_str(),path.c_str());
 		FXString fil=path.c_str();
-		pftp->upload(fil,0,false);   
+		pftp->upload(fil,0,false);
+		this->mode (path,FXFile::mode(fil),false);   
 		 
 
     }
