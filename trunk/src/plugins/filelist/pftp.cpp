@@ -216,6 +216,8 @@ void PFTP::upload(const FXString & file, int throttle, bool asc)
     
     if(size<delta)delta=size;
 
+
+
 bool retransmit=false;
 FXuchar* buff=NULL;
 
@@ -298,6 +300,10 @@ FXuchar* buff=NULL;
     dsock = INVALID_SOCKET;
 
     monitor->end(offset, file);
+    
+
+
+    
 }
 
 void PFTP::getAsBytes(const FXString & file, SOCKET sock, FXMemoryStream & stream)
@@ -388,11 +394,11 @@ int PFTP::connect(const FXString & server)
 
     FXString numerals;
 
-	u_long arg = 1;
+	/*u_long arg = 1;
 	int code = ioctlsocket(csock, FIONBIO, &arg);
 	if(code)
 		goto failure;
-
+*/
 
 	if(proxyServer)
 	{
@@ -661,7 +667,7 @@ void PFTP::getDataSock()
         dsock = INVALID_SOCKET;
 		return;
     }
-
+/*
 	u_long arg = 1;
 	int code = ioctlsocket(dsock, FIONBIO, &arg);
 	if(code)
@@ -671,7 +677,7 @@ void PFTP::getDataSock()
         dsock = INVALID_SOCKET;
 		return;
     }
-
+*/
 	if(proxyServer)
 	{
 		FXString numerals;
