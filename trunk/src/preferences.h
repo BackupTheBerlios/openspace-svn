@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 using namespace std;
 
 
@@ -21,11 +22,11 @@ class command_container
 {
   public:
     string name;
-    FXTextField *textfield;
-    FXPacker *vv;
-    FXCheckButton *rescancheck;
-    FXCheckButton *capturecheck;
-    FXVerticalFrame *frame;
+    string exec;
+    bool rescan;
+    bool capture;
+    
+    
 
 };
 
@@ -45,13 +46,21 @@ class preferences:public FXDialogBox
      FXTextField * mainwindow_width;
     FXTextField *mainwindow_height;
 
-    FXTextField *newcommandedit;
-
-    FXPopup *commandspop;
-    FXOptionMenu *commandsmenu;
-    FXVerticalFrame *commandspane;
-    FXVerticalFrame *staticcommandpane;
-    FXVerticalFrame *commandsmainpane;
+    FXTextField *newCommandEdit;
+    FXPopup *commandsPop;
+    FXOptionMenu *commandsMenu;
+    FXVerticalFrame *commandsPane;
+    FXTextField *commandsTextfield;
+    FXCheckButton *commandsRescan;
+    FXCheckButton *commandsCapture;
+    
+    string currentCommandName;
+    
+    
+    FXVerticalFrame *frame;
+    
+    
+    
 
     FXPopup *filetypepop;
     FXOptionMenu *filetypemenu;
@@ -63,7 +72,7 @@ class preferences:public FXDialogBox
 
 
 
-    vector < command_container * >command_vec;
+    map <string, command_container >commandsMap;
     vector < filetype_container * >filetype_vec;
 
     FXVerticalFrame *filetypepane;

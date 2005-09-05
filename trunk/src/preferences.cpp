@@ -51,21 +51,21 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 
 
 
-    commandsmainpane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXLabel (commandsmainpane, "Commands settings", NULL, LAYOUT_LEFT);
-    commandspane = new FXVerticalFrame (commandsmainpane, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    staticcommandpane = new FXVerticalFrame (commandsmainpane, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    commandsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXLabel (commandsPane, "Commands settings", NULL, LAYOUT_LEFT);
+
 
 
     new FXButton (buttons, "Commands Settings", NULL, switcher, FXSwitcher::ID_OPEN_THIRD, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
 
+    commandsPop = new FXPopup (this);
 
     if (conf->openxpath ("/OpenspaceConfig/commands") != -1)
     {
-	command_container *ct;
+	command_container ct;
 
-	commandspop = new FXPopup (this);
+	
 
 
 	while (1)
@@ -74,54 +74,50 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 	    if (res == "")
 		break;
 
-	    ct = new command_container;
-	    ct->frame = new FXVerticalFrame (commandspane, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+	    
 
+	    new FXOption (commandsPop, res.c_str (), NULL, this, ID_COMMAND_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
 
-	    new FXOption (commandspop, res.c_str (), NULL, this, ID_COMMAND_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
-
-	    ct->name = res;
+	    ct.name = res;
 	    configure conflocal = *conf;
-	    string exec = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/exec");
-	    ct->textfield = new FXTextField (ct->frame, 20);
-	    ct->textfield->setText (exec.c_str ());
-
-
-
-	    ct->vv = new FXGroupBox (ct->frame, "Options", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0);
-	    ct->rescancheck = new FXCheckButton (ct->vv, "rescan", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
-	    ct->capturecheck = new FXCheckButton (ct->vv, "capture", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
-
+	    ct.exec = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/exec");
+	    
 	    string options = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/options");
 
 	    string::size_type pos = options.find ("capture");
 	    if (pos != string::npos)
-		ct->capturecheck->setCheck (true);
+		ct.capture=true;
 	    else
-		ct->capturecheck->setCheck (false);
+		ct.capture=false;
 
 
 	    pos = options.find ("rescan");
 	    if (pos != string::npos)
-		ct->rescancheck->setCheck (true);
+		ct.rescan=true;
 	    else
-		ct->rescancheck->setCheck (false);
+		ct.rescan=false;
 
 
-	    ct->frame->hide ();
-	    command_vec.push_back (ct);
+	    commandsMap[ct.name]=ct;
 
 	}
+	    commandsTextfield = new FXTextField (commandsPane, 20);
+	    
+            FXPacker *vv = new FXGroupBox (commandsPane, "Options", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0);
+	    commandsRescan = new FXCheckButton (vv, "rescan", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
+	    commandsCapture = new FXCheckButton (vv, "capture", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
+	    commandsMenu = new FXOptionMenu (commandsPane, commandsPop, LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
+	    
+	    commandsRescan->setCheck(ct.rescan);
+	    commandsCapture->setCheck(ct.capture);
+	    commandsTextfield->setText (ct.exec.c_str ());
+            commandsMenu->setCurrentNo (commandsMenu->getNumOptions () - 1);
+	    currentCommandName=ct.name;
+	
+	new FXButton (commandsPane, "New Command", NULL, this, ID_NEW_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+	newCommandEdit = new FXTextField (commandsPane, 20);
 
-	ct->frame->show ();
-
-	commandsmenu = new FXOptionMenu (staticcommandpane, commandspop, LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
-
-	commandsmenu->setCurrentNo (commandsmenu->getNumOptions () - 1);
-	new FXButton (staticcommandpane, "New Command", NULL, this, ID_NEW_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
-	newcommandedit = new FXTextField (staticcommandpane, 20);
-
-	new FXButton (staticcommandpane, "Remove", NULL, this, ID_REMOVE_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+	new FXButton (commandsPane, "Remove", NULL, this, ID_REMOVE_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
     }
 
@@ -148,7 +144,7 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 	    if (res == "")
 		break;
 
-	    ct = new filetype_container;
+	    ct = new   filetype_container;
 
 
 	    new FXOption (filetypepop, res.c_str (), NULL, this, ID_FILETYPE_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
@@ -233,26 +229,27 @@ preferences::~preferences ()
 long preferences::onSave (FXObject * sender, FXSelector sel, void *)
 {
     FXTRACE ((5, "save\n"));
+    
+    this->onCommandChange(NULL,0,NULL);
 
+    map < string, command_container >::iterator iter;
 
-
-
-    vector < command_container * >::iterator iter;
-
-    for (iter = command_vec.begin (); iter != command_vec.end (); iter++)
+    for (iter = commandsMap.begin (); iter != commandsMap.end (); iter++)
     {
-	command_container *ct = *iter;
-	string com = ct->name;
-	string value = ct->textfield->getText ().text ();
+	command_container ct = iter->second;
+	
+	string com = ct.name;
+	string value = ct.exec;
 	if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/exec", value))
 	{
 	    conf->addstring ("/OpenspaceConfig/commands", com, "");
+	    if(ct.exec!="")
 	    conf->addstring ("/OpenspaceConfig/commands/" + com, "exec", value);
 	}
 	string options;
-	if (ct->capturecheck->getCheck ())
+	if (ct.capture)
 	    options += " capture";
-	if (ct->rescancheck->getCheck ())
+	if (ct.rescan)
 	    options += " rescan";
 
 	if (options != "")
@@ -261,14 +258,14 @@ long preferences::onSave (FXObject * sender, FXSelector sel, void *)
 		conf->addstring ("/OpenspaceConfig/commands/" + com, "options", options);
 	}
 
-	/*fxmessage("\n");
+	   fxmessage("\n");
 	   fxmessage(value.c_str());
 	   fxmessage("\n");
 	   fxmessage(com.c_str());
-	 */
+	 
     }
 
-
+/*
     vector < filetype_container * >::iterator iter2;
 
     for (iter2 = filetype_vec.begin (); iter2 != filetype_vec.end (); iter2++)
@@ -284,30 +281,29 @@ long preferences::onSave (FXObject * sender, FXSelector sel, void *)
     }
 
 
-
+*/
     conf->saveonestring ("/OpenspaceConfig/mainwindow/width", mainwindow_width->getText ().text ());
     conf->saveonestring ("/OpenspaceConfig/mainwindow/height", mainwindow_height->getText ().text ());
-//conf->addstring("/OpenspaceConfig/mainwindow","test","zawartosc");
+
 
 }
 
 long preferences::onCommandChange (FXObject * sender, FXSelector sel, void *)
 {
 
-    vector < command_container * >::iterator iter;
+command_container *ct_prev=&commandsMap[currentCommandName];
+ct_prev->exec=commandsTextfield->getText().text();
+ct_prev->capture=commandsCapture->getCheck();
+ct_prev->rescan=commandsRescan->getCheck();
 
-    for (iter = command_vec.begin (); iter != command_vec.end (); iter++)
-    {
-	command_container *ct = *iter;
-	ct->frame->hide ();
-	if (ct->name == commandsmenu->getCurrent ()->getText ().text ())
-	{
-	    ct->frame->show ();
-	}
 
-    }
-    commandspane->recalc ();
-    commandsmainpane->recalc ();
+
+command_container ct=commandsMap[commandsMenu->getCurrent ()->getText ().text ()];
+
+commandsRescan->setCheck(ct.rescan);
+commandsCapture->setCheck(ct.capture);
+commandsTextfield->setText (ct.exec.c_str ());
+currentCommandName=ct.name;
 
 }
 
@@ -373,6 +369,7 @@ filetypepane->recalc();
 }
 long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *)
 {
+/*
     fxmessage ("command");
 
     string command_name = newcommandedit->getText ().text ();
@@ -390,11 +387,12 @@ long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *)
 
     ct->frame->hide ();
     command_vec.push_back (ct);
-
+*/
 }
 
 long preferences::onRemoveCommand (FXObject * sender, FXSelector sel, void *)
 {
+/*
     string command = "/OpenspaceConfig/commands/";
     command += commandsmenu->getCurrent ()->getText ().text ();
 //command+="/exec";
@@ -423,7 +421,7 @@ long preferences::onRemoveCommand (FXObject * sender, FXSelector sel, void *)
 
     command_container *ct = *command_vec.begin ();
     ct->frame->show ();
-
+*/
 
 }
 
