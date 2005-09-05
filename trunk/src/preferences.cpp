@@ -18,6 +18,7 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 {
 
     mimeapp=new MimeApp(this);
+    objmanager=objectmanager::instance(getApp());
     FXVerticalFrame *vertical = new FXVerticalFrame (this, LAYOUT_SIDE_TOP | LAYOUT_FILL_X | LAYOUT_FILL_Y);
     FXHorizontalFrame *horizontal = new FXHorizontalFrame (vertical, LAYOUT_FILL_X | LAYOUT_FILL_Y);
     FXVerticalFrame *buttons = new FXVerticalFrame (horizontal, LAYOUT_LEFT | LAYOUT_FILL_Y | FRAME_SUNKEN | PACK_UNIFORM_WIDTH | PACK_UNIFORM_HEIGHT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -47,19 +48,24 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
     new FXLabel (pluginspane, "Plugins settings", NULL, LAYOUT_LEFT);
     new FXButton (buttons, "Plugins Settings", NULL, switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
-
-
-
-
     commandsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXLabel (commandsPane, "Commands settings", NULL, LAYOUT_LEFT);
 
-
-
     new FXButton (buttons, "Commands Settings", NULL, switcher, FXSwitcher::ID_OPEN_THIRD, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
-
     commandsPop = new FXPopup (this);
+    commandsMenu = new FXOptionMenu (commandsPane, commandsPop, LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
+    new FXLabel (commandsPane, "exec: ", NULL, LAYOUT_LEFT);
+    commandsTextfield = new FXTextField (commandsPane, 20);
+    new FXLabel (commandsPane, "text: ", NULL, LAYOUT_LEFT);
+    commandsTextfieldText = new FXTextField (commandsPane, 20);
+    commandsType=new FXLabel (commandsPane, "", NULL, LAYOUT_LEFT);
+    commandsIcon=new FXLabel (commandsPane, "", NULL, LAYOUT_LEFT);
+    
+    FXPacker *vv = new FXGroupBox (commandsPane, "Options", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0);
+    commandsRescan = new FXCheckButton (vv, "rescan", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
+    commandsCapture = new FXCheckButton (vv, "capture", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
+   
 
     if (conf->openxpath ("/OpenspaceConfig/commands") != -1)
     {
@@ -73,8 +79,6 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 	    string res = conf->getnextnode ();
 	    if (res == "")
 		break;
-
-	    
 
 	    new FXOption (commandsPop, res.c_str (), NULL, this, ID_COMMAND_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
 
@@ -96,33 +100,45 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 		ct.rescan=true;
 	    else
 		ct.rescan=false;
-
-
+		
+		ct.text=conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/text");
+		ct.icon=conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/icon");
+		ct.type=conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/type");
 	    commandsMap[ct.name]=ct;
 
 	}
-	    commandsTextfield = new FXTextField (commandsPane, 20);
-	    
-            FXPacker *vv = new FXGroupBox (commandsPane, "Options", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0);
-	    commandsRescan = new FXCheckButton (vv, "rescan", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
-	    commandsCapture = new FXCheckButton (vv, "capture", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
-	    commandsMenu = new FXOptionMenu (commandsPane, commandsPop, LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
-	    
+
 	    commandsRescan->setCheck(ct.rescan);
 	    commandsCapture->setCheck(ct.capture);
 	    commandsTextfield->setText (ct.exec.c_str ());
             commandsMenu->setCurrentNo (commandsMenu->getNumOptions () - 1);
 	    currentCommandName=ct.name;
+	    string str="command type: " + ct.type;
+	    commandsType->setText(str.c_str());
+	    
+	    if(ct.icon!="")	   
+	    commandsIcon->setIcon(objmanager->osicons[ct.icon.substr(0,ct.icon.length()-4)]);
 	
+	
+	   map < string, FXIcon * >::iterator iter;
+
+    for (iter = objmanager->osicons.begin (); iter != objmanager->osicons.end (); iter++)
+    {
+	FXIcon *icon = iter->second;
+      new FXOption (commandsPop, "", icon, this, ID_COMMAND_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
+    }	
+	
+	
+	
+	new FXLabel (commandsPane, "");
+	new FXLabel (commandsPane, "");
+	new FXSeparator(commandsPane);
 	new FXButton (commandsPane, "New Command", NULL, this, ID_NEW_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 	newCommandEdit = new FXTextField (commandsPane, 20);
 
 	new FXButton (commandsPane, "Remove", NULL, this, ID_REMOVE_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
     }
-
-
-
 
     filetypepane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXLabel (filetypepane, "File types settings", NULL, LAYOUT_LEFT);
@@ -185,12 +201,9 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 
 	     */
 
-
-
 	    filetype_vec.push_back (ct);
 
 	}
-
 
 	filetypestring = ct->name;
 
@@ -208,23 +221,17 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 	    }
 	}
 
-
 	filetypemenu = new FXOptionMenu (filetypepane, filetypepop, LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
 	//filetypemenu->setCurrentNo(filetypemenu->getNumOptions()-1);
 
     }
 
-
-
-
 }
-
 
 
 preferences::~preferences ()
 {
 }
-
 
 long preferences::onSave (FXObject * sender, FXSelector sel, void *)
 {
@@ -256,6 +263,12 @@ long preferences::onSave (FXObject * sender, FXSelector sel, void *)
 	{
 	    if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/options", options))
 		conf->addstring ("/OpenspaceConfig/commands/" + com, "options", options);
+	}
+
+	if (ct.text != "")
+	{
+	    if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/text", ct.text))
+		conf->addstring ("/OpenspaceConfig/commands/" + com, "text", ct.text);
 	}
 
 	   fxmessage("\n");
@@ -303,6 +316,10 @@ command_container ct=commandsMap[commandsMenu->getCurrent ()->getText ().text ()
 commandsRescan->setCheck(ct.rescan);
 commandsCapture->setCheck(ct.capture);
 commandsTextfield->setText (ct.exec.c_str ());
+commandsTextfieldText->setText (ct.text.c_str ());
+	if(ct.icon!="")	   
+	commandsIcon->setIcon(objmanager->osicons[ct.icon.substr(0,ct.icon.length()-4)]);
+
 currentCommandName=ct.name;
 
 }

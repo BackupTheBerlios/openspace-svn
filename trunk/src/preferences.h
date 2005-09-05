@@ -25,6 +25,9 @@ class command_container
     string exec;
     bool rescan;
     bool capture;
+    string text;
+    string type;
+    string icon;
     
     
 
@@ -51,11 +54,14 @@ class preferences:public FXDialogBox
     FXOptionMenu *commandsMenu;
     FXVerticalFrame *commandsPane;
     FXTextField *commandsTextfield;
+    FXTextField *commandsTextfieldText;
     FXCheckButton *commandsRescan;
     FXCheckButton *commandsCapture;
+    FXLabel *commandsType;
+    FXLabel *commandsIcon;
     
     string currentCommandName;
-    
+    objectmanager* objmanager;
     
     FXVerticalFrame *frame;
     
