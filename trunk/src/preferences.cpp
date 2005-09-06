@@ -53,10 +53,6 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 
     new FXButton (buttons, "Commands Settings", NULL, switcher, FXSwitcher::ID_OPEN_THIRD, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
-   //commandsPop = new FXScrollPane (this,30,PACK_UNIFORM_HEIGHT);
-   // commandsPop = (FXScrollPane*)new FXMenuPane (this,20);
-   // commandsMenu = new FXOptionMenu (commandsPane, dynamic_cast<FXMenuPane *>(commandsPop), LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
-   
     commandsCombo=new FXListBox (commandsPane, this, ID_COMMAND_CHANGE);
     new FXLabel (commandsPane, "icon: ", NULL, LAYOUT_LEFT);
     iconsList=new FXListBox (commandsPane);
@@ -76,19 +72,22 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 
     if (conf->openxpath ("/OpenspaceConfig/commands") != -1)
     {
-	command_container ct;
+	
 
 	
 
-
+command_container *ctlast;
 	while (1)
 	{
 	    string res = conf->getnextnode ();
 	    if (res == "")
 		break;
-
-	    //new FXOption (commandsPop, res.c_str (), NULL, this, ID_COMMAND_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
-		commandsCombo->appendItem(res.c_str (),objmanager->osicons["execute"]);
+		
+		fxmessage("aa=%s\n",res.c_str());
+		
+	    command_container ct;
+	    ctlast=&ct;
+	    commandsCombo->appendItem(res.c_str (),objmanager->osicons["execute"]);
 	    ct.name = res;
 	    configure conflocal = *conf;
 	    ct.exec = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/exec");
@@ -115,19 +114,16 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 
 	}
 
-	    commandsRescan->setCheck(ct.rescan);
-	    commandsCapture->setCheck(ct.capture);
-	    commandsTextfield->setText (ct.exec.c_str ());
+	    commandsRescan->setCheck(ctlast->rescan);
+	    commandsCapture->setCheck(ctlast->capture);
+	    commandsTextfield->setText (ctlast->exec.c_str ());
             commandsCombo->setCurrentItem (commandsCombo->getNumItems () - 1);
-	    currentCommandName=ct.name;
-	    string str="command type: " + ct.type;
+	    currentCommandName=ctlast->name;
+	    string str="command type: " + ctlast->type;
 	    commandsType->setText(str.c_str());
 	    string shorticonname;
 	    
 	    
-	    	   
-	   // commandsIcon->setIcon(objmanager->osicons[]);
-	
 	
 	   map < string, FXIcon * >::iterator iter;
 	   
@@ -137,8 +133,8 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 	FXIcon *icon = iter->second;
 	iconsList->appendItem(iter->first.c_str(),icon);
     }	
-	if(ct.icon!="")
-	iconsList->setCurrentItem(iconsList->findItem(ct.icon.c_str()));
+	if(ctlast->icon!="")
+	iconsList->setCurrentItem(iconsList->findItem(ctlast->icon.c_str()));
 	
 	new FXLabel (commandsPane, "");
 	new FXLabel (commandsPane, "");
@@ -150,90 +146,118 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 
     }
 
-    filetypepane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXLabel (filetypepane, "File types settings", NULL, LAYOUT_LEFT);
+
+    filetypePane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXLabel (filetypePane, "File types settings", NULL, LAYOUT_LEFT);
     new FXButton (buttons, "File types Settings", NULL, switcher, FXSwitcher::ID_OPEN_FOURTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
 
 
     if (conf->openxpath ("/OpenspaceConfig/file_types") != -1)
     {
-	filetype_container *ct;
+	filetype_container *ctlast;
 
-	filetypepop = new FXPopup (this);
-
-	FXVerticalFrame *frame = new FXVerticalFrame (filetypepane, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-
+	fileTypeList=new FXListBox (filetypePane, this, ID_FILETYPE_CHANGE);
+	fileTypeList->setNumVisible(30);
+        additionalCommands=new FXList (filetypePane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,200);
+	additionalCommands->setNumVisible(5);
 	while (1)
 	{
 	    string res = conf->getnextnode ();
 	    if (res == "")
 		break;
 
-	    ct = new   filetype_container;
-
-
-	    new FXOption (filetypepop, res.c_str (), NULL, this, ID_FILETYPE_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
-
-	    ct->name = res;
+	
 	    configure conflocal = *conf;
-	    string exec = conflocal.readonestring ("/OpenspaceConfig/file_types/" + res + "/default");
+	   if(conflocal.openxpath ("/OpenspaceConfig/file_types/"+res+"/types") != -1)
+	   {
+	    while (1)
+		{
+	 	   string res2 = conflocal.getnextnode ();
+	   		if (res2 == "")
+			break;
+			
+			 filetype_container ct;
+			 ct.name = res+"/"+res2;
+			 fileTypeList->appendItem(ct.name.c_str (),objmanager->osicons["unknown"]);	    
+	   		 
+	   		 ct.command = conf->readonestring ("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/default");
+	   		 ct.icon=conf->readonestring("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/icon") ;
+	   		 
+			 configure conflocal2 = *conf;
+	   		 if(conflocal2.openxpath("/OpenspaceConfig/file_types/" + res+"/types/"+res2 + "/commands/command")!=-1)
+	      		 {
+	      			 while(1)
+	      			 {
+	      			  string command=conflocal2.getnextstring();
+	     			  if(command=="")
+	     			  break;
+	     			  ct.commands.push_back(command.c_str());
+				  fxmessage("\n\nCOMMAND=%s\n",command.c_str());
 
-	    ct->command = exec;
-
-	    /*       FXIconSource *icos=new FXIconSource(getApp()); 
-
-	       string path=conf->readonestring("/OpenspaceConfig/path") + "ico/" + conf->readonestring("/OpenspaceConfig/file_types/" +res +"/icon") ;
-	       FXString fil=path.c_str();
-
-	       ct->icon=icos->loadIcon(fil);
-	       if(ct->icon)
+	     			 }
+	    		 }  
+			 filetypesMap[ct.name]=ct;  
+			
+		}
+		
+	   }	
+	    filetype_container ct;
+	    ctlast=&ct;
+	    fileTypeList->appendItem(res.c_str (),objmanager->osicons["unknown"]);	    
+	    ct.name = res;
+	    ct.command = conf->readonestring ("/OpenspaceConfig/file_types/" + res + "/default");
+	    ct.icon=conf->readonestring("/OpenspaceConfig/file_types/" +res +"/icon") ;
+	    
+	    
+	    configure conflocal2 = *conf;
+	    if(conflocal2.openxpath("/OpenspaceConfig/file_types/" + ct.name + "/commands/command")!=-1)
 	       {
+	      	 while(1)
+	      	 {
+	      	  string command=conflocal2.getnextstring();
+	     	  if(command=="")
+	     	  break;
+	     	 ct.commands.push_back(command.c_str());
+		  fxmessage("\n\nCOMMAND=%s\n",command.c_str());
 
-	       ct->icon->create();
-	       new FXButton (ct->frame,"",ct->icon,this,777,FRAME_THICK,0,0,0,0,0,0,0,0);
-	       }
-
-	       FXComboBox *cbox=new FXComboBox (ct->frame, 20);
-	       configure conflocal2=*conf;                          
-	       if(conflocal2.openxpath("/OpenspaceConfig/file_types/" + res + "/commands/command")!=-1)
-	       {
-	       while(1)
-	       {
-	       string command=conflocal2.getnextstring();
-	       if(command=="")
-	       break;
-	       cbox->appendItem(command.c_str());
-
-	       }
+	     	 }
 	       }    
-
-
-	     */
-
-	    filetype_vec.push_back (ct);
-
+	filetypesMap[ct.name]=ct;
 	}
 
-	filetypestring = ct->name;
+	filetypestring = ctlast->name;
 
-	filetypedefaultbox = new FXComboBox (frame, 20);
-	configure conflocal2 = *conf;
-	if (conflocal2.openxpath ("/OpenspaceConfig/commands") != -1)
+	fileTypeDefaultBox = new FXListBox (filetypePane);
+	fileTypeDefaultBox->setNumVisible(30);
+	
+	fileTypeDefaultBox->appendItem ("",objmanager->osicons["execute"]);
+	
+	if (conf->openxpath ("/OpenspaceConfig/commands") != -1)
 	{
 	    while (1)
 	    {
-		string command = conflocal2.getnextnode ();
+		string command = conf->getnextnode ();
 		if (command == "")
 		    break;
-		filetypedefaultbox->appendItem (command.c_str ());
+		fileTypeDefaultBox->appendItem (command.c_str (),objmanager->osicons["execute"]);
 
 	    }
 	}
+	
+	vector<string>::iterator iter;
+	for(iter=ctlast->commands.begin();iter!=ctlast->commands.end();iter++)
+	{
+	additionalCommands->appendItem(iter->c_str());
+	}
+	                         
+	       
+	
+	fileTypeList->setCurrentItem (fileTypeList->getNumItems () - 1);
+	fileTypeDefaultBox->setCurrentItem(fileTypeDefaultBox->findItem(ctlast->command.c_str()));
+	
 
-	filetypemenu = new FXOptionMenu (filetypepane, filetypepop, LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
-	//filetypemenu->setCurrentNo(filetypemenu->getNumOptions()-1);
-
+	
     }
 
 }
@@ -248,6 +272,7 @@ long preferences::onSave (FXObject * sender, FXSelector sel, void *)
     FXTRACE ((5, "save\n"));
     
     this->onCommandChange(NULL,0,NULL);
+    this->onFileTypeChange(NULL,0,NULL);
 
     map < string, command_container >::iterator iter;
 
@@ -345,60 +370,23 @@ currentCommandName=ct.name;
 long preferences::onFileTypeChange (FXObject * sender, FXSelector sel, void *)
 {
 
+filetype_container *ct_prev=&filetypesMap[currentFileType];
+ct_prev->command=fileTypeDefaultBox->getItem(fileTypeDefaultBox->getCurrentItem()).text();
+//ct_prev->icon=
+
+filetype_container ct=filetypesMap[fileTypeList->getItem (fileTypeList->getCurrentItem ()).text ()];
+fileTypeDefaultBox->setCurrentItem(fileTypeDefaultBox->findItem(ct.command.c_str()));
+additionalCommands->clearItems();
 
 
-    vector < filetype_container * >::iterator iter;
-
-
-    for (iter = filetype_vec.begin (); iter != filetype_vec.end (); iter++)
-    {
-	filetype_container *ct = *iter;
-	if (ct->name == filetypestring)
+vector<string>::iterator iter;
+	for(iter=ct.commands.begin();iter!=ct.commands.end();iter++)
 	{
-	    ct->command = filetypedefaultbox->getText ().text ();
-	    fxmessage (ct->name.c_str ());
-	    break;
+	additionalCommands->appendItem(iter->c_str());
 	}
-
-    }
-
-    filetypestring = filetypemenu->getCurrent ()->getText ().text ();
-    fxmessage (filetypestring.c_str ());
-    for (iter = filetype_vec.begin (); iter != filetype_vec.end (); iter++)
-    {
-	filetype_container *ct = *iter;
-	if (ct->name == filetypestring)
-	{
-	    int pos = filetypedefaultbox->findItem (ct->command.c_str ());
-	    filetypedefaultbox->setCurrentItem (pos);
-	    break;
-	}
-
-    }
-
-
-
-//string def=conf->readonestring("/OpenspaceConfig/file_types/" + filetypestring + "/default" );
-
-
-
-
-/*
-vector<filetype_container*>::iterator iter;
-
-	for (iter=filetype_vec.begin();iter != filetype_vec.end(); iter++)
-	{
-		filetype_container*ct=*iter;
-		ct->frame->hide();
-		if(ct->name==filetypemenu->getCurrent()->getText().text())
-		{
-		ct->frame->show();
-		}
 	
-	}
 
-filetypepane->recalc();
-*/
+currentFileType=ct.name;
 
 }
 long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *)

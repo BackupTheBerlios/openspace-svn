@@ -16,6 +16,8 @@ class filetype_container
   public:
     string name;
     string command;
+    string icon;
+    vector <string> commands;
 };
 
 class command_container
@@ -50,8 +52,6 @@ class preferences:public FXDialogBox
     FXTextField *mainwindow_height;
 
     FXTextField *newCommandEdit;
-    //FXScrollPane *commandsPop;
-   // FXOptionMenu *commandsMenu;
     FXListBox *commandsCombo;
     FXListBox *iconsList;
     FXVerticalFrame *commandsPane;
@@ -62,7 +62,10 @@ class preferences:public FXDialogBox
     FXLabel *commandsType;
     FXLabel *commandsIcon;
     
+    FXList *additionalCommands;
+    
     string currentCommandName;
+    string currentFileType;
     objectmanager* objmanager;
     
     FXVerticalFrame *frame;
@@ -70,9 +73,8 @@ class preferences:public FXDialogBox
     
     
 
-    FXPopup *filetypepop;
-    FXOptionMenu *filetypemenu;
-    FXComboBox *filetypedefaultbox;
+    FXListBox *fileTypeList;
+    FXListBox *fileTypeDefaultBox;
     string filetypestring;
 
     MimeApp *mimeapp;
@@ -80,10 +82,10 @@ class preferences:public FXDialogBox
 
 
 
-    map <string, command_container >commandsMap;
-    vector < filetype_container * >filetype_vec;
+    map <string, command_container > commandsMap;
+    map <string, filetype_container> filetypesMap;
 
-    FXVerticalFrame *filetypepane;
+    FXVerticalFrame *filetypePane;
     enum
     {
 	ID_SAVE = FXDialogBox::ID_LAST,

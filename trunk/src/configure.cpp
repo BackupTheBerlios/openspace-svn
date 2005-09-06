@@ -46,10 +46,13 @@ configure::~configure ()
     if (!copy)
     {
 	FXTRACE ((5, "CONFIGURATION SAVING\n"));
-	FILE *save = fopen (file.c_str (), "w");
-	xmlDocDump (save, doc);
-	fclose (save);
-
+	//FILE *save = fopen (file.c_str (), "w");
+	//xmlDocDump (save, doc);
+	
+	 xmlSaveFormatFileEnc(file.c_str(), doc, "UTF-8", 1);
+	//fclose (save);
+	string cmd="xmllint --format " +file+ " -o "+file;
+	system(cmd.c_str());
 	xmlFreeDoc (doc);
 	xmlCleanupParser ();
     }
@@ -86,6 +89,7 @@ string configure::readonestring (string path)
 
     nodeset = result->nodesetval;
     keyword = xmlNodeListGetString (doc, nodeset->nodeTab[0]->xmlChildrenNode, 1);
+    if(keyword!=NULL)
     retstring = string ((char *) keyword);
     xmlFree (keyword);
 
@@ -241,10 +245,7 @@ bool configure::addstring (string path, string node, string value)
 
     nodeset = result->nodesetval;
 
-
-
-
-    xmlNewChild (nodeset->nodeTab[0], NULL, (xmlChar *) node.c_str (), (xmlChar *) value.c_str ());
+   xmlNewChild (nodeset->nodeTab[0], NULL, (xmlChar *) node.c_str (), (xmlChar *) value.c_str ());
 
 
 
@@ -292,19 +293,33 @@ int configure::openxpath (string path)
 string configure::getnextnode ()
 {
 
-
+label:
     string retstring;
     if (cur)
     {
 	if (cur->next)
+	{
 	    retstring = string ((char *) cur->next->name);
+	    if(retstring=="")
+	    {
+	    fxmessage("\nKICHA\n");
+	    	 if(cur->next!=NULL)
+   		 {
+		 cur = cur->next->next;
+		 goto label;
+		 }
+	    }
+	}
 	else
 	    return "";
     }
     else
 	return "";
 
+    if(cur->next!=NULL)
     cur = cur->next->next;
+    else
+    retstring="";
 
     return retstring;
 
