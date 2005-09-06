@@ -39,7 +39,7 @@
 	
 		<run_shell>
 			<exec>aterm -transparent -foreground white -bg black -cr red -sl 500  -trsb -shading 80</exec>
-			<icon>run_shell.gif</icon>
+			<icon>run_shell</icon>
 			<text>terminal</text>
 		</run_shell>	
 		
@@ -112,7 +112,7 @@
 		</editsymlink>
 		<other>
 			<type>INTERNAL</type>
-			<icon>other.png</icon>
+			<icon>other</icon>
 		</other>
 		<ls>
 			<exec>ls</exec>
@@ -149,63 +149,63 @@
 		
 		
 		<image>
-			<icon>image.gif</icon>
+			<icon>image</icon>
 			<types>
 				<png>
 						<commands>
 							<command>edit_image</command>
 							<command>view_image</command>
 						</commands>
-					<icon>image.gif</icon>	
+					<icon>image</icon>	
 					
 				</png>
 			</types>	
 		</image>
 		
 		<video>
-			<icon>movie.gif</icon>
+			<icon>movie</icon>
 		</video>
 		
 		<audio>
-			<icon>music.gif</icon>
+			<icon>music</icon>
 		</audio>
 		
 		<application>
 			<types>
 				<pdf>
-					<icon>doc.gif</icon>	
+					<icon>doc</icon>	
 					
 				</pdf>
 				
 				<vnd.sun.xml.writer>
-					<icon>word.gif</icon>	
+					<icon>word</icon>	
 				</vnd.sun.xml.writer>
 				
 				<msword>
-					<icon>word.gif</icon>	
+					<icon>word</icon>	
 				</msword>
 				<vnd.sun.xml.calc>
-					<icon>word.gif</icon>	
+					<icon>word</icon>	
 				</vnd.sun.xml.calc>
 				<vnd.ms-excel>
-					<icon>word.gif</icon>					
+					<icon>word</icon>					
 				</vnd.ms-excel>
 				<x-sharedlib>
-					<icon>library.gif</icon>	
+					<icon>library</icon>	
 				</x-sharedlib>
 				<x-shellscript>
-					<icon>script.gif</icon>
+					<icon>script</icon>
 				</x-shellscript>
 				<x-bzip-compressed-tar>
 					<default>vfs_archive</default>
-					<icon>compressed.gif</icon>
+					<icon>compressed</icon>
 					<commands>
 							<command>extract_tar_bz2</command>
 					</commands>
 				</x-bzip-compressed-tar>
 				<x-compressed-tar>
 					<default>vfs_archive</default>
-					<icon>compressed.gif</icon>
+					<icon>compressed</icon>
 					<commands>
 							<command>extract_tar_gz</command>
 					</commands>

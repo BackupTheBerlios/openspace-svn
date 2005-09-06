@@ -53,8 +53,15 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 
     new FXButton (buttons, "Commands Settings", NULL, switcher, FXSwitcher::ID_OPEN_THIRD, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
-    commandsPop = new FXPopup (this);
-    commandsMenu = new FXOptionMenu (commandsPane, commandsPop, LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
+   //commandsPop = new FXScrollPane (this,30,PACK_UNIFORM_HEIGHT);
+   // commandsPop = (FXScrollPane*)new FXMenuPane (this,20);
+   // commandsMenu = new FXOptionMenu (commandsPane, dynamic_cast<FXMenuPane *>(commandsPop), LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
+   
+    commandsCombo=new FXListBox (commandsPane, this, ID_COMMAND_CHANGE);
+    new FXLabel (commandsPane, "icon: ", NULL, LAYOUT_LEFT);
+    iconsList=new FXListBox (commandsPane);
+    commandsCombo->setNumVisible(30);
+    iconsList->setNumVisible(30);
     new FXLabel (commandsPane, "exec: ", NULL, LAYOUT_LEFT);
     commandsTextfield = new FXTextField (commandsPane, 20);
     new FXLabel (commandsPane, "text: ", NULL, LAYOUT_LEFT);
@@ -80,8 +87,8 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 	    if (res == "")
 		break;
 
-	    new FXOption (commandsPop, res.c_str (), NULL, this, ID_COMMAND_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
-
+	    //new FXOption (commandsPop, res.c_str (), NULL, this, ID_COMMAND_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
+		commandsCombo->appendItem(res.c_str (),objmanager->osicons["execute"]);
 	    ct.name = res;
 	    configure conflocal = *conf;
 	    ct.exec = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/exec");
@@ -111,24 +118,27 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 	    commandsRescan->setCheck(ct.rescan);
 	    commandsCapture->setCheck(ct.capture);
 	    commandsTextfield->setText (ct.exec.c_str ());
-            commandsMenu->setCurrentNo (commandsMenu->getNumOptions () - 1);
+            commandsCombo->setCurrentItem (commandsCombo->getNumItems () - 1);
 	    currentCommandName=ct.name;
 	    string str="command type: " + ct.type;
 	    commandsType->setText(str.c_str());
+	    string shorticonname;
 	    
-	    if(ct.icon!="")	   
-	    commandsIcon->setIcon(objmanager->osicons[ct.icon.substr(0,ct.icon.length()-4)]);
+	    
+	    	   
+	   // commandsIcon->setIcon(objmanager->osicons[]);
 	
 	
 	   map < string, FXIcon * >::iterator iter;
-
+	   
+    iconsList->appendItem("",NULL);
     for (iter = objmanager->osicons.begin (); iter != objmanager->osicons.end (); iter++)
     {
 	FXIcon *icon = iter->second;
-      new FXOption (commandsPop, "", icon, this, ID_COMMAND_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
+	iconsList->appendItem(iter->first.c_str(),icon);
     }	
-	
-	
+	if(ct.icon!="")
+	iconsList->setCurrentItem(iconsList->findItem(ct.icon.c_str()));
 	
 	new FXLabel (commandsPane, "");
 	new FXLabel (commandsPane, "");
@@ -271,6 +281,13 @@ long preferences::onSave (FXObject * sender, FXSelector sel, void *)
 		conf->addstring ("/OpenspaceConfig/commands/" + com, "text", ct.text);
 	}
 
+
+	if (ct.icon != "")
+	{
+	    if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/icon", ct.icon))
+		conf->addstring ("/OpenspaceConfig/commands/" + com, "icon", ct.icon);
+	}
+
 	   fxmessage("\n");
 	   fxmessage(value.c_str());
 	   fxmessage("\n");
@@ -308,17 +325,17 @@ command_container *ct_prev=&commandsMap[currentCommandName];
 ct_prev->exec=commandsTextfield->getText().text();
 ct_prev->capture=commandsCapture->getCheck();
 ct_prev->rescan=commandsRescan->getCheck();
+ct_prev->text=commandsTextfieldText->getText().text();
+ct_prev->icon=iconsList->getItem(iconsList->getCurrentItem()).text();
 
-
-
-command_container ct=commandsMap[commandsMenu->getCurrent ()->getText ().text ()];
+command_container ct=commandsMap[commandsCombo->getItem (commandsCombo->getCurrentItem ()).text ()];
 
 commandsRescan->setCheck(ct.rescan);
 commandsCapture->setCheck(ct.capture);
 commandsTextfield->setText (ct.exec.c_str ());
 commandsTextfieldText->setText (ct.text.c_str ());
-	if(ct.icon!="")	   
-	commandsIcon->setIcon(objmanager->osicons[ct.icon.substr(0,ct.icon.length()-4)]);
+
+iconsList->setCurrentItem(iconsList->findItem(ct.icon.c_str()));
 
 currentCommandName=ct.name;
 

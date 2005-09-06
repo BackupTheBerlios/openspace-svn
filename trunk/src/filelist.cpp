@@ -680,12 +680,12 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 	    if (res == "")
 	    break;
 	   	string name=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/icon");
-		string shortname=name.substr (0,name.length () - 4);
+		
 	
 			if(name=="")
 			new FXButton (toolbar2, res.c_str (), NULL, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 			else
-			new FXButton (toolbar2, "", objmanager->osicons[shortname], this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+			new FXButton (toolbar2, "", objmanager->osicons[name], this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 			
 			
 			button_commands_tab.push_back(res);

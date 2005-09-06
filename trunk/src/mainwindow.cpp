@@ -182,6 +182,9 @@ bool MainWindow::loadMimeSettings (string path, string type)
     {
 	FXFileStream stream;
 	string path = conf->readonestring ("/OpenspaceConfig/path") + "/icons/"+conf->readonestring ("/OpenspaceConfig/icons_theme")+"/" + res2;
+	string pp=path+".gif";
+	if(FXFile::exists(pp.c_str()))path+=".gif";
+	else path+=".png";
 	FXIcon *osicon = NULL;
 	osicon = new FXGIFIcon (getApp (), NULL);
 	if (stream.open (path.c_str (), FXStreamLoad))

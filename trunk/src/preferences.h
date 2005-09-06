@@ -50,8 +50,10 @@ class preferences:public FXDialogBox
     FXTextField *mainwindow_height;
 
     FXTextField *newCommandEdit;
-    FXPopup *commandsPop;
-    FXOptionMenu *commandsMenu;
+    //FXScrollPane *commandsPop;
+   // FXOptionMenu *commandsMenu;
+    FXListBox *commandsCombo;
+    FXListBox *iconsList;
     FXVerticalFrame *commandsPane;
     FXTextField *commandsTextfield;
     FXTextField *commandsTextfieldText;
