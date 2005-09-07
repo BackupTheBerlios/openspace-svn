@@ -62,7 +62,7 @@ class preferences:public FXDialogBox
     FXLabel *commandsType;
     FXLabel *commandsIcon;
     
-    FXList *additionalCommands;
+    FXList *additionalCommands,*additionalCommandsAvailable;
     
     string currentCommandName;
     string currentFileType;
@@ -95,6 +95,8 @@ class preferences:public FXDialogBox
 	ID_NEW_FILETYPE,
 	ID_REMOVE_COMMAND,
 	ID_MIME_APP,
+	ID_ADD_COMMAND_ADDITIONAL,
+	ID_DEL_COMMAND_ADDITIONAL,
 	ID_LAST,
     };
 
@@ -106,6 +108,7 @@ class preferences:public FXDialogBox
     long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::onRemoveCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::onOpenMimeApp (FXObject * sender, FXSelector sel, void *);
+    long preferences:: onAdditionalCommandChange( FXObject * sender, FXSelector sel, void *);
 
     virtual ~ preferences ();
 };

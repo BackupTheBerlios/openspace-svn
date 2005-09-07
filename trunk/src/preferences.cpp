@@ -11,6 +11,7 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_NEW_COMMAND, preferences::onNewCommand), 
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_REMOVE_COMMAND, preferences::onRemoveCommand),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_MIME_APP, preferences::onOpenMimeApp),
+	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_COMMAND_ADDITIONAL,preferences::ID_DEL_COMMAND_ADDITIONAL, preferences::onAdditionalCommandChange),
 };
 
 
@@ -156,11 +157,31 @@ command_container *ctlast;
     if (conf->openxpath ("/OpenspaceConfig/file_types") != -1)
     {
 	filetype_container *ctlast;
-
+	new FXLabel(filetypePane,"File Type:");
 	fileTypeList=new FXListBox (filetypePane, this, ID_FILETYPE_CHANGE);
 	fileTypeList->setNumVisible(30);
-        additionalCommands=new FXList (filetypePane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,200);
+	
+	new FXLabel(filetypePane,"default command:");
+	fileTypeDefaultBox = new FXListBox (filetypePane);
+	fileTypeDefaultBox->setNumVisible(30);
+	
+	FXHorizontalFrame* hzframe=new FXHorizontalFrame (filetypePane, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	FXVerticalFrame* vframe0=new FXVerticalFrame (hzframe, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXLabel(vframe0,"additional commands:");
+        additionalCommands=new FXList (vframe0,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	additionalCommands->setNumVisible(5);
+	FXVerticalFrame* vframe=new FXVerticalFrame (hzframe, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXLabel(vframe,"\n");
+	new FXLabel(vframe,"\n");
+	new FXArrowButton(vframe,this,ID_ADD_COMMAND_ADDITIONAL,FRAME_RAISED|FRAME_THICK|ARROW_LEFT);
+	new FXArrowButton(vframe,this,ID_DEL_COMMAND_ADDITIONAL,FRAME_RAISED|FRAME_THICK|ARROW_RIGHT);
+	FXVerticalFrame* vframe1=new FXVerticalFrame (hzframe, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXLabel(vframe1,"all available commands:");
+	additionalCommandsAvailable=new FXList (vframe1,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
+	additionalCommandsAvailable->setNumVisible(5);
+
+	
+	
 	while (1)
 	{
 	    string res = conf->getnextnode ();
@@ -228,8 +249,7 @@ command_container *ctlast;
 
 	filetypestring = ctlast->name;
 
-	fileTypeDefaultBox = new FXListBox (filetypePane);
-	fileTypeDefaultBox->setNumVisible(30);
+	
 	
 	fileTypeDefaultBox->appendItem ("",objmanager->osicons["execute"]);
 	
@@ -241,6 +261,7 @@ command_container *ctlast;
 		if (command == "")
 		    break;
 		fileTypeDefaultBox->appendItem (command.c_str (),objmanager->osicons["execute"]);
+		additionalCommandsAvailable->appendItem (command.c_str ());
 
 	    }
 	}
@@ -391,59 +412,69 @@ currentFileType=ct.name;
 }
 long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *)
 {
-/*
-    fxmessage ("command");
 
-    string command_name = newcommandedit->getText ().text ();
+    string command_name = newCommandEdit->getText ().text ();
+    if(command_name=="")
+    return 0;
+    
     fxmessage (command_name.c_str ());
-    command_container *ct = new command_container;
-    ct->frame = new FXVerticalFrame (commandspane, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    FXOption *op = new FXOption (commandspop, command_name.c_str (), NULL, this, ID_COMMAND_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
-    op->create ();
-    ct->name = command_name;
-    ct->textfield = new FXTextField (ct->frame, 20);
-    ct->vv = new FXGroupBox (ct->frame, "Options", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0);
-    ct->rescancheck = new FXCheckButton (ct->vv, "rescan", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
-    ct->capturecheck = new FXCheckButton (ct->vv, "capture", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
-    ct->frame->create ();
+    command_container ct=commandsMap[command_name];
+    if(ct.name!="") // already exists
+    return 0;
+    
+    ct.name=command_name;
+    ct.rescan=false;
+    ct.capture=false;
+    commandsCombo->appendItem(ct.name.c_str());
+    commandsMap[command_name]=ct;   
+    commandsCombo->setCurrentItem (commandsCombo->getNumItems () - 1);
+    this->onCommandChange(NULL,0,NULL);
+    
+    fileTypeDefaultBox->appendItem(ct.name.c_str());
+    additionalCommands->appendItem(ct.name.c_str());
 
-    ct->frame->hide ();
-    command_vec.push_back (ct);
-*/
+
 }
 
 long preferences::onRemoveCommand (FXObject * sender, FXSelector sel, void *)
 {
-/*
-    string command = "/OpenspaceConfig/commands/";
-    command += commandsmenu->getCurrent ()->getText ().text ();
-//command+="/exec";
-    fxmessage (command.c_str ());
+
+    string command =  commandsCombo->getItem (commandsCombo->getCurrentItem ()).text ();
+    int cur=commandsCombo->getCurrentItem ();
+    commandsCombo->setCurrentItem (0);
+    commandsCombo->removeItem (cur);    
+    this->onCommandChange(NULL,0,NULL);
+    
+    
+       string res = "/OpenspaceConfig/commands/"+command;
+       conf->removestring (res);
 
 
-    conf->removestring (command);
+}
 
-    vector < command_container * >::iterator iter;
-
-    for (iter = command_vec.begin (); iter != command_vec.end (); iter++)
-    {
-	command_container *ct = *iter;
-	ct->frame->hide ();
-	if (ct->name == commandsmenu->getCurrent ()->getText ().text ())
+long preferences:: onAdditionalCommandChange( FXObject * sender, FXSelector sel, void *)
+{
+FXushort id=FXSELID(sel);
+filetype_container *ct_prev=&filetypesMap[currentFileType];
+	if(id==ID_ADD_COMMAND_ADDITIONAL)
 	{
-	    delete ct->frame;
-	    delete ct;
-	    command_vec.erase (iter);
-	    delete commandsmenu->getCurrent ();
-	    commandsmenu->setCurrentNo (0);
-	    break;
+	ct_prev->commands.push_back(additionalCommandsAvailable->getItemText(additionalCommandsAvailable->getCurrentItem()).text());
+	additionalCommands->appendItem(additionalCommandsAvailable->getItemText(additionalCommandsAvailable->getCurrentItem()));
 	}
+	else
+	{
+		vector <string>::iterator iter = find(ct_prev->commands.begin(), ct_prev->commands.end(),additionalCommands->getItemText( additionalCommands->getCurrentItem()).text());
+		if(iter != ct_prev->commands.end())
+		{
+		ct_prev->commands.erase(iter);
+		}
+	additionalCommands->removeItem(additionalCommands->getCurrentItem());
+	
+	
 
-    }
 
-    command_container *ct = *command_vec.begin ();
-    ct->frame->show ();
-*/
+	
+	}
 
 }
 
