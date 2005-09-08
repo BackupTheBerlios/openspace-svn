@@ -290,45 +290,37 @@ int configure::openxpath (string path)
 
 }
 
-string configure::getnextnode ()
+bool configure::getnextnode (string &ret)
 {
 
-label:
     string retstring;
     if (cur)
     {
 	if (cur->next)
 	{
 	    retstring = string ((char *) cur->next->name);
-	    if(retstring=="")
-	    {
-	    fxmessage("\nKICHA\n");
-	    	 if(cur->next!=NULL)
-   		 {
-		 cur = cur->next->next;
-		 goto label;
-		 }
-	    }
+	    
 	}
 	else
-	    return "";
+	    return false;
     }
     else
-	return "";
+	return false;
 
     if(cur->next!=NULL)
     cur = cur->next->next;
     else
-    retstring="";
+    return false;
 
-    return retstring;
+    ret=retstring;	
+    return true;
 
 
 
 }
 
 
-string configure::getnextstring ()
+bool configure::getnextstring (string &ret)
 {
 
 
@@ -337,7 +329,7 @@ string configure::getnextstring ()
     if (nodeset->nodeNr == pos)
     {
 	xmlXPathFreeObject (result);
-	return "";
+	return false;
     }
 
 
@@ -347,7 +339,8 @@ string configure::getnextstring ()
 
     xmlFree (keyword);
     pos++;
-    return retstring;
+    ret=retstring;
+    return true;
 
 
 
@@ -357,11 +350,9 @@ int configure::countxpath (string path)
 {
     int counter = 0;
     openxpath (path);
-    while (1)
+    string res;
+    while (getnextstring (res))
     {
-	string res = getnextstring ();
-	if (res == "")
-	    break;
 	counter++;
     }
     return counter;

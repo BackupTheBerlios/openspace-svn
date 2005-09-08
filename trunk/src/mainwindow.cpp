@@ -225,21 +225,17 @@ if(conf->initialized())
 // read icons for file types
     if (conf->openxpath ("/OpenspaceConfig/file_types") != -1)
     {
-	while (1)
+    string res;
+	while (conf->getnextnode (res))
 	{
-	    string res = conf->getnextnode ();
-	    if (res == "")
-		break;
 	    loadMimeSettings ("/OpenspaceConfig/file_types/" + res, res);
 	    configure conflocal = *conf;
 	    if (conflocal.openxpath ("/OpenspaceConfig/file_types/" + res + "/types") != -1)
 	    {
-		while (1)
+	    string res2;
+		while (conflocal.getnextnode (res2))
 		{
-		    string res2 = conflocal.getnextnode ();
-		    if (res2 == "")
-			break;
-		    loadMimeSettings ("/OpenspaceConfig/file_types/" + res + "/types/" + res2, res + "/" + res2);
+		      loadMimeSettings ("/OpenspaceConfig/file_types/" + res + "/types/" + res2, res + "/" + res2);
 		}
 	    }
 	}
@@ -454,12 +450,10 @@ long MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 	int count=0;				       
 	if (conf->openxpath ("/OpenspaceConfig/filelist") != -1)
    	{
-	    while (1)
+	string res;
+	    while (conf->getnextnode (res))
 	    {
-	    string res = conf->getnextnode ();
-	        if (res == "")
-		break;	
-		string filelist_type = conf->readonestring ("/OpenspaceConfig/filelist/"+res+"/type");
+	  	string filelist_type = conf->readonestring ("/OpenspaceConfig/filelist/"+res+"/type");
 		
 		if(filelist_type=="network")
 		{

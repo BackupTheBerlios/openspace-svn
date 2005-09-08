@@ -80,11 +80,10 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 	
 
 command_container *ctlast;
-	while (1)
+string res;
+	while (conf->getnextnode (res))
 	{
-	    string res = conf->getnextnode ();
-	    if (res == "")
-		break;
+	   
 		
 		fxmessage("aa=%s\n",res.c_str());
 		
@@ -194,22 +193,18 @@ command_container *ctlast;
 	}
 	
 	new FXButton (filetypePane, "Add", NULL, this, preferences::ID_ADD_FILETYPE);
-	
-	while (1)
+	string res;
+	while (conf->getnextnode (res))
 	{
-	    string res = conf->getnextnode ();
-	    if (res == "")
-		break;
 
 	
 	    configure conflocal = *conf;
 	   if(conflocal.openxpath ("/OpenspaceConfig/file_types/"+res+"/types") != -1)
 	   {
-	    while (1)
+	   string res2;
+	    while (conflocal.getnextnode (res2))
 		{
-	 	   string res2 = conflocal.getnextnode ();
-	   		if (res2 == "")
-			break;
+	 	 
 			
 			 filetype_container ct;
 			 ct.name = res+"/"+res2;
@@ -221,12 +216,10 @@ command_container *ctlast;
 			 configure conflocal2 = *conf;
 	   		 if(conflocal2.openxpath("/OpenspaceConfig/file_types/" + res+"/types/"+res2 + "/commands/command")!=-1)
 	      		 {
-	      			 while(1)
+			 string command;
+	      			 while(conflocal2.getnextstring(command))
 	      			 {
-	      			  string command=conflocal2.getnextstring();
-	     			  if(command=="")
-	     			  break;
-	     			  ct.commands.push_back(command.c_str());
+	      			  ct.commands.push_back(command.c_str());
 				  fxmessage("\n\nCOMMAND=%s\n",command.c_str());
 
 	     			 }
@@ -248,12 +241,11 @@ command_container *ctlast;
 	    configure conflocal2 = *conf;
 	    if(conflocal2.openxpath("/OpenspaceConfig/file_types/" + ct.name + "/commands/command")!=-1)
 	       {
-	      	 while(1)
+	       string command;
+	      	 while(conflocal2.getnextstring(command))
 	      	 {
-	      	  string command=conflocal2.getnextstring();
-	     	  if(command=="")
-	     	  break;
-	     	 ct.commands.push_back(command.c_str());
+	      	 
+	     	  ct.commands.push_back(command.c_str());
 		  fxmessage("\n\nCOMMAND=%s\n",command.c_str());
 
 	     	 }
@@ -269,11 +261,10 @@ command_container *ctlast;
 	
 	if (conf->openxpath ("/OpenspaceConfig/commands") != -1)
 	{
-	    while (1)
+	string command;
+	    while (conf->getnextnode (command))
 	    {
-		string command = conf->getnextnode ();
-		if (command == "")
-		    break;
+		
 		fileTypeDefaultBox->appendItem (command.c_str (),objmanager->osicons["execute"]);
 		additionalCommandsAvailable->appendItem (command.c_str ());
 

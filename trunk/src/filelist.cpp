@@ -673,13 +673,10 @@ int command_num=0;
 if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     {
     fxmessage("OTWARTE\n\n");
-	while (1)
+    string res;
+	while (conf->getnextstring (res))
 	{
-	    string res = conf->getnextstring ();
-	    fxmessage("BB\n\n");
-	    if (res == "")
-	    break;
-	   	string name=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/icon");
+		   	string name=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/icon");
 		
 	
 			if(name=="")
@@ -793,11 +790,10 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
     if (conf->openxpath ("/OpenspaceConfig/filelist/"+type+"/headers/header") != -1)
     {
-	while (1)
+    string res;
+	while (conf->getnextstring (res))
 	{
-	    string res = conf->getnextstring ();
-	    if (res == "")
-		break;
+
 
 	    if ((wi = conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/" + res + "/width")) != "")
 		vector_width.push_back (atoi (wi.c_str ()));
@@ -1693,12 +1689,10 @@ commands_tab.clear();
 
     if (conf->openxpath ("/OpenspaceConfig/shutter") != -1)
     {
-
-	while (1)
+	string res;
+	while (conf->getnextnode (res))
 	{
-	    string res = conf->getnextnode ();
-	    if (res == "")
-		break;
+
 
 	    configure conflocal = *conf;
 	    //shutterItem = new FXShutterItem(shutterFrame,res.c_str(),NULL,      FRAME_SUNKEN|LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT,0,0,0,0,0,0,0,0,0,0);
@@ -1715,12 +1709,10 @@ commands_tab.clear();
 	    content->setBackColor (getApp ()->getShadowColor ());
 	    if (conflocal.openxpath ("/OpenspaceConfig/shutter/" + res + "/command") != -1)
 	    {
-
-		while (1)
+	    string res;
+		while (conflocal.getnextstring (res))
 		{
-		    string res = conflocal.getnextstring ();
-		    if (res == "")
-			break;
+	
 
 		    string comm_s;
 		    if (res == "special")
@@ -1754,12 +1746,9 @@ commands_tab.clear();
 				if (ext != "" && conflocal3.openxpath ("/OpenspaceConfig/" + rep + "/commands/command") != -1)
 				{
 				    open++;
-				    while (1)
-				    {
-
-					string res = conflocal3.getnextstring ();
-					if (res == "")
-					    break;
+				       string res;
+					while (conflocal3.getnextstring (res))
+					{
 
 
 					if (sp == 1)
@@ -1788,12 +1777,9 @@ commands_tab.clear();
 				if (ext != "" && conflocal3.openxpath ("/OpenspaceConfig/" + rep + "/commands/command") != -1)
 				{
 				    open++;
-				    while (1)
-				    {
-
-					string res = conflocal3.getnextstring ();
-					if (res == "")
-					    break;
+				        string res;
+				   while (conflocal3.getnextstring (res))
+				   {
 
 
 					if (sp == 1)

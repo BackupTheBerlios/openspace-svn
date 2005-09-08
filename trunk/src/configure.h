@@ -21,8 +21,8 @@ class configure
     bool configure::saveonestring (string path, string value);
     bool configure::addstring (string path, string node, string value);
     int configure::openxpath (string path);
-    string configure::getnextstring (void);
-    string configure::getnextnode (void);
+    bool configure::getnextstring (string &ret);
+    bool configure::getnextnode (string &ret);
     int configure::countxpath (string path);
     bool configure::removestring (string path);
     
