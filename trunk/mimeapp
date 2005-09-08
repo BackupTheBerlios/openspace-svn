@@ -1,5 +1,5 @@
-video:mplayer xine
-image:qiv gimp gimp-2.0 gimp-2.2
+video:mplayer xine gmplayer
+image:qiv gimp gimp-2.0 gimp-2.2 xv
 audio:xmms freeamp bmp
 image/x-xcf:gimp gimp-2.0 gimp-2.2
 text:nedit scite gvim kedit gedit xemacs
@@ -19,3 +19,6 @@ application/x-dia-diagram:dia
 application/x-blender:blender
 application/x-executable:wine
 application/x-gnumeric:gnumeric
+application/x-lyx:lyx
+application/pgp:gpa
+application/x-cd-image:k3b nero

@@ -70,6 +70,7 @@ class preferences:public FXDialogBox
     
     FXVerticalFrame *frame;
     
+    FXComboBox *allMime;
     
     
 
@@ -97,6 +98,7 @@ class preferences:public FXDialogBox
 	ID_MIME_APP,
 	ID_ADD_COMMAND_ADDITIONAL,
 	ID_DEL_COMMAND_ADDITIONAL,
+	ID_ADD_FILETYPE,
 	ID_LAST,
     };
 
@@ -109,7 +111,7 @@ class preferences:public FXDialogBox
     long preferences::onRemoveCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::onOpenMimeApp (FXObject * sender, FXSelector sel, void *);
     long preferences:: onAdditionalCommandChange( FXObject * sender, FXSelector sel, void *);
-
+    long preferences::onAddFiletype (FXObject * sender, FXSelector sel, void *);
     virtual ~ preferences ();
 };
 

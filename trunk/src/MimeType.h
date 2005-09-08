@@ -5,8 +5,7 @@
 class MimeType
 {
 
-  private:
-    static map < string, string > mimeMap;
+ private:   
     static map < string, string > mimeCache;
     static bool isInitialized;
 
@@ -18,12 +17,13 @@ class MimeType
     {
     }
 
-    static void __initialize (void);
+   
     static bool _matches (string pattern, string fname);
 
   public:
     static string getMimeFromName (string name);
-
+    static map < string, string > mimeMap;
+    static void __initialize (void);
 };
 
 #endif

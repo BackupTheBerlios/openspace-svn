@@ -106,3 +106,15 @@ string mime2xml(string str)
 
 return str;
 }
+
+string xml2mime(string str)
+{
+	for(int i=0;str[i]!= '\0';i++)
+	{
+	 	if(str[i]=='P')
+		str[i]='+';
+	}
+
+
+return str;
+}

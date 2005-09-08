@@ -1,5 +1,6 @@
 #include "fx.h"
 #include "preferences.h"
+#include "MimeType.h"
 
 
 FXDEFMAP (preferences) preferencesMap[] =
@@ -11,6 +12,7 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_NEW_COMMAND, preferences::onNewCommand), 
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_REMOVE_COMMAND, preferences::onRemoveCommand),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_MIME_APP, preferences::onOpenMimeApp),
+	FXMAPFUNC (SEL_COMMAND, preferences::ID_ADD_FILETYPE, preferences::onAddFiletype),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_COMMAND_ADDITIONAL,preferences::ID_DEL_COMMAND_ADDITIONAL, preferences::onAdditionalCommandChange),
 };
 
@@ -137,13 +139,14 @@ command_container *ctlast;
 	if(ctlast->icon!="")
 	iconsList->setCurrentItem(iconsList->findItem(ctlast->icon.c_str()));
 	
-	new FXLabel (commandsPane, "");
-	new FXLabel (commandsPane, "");
-	new FXSeparator(commandsPane);
-	new FXButton (commandsPane, "New Command", NULL, this, ID_NEW_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
-	newCommandEdit = new FXTextField (commandsPane, 20);
 
-	new FXButton (commandsPane, "Remove", NULL, this, ID_REMOVE_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+	new FXSeparator(commandsPane);
+	FXHorizontalFrame *hfr=new FXHorizontalFrame (commandsPane, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXButton (hfr, "Remove", NULL, this, ID_REMOVE_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+	new FXButton (hfr, "New Command", NULL, this, ID_NEW_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+	newCommandEdit = new FXTextField (hfr, 20);
+
+	
 
     }
 
@@ -181,6 +184,16 @@ command_container *ctlast;
 	additionalCommandsAvailable->setNumVisible(5);
 
 	
+	allMime=new FXComboBox (filetypePane,60);
+	allMime->setNumVisible(30);
+	MimeType::__initialize();
+	map<string,string>::iterator iter0;
+	for(iter0=MimeType::mimeMap.begin();iter0!=MimeType::mimeMap.end();iter0++)
+	{
+	allMime->appendItem(iter0->second.c_str());
+	}
+	
+	new FXButton (filetypePane, "Add", NULL, this, preferences::ID_ADD_FILETYPE);
 	
 	while (1)
 	{
@@ -199,7 +212,7 @@ command_container *ctlast;
 			break;
 			
 			 filetype_container ct;
-			 ct.name = res+"/"+res2;
+			 ct.name = xml2mime(res+"/"+res2);
 			 fileTypeList->appendItem(ct.name.c_str (),objmanager->osicons["unknown"]);	    
 	   		 
 	   		 ct.command = conf->readonestring ("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/default");
@@ -225,8 +238,9 @@ command_container *ctlast;
 	   }	
 	    filetype_container ct;
 	    ctlast=&ct;
-	    fileTypeList->appendItem(res.c_str (),objmanager->osicons["unknown"]);	    
-	    ct.name = res;
+	    ct.name = xml2mime(res);
+	    fileTypeList->appendItem(ct.name.c_str (),objmanager->osicons["unknown"]);	    
+	    
 	    ct.command = conf->readonestring ("/OpenspaceConfig/file_types/" + res + "/default");
 	    ct.icon=conf->readonestring("/OpenspaceConfig/file_types/" +res +"/icon") ;
 	    
@@ -283,6 +297,20 @@ command_container *ctlast;
 
 }
 
+long preferences::onAddFiletype (FXObject * sender, FXSelector sel, void *)
+{
+string mime=allMime->getText().text();
+
+filetype_container ct=filetypesMap[mime];
+    if(ct.name!="") // already exists
+    return 0;
+  
+  ct.name=mime;  
+  filetypesMap[mime]=ct;    
+
+fileTypeList->appendItem(ct.name.c_str (),objmanager->osicons["unknown"]);  
+this->onFileTypeChange(NULL,0,NULL);  
+}
 
 preferences::~preferences ()
 {
@@ -339,6 +367,13 @@ long preferences::onSave (FXObject * sender, FXSelector sel, void *)
 	   fxmessage("\n");
 	   fxmessage(com.c_str());
 	 
+    }
+
+map < string, filetype_container >::iterator iter;
+
+    for (iter = filetypesMap.begin (); iter != filetypesMap.end (); iter++)
+    {
+	filetype_container ct = iter->second;
     }
 
 /*
