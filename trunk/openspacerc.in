@@ -214,10 +214,8 @@
 							
 			</types>	
 		</application>	
-		
-	</file_types>
-	
-	<file_types_special>
+		<COMMON>
+		<types>
 		<dir>
 			<color>0 0 100</color>
 			<backcolor>145 134 201</backcolor>
@@ -231,8 +229,15 @@
 		</executable>
 		<all>
 			<default>open_text</default>
-		</all>	
-	</file_types_special>
+		</all>
+		</types>
+		</COMMON>
+		
+	</file_types>
+	
+	
+			
+	
 	
 	<shutter>
 		<common>

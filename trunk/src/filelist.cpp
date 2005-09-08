@@ -1020,8 +1020,8 @@ clearItems ();
 	
 	if (os_file.type & FOLDER)
 	{
-	    color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types_special/dir/color"));
-	    backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types_special/dir/backcolor"));
+	    color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/dir/color"));
+	    backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/dir/backcolor"));
 	    icon = specialicons[1];
 	    icon2 = specialicons[0];
 	}
@@ -1056,8 +1056,8 @@ clearItems ();
 	    {
 		icon = specialicons[3];
 		icon2 = specialicons[2];
-		color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types_special/all/color"));
-		backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types_special/all/backcolor"));
+		color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/color"));
+		backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/backcolor"));
 	    }
 		
 	    string graphtype=ext.substr(0,5);
@@ -1088,8 +1088,8 @@ clearItems ();
 
 	if (os_file.type & EXECUTABLE && !(os_file.type & FOLDER))
 	{
-	    color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types_special/executable/color"));
-	    backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types_special/executable/backcolor"));
+	    color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/executable/color"));
+	    backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/executable/backcolor"));
 	}
 
 
@@ -1627,7 +1627,7 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
    	}
 	else
 	{
-	runCommand(conf->readonestring ("/OpenspaceConfig/file_types_special/all/default"));
+	runCommand(conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/default"));
 	
 	}
 			
