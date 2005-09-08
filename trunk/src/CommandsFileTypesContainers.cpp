@@ -14,7 +14,7 @@ if(name=="")
 return;
 
 	string::size_type pos=name.find("/");
-	
+	string path;
 	string mime_major;
 	string mime_minor;
 	if (pos != string::npos)
@@ -28,30 +28,46 @@ return;
 				if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime_major+"/types",ret)==false)
 				conf->addstring ("/OpenspaceConfig/file_types/" + mime_major ,"types","");	
 		
-		if(command!="")
-		if(!conf->saveonestring ("/OpenspaceConfig/file_types/" + mime_major + "/types/"+mime_minor+"/default",command))
-			{
-				
-				if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime_major+"/types/"+mime_minor)=="")
-				conf->addstring ("/OpenspaceConfig/file_types/" + mime_major + "/types",mime_minor,"");
-			
-			conf->addstring ("/OpenspaceConfig/file_types/" + mime_major + "/types/"+mime_minor,"default",command);
-			}
+		if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime_major+"/types/"+mime_minor,ret)==false)
+				conf->addstring ("/OpenspaceConfig/file_types/" + mime_major+"/types" ,mime_minor,"");	
+		
+		path="/OpenspaceConfig/file_types/" + mime_major + "/types/"+mime_minor;
+		
+	
+
 			
 	}
 	else  // major mime type: audio,video,etc
 	{
+	string ret;
+	if(conf->readonestring ("/OpenspaceConfig/file_types/"+ name,ret)==false)
+			conf->addstring ("/OpenspaceConfig/file_types/" ,name,"");	
 	
-			if(command!="")	
-			if(!conf->saveonestring ("/OpenspaceConfig/file_types/" + name + "/default",command))
+	path="/OpenspaceConfig/file_types/" + name;
+	}
+	
+	if(command!="")
+	  if(!conf->saveonestring (path+"/default",command))
 			{
-			if(conf->readonestring ("/OpenspaceConfig/file_types/"+ name)=="")
-			conf->addstring ("/OpenspaceConfig/file_types", name,"");
-			
-			conf->addstring ("/OpenspaceConfig/file_types/"+name,"default",command);
+			conf->addstring(path ,"default",command);
 			}
 	
-	}		
+	
+		
+	
+	if(commands.size()>0)
+	{
+	conf->removestring("/OpenspaceConfig/file_types/" + mime_major + "/types/"+mime_minor+"/commands");
+	vector <string>::iterator iter;
+	conf->addstring("/OpenspaceConfig/file_types/" + mime_major + "/types/"+mime_minor,"commands","");
+		for(iter=commands.begin();iter!=commands.end();iter++)
+		{
+		conf->addstring("/OpenspaceConfig/file_types/" + mime_major + "/types/"+mime_minor+"/commands","command",iter->c_str());
+		}
+	
+	}
+	
+		
 /*
 	if ( conflocal3.openxpath ("/OpenspaceConfig/" + rep + "/commands/command") != -1)
 				{
