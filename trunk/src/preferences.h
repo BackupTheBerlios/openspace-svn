@@ -3,6 +3,8 @@
 
 #include "sharedobjects.h"
 #include "MimeApp.h"
+#include "CommandsFileTypesContainers.h"
+
 
 #include <vector>
 #include <string>
@@ -10,30 +12,6 @@
 using namespace std;
 
 
-
-class filetype_container
-{
-  public:
-    string name;
-    string command;
-    string icon;
-    vector <string> commands;
-};
-
-class command_container
-{
-  public:
-    string name;
-    string exec;
-    bool rescan;
-    bool capture;
-    string text;
-    string type;
-    string icon;
-    
-    
-
-};
 
 
 //preferences window, this is one of the most important things to be extended
@@ -79,8 +57,6 @@ class preferences:public FXDialogBox
     string filetypestring;
 
     MimeApp *mimeapp;
-
-
 
 
     map <string, command_container > commandsMap;

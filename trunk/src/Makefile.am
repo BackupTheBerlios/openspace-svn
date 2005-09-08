@@ -32,7 +32,9 @@ openspace_SOURCES = cmddialog.cpp \
 	MimeApp.h \
 	MimeApp.cpp \
 	FirstRun.cpp \
-	FirstRun.h 
+	FirstRun.h \
+	CommandsFileTypesContainers.h \
+	CommandsFileTypesContainers.cpp 
 
 SUBDIRS = plugins
 

@@ -1,6 +1,7 @@
 #include "fx.h"
 #include "MimeApp.h"
 #include "sharedobjects.h"
+#include "CommandsFileTypesContainers.h"
 
 #ifdef WIN32
 #define SEPARATOR "\\"
@@ -103,7 +104,7 @@ void MimeApp::fill(string tmp)
 	mime_label->setText(mime.c_str());
 
 	
-	fxmessage(mime.c_str());
+	//fxmessage(mime.c_str());
 	
 	programsbox->clearItems();
 	
@@ -115,21 +116,25 @@ void MimeApp::fill(string tmp)
 	string command="which " + prog + " >/dev/null 2>/dev/null";
 		if(system(command.c_str())==0)
 		{
-		fxmessage(" ");
-		fxmessage(prog.c_str());
+		//fxmessage(" ");
+		//fxmessage(prog.c_str());
 		programsbox->appendItem(prog.c_str());
 		}
 
 	
 	}
-	fxmessage("\n");
+	//fxmessage("\n");
 
 
 }
 
 void MimeApp::save(string mime, string program)
 {
-	fxmessage("save=%s\n",mime.c_str());
+
+if(program=="")
+return;
+
+	//fxmessage("save=%s\n",mime.c_str());
 	string::size_type pos=mime.find("/");
 	
 	string mime_major;
@@ -143,7 +148,7 @@ void MimeApp::save(string mime, string program)
 	{
 		mime_major=mime.substr(0,pos);	
 		mime_minor=mime.substr(pos+1);
-		fxmessage("MIME=%s--%s\n",mime_major.c_str(),mime_minor.c_str());
+		//fxmessage("MIME=%s--%s\n",mime_major.c_str(),mime_minor.c_str());
 		
 	
 		command_name+=mime_major+"_"+mime_minor;
@@ -151,19 +156,10 @@ void MimeApp::save(string mime, string program)
 		reg2 = conf->readonestring ("/OpenspaceConfig/file_types/" + mime_major + "/default");
 		string command_major = conf->readonestring ("/OpenspaceConfig/commands/" + reg2 + "/exec");
 		
-		if(command_major!=command_exec && reg2!=command_name)
+		if(reg2=="" || (command_major!=command_exec && reg2!=command_name))
 		{
-			if(!conf->saveonestring ("/OpenspaceConfig/file_types/" + mime + "types/default",command_name))
-			{
-				if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime_major)=="")
-				conf->addstring ("/OpenspaceConfig/file_types", mime_major,"");
-				
-				if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime_major+"/types")=="")
-				conf->addstring ("/OpenspaceConfig/file_types/" + mime_major ,"types","");
-			
-			conf->addstring ("/OpenspaceConfig/file_types/" + mime_major + "/types",mime_minor,"");
-			conf->addstring ("/OpenspaceConfig/file_types/" + mime_major + "/types/"+mime_minor,"default",command_name);
-			}
+		filetype_container ct=filetype_container(mime,command_name);
+		ct.save();	
 			
 		}
 		else
@@ -175,15 +171,8 @@ void MimeApp::save(string mime, string program)
 		string reg = conf->readonestring ("/OpenspaceConfig/file_types/" + mime + "/default");
 		if(reg=="" || reg!=command_name)
 		{
-			if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime)=="")
-				conf->addstring ("/OpenspaceConfig/file_types", mime,"");
-			if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime+"/default")=="")
-				conf->addstring ("/OpenspaceConfig/file_types/"+mime,"default","");	
-				
-			conf->saveonestring ("/OpenspaceConfig/file_types/" + mime + "/default",
-			command_name);
-			
-			
+		filetype_container ct=filetype_container(mime,command_name);
+		ct.save();			
 		}
 		else
 		return;

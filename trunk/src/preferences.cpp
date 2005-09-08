@@ -190,7 +190,7 @@ command_container *ctlast;
 	map<string,string>::iterator iter0;
 	for(iter0=MimeType::mimeMap.begin();iter0!=MimeType::mimeMap.end();iter0++)
 	{
-	allMime->appendItem(iter0->second.c_str());
+	allMime->appendItem(xml2mime(iter0->second).c_str());
 	}
 	
 	new FXButton (filetypePane, "Add", NULL, this, preferences::ID_ADD_FILETYPE);
@@ -212,8 +212,8 @@ command_container *ctlast;
 			break;
 			
 			 filetype_container ct;
-			 ct.name = xml2mime(res+"/"+res2);
-			 fileTypeList->appendItem(ct.name.c_str (),objmanager->osicons["unknown"]);	    
+			 ct.name = res+"/"+res2;
+			 fileTypeList->appendItem(xml2mime(ct.name).c_str (),objmanager->osicons["unknown"]);	    
 	   		 
 	   		 ct.command = conf->readonestring ("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/default");
 	   		 ct.icon=conf->readonestring("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/icon") ;
@@ -238,8 +238,8 @@ command_container *ctlast;
 	   }	
 	    filetype_container ct;
 	    ctlast=&ct;
-	    ct.name = xml2mime(res);
-	    fileTypeList->appendItem(ct.name.c_str (),objmanager->osicons["unknown"]);	    
+	    ct.name = res;
+	    fileTypeList->appendItem(xml2mime(ct.name) .c_str (),objmanager->osicons["unknown"]);	    
 	    
 	    ct.command = conf->readonestring ("/OpenspaceConfig/file_types/" + res + "/default");
 	    ct.icon=conf->readonestring("/OpenspaceConfig/file_types/" +res +"/icon") ;
@@ -327,53 +327,16 @@ long preferences::onSave (FXObject * sender, FXSelector sel, void *)
 
     for (iter = commandsMap.begin (); iter != commandsMap.end (); iter++)
     {
-	command_container ct = iter->second;
-	
-	string com = ct.name;
-	string value = ct.exec;
-	if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/exec", value))
-	{
-	    conf->addstring ("/OpenspaceConfig/commands", com, "");
-	    if(ct.exec!="")
-	    conf->addstring ("/OpenspaceConfig/commands/" + com, "exec", value);
-	}
-	string options;
-	if (ct.capture)
-	    options += " capture";
-	if (ct.rescan)
-	    options += " rescan";
-
-	if (options != "")
-	{
-	    if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/options", options))
-		conf->addstring ("/OpenspaceConfig/commands/" + com, "options", options);
-	}
-
-	if (ct.text != "")
-	{
-	    if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/text", ct.text))
-		conf->addstring ("/OpenspaceConfig/commands/" + com, "text", ct.text);
-	}
-
-
-	if (ct.icon != "")
-	{
-	    if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/icon", ct.icon))
-		conf->addstring ("/OpenspaceConfig/commands/" + com, "icon", ct.icon);
-	}
-
-	   fxmessage("\n");
-	   fxmessage(value.c_str());
-	   fxmessage("\n");
-	   fxmessage(com.c_str());
-	 
+	command_container ct = iter->second;	
+	ct.save();		 
     }
 
-map < string, filetype_container >::iterator iter;
+map < string, filetype_container >::iterator iter2;
 
-    for (iter = filetypesMap.begin (); iter != filetypesMap.end (); iter++)
+    for (iter2 = filetypesMap.begin (); iter2 != filetypesMap.end (); iter2++)
     {
-	filetype_container ct = iter->second;
+	filetype_container ct = iter2->second;
+	ct.save();
     }
 
 /*
@@ -430,7 +393,7 @@ filetype_container *ct_prev=&filetypesMap[currentFileType];
 ct_prev->command=fileTypeDefaultBox->getItem(fileTypeDefaultBox->getCurrentItem()).text();
 //ct_prev->icon=
 
-filetype_container ct=filetypesMap[fileTypeList->getItem (fileTypeList->getCurrentItem ()).text ()];
+filetype_container ct=filetypesMap[mime2xml(fileTypeList->getItem (fileTypeList->getCurrentItem ()).text ())];
 fileTypeDefaultBox->setCurrentItem(fileTypeDefaultBox->findItem(ct.command.c_str()));
 additionalCommands->clearItems();
 

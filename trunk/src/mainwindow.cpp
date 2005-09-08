@@ -201,25 +201,21 @@ bool MainWindow::loadMimeSettings (string path, string type)
 //-----MAIN WINDOW---------------------------------------------------------------------------------------------------------------------------         
 MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0)
 {
-
-
+    conf = new configure ();
+if(conf->initialized())
+{
     objmanager=objectmanager::instance(getApp());
     
     new FXToolTip (getApp (), TOOLTIP_NORMAL);
     pane = NULL;
     filemenu = NULL;
-    conf = new configure ();
-    if(!conf->initialized())
-    {
-   // FXMessageBox box(getApp (), "error", "Configuration file is broken :|", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
-    //box.execute ();
-    fxmessage("CONFIGURATION FILE IS BROKEN");
-    exit(-1);
-    }
+    pref = NULL;
+    
+   
     
     loadicons(conf->readonestring ("/OpenspaceConfig/path") +"/icons/"+conf->readonestring ("/OpenspaceConfig/icons_theme") + "/");
     
-    pref = new preferences (this);
+   
     string res = conf->readonestring ("/OpenspaceConfig/version");
     FXTRACE ((1, "VERSION %s\n", res.c_str ()));
     int w = atoi (conf->readonestring ("/OpenspaceConfig/mainwindow/width").c_str ());
@@ -327,19 +323,26 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
 		first_run->show (PLACEMENT_SCREEN);
 	}
 }
+else//configuration file broken
+{
+
+new FXLabel(this,"Configuration file is broken :|");
+
+}
+
+}
 
 
 //---------------------------------------------------- 
 // open configure window
 long MainWindow::onOpenConfigure (FXObject * sender, FXSelector sel, void *)
 {
-
-    FXTRACE ((5, "CONFIGURE\n"));
-    if (pref->shown ())
-	pref->hide ();
-
-    else
-	pref->show (PLACEMENT_OWNER);
+   if(pref==NULL)
+   {
+   pref = new preferences (this);
+   pref->create();
+   }  
+   pref->show (PLACEMENT_OWNER);
 }
 
 
@@ -1116,13 +1119,18 @@ long MainWindow::onOverwrite (FXObject * sender, FXSelector sel, void *)
 //NEED TO CHANGE THIS
 long MainWindow::onConfigure (FXObject * sender, FXSelector sel, void *ptr)
 {
+if(!conf->initialized()) return 0;
+
     FXMainWindow::onConfigure (sender, sel, ptr);
     float widthpanel = this->getWidth () * ratio;
     left->setWidth ((int) widthpanel);
 
     //fxmessage("RESIZE RESIZE \n\n");
-} long MainWindow::onUpdate (FXObject * sender, FXSelector sel, void *ptr)
+} 
+long MainWindow::onUpdate (FXObject * sender, FXSelector sel, void *ptr)
 {
+if(!conf->initialized())return 0;
+
     FXMainWindow::onUpdate (sender, sel, ptr);
     float l = left->getWidth ();
     float r = right->getWidth ();
