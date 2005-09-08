@@ -21,11 +21,11 @@ return;
 	{
 		mime_major=name.substr(0,pos);	
 		mime_minor=name.substr(pos+1);
-		
-				if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime_major)=="")
+		string ret;
+				if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime_major,ret)==false)
 				conf->addstring ("/OpenspaceConfig/file_types", mime_major,"");
 				
-				if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime_major+"/types")=="")
+				if(conf->readonestring ("/OpenspaceConfig/file_types/"+ mime_major+"/types",ret)==false)
 				conf->addstring ("/OpenspaceConfig/file_types/" + mime_major ,"types","");	
 		
 		if(command!="")

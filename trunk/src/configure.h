@@ -18,6 +18,7 @@ class configure
     
     bool initialized(void);
     string readonestring (string path);
+    bool configure::readonestring (string path,string &ret);
     bool configure::saveonestring (string path, string value);
     bool configure::addstring (string path, string node, string value);
     int configure::openxpath (string path);

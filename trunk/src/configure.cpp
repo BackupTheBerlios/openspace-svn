@@ -59,6 +59,50 @@ configure::~configure ()
 
 }
 
+bool configure::readonestring (string path,string &ret)
+{
+
+
+    xmlChar *xpath = (xmlChar *) path.c_str ();
+    xmlChar *keyword;
+    string retstring;
+
+
+    xmlNodeSetPtr nodeset;
+    xmlXPathContextPtr context;
+    xmlXPathObjectPtr result;
+
+    context = xmlXPathNewContext (doc);
+    if (context == NULL)
+	return false;
+
+    result = xmlXPathEvalExpression (xpath, context);
+    xmlXPathFreeContext (context);
+    if (result == NULL)
+	return false;
+
+
+    if (xmlXPathNodeSetIsEmpty (result->nodesetval))
+    {
+	return false;
+    }
+
+
+    nodeset = result->nodesetval;
+    keyword = xmlNodeListGetString (doc, nodeset->nodeTab[0]->xmlChildrenNode, 1);
+    if(keyword!=NULL)
+    retstring = string ((char *) keyword);
+    xmlFree (keyword);
+
+
+
+
+    xmlXPathFreeObject (result);
+    ret=retstring;
+    return true;
+
+}
+
 string configure::readonestring (string path)
 {
 
