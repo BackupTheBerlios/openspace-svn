@@ -217,6 +217,7 @@
 		<COMMON>
 		<types>
 		<dir>
+			<icon>directory</icon>
 			<color>-10223616</color>
 			<backcolor>-3570031</backcolor>
 			<commands>
@@ -225,11 +226,16 @@
 			</commands>
 		</dir>
 		<executable>
+			<icon>executable</icon>
 			<color>-10198016</color>
 		</executable>
 		<all>
+			<icon>unknown</icon>
 			<default>open_text</default>
 		</all>
+		<symlink>
+			<icon>symlink</icon>
+		</symlink>
 		</types>
 		</COMMON>
 		

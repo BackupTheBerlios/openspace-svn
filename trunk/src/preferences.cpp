@@ -1,6 +1,10 @@
 #include "fx.h"
 #include "preferences.h"
 #include "MimeType.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <dirent.h>
 
 
 FXDEFMAP (preferences) preferencesMap[] =
@@ -51,9 +55,35 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 //getShell()->getHeight()
 
 
-    FXVerticalFrame *pluginspane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXLabel (pluginspane, "Plugins settings", NULL, LAYOUT_LEFT);
-    new FXButton (buttons, "Plugins Settings", NULL, switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+    FXVerticalFrame *commandPluginsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXLabel (commandPluginsPane, "Command plugins settings", NULL, LAYOUT_LEFT);
+    new FXButton (buttons, "Command plugins Settings", NULL, switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+
+commandPluginsList=new FXListBox (commandPluginsPane, this, ID_COMMANDPLUGIN_CHANGE);
+
+string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/cmddialog";
+
+
+struct stat status;
+	    struct dirent *dp;
+	    DIR *dirp;
+
+	    dirp = opendir (plugin_path.c_str ());
+
+	    while ((dp = readdir (dirp)) != NULL)
+	    {
+		if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
+		{
+		string name=dp->d_name;
+		commandPluginsList->appendItem(name.c_str());	
+		    
+		}
+	    }
+
+	    closedir (dirp);
+
+
+
 
     commandsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXLabel (commandsPane, "Commands settings", NULL, LAYOUT_LEFT);
@@ -137,6 +167,7 @@ string res;
     for (iter = objmanager->osicons.begin (); iter != objmanager->osicons.end (); iter++)
     {
 	FXIcon *icon = iter->second;
+	if(icon!=NULL)
 	iconsList->appendItem(iter->first.c_str(),icon);
     }	
 	if(ctlast->icon!="")
@@ -170,6 +201,9 @@ string res;
 	new FXLabel(filetypePane,"default command:");
 	fileTypeDefaultBox = new FXListBox (filetypePane);
 	fileTypeDefaultBox->setNumVisible(30);
+	
+	iconsList2=new FXListBox (filetypePane);
+        iconsList2->setNumVisible(30);
 	
 	FXHorizontalFrame* hzframe=new FXHorizontalFrame (filetypePane, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	FXVerticalFrame* vframe0=new FXVerticalFrame (hzframe, LAYOUT_FILL_X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -272,6 +306,17 @@ string res;
 
 	filetypestring = ctlast->name;
 
+	 map < string, FXIcon * >::iterator iter2;
+	 iconsList2->appendItem("",NULL);
+    	for (iter2 = objmanager->osicons.begin (); iter2 != objmanager->osicons.end (); iter2++)
+    	{
+	FXIcon *icon = iter2->second;
+	if(icon!=NULL && (iter2->first.length()<4 || iter2->first.substr(0,4)!="big_"))
+	iconsList2->appendItem(iter2->first.c_str(),icon);
+    	}	
+	if(ctlast->icon!="")
+	iconsList2->setCurrentItem(iconsList2->findItem(ctlast->icon.c_str()));
+	
 	
 	
 	fileTypeDefaultBox->appendItem ("",objmanager->osicons["execute"]);
@@ -420,11 +465,13 @@ for(int i=0;i<additionalCommands->getNumItems ();i++)
 
 ct_prev->color=ntos(colorbutton->getBackColor());
 ct_prev->backcolor=ntos(backcolorbutton->getBackColor());
+ct_prev->icon=iconsList2->getItem(iconsList2->getCurrentItem()).text();
 
 filetype_container ct=filetypesMap[mime2xml(fileTypeList->getItem (fileTypeList->getCurrentItem ()).text ())];
 fileTypeDefaultBox->setCurrentItem(fileTypeDefaultBox->findItem(ct.command.c_str()));
 additionalCommands->clearItems();
 
+iconsList2->setCurrentItem(iconsList2->findItem(ct.icon.c_str()));
 
 vector<string>::iterator iter;
 	for(iter=ct.commands.begin();iter!=ct.commands.end();iter++)

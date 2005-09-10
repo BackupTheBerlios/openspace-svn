@@ -60,23 +60,29 @@ void MainWindow::loadicons (string icondir)
 
 FXIconSource *source = new FXIconSource (getApp ());
 FXString fil=icondir.c_str();
-FXString name=fil+"directory.gif";
+FXString name=fil+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/dir/icon").c_str() + ".gif";
 objmanager->specialicons[0] =  source->loadIcon (name);
+if(objmanager->specialicons[0])
 objmanager->specialicons[0]->create();
-name=fil+"big_directory.gif";
+name=fil+"big_"+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/dir/icon").c_str()+ ".gif";
 objmanager->specialicons[1] =  source->loadIcon (name);
+if(objmanager->specialicons[1])
 objmanager->specialicons[1]->create();
-name=fil+"unknown.gif";
+name=fil+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/icon").c_str()+ ".gif";
 objmanager->specialicons[2] =  source->loadIcon (name);
+if(objmanager->specialicons[2])
 objmanager->specialicons[2]->create();
-name=fil+"big_unknown.gif";
+name=fil+"big_"+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/icon").c_str()+ ".gif";
 objmanager->specialicons[3] =  source->loadIcon (name);
+if(objmanager->specialicons[3])
 objmanager->specialicons[3]->create();
-name=fil+"executable.gif";
+name=fil+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/executable/icon").c_str()+ ".gif";
 objmanager->specialicons[4] =  source->loadIcon (name);
+if(objmanager->specialicons[4])
 objmanager->specialicons[4]->create();
-name=fil+"symlink.gif";
+name=fil+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/symlink/icon").c_str()+ ".gif";
 objmanager->specialicons[5] =  source->loadIcon (name);
+if(objmanager->specialicons[5])
 objmanager->specialicons[5]->create();
 
 

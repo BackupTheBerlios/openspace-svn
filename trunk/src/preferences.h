@@ -31,7 +31,7 @@ class preferences:public FXDialogBox
 
     FXTextField *newCommandEdit;
     FXListBox *commandsCombo;
-    FXListBox *iconsList;
+    FXListBox *iconsList,*iconsList2;
     FXVerticalFrame *commandsPane;
     FXTextField *commandsTextfield;
     FXTextField *commandsTextfieldText;
@@ -60,6 +60,8 @@ class preferences:public FXDialogBox
     MimeApp *mimeapp;
     FXColorDialog *colordlg;
 
+    FXListBox *commandPluginsList;
+
     map <string, command_container > commandsMap;
     map <string, filetype_container> filetypesMap;
 
@@ -78,6 +80,7 @@ class preferences:public FXDialogBox
 	ID_ADD_FILETYPE,
 	ID_CHOOSE_COLOR,
 	ID_CHOOSE_BACKCOLOR,
+	ID_COMMANDPLUGIN_CHANGE,
 	ID_LAST,
     };
 

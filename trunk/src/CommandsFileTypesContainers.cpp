@@ -47,11 +47,16 @@ return;
 	}
 	
 	if(command!="")
+	{
 	  if(!conf->saveonestring (path+"/default",command))
 			{
 			conf->addstring(path ,"default",command);
 			}
-	
+	}
+	else
+	{
+	conf->removestring (path+"/default");
+	}
 	
 		
 	
@@ -75,8 +80,17 @@ return;
 			{
 			conf->addstring(path ,"backcolor",backcolor);
 			}
-
-
+	if(icon!="")
+	{		
+	if(!conf->saveonestring (path+"/icon",icon))
+			{
+			conf->addstring(path ,"icon",icon);
+			}
+	}
+	else
+	{
+	conf->removestring (path+"/icon");
+	}
 
 }
 
