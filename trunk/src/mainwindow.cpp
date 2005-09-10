@@ -118,23 +118,8 @@ FXColor readcolor (string col)
 {
     if (col == "")
 	return FXRGB (0, 0, 0);
-    FXString color = col.c_str ();
-    int cc = 0;
-    int z1 = 0;
-    FXString rgbcolor[3];
-    while (z1 != -1)
-    {
-	z1 = color.find (" ", 0);
-	int i = 0;
-	if (z1 == -1)
-	    rgbcolor[cc].append (color.text (), color.length ());
+return FXIntVal(col.c_str());
 
-	else
-	    rgbcolor[cc].append (color.text (), z1);
-	color.remove (0, z1 + 1);
-	cc++;
-    }
-    return FXRGB (FXIntVal (rgbcolor[0]), FXIntVal (rgbcolor[1]), FXIntVal (rgbcolor[2]));
 }
 
 
@@ -143,23 +128,7 @@ FXColor readcolor2 (string col)
 {
     if (col == "")
 	return FXRGB (255, 255, 255);
-    FXString color = col.c_str ();
-    int cc = 0;
-    int z1 = 0;
-    FXString rgbcolor[3];
-    while (z1 != -1)
-    {
-	z1 = color.find (" ", 0);
-	int i = 0;
-	if (z1 == -1)
-	    rgbcolor[cc].append (color.text (), color.length ());
-
-	else
-	    rgbcolor[cc].append (color.text (), z1);
-	color.remove (0, z1 + 1);
-	cc++;
-    }
-    return FXRGB (FXIntVal (rgbcolor[0]), FXIntVal (rgbcolor[1]), FXIntVal (rgbcolor[2]));
+return  FXIntVal(col.c_str());
 }
 
 string MainWindow::parseDir (string dir)
@@ -173,28 +142,17 @@ string MainWindow::parseDir (string dir)
 
 bool MainWindow::loadMimeSettings (string path, string type)
 {
+
     string res2 = conf->readonestring (path + "/icon");
     string colorstr = conf->readonestring (path + "/color");
     FXColor color = readcolor (colorstr);
     string backcolorstr = conf->readonestring (path + "/backcolor");
     FXColor backcolor = readcolor2 (backcolorstr);
-    if (res2 != "")
-    {
-	FXFileStream stream;
-	string path = conf->readonestring ("/OpenspaceConfig/path") + "/icons/"+conf->readonestring ("/OpenspaceConfig/icons_theme")+"/" + res2;
-	string pp=path+".gif";
-	if(FXFile::exists(pp.c_str()))path+=".gif";
-	else path+=".png";
-	FXIcon *osicon = NULL;
-	osicon = new FXGIFIcon (getApp (), NULL);
-	if (stream.open (path.c_str (), FXStreamLoad))
-	{
-	    osicon->loadPixels (stream);
-	    stream.close ();
-	    osicon->create ();
-	    objmanager->file_type_settings[type] = new file_type (osicon, color, backcolor);
-	}
-    }
+    if(res2!="")
+    objmanager->file_type_settings[type] = new file_type (objmanager->osicons[res2],objmanager->osicons["big_"+res2], color, backcolor);
+    else
+    return false;
+
 }
 
 

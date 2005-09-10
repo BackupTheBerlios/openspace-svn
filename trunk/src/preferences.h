@@ -49,7 +49,8 @@ class preferences:public FXDialogBox
     FXVerticalFrame *frame;
     
     FXComboBox *allMime;
-    
+    FXButton *colorbutton;
+    FXButton *backcolorbutton;
     
 
     FXListBox *fileTypeList;
@@ -57,7 +58,7 @@ class preferences:public FXDialogBox
     string filetypestring;
 
     MimeApp *mimeapp;
-
+    FXColorDialog *colordlg;
 
     map <string, command_container > commandsMap;
     map <string, filetype_container> filetypesMap;
@@ -75,6 +76,8 @@ class preferences:public FXDialogBox
 	ID_ADD_COMMAND_ADDITIONAL,
 	ID_DEL_COMMAND_ADDITIONAL,
 	ID_ADD_FILETYPE,
+	ID_CHOOSE_COLOR,
+	ID_CHOOSE_BACKCOLOR,
 	ID_LAST,
     };
 
@@ -88,6 +91,9 @@ class preferences:public FXDialogBox
     long preferences::onOpenMimeApp (FXObject * sender, FXSelector sel, void *);
     long preferences:: onAdditionalCommandChange( FXObject * sender, FXSelector sel, void *);
     long preferences::onAddFiletype (FXObject * sender, FXSelector sel, void *);
+    long preferences::onChooseColor (FXObject * sender, FXSelector sel, void *);
+    void preferences::setAllColor(FXButton* button,FXColor color);
+    
     virtual ~ preferences ();
 };
 

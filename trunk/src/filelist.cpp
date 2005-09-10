@@ -1054,6 +1054,7 @@ clearItems ();
 	    }
 	    else
 	    {
+	  
 		icon = specialicons[3];
 		icon2 = specialicons[2];
 		color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/color"));
@@ -1736,7 +1737,7 @@ commands_tab.clear();
 
 				if (oslistitem->osf.type & FOLDER)
 				{
-				    rep = "file_types_special/dir";
+				    rep = "file_types/COMMON/types/dir";
 				    ext = "dir";
 				}
 				configure conflocal3 = *conf;

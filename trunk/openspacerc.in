@@ -217,15 +217,15 @@
 		<COMMON>
 		<types>
 		<dir>
-			<color>0 0 100</color>
-			<backcolor>145 134 201</backcolor>
+			<color>-10223616</color>
+			<backcolor>-3570031</backcolor>
 			<commands>
 					<command>umount</command>
 					<command>show_thumbs</command>
 			</commands>
 		</dir>
 		<executable>
-			<color>0 100 100</color>
+			<color>-10198016</color>
 		</executable>
 		<all>
 			<default>open_text</default>

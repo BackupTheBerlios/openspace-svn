@@ -15,6 +15,8 @@ class filetype_container
     string command;
     string icon;
     vector <string> commands;
+    string color;
+    string backcolor;
     filetype_container(string name,string command);
     filetype_container(){}
     void save(void);

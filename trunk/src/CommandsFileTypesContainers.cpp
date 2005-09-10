@@ -57,28 +57,27 @@ return;
 	
 	if(commands.size()>0)
 	{
-	conf->removestring("/OpenspaceConfig/file_types/" + mime_major + "/types/"+mime_minor+"/commands");
+	conf->removestring(path+"/commands");
 	vector <string>::iterator iter;
-	conf->addstring("/OpenspaceConfig/file_types/" + mime_major + "/types/"+mime_minor,"commands","");
+	conf->addstring(path,"commands","");
 		for(iter=commands.begin();iter!=commands.end();iter++)
 		{
-		conf->addstring("/OpenspaceConfig/file_types/" + mime_major + "/types/"+mime_minor+"/commands","command",iter->c_str());
+		conf->addstring(path+"/commands","command",iter->c_str());
 		}
 	
 	}
 	
-		
-/*
-	if ( conflocal3.openxpath ("/OpenspaceConfig/" + rep + "/commands/command") != -1)
-				{
-		
-				    while (1)
-				    {
+	if(!conf->saveonestring (path+"/color",color))
+			{
+			conf->addstring(path ,"color",color);
+			}
+	if(!conf->saveonestring (path+"/backcolor",backcolor))
+			{
+			conf->addstring(path ,"backcolor",backcolor);
+			}
 
-					string res = conflocal3.getnextstring ();
-					if (res == "")
-					    break;
-*/
+
+
 }
 
 command_container::command_container(string name, string exec):name(name),exec(exec)

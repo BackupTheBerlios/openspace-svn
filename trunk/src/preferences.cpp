@@ -13,6 +13,7 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_REMOVE_COMMAND, preferences::onRemoveCommand),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_MIME_APP, preferences::onOpenMimeApp),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_ADD_FILETYPE, preferences::onAddFiletype),
+	FXMAPFUNCS (SEL_COMMAND, preferences::ID_CHOOSE_COLOR,preferences::ID_CHOOSE_BACKCOLOR, preferences::onChooseColor),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_COMMAND_ADDITIONAL,preferences::ID_DEL_COMMAND_ADDITIONAL, preferences::onAdditionalCommandChange),
 };
 
@@ -22,9 +23,11 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 
     mimeapp=new MimeApp(this);
     objmanager=objectmanager::instance(getApp());
+    colordlg=new FXColorDialog(this,"Color Dialog");
+    
     FXVerticalFrame *vertical = new FXVerticalFrame (this, LAYOUT_SIDE_TOP | LAYOUT_FILL_X | LAYOUT_FILL_Y);
     FXHorizontalFrame *horizontal = new FXHorizontalFrame (vertical, LAYOUT_FILL_X | LAYOUT_FILL_Y);
-    FXVerticalFrame *buttons = new FXVerticalFrame (horizontal, LAYOUT_LEFT | LAYOUT_FILL_Y | FRAME_SUNKEN | PACK_UNIFORM_WIDTH | PACK_UNIFORM_HEIGHT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    FXVerticalFrame *buttons = new FXVerticalFrame (horizontal, LAYOUT_LEFT | LAYOUT_FILL_Y | FRAME_SUNKEN | PACK_UNIFORM_WIDTH | LAYOUT_FIX_HEIGHT, 0, 0, 0, 500, 0, 0, 0, 0, 0, 0);
     FXSwitcher *switcher = new FXSwitcher (horizontal, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0);
 
 
@@ -33,6 +36,7 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 
 
     FXVerticalFrame *mainpane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
     new FXLabel (mainpane, "Main settings", NULL, LAYOUT_LEFT);
     new FXButton (buttons, "Main Settings", NULL, switcher, FXSwitcher::ID_OPEN_FIRST, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
@@ -141,8 +145,8 @@ string res;
 
 	new FXSeparator(commandsPane);
 	FXHorizontalFrame *hfr=new FXHorizontalFrame (commandsPane, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	new FXButton (hfr, "Remove", NULL, this, ID_REMOVE_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
-	new FXButton (hfr, "New Command", NULL, this, ID_NEW_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+	new FXButton (hfr, "Remove", NULL, this, ID_REMOVE_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT );
+	new FXButton (hfr, "New Command", NULL, this, ID_NEW_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT);
 	newCommandEdit = new FXTextField (hfr, 20);
 
 	
@@ -167,24 +171,30 @@ string res;
 	fileTypeDefaultBox = new FXListBox (filetypePane);
 	fileTypeDefaultBox->setNumVisible(30);
 	
-	FXHorizontalFrame* hzframe=new FXHorizontalFrame (filetypePane, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	FXVerticalFrame* vframe0=new FXVerticalFrame (hzframe, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	FXHorizontalFrame* hzframe=new FXHorizontalFrame (filetypePane, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	FXVerticalFrame* vframe0=new FXVerticalFrame (hzframe, LAYOUT_FILL_X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXLabel(vframe0,"additional commands:");
         additionalCommands=new FXList (vframe0,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	additionalCommands->setNumVisible(5);
-	FXVerticalFrame* vframe=new FXVerticalFrame (hzframe, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	FXVerticalFrame* vframe=new FXVerticalFrame (hzframe, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXLabel(vframe,"\n");
 	new FXLabel(vframe,"\n");
 	new FXArrowButton(vframe,this,ID_ADD_COMMAND_ADDITIONAL,FRAME_RAISED|FRAME_THICK|ARROW_LEFT);
 	new FXArrowButton(vframe,this,ID_DEL_COMMAND_ADDITIONAL,FRAME_RAISED|FRAME_THICK|ARROW_RIGHT);
-	FXVerticalFrame* vframe1=new FXVerticalFrame (hzframe, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	FXVerticalFrame* vframe1=new FXVerticalFrame (hzframe, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXLabel(vframe1,"all available commands:");
 	additionalCommandsAvailable=new FXList (vframe1,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	additionalCommandsAvailable->setNumVisible(5);
 
+	new FXLabel(filetypePane,"color:");
+	colorbutton=new FXButton(filetypePane,"Color",NULL,this,ID_CHOOSE_COLOR);
+	new FXLabel(filetypePane,"back color:");
+	backcolorbutton=new FXButton(filetypePane,"Back Color",NULL,this,ID_CHOOSE_BACKCOLOR);
 	
 	allMime=new FXComboBox (filetypePane,60);
 	allMime->setNumVisible(30);
+	new FXButton (filetypePane, "Add", NULL, this, preferences::ID_ADD_FILETYPE);
+	
 	MimeType::__initialize();
 	map<string,string>::iterator iter0;
 	for(iter0=MimeType::mimeMap.begin();iter0!=MimeType::mimeMap.end();iter0++)
@@ -192,7 +202,11 @@ string res;
 	allMime->appendItem(xml2mime(iter0->second).c_str());
 	}
 	
-	new FXButton (filetypePane, "Add", NULL, this, preferences::ID_ADD_FILETYPE);
+	 
+	
+	
+	
+
 	string res;
 	while (conf->getnextnode (res))
 	{
@@ -212,6 +226,8 @@ string res;
 	   		 
 	   		 ct.command = conf->readonestring ("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/default");
 	   		 ct.icon=conf->readonestring("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/icon") ;
+			 ct.color=conf->readonestring("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/color") ;
+			 ct.backcolor=conf->readonestring("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/backcolor") ;
 	   		 
 			 configure conflocal2 = *conf;
 	   		 if(conflocal2.openxpath("/OpenspaceConfig/file_types/" + res+"/types/"+res2 + "/commands/command")!=-1)
@@ -236,7 +252,8 @@ string res;
 	    
 	    ct.command = conf->readonestring ("/OpenspaceConfig/file_types/" + res + "/default");
 	    ct.icon=conf->readonestring("/OpenspaceConfig/file_types/" +res +"/icon") ;
-	    
+	    ct.color=conf->readonestring("/OpenspaceConfig/file_types/" +res +"/color") ;
+	    ct.backcolor=conf->readonestring("/OpenspaceConfig/file_types/" +res +"/backcolor") ;
 	    
 	    configure conflocal2 = *conf;
 	    if(conflocal2.openxpath("/OpenspaceConfig/file_types/" + ct.name + "/commands/command")!=-1)
@@ -282,11 +299,40 @@ string res;
 	fileTypeList->setCurrentItem (fileTypeList->getNumItems () - 1);
 	fileTypeDefaultBox->setCurrentItem(fileTypeDefaultBox->findItem(ctlast->command.c_str()));
 	
-
+        setAllColor(colorbutton,readcolor(ctlast->color));
+	setAllColor(backcolorbutton,readcolor2(ctlast->backcolor));
 	
     }
 
 }
+
+void preferences::setAllColor(FXButton* button,FXColor color)
+{
+ button->setBaseColor(color);
+ button->setBorderColor(color);
+ button->setShadowColor(color);
+ button->setHiliteColor(color);
+ button->setTextColor(color);
+ button->setBackColor(color);
+}
+
+ long preferences::onChooseColor (FXObject * sender, FXSelector sel, void *)
+ {
+
+ if(!colordlg->execute())
+return 0;
+ 
+  fxmessage("COLOR\n");
+  
+ FXColor color=colordlg->getRGBA();
+ FXushort id=FXSELID(sel);
+ if(id==ID_CHOOSE_COLOR)
+ setAllColor(colorbutton,color);
+ else
+ setAllColor(backcolorbutton,color);
+ 
+
+ }	
 
 long preferences::onAddFiletype (FXObject * sender, FXSelector sel, void *)
 {
@@ -330,23 +376,6 @@ map < string, filetype_container >::iterator iter2;
 	ct.save();
     }
 
-/*
-    vector < filetype_container * >::iterator iter2;
-
-    for (iter2 = filetype_vec.begin (); iter2 != filetype_vec.end (); iter2++)
-    {
-
-	filetype_container *ct = *iter2;
-	conf->saveonestring ("/OpenspaceConfig/file_types/" + ct->name + "/default", ct->command);
-	fxmessage (ct->name.c_str ());
-	fxmessage (" ");
-	fxmessage (ct->command.c_str ());
-	fxmessage ("\n");
-
-    }
-
-
-*/
     conf->saveonestring ("/OpenspaceConfig/mainwindow/width", mainwindow_width->getText ().text ());
     conf->saveonestring ("/OpenspaceConfig/mainwindow/height", mainwindow_height->getText ().text ());
 
@@ -382,7 +411,15 @@ long preferences::onFileTypeChange (FXObject * sender, FXSelector sel, void *)
 
 filetype_container *ct_prev=&filetypesMap[currentFileType];
 ct_prev->command=fileTypeDefaultBox->getItem(fileTypeDefaultBox->getCurrentItem()).text();
-//ct_prev->icon=
+
+ct_prev->commands.clear();
+for(int i=0;i<additionalCommands->getNumItems ();i++)
+	{
+	ct_prev->commands.push_back(additionalCommands->getItemText(i).text());
+	}
+
+ct_prev->color=ntos(colorbutton->getBackColor());
+ct_prev->backcolor=ntos(backcolorbutton->getBackColor());
 
 filetype_container ct=filetypesMap[mime2xml(fileTypeList->getItem (fileTypeList->getCurrentItem ()).text ())];
 fileTypeDefaultBox->setCurrentItem(fileTypeDefaultBox->findItem(ct.command.c_str()));
@@ -394,6 +431,9 @@ vector<string>::iterator iter;
 	{
 	additionalCommands->appendItem(iter->c_str());
 	}
+
+ setAllColor(colorbutton,readcolor(ct.color));
+ setAllColor(backcolorbutton,readcolor2(ct.backcolor));
 	
 
 currentFileType=ct.name;
