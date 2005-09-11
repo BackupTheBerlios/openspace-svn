@@ -158,7 +158,9 @@ return;
 		
 		if(reg2=="" || (command_major!=command_exec && reg2!=command_name))
 		{
-		filetype_container ct=filetype_container(mime,command_name);
+		filetype_container ct=filetype_container();
+		ct.load(mime);
+		ct.command=command_name;
 		ct.save();	
 			
 		}
@@ -171,7 +173,9 @@ return;
 		string reg = conf->readonestring ("/OpenspaceConfig/file_types/" + mime + "/default");
 		if(reg=="" || reg!=command_name)
 		{
-		filetype_container ct=filetype_container(mime,command_name);
+		filetype_container ct=filetype_container();
+		ct.load(mime);
+		ct.command=command_name;
 		ct.save();			
 		}
 		else

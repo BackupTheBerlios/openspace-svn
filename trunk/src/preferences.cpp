@@ -13,12 +13,16 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_SAVE, preferences::onSave),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_COMMAND_CHANGE, preferences::onCommandChange),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_FILETYPE_CHANGE, preferences::onFileTypeChange), 
+	FXMAPFUNC (SEL_COMMAND, preferences::ID_SHUTTER_CHANGE, preferences::onShutterChange),	
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_NEW_COMMAND, preferences::onNewCommand), 
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_REMOVE_COMMAND, preferences::onRemoveCommand),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_MIME_APP, preferences::onOpenMimeApp),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_ADD_FILETYPE, preferences::onAddFiletype),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_CHOOSE_COLOR,preferences::ID_CHOOSE_BACKCOLOR, preferences::onChooseColor),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_COMMAND_ADDITIONAL,preferences::ID_DEL_COMMAND_ADDITIONAL, preferences::onAdditionalCommandChange),
+	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_BUTTON_COMMAND,preferences::ID_DEL_BUTTON_COMMAND, preferences::onAddButtonCommand),
+	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_SHUTTER_COMMAND,preferences::ID_DEL_SHUTTER_COMMAND, preferences::onAddShutterCommand),
+	
 };
 
 
@@ -54,10 +58,75 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 //getShell()->getWidth()
 //getShell()->getHeight()
 
+ FXVerticalFrame *buttonsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXLabel (buttonsPane, "Buttons settings", NULL, LAYOUT_LEFT);
+    new FXButton (buttons, "Buttons Settings", NULL, switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+
+	buttonsList=new FXList (buttonsPane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
+	buttonsList->setNumVisible(5);
+
+	    if(conf->openxpath("/OpenspaceConfig/button_commands/command")!=-1)
+	       {
+	       string commandstr;
+	      	 while(conf->getnextstring(commandstr))
+	      	 {     	 
+	     	 buttonsList->appendItem(commandstr.c_str());
+	     	 }
+	       }	 
+	FXHorizontalFrame *buttonsHframe = new FXHorizontalFrame (buttonsPane, LAYOUT_FILL_X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);  
+
+	new FXLabel(buttonsHframe," ");
+	new FXLabel(buttonsHframe," ");
+	new FXArrowButton(buttonsHframe,this,ID_ADD_BUTTON_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_UP);
+	new FXArrowButton(buttonsHframe,this,ID_DEL_BUTTON_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_DOWN);
+	additionalCommandsAvailableForButtons=new FXList (buttonsPane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
+	additionalCommandsAvailableForButtons->setNumVisible(8);
+FXHorizontalFrame *buttonsHframe2 = new FXHorizontalFrame (buttonsPane, LAYOUT_FILL_X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);  
+
+	new FXLabel(buttonsHframe2," ");
+	new FXLabel(buttonsHframe2," ");
+new FXArrowButton(buttonsHframe2,this,ID_DEL_SHUTTER_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_UP);
+new FXArrowButton(buttonsHframe2,this,ID_ADD_SHUTTER_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_DOWN);
+
+       shutterList=new FXListBox (buttonsPane, this, ID_SHUTTER_CHANGE);
+       shutterList->setNumVisible(10);
+
+shutterCommands=new FXList (buttonsPane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
+shutterCommands->setNumVisible(5);
+
+ if(conf->openxpath("/OpenspaceConfig/shutter")!=-1)
+	       {
+	       string commandstr;
+	      	 while(conf->getnextnode(commandstr))
+	      	 {     	 
+	     	 shutterList->appendItem(commandstr.c_str());
+		 shutterCommands->clearItems();
+		 
+		 configure conflocal=*conf;		 
+		 
+		  if(conflocal.openxpath("/OpenspaceConfig/shutter/"+commandstr+"/command")!=-1)
+	     	  {
+	      	 string commandstr2;
+	      		 while(conflocal.getnextstring(commandstr2))
+	      		 {     	 
+	     		 shutterCommands->appendItem(commandstr2.c_str());
+			 shutterVector.push_back(shutter_container(commandstr,commandstr2));
+			 }
+	     	  }
+		 
+		 
+	     	 }
+	       }	
+	       
+shutterList->setCurrentItem (shutterList->getNumItems () - 1);
+
+
+
+
 
     FXVerticalFrame *commandPluginsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXLabel (commandPluginsPane, "Command plugins settings", NULL, LAYOUT_LEFT);
-    new FXButton (buttons, "Command plugins Settings", NULL, switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+    new FXButton (buttons, "Command plugins Settings", NULL, switcher, FXSwitcher::ID_OPEN_THIRD, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
 commandPluginsList=new FXListBox (commandPluginsPane, this, ID_COMMANDPLUGIN_CHANGE);
 
@@ -88,7 +157,7 @@ struct stat status;
     commandsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXLabel (commandsPane, "Commands settings", NULL, LAYOUT_LEFT);
 
-    new FXButton (buttons, "Commands Settings", NULL, switcher, FXSwitcher::ID_OPEN_THIRD, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+    new FXButton (buttons, "Commands Settings", NULL, switcher, FXSwitcher::ID_OPEN_FOURTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
     commandsCombo=new FXListBox (commandsPane, this, ID_COMMAND_CHANGE);
     new FXLabel (commandsPane, "icon: ", NULL, LAYOUT_LEFT);
@@ -187,7 +256,7 @@ string res;
 
     filetypePane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXLabel (filetypePane, "File types settings", NULL, LAYOUT_LEFT);
-    new FXButton (buttons, "File types Settings", NULL, switcher, FXSwitcher::ID_OPEN_FOURTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+    new FXButton (buttons, "File types Settings", NULL, switcher, FXSwitcher::ID_OPEN_FIFTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
 
 
@@ -255,52 +324,21 @@ string res;
 	 	 
 			
 			 filetype_container ct;
-			 ct.name = res+"/"+res2;
+			 ct.load( res+"/"+res2);
 			 fileTypeList->appendItem(xml2mime(ct.name).c_str (),objmanager->osicons["unknown"]);	    
 	   		 
-	   		 ct.command = conf->readonestring ("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/default");
-	   		 ct.icon=conf->readonestring("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/icon") ;
-			 ct.color=conf->readonestring("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/color") ;
-			 ct.backcolor=conf->readonestring("/OpenspaceConfig/file_types/" + res + "/types/"+res2+"/backcolor") ;
 	   		 
-			 configure conflocal2 = *conf;
-	   		 if(conflocal2.openxpath("/OpenspaceConfig/file_types/" + res+"/types/"+res2 + "/commands/command")!=-1)
-	      		 {
-			 string command;
-	      			 while(conflocal2.getnextstring(command))
-	      			 {
-	      			  ct.commands.push_back(command.c_str());
-				  fxmessage("\n\nCOMMAND=%s\n",command.c_str());
-
-	     			 }
-	    		 }  
 			 filetypesMap[ct.name]=ct;  
 			
 		}
 		
 	   }	
 	    filetype_container ct;
+	    ct.load( res);
 	    ctlast=&ct;
-	    ct.name = res;
 	    fileTypeList->appendItem(xml2mime(ct.name) .c_str (),objmanager->osicons["unknown"]);	    
 	    
-	    ct.command = conf->readonestring ("/OpenspaceConfig/file_types/" + res + "/default");
-	    ct.icon=conf->readonestring("/OpenspaceConfig/file_types/" +res +"/icon") ;
-	    ct.color=conf->readonestring("/OpenspaceConfig/file_types/" +res +"/color") ;
-	    ct.backcolor=conf->readonestring("/OpenspaceConfig/file_types/" +res +"/backcolor") ;
-	    
-	    configure conflocal2 = *conf;
-	    if(conflocal2.openxpath("/OpenspaceConfig/file_types/" + ct.name + "/commands/command")!=-1)
-	       {
-	       string command;
-	      	 while(conflocal2.getnextstring(command))
-	      	 {
-	      	 
-	     	  ct.commands.push_back(command.c_str());
-		  fxmessage("\n\nCOMMAND=%s\n",command.c_str());
-
-	     	 }
-	       }    
+	   
 	filetypesMap[ct.name]=ct;
 	}
 
@@ -329,7 +367,7 @@ string res;
 		
 		fileTypeDefaultBox->appendItem (command.c_str (),objmanager->osicons["execute"]);
 		additionalCommandsAvailable->appendItem (command.c_str ());
-
+		additionalCommandsAvailableForButtons->appendItem (command.c_str ());
 	    }
 	}
 	
@@ -349,7 +387,47 @@ string res;
 	
     }
 
+
 }
+long preferences::onAddButtonCommand (FXObject * sender, FXSelector sel, void *)
+{
+
+FXushort id=FXSELID(sel);
+
+	if(id==ID_ADD_BUTTON_COMMAND)
+	{
+	buttonsList->appendItem(additionalCommandsAvailableForButtons->getItemText(additionalCommandsAvailableForButtons->getCurrentItem()));
+	}
+	else
+	{
+	buttonsList->removeItem(buttonsList->getCurrentItem());
+	}
+
+
+}
+
+long preferences::onAddShutterCommand (FXObject * sender, FXSelector sel, void *)
+{
+
+FXushort id=FXSELID(sel);
+
+	if(id==ID_ADD_SHUTTER_COMMAND)
+	{
+	
+	string actual_shutter=shutterList->getItem(shutterList->getCurrentItem()).text();
+	string cmd=additionalCommandsAvailableForButtons->getItemText(additionalCommandsAvailableForButtons->getCurrentItem()).text();
+	shutterVector.push_back(shutter_container(actual_shutter,cmd));
+	shutterCommands->appendItem(cmd.c_str());
+	}
+	else
+	{
+	shutterCommands->removeItem(shutterCommands->getCurrentItem());
+	}
+
+
+
+}
+
 
 void preferences::setAllColor(FXButton* button,FXColor color)
 {
@@ -424,6 +502,19 @@ map < string, filetype_container >::iterator iter2;
     conf->saveonestring ("/OpenspaceConfig/mainwindow/width", mainwindow_width->getText ().text ());
     conf->saveonestring ("/OpenspaceConfig/mainwindow/height", mainwindow_height->getText ().text ());
 
+conf->removestring ("/OpenspaceConfig/button_commands");
+conf->addstring("/OpenspaceConfig","button_commands","");
+
+for (int c = 0; c < buttonsList->getNumItems (); c++)
+	    {
+		
+		  string cmd= buttonsList->getItemText (c).text ();
+		  fxmessage("\nCOMMAND=%s",cmd.c_str());
+		conf->addstring("/OpenspaceConfig/button_commands","command",cmd);
+
+
+	    }
+
 
 }
 
@@ -486,6 +577,20 @@ vector<string>::iterator iter;
 currentFileType=ct.name;
 
 }
+
+long preferences::onShutterChange (FXObject * sender, FXSelector sel, void *)
+{
+string actual_shutter=shutterList->getItem(shutterList->getCurrentItem()).text();
+shutterCommands->clearItems();
+vector <shutter_container>::iterator iter;
+	for(iter=shutterVector.begin();iter!=shutterVector.end();iter++)
+	{
+		if(iter->shutter==actual_shutter)
+	shutterCommands->appendItem(iter->command.c_str());
+	}
+
+}
+
 long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *)
 {
 

@@ -11,7 +11,13 @@
 #include <map>
 using namespace std;
 
-
+class shutter_container
+{
+public:
+string shutter;
+string command;
+shutter_container(string s,string c):shutter(s),command(c){}
+};
 
 
 //preferences window, this is one of the most important things to be extended
@@ -40,7 +46,8 @@ class preferences:public FXDialogBox
     FXLabel *commandsType;
     FXLabel *commandsIcon;
     
-    FXList *additionalCommands,*additionalCommandsAvailable;
+    FXList *additionalCommands,*additionalCommandsAvailable,*additionalCommandsAvailableForButtons;
+    FXList *shutterCommands;
     
     string currentCommandName;
     string currentFileType;
@@ -52,7 +59,7 @@ class preferences:public FXDialogBox
     FXButton *colorbutton;
     FXButton *backcolorbutton;
     
-
+    FXListBox *shutterList;
     FXListBox *fileTypeList;
     FXListBox *fileTypeDefaultBox;
     string filetypestring;
@@ -61,9 +68,11 @@ class preferences:public FXDialogBox
     FXColorDialog *colordlg;
 
     FXListBox *commandPluginsList;
+    FXList*buttonsList;
 
     map <string, command_container > commandsMap;
     map <string, filetype_container> filetypesMap;
+    vector <shutter_container> shutterVector;
 
     FXVerticalFrame *filetypePane;
     enum
@@ -81,6 +90,11 @@ class preferences:public FXDialogBox
 	ID_CHOOSE_COLOR,
 	ID_CHOOSE_BACKCOLOR,
 	ID_COMMANDPLUGIN_CHANGE,
+	ID_ADD_BUTTON_COMMAND,
+	ID_DEL_BUTTON_COMMAND,
+	ID_ADD_SHUTTER_COMMAND,
+	ID_DEL_SHUTTER_COMMAND,
+	ID_SHUTTER_CHANGE,
 	ID_LAST,
     };
 
@@ -89,12 +103,17 @@ class preferences:public FXDialogBox
     long preferences::onSave (FXObject * sender, FXSelector sel, void *);
     long preferences::onCommandChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onFileTypeChange (FXObject * sender, FXSelector sel, void *);
+    long preferences::onShutterChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::onRemoveCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::onOpenMimeApp (FXObject * sender, FXSelector sel, void *);
     long preferences:: onAdditionalCommandChange( FXObject * sender, FXSelector sel, void *);
     long preferences::onAddFiletype (FXObject * sender, FXSelector sel, void *);
     long preferences::onChooseColor (FXObject * sender, FXSelector sel, void *);
+    long preferences::onAddButtonCommand (FXObject * sender, FXSelector sel, void *);
+    long preferences::onAddShutterCommand (FXObject * sender, FXSelector sel, void *);
+    
+    
     void preferences::setAllColor(FXButton* button,FXColor color);
     
     virtual ~ preferences ();

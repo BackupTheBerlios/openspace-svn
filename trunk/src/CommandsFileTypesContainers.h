@@ -20,6 +20,7 @@ class filetype_container
     filetype_container(string name,string command);
     filetype_container(){}
     void save(void);
+    bool load(string name);
 };
 
 class command_container

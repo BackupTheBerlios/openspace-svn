@@ -6,6 +6,41 @@ filetype_container::filetype_container(string name,string command):name(name),co
 {
 }
 
+bool filetype_container::load(string name)
+{
+this->name=name;
+
+string::size_type pos=name.find("/");
+	string path;
+	string mime_major;
+	string mime_minor;
+	if (pos != string::npos)
+	{
+		mime_major=name.substr(0,pos);	
+		mime_minor=name.substr(pos+1);
+	path="/OpenspaceConfig/file_types/" + mime_major + "/types/"+mime_minor;
+	}
+	else
+	{
+	path="/OpenspaceConfig/file_types/" + name;
+	}
+
+	    command = conf->readonestring (path + "/default");
+	    icon=conf->readonestring(path +"/icon") ;
+	    color=conf->readonestring(path +"/color") ;
+	    backcolor=conf->readonestring(path +"/backcolor") ;
+	    
+	    configure conflocal2 = *conf;
+	    if(conflocal2.openxpath(path + "/commands/command")!=-1)
+	       {
+	       string commandstr;
+	      	 while(conflocal2.getnextstring(commandstr))
+	      	 {     	 
+	     	  commands.push_back(commandstr.c_str());
+	     	 }
+	       }    
+
+}
 void filetype_container::save(void)
 {
 fxmessage("\nNAME=%s COMMAND=%s\n",name.c_str(),command.c_str());
