@@ -30,11 +30,12 @@ class preferences:public FXDialogBox
     {
     }
 
-  public:
+  
 
-     FXTextField * mainwindow_width;
+    bool saveconfiguration;
+    FXTextField * mainwindow_width;
     FXTextField *mainwindow_height;
-
+    FXTextField *leftdir,*rightdir,*defaultdir;
     FXTextField *newCommandEdit;
     FXListBox *commandsCombo;
     FXListBox *iconsList,*iconsList2;
@@ -67,7 +68,7 @@ class preferences:public FXDialogBox
     MimeApp *mimeapp;
     FXColorDialog *colordlg;
 
-    FXListBox *commandPluginsList;
+    FXListBox *commandPluginsList,*availableCommandPluginsList;
     FXList*buttonsList;
 
     map <string, command_container > commandsMap;
@@ -75,6 +76,9 @@ class preferences:public FXDialogBox
     vector <shutter_container> shutterVector;
 
     FXVerticalFrame *filetypePane;
+    
+    public:
+    
     enum
     {
 	ID_SAVE = FXDialogBox::ID_LAST,
@@ -84,6 +88,7 @@ class preferences:public FXDialogBox
 	ID_NEW_FILETYPE,
 	ID_REMOVE_COMMAND,
 	ID_MIME_APP,
+	ID_MIME_APP_AUTO,
 	ID_ADD_COMMAND_ADDITIONAL,
 	ID_DEL_COMMAND_ADDITIONAL,
 	ID_ADD_FILETYPE,
@@ -95,6 +100,8 @@ class preferences:public FXDialogBox
 	ID_ADD_SHUTTER_COMMAND,
 	ID_DEL_SHUTTER_COMMAND,
 	ID_SHUTTER_CHANGE,
+	ID_DOWNLOAD_INSTALL_CMD_PLUGIN,
+	ID_UPDATE_CMD_PLUGIN_LIST,
 	ID_LAST,
     };
 
@@ -113,8 +120,8 @@ class preferences:public FXDialogBox
     long preferences::onAddButtonCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::onAddShutterCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::close (FXObject * sender, FXSelector sel, void *);
-    
-    
+    long preferences::downloadInstallCommandPlugin (FXObject * sender, FXSelector sel, void *);
+    long preferences::updateCommandPluginList (FXObject * sender, FXSelector sel, void *);
     
     void preferences::setAllColor(FXButton* button,FXColor color);
     

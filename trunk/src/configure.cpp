@@ -20,7 +20,7 @@ configure::configure ()
 {
 
     string dir = FXFile::getUserDirectory ("").text ();
-    file = dir + SEPARATOR + ".openspacerc";
+    file = dir +  "/.openspace/openspacerc";
 
     if (!FXFile::exists (file.c_str ()))
     {

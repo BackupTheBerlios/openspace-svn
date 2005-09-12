@@ -17,28 +17,32 @@ class MimeApp:public FXDialogBox
     {
     }
 
-  public:
+ 
+
+  
+   
+    FXComboBox *programsbox;
+    FXLabel *mime_label;  
   
     vector <string> mime_vector;
     vector <string>::iterator iter;
-    FXComboBox *programsbox;
-    FXLabel *mime_label;
-
+ public:
     enum
-    {
-	ID_SAVE = FXDialogBox::ID_LAST,
-	ID_NEXT,
+    {	 
+	ID_NEXT=FXDialogBox::ID_LAST,
 	ID_PREVIOUS,
 	ID_LAST,
     };
 
     MimeApp (FXWindow * owner);
 
-    long MimeApp::onSave (FXObject * sender, FXSelector sel, void *);
     long MimeApp::onNextPrevious(FXObject * sender, FXSelector sel, void *);
+    long MimeApp::onClose (FXObject * sender, FXSelector sel, void *ptr);
     
     void MimeApp::fill(string tmp);
     static void MimeApp::save(string mime, string program);
+    void MimeApp::doAutomaticConfiguration(void);
+    
     
 
     virtual ~ MimeApp ();

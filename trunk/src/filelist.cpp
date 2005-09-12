@@ -1517,22 +1517,29 @@ fxmessage("COM=%s TYPE=%s",command.c_str(),command_type.c_str());
 
     else if (command_type == "PLUGIN")
     {
-	FXASSERT ((5, "PLUGIN\n"));
-	string res = conf->readonestring ("/OpenspaceConfig/plugins/cmddialog/" + command);
-
-	if (res == "")
-	    return 0;
+	
 
 	if(popupmenu)
 	popupmenu->popdown ();
 
 
-	string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/cmddialog/lib" + res;
+	string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/cmddialog/lib" + command;
 #ifdef WIN32
 	plugin_path += ".dll";
 #else
 	plugin_path += ".so";
 #endif
+
+	if(!FXFile::exists(plugin_path.c_str()))
+	{
+	plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/cmddialog")+"/lib" + command;
+	#ifdef WIN32
+	plugin_path += ".dll";
+	#else
+	plugin_path += ".so";
+	#endif
+	}
+
 
 	void *dllhandle = fxdllOpen (plugin_path.c_str ());
 

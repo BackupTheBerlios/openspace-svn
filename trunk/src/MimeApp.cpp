@@ -19,8 +19,8 @@ using namespace std;
 FXDEFMAP (MimeApp) MimeAppMap[] =
 {
     //________Message_Type_____________________ID____________Message_Handler_______  
-	FXMAPFUNC (SEL_COMMAND, MimeApp::ID_SAVE, MimeApp::onSave),
 	FXMAPFUNCS (SEL_COMMAND, MimeApp::ID_NEXT,MimeApp::ID_PREVIOUS, MimeApp::onNextPrevious),
+	FXMAPFUNC (SEL_CLOSE,0, MimeApp::onClose),
 };
 
 
@@ -31,12 +31,11 @@ FXIMPLEMENT (MimeApp, FXDialogBox, MimeAppMap, ARRAYNUMBER (MimeAppMap)) MimeApp
     FXVerticalFrame *vertical = new FXVerticalFrame (this, LAYOUT_SIDE_TOP | LAYOUT_FILL_X | LAYOUT_FILL_Y);
     
     mime_label=new FXLabel(vertical,"");
-    programsbox= new FXComboBox (vertical, 5, NULL, 0, FRAME_THICK | LAYOUT_SIDE_TOP | COMBOBOX_STATIC);
-    
+    programsbox= new FXComboBox (vertical, 20, NULL, 0, FRAME_THICK | LAYOUT_SIDE_TOP | COMBOBOX_STATIC);
+    programsbox->setNumVisible(10);
     
     FXHorizontalFrame *hori = new FXHorizontalFrame (vertical, LAYOUT_SIDE_TOP | LAYOUT_FILL_X | LAYOUT_FILL_Y);
     FXButton *but1 = new FXButton (hori, "PREVIOUS", NULL, this,ID_PREVIOUS);
-    FXButton *but2 = new FXButton (hori, "SAVE", NULL, this,ID_SAVE);
     FXButton *but3 = new FXButton (hori, "NEXT", NULL, this,ID_NEXT);
 
  string file = string(PATH_CFG) + string(SEPARATOR) + string("mimeapp");
@@ -58,20 +57,33 @@ FXIMPLEMENT (MimeApp, FXDialogBox, MimeAppMap, ARRAYNUMBER (MimeAppMap)) MimeApp
 }
 
 
+long MimeApp::onClose (FXObject * sender, FXSelector sel, void *ptr)
+{
+fxmessage("CLOSE & SAVE\n");
+string program=programsbox->getText().text();
+string mime=mime_label->getText().text();	
+save(mime,program);
+
+
+FXDialogBox::onCmdAccept(sender,sel,ptr);
+
+}
+
 
 MimeApp::~MimeApp ()
 {
 }
 
-
-
-long MimeApp::onSave (FXObject * sender, FXSelector sel, void *)
+void MimeApp::doAutomaticConfiguration(void)
 {
-    FXTRACE ((5, "save\n"));
-	string program=programsbox->getText().text();
-	string mime=mime_label->getText().text();
+vector <string>::iterator iter;
+			
+		for (iter=mime_vector.begin(); iter != mime_vector.end(); iter++)
+    		{
+			fill(*iter);
+			save(mime_label->getText().text(),programsbox->getText().text());
+		}
 	
-	save(mime,program);
 
 }
 
@@ -88,6 +100,11 @@ long MimeApp::onNextPrevious(FXObject * sender, FXSelector sel, void *)
 	{
 		iter--;
 	}
+	
+	string program=programsbox->getText().text();
+	string mime=mime_label->getText().text();	
+	save(mime,program);
+	
 	
 	fill(*iter);
 
@@ -116,14 +133,12 @@ void MimeApp::fill(string tmp)
 	string command="which " + prog + " >/dev/null 2>/dev/null";
 		if(system(command.c_str())==0)
 		{
-		//fxmessage(" ");
-		//fxmessage(prog.c_str());
 		programsbox->appendItem(prog.c_str());
 		}
 
 	
 	}
-	//fxmessage("\n");
+	programsbox->appendItem("");
 
 
 }
@@ -134,7 +149,7 @@ void MimeApp::save(string mime, string program)
 if(program=="")
 return;
 
-	//fxmessage("save=%s\n",mime.c_str());
+
 	string::size_type pos=mime.find("/");
 	
 	string mime_major;
@@ -148,9 +163,7 @@ return;
 	{
 		mime_major=mime.substr(0,pos);	
 		mime_minor=mime.substr(pos+1);
-		//fxmessage("MIME=%s--%s\n",mime_major.c_str(),mime_minor.c_str());
-		
-	
+			
 		command_name+=mime_major+"_"+mime_minor;
 	
 		reg2 = conf->readonestring ("/OpenspaceConfig/file_types/" + mime_major + "/default");

@@ -5,7 +5,10 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <stdlib.h>
 
+#include <fstream>
+#include <sstream>
 
 FXDEFMAP (preferences) preferencesMap[] =
 {
@@ -16,29 +19,117 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_SHUTTER_CHANGE, preferences::onShutterChange),	
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_NEW_COMMAND, preferences::onNewCommand), 
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_REMOVE_COMMAND, preferences::onRemoveCommand),
-	FXMAPFUNC (SEL_COMMAND, preferences::ID_MIME_APP, preferences::onOpenMimeApp),
+	FXMAPFUNCS (SEL_COMMAND, preferences::ID_MIME_APP, preferences::ID_MIME_APP_AUTO, preferences::onOpenMimeApp),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_ADD_FILETYPE, preferences::onAddFiletype),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_CHOOSE_COLOR,preferences::ID_CHOOSE_BACKCOLOR, preferences::onChooseColor),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_COMMAND_ADDITIONAL,preferences::ID_DEL_COMMAND_ADDITIONAL, preferences::onAdditionalCommandChange),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_BUTTON_COMMAND,preferences::ID_DEL_BUTTON_COMMAND, preferences::onAddButtonCommand),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_SHUTTER_COMMAND,preferences::ID_DEL_SHUTTER_COMMAND, preferences::onAddShutterCommand),
 	FXMAPFUNC(SEL_CLOSE,0,preferences::close),
+	FXMAPFUNC (SEL_COMMAND, preferences::ID_DOWNLOAD_INSTALL_CMD_PLUGIN, preferences::downloadInstallCommandPlugin),
+	FXMAPFUNC (SEL_COMMAND, preferences::ID_UPDATE_CMD_PLUGIN_LIST, preferences::updateCommandPluginList),
+	
 	
 };
 
 long preferences::close (FXObject * sender, FXSelector sel, void *ptr)
 {
 fxmessage("CLOSE & SAVE\n");
+
+if(saveconfiguration)
 this->save();
+
+FXMessageBox about (this, "restart", "restart openspace to apply changes", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+about.execute ();
+
 FXDialogBox::onCmdAccept(sender,sel,ptr);
 
 }
 
 
-FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesMap)) preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", DECOR_TITLE | DECOR_BORDER | DECOR_RESIZE, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4)
+FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesMap))
+
+
+long preferences::downloadInstallCommandPlugin (FXObject * sender, FXSelector sel, void *)
 {
 
-    mimeapp=new MimeApp(this);
+string file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/commandPluginsList.txt";
+	if(FXFile::exists(file.c_str()))
+	{
+	
+	std::string line;
+   	std::ifstream infile (file.c_str());
+
+  		  while (std::getline (infile, line))
+   		 {
+		string name;
+		string download;
+		std::stringstream parser (line);	
+		parser >> name;
+		parser >> download;
+			if(name==availableCommandPluginsList->getItem(availableCommandPluginsList->getCurrentItem()).text())
+			{
+			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget "+ download;
+			system(cmd.c_str());
+			fxmessage("DONWLOADED :d :d\n");
+			
+			 command_container ct=commandsMap[name];
+   			 if(ct.name!="") // already exists
+   			 return 0;
+    
+   			  ct.name=name;
+  			  ct.rescan=false;
+  			  ct.capture=false;
+			  ct.type="PLUGIN";
+   			  commandsCombo->appendItem(ct.name.c_str());
+    			  commandsMap[name]=ct;   
+ 		          commandsCombo->setCurrentItem (commandsCombo->getNumItems () - 1);
+   			  this->onCommandChange(NULL,0,NULL);
+    
+  			  fileTypeDefaultBox->appendItem(ct.name.c_str());
+  			  additionalCommands->appendItem(ct.name.c_str());
+			
+			break;
+			}
+		
+		}
+	}
+
+
+}
+long preferences::updateCommandPluginList (FXObject * sender, FXSelector sel, void *)
+{
+
+string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget http://openspace.linux.pl/0.1.0/x86/commandPluginsList.txt";
+system(cmd.c_str());
+fxmessage("\nCOMMAND=%s",cmd.c_str());
+string file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/commandPluginsList.txt";
+	if(FXFile::exists(file.c_str()))
+	{
+	
+	std::string line;
+   	std::ifstream infile (file.c_str());
+
+  		  while (std::getline (infile, line))
+   		 {
+		string name;
+		string download;
+		std::stringstream parser (line);	
+		parser >> name;
+		parser >> download;
+		availableCommandPluginsList->appendItem(name.c_str());
+		}
+	}
+
+}
+
+
+preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", DECOR_TITLE | DECOR_BORDER | DECOR_RESIZE, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4)
+{
+
+    mimeapp=NULL;
+    saveconfiguration=true;
+    
     objmanager=objectmanager::instance(getApp());
     colordlg=new FXColorDialog(this,"Color Dialog");
     
@@ -49,8 +140,8 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
 
 
     //new FXButton (vertical, "Save", NULL, this, preferences::ID_SAVE);
-    new FXButton (vertical, "Auto configure", NULL, this, preferences::ID_MIME_APP);
-
+    new FXButton (vertical, "Semi-Auto configure", NULL, this, preferences::ID_MIME_APP);
+    new FXButton (vertical, "Full-Auto configure", NULL, this, preferences::ID_MIME_APP_AUTO);
 
     FXVerticalFrame *mainpane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
@@ -63,13 +154,28 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
     new FXLabel (mainpane, "height:");
     mainwindow_height = new FXTextField (mainpane, 5);
     mainwindow_height->setText (conf->readonestring ("/OpenspaceConfig/mainwindow/height").c_str ());
+    
+    
+    new FXLabel (mainpane, "left directory:");
+    leftdir = new FXTextField (mainpane, 50);
+    leftdir->setText(conf->readonestring ("/OpenspaceConfig/leftdir/dir").c_str ());
+
+    new FXLabel (mainpane, "right directory (in single directory window mode this is default window):");
+    rightdir = new FXTextField (mainpane, 50);
+    rightdir->setText(conf->readonestring ("/OpenspaceConfig/rightdir/dir").c_str ());
+    
+    new FXLabel (mainpane, "default new opened directory:");
+    defaultdir = new FXTextField (mainpane, 50);
+    defaultdir->setText(conf->readonestring ("/OpenspaceConfig/defaultdir/dir").c_str ());
+    
+    
 
 //getShell()->getWidth()
 //getShell()->getHeight()
 
  FXVerticalFrame *buttonsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXLabel (buttonsPane, "Buttons settings", NULL, LAYOUT_LEFT);
-    new FXButton (buttons, "Buttons Settings", NULL, switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+    new FXLabel (buttonsPane, "Menu and Buttons settings", NULL, LAYOUT_LEFT);
+    new FXButton (buttons, "Menu and Buttons Settings", NULL, switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
 	buttonsList=new FXList (buttonsPane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	buttonsList->setNumVisible(5);
@@ -137,7 +243,19 @@ shutterList->setCurrentItem (shutterList->getNumItems () - 1);
     new FXLabel (commandPluginsPane, "Command plugins settings", NULL, LAYOUT_LEFT);
     new FXButton (buttons, "Command plugins Settings", NULL, switcher, FXSwitcher::ID_OPEN_THIRD, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
+ new FXLabel (commandPluginsPane, "installed plugins");
 commandPluginsList=new FXListBox (commandPluginsPane, this, ID_COMMANDPLUGIN_CHANGE);
+commandPluginsList->setNumVisible(30);
+
+ new FXLabel (commandPluginsPane, "available plugins - download from internet");
+ 
+availableCommandPluginsList=new FXListBox (commandPluginsPane, this, ID_COMMANDPLUGIN_CHANGE);
+availableCommandPluginsList->setNumVisible(30);
+
+new FXButton (commandPluginsPane, "Download and Install", NULL, this, ID_DOWNLOAD_INSTALL_CMD_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
+new FXButton (commandPluginsPane, "Update available plugins list", NULL, this, ID_UPDATE_CMD_PLUGIN_LIST, FRAME_RAISED | ICON_ABOVE_TEXT );
+
+
 
 string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/cmddialog";
 
@@ -147,13 +265,41 @@ struct stat status;
 	    DIR *dirp;
 
 	    dirp = opendir (plugin_path.c_str ());
-
+	    if(dirp)
 	    while ((dp = readdir (dirp)) != NULL)
 	    {
 		if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
 		{
 		string name=dp->d_name;
-		commandPluginsList->appendItem(name.c_str());	
+			if(name.substr(name.length()-3,3)==".so")
+			{
+			name=name.substr(0,name.length()-3);
+			name=name.substr(3,name.length()-3);
+			commandPluginsList->appendItem(name.c_str());
+			}
+			
+		    
+		}
+	    }
+
+	closedir (dirp);
+
+plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/cmddialog");
+	
+	dirp = opendir (plugin_path.c_str ());
+	    if(dirp)
+	    while ((dp = readdir (dirp)) != NULL)
+	    {
+		if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
+		{
+		string name=dp->d_name;
+			if(name.substr(name.length()-3,3)==".so")
+			{
+			name=name.substr(0,name.length()-3);
+			name=name.substr(3,name.length()-3);
+			commandPluginsList->appendItem(name.c_str());
+			}
+			
 		    
 		}
 	    }
@@ -557,6 +703,10 @@ vector <shutter_container>::iterator shutter_iter;
 
 
 
+conf->saveonestring ("/OpenspaceConfig/leftdir/dir",leftdir->getText().text());
+conf->saveonestring ("/OpenspaceConfig/rightdir/dir",rightdir->getText().text());
+conf->saveonestring ("/OpenspaceConfig/defaultdir/dir",defaultdir->getText().text());
+
 
 }
 
@@ -703,10 +853,28 @@ filetype_container *ct_prev=&filetypesMap[currentFileType];
 
 long preferences::onOpenMimeApp (FXObject * sender, FXSelector sel, void *)
 {
- 
-    if (mimeapp->shown ())
-	mimeapp->hide ();
+if(mimeapp==NULL)
+{
+mimeapp=new MimeApp(this);
 
-    else
-	mimeapp->show (PLACEMENT_OWNER);
+
+FXushort id=FXSELID(sel);
+
+	if(id==ID_MIME_APP_AUTO)
+	{	
+	mimeapp->doAutomaticConfiguration();
+	}
+	else
+	{
+	mimeapp->create();
+	mimeapp->execute (PLACEMENT_OWNER);
+	}
+
+
+saveconfiguration=false;
+this->handle (this, FXSEL (SEL_CLOSE, 0), NULL);
+}
+
+   
+	
 }

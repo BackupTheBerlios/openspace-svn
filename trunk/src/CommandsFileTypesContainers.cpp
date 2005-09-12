@@ -138,6 +138,10 @@ void command_container::save(void)
 
 string com = name;
 	string value = exec;
+	
+	
+	
+	
 	if(type!="INTERNAL" && type!="PLUGIN")
 	{
 		if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/exec", value))
@@ -147,6 +151,15 @@ string com = name;
 	   	 conf->addstring ("/OpenspaceConfig/commands/" + com, "exec", value);
 		}
 	}
+	else
+	{
+	if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/type", type))
+		{
+		conf->addstring ("/OpenspaceConfig/commands", com, "");
+		conf->addstring ("/OpenspaceConfig/commands/" + com, "type", type);
+		}
+	}
+	
 	string options;
 	if (capture)
 	    options += " capture";

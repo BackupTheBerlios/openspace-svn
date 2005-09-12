@@ -366,17 +366,7 @@
 		
 	</filelist>
 	
-	<plugins>
-		<cmddialog>
-			<mkdir>mkdir</mkdir>
-			<access>access</access>
-			<rename>rename</rename>
-			<clone>clone</clone>
-			<symlink>symlink</symlink>
-			<editsymlink>editsymlink</editsymlink>
-			<compress>compress</compress>
-		</cmddialog>
-	</plugins>
+	
 	
 	
 	

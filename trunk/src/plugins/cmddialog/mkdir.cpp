@@ -35,7 +35,7 @@ class special_cmddialog:public cmddialog
     virtual int special_cmddialog::exec (void)
     {
 	string s = text->getText ().text ();
-	fb->mkdir (s, 0);
+	fb->mkdir (s, 755);
     }
 
 

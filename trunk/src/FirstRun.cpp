@@ -40,27 +40,21 @@ long FirstRun::onConfigure(FXObject * sender, FXSelector sel, void *)
 	{
 	preferences *prefer=new preferences(this);
 	prefer->create();
-	prefer->show(PLACEMENT_OWNER);
+	prefer->execute(PLACEMENT_OWNER);
 	}
 	else if(id==ID_CONF_SEMI)
 	{
 	MimeApp *mimeapp=new MimeApp(this);
 	mimeapp->create();
-	mimeapp->show(PLACEMENT_OWNER);
+	mimeapp->execute(PLACEMENT_OWNER);
 	}
 	else if(id==ID_CONF_AUTOMATIC)
 	{
 		MimeApp *mimeapp=new MimeApp(this);
-		vector <string>::iterator iter;
-			
-		for (iter=mimeapp->iter; iter != mimeapp->mime_vector.end(); iter++)
-    		{
-			mimeapp->fill(*iter);
-			mimeapp->save(mimeapp->mime_label->getText().text(),mimeapp->programsbox->getText().text());
-		}
-	
+		mimeapp->doAutomaticConfiguration();
 	
 	}
-	
+	FXMessageBox about (this, "restart", "restart openspace to apply changes", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+   	about.execute ();
 
 }
