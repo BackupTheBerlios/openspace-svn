@@ -10,7 +10,7 @@
 FXDEFMAP (preferences) preferencesMap[] =
 {
     //________Message_Type_____________________ID____________Message_Handler_______  
-	FXMAPFUNC (SEL_COMMAND, preferences::ID_SAVE, preferences::onSave),
+	//FXMAPFUNC (SEL_COMMAND, preferences::ID_SAVE, preferences::onSave),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_COMMAND_CHANGE, preferences::onCommandChange),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_FILETYPE_CHANGE, preferences::onFileTypeChange), 
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_SHUTTER_CHANGE, preferences::onShutterChange),	
@@ -22,8 +22,17 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_COMMAND_ADDITIONAL,preferences::ID_DEL_COMMAND_ADDITIONAL, preferences::onAdditionalCommandChange),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_BUTTON_COMMAND,preferences::ID_DEL_BUTTON_COMMAND, preferences::onAddButtonCommand),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_SHUTTER_COMMAND,preferences::ID_DEL_SHUTTER_COMMAND, preferences::onAddShutterCommand),
+	FXMAPFUNC(SEL_CLOSE,0,preferences::close),
 	
 };
+
+long preferences::close (FXObject * sender, FXSelector sel, void *ptr)
+{
+fxmessage("CLOSE & SAVE\n");
+this->save();
+FXDialogBox::onCmdAccept(sender,sel,ptr);
+
+}
 
 
 FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesMap)) preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", DECOR_TITLE | DECOR_BORDER | DECOR_RESIZE, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4)
@@ -39,7 +48,7 @@ FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesM
     FXSwitcher *switcher = new FXSwitcher (horizontal, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0);
 
 
-    new FXButton (vertical, "Save", NULL, this, preferences::ID_SAVE);
+    //new FXButton (vertical, "Save", NULL, this, preferences::ID_SAVE);
     new FXButton (vertical, "Auto configure", NULL, this, preferences::ID_MIME_APP);
 
 
@@ -410,18 +419,33 @@ long preferences::onAddShutterCommand (FXObject * sender, FXSelector sel, void *
 {
 
 FXushort id=FXSELID(sel);
+string actual_shutter=shutterList->getItem(shutterList->getCurrentItem()).text();
 
 	if(id==ID_ADD_SHUTTER_COMMAND)
 	{
 	
-	string actual_shutter=shutterList->getItem(shutterList->getCurrentItem()).text();
+	
 	string cmd=additionalCommandsAvailableForButtons->getItemText(additionalCommandsAvailableForButtons->getCurrentItem()).text();
 	shutterVector.push_back(shutter_container(actual_shutter,cmd));
 	shutterCommands->appendItem(cmd.c_str());
 	}
 	else
 	{
+	
+	string cmd=shutterCommands->getItemText(shutterCommands->getCurrentItem()).text();
 	shutterCommands->removeItem(shutterCommands->getCurrentItem());
+	
+	vector <shutter_container>::iterator iter;
+	
+	for(iter=shutterVector.begin();iter!=shutterVector.end(); iter++)
+		{
+			if(iter->command==cmd && iter->shutter==actual_shutter)
+			{
+			shutterVector.erase(iter);
+			break;
+			}
+		}
+			
 	}
 
 
@@ -476,7 +500,7 @@ preferences::~preferences ()
 {
 }
 
-long preferences::onSave (FXObject * sender, FXSelector sel, void *)
+long preferences::save (void)
 {
     FXTRACE ((5, "save\n"));
     
@@ -514,6 +538,24 @@ for (int c = 0; c < buttonsList->getNumItems (); c++)
 
 
 	    }
+
+
+conf->removestring ("/OpenspaceConfig/shutter");
+conf->addstring("/OpenspaceConfig","shutter","");
+
+vector <shutter_container>::iterator shutter_iter;
+	
+	for(shutter_iter=shutterVector.begin();shutter_iter!=shutterVector.end(); shutter_iter++)
+		{
+		string res;
+			if(!conf->readonestring("/OpenspaceConfig/shutter/"+shutter_iter->shutter,res))
+			conf->addstring("/OpenspaceConfig/shutter",shutter_iter->shutter,"");
+				
+			conf->addstring("/OpenspaceConfig/shutter/"+shutter_iter->shutter,"command",shutter_iter->command);
+	
+		}
+
+
 
 
 }

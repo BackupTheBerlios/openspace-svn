@@ -100,7 +100,7 @@ class preferences:public FXDialogBox
 
     preferences (FXWindow * owner);
 
-    long preferences::onSave (FXObject * sender, FXSelector sel, void *);
+    long preferences::save (void);
     long preferences::onCommandChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onFileTypeChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onShutterChange (FXObject * sender, FXSelector sel, void *);
@@ -112,6 +112,8 @@ class preferences:public FXDialogBox
     long preferences::onChooseColor (FXObject * sender, FXSelector sel, void *);
     long preferences::onAddButtonCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::onAddShutterCommand (FXObject * sender, FXSelector sel, void *);
+    long preferences::close (FXObject * sender, FXSelector sel, void *);
+    
     
     
     void preferences::setAllColor(FXButton* button,FXColor color);
