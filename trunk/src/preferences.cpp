@@ -17,6 +17,7 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_COMMAND_CHANGE, preferences::onCommandChange),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_FILETYPE_CHANGE, preferences::onFileTypeChange), 
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_SHUTTER_CHANGE, preferences::onShutterChange),	
+	FXMAPFUNC (SEL_COMMAND, preferences::ID_VFS_CHANGE, preferences::onVfsChange),	
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_NEW_COMMAND, preferences::onNewCommand), 
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_REMOVE_COMMAND, preferences::onRemoveCommand),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_MIME_APP, preferences::ID_MIME_APP_AUTO, preferences::onOpenMimeApp),
@@ -28,6 +29,8 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC(SEL_CLOSE,0,preferences::close),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_DOWNLOAD_INSTALL_CMD_PLUGIN, preferences::downloadInstallCommandPlugin),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_UPDATE_CMD_PLUGIN_LIST, preferences::updateCommandPluginList),
+	
+	
 	
 	
 };
@@ -306,6 +309,8 @@ plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/
 
 	    closedir (dirp);
 
+    
+
 
 
 
@@ -543,7 +548,56 @@ string res;
     }
 
 
+    vfsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXLabel (vfsPane, "VFS settings", NULL, LAYOUT_LEFT);
+
+    new FXButton (buttons, "Virtual File System Settings", NULL, switcher, FXSwitcher::ID_OPEN_SIXTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+
+    
+    
+        vfsList=new FXListBox (vfsPane, this, ID_VFS_CHANGE);
+        vfsList->setNumVisible(10);
+        
+	    
+    
+        FXHorizontalFrame *hzframe=new FXHorizontalFrame (vfsPane, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	FXVerticalFrame *vframe0=new FXVerticalFrame (hzframe, LAYOUT_FILL_X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXLabel(vframe0,"visible headers:");
+        headersList=new FXList (vframe0,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
+	headersList->setNumVisible(5);
+	FXVerticalFrame* vframe=new FXVerticalFrame (hzframe, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXLabel(vframe,"\n");
+	new FXLabel(vframe,"\n");
+	new FXArrowButton(vframe,this,ID_ADD_COMMAND_ADDITIONAL,FRAME_RAISED|FRAME_THICK|ARROW_LEFT);
+	new FXArrowButton(vframe,this,ID_DEL_COMMAND_ADDITIONAL,FRAME_RAISED|FRAME_THICK|ARROW_RIGHT);
+	FXVerticalFrame *vframe1=new FXVerticalFrame (hzframe, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXLabel(vframe1,"all available headers:");
+	availableHeadersList=new FXList (vframe1,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
+	availableHeadersList->setNumVisible(5);
+
+    
+    
+    if (conf->openxpath ("/OpenspaceConfig/filelist") != -1)
+	{
+	string command;
+	    while (conf->getnextnode (command))
+	    {
+	    vfsList->appendItem(command.c_str());
+	    }
+	}    
+    
+
+       
+	this->onVfsChange(NULL,0,NULL);
+
+
 }
+
+long preferences::onVfsChange (FXObject * sender, FXSelector sel, void *)
+{
+fxmessage("change");
+}
+
 long preferences::onAddButtonCommand (FXObject * sender, FXSelector sel, void *)
 {
 

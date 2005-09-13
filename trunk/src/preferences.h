@@ -1,16 +1,12 @@
 #ifndef PREFERENCES_H
 #define PREFERENCES_H
-
 #include "sharedobjects.h"
 #include "MimeApp.h"
 #include "CommandsFileTypesContainers.h"
-
-
 #include <vector>
 #include <string>
 #include <map>
 using namespace std;
-
 class shutter_container
 {
 public:
@@ -46,6 +42,10 @@ class preferences:public FXDialogBox
     FXCheckButton *commandsCapture;
     FXLabel *commandsType;
     FXLabel *commandsIcon;
+    
+    FXVerticalFrame *vfsPane;
+    FXListBox *vfsList;
+    FXList*headersList,*availableHeadersList;
     
     FXList *additionalCommands,*additionalCommandsAvailable,*additionalCommandsAvailableForButtons;
     FXList *shutterCommands;
@@ -84,6 +84,7 @@ class preferences:public FXDialogBox
 	ID_SAVE = FXDialogBox::ID_LAST,
 	ID_COMMAND_CHANGE,
 	ID_FILETYPE_CHANGE,
+	ID_VFS_CHANGE,
 	ID_NEW_COMMAND,
 	ID_NEW_FILETYPE,
 	ID_REMOVE_COMMAND,
@@ -122,6 +123,7 @@ class preferences:public FXDialogBox
     long preferences::close (FXObject * sender, FXSelector sel, void *);
     long preferences::downloadInstallCommandPlugin (FXObject * sender, FXSelector sel, void *);
     long preferences::updateCommandPluginList (FXObject * sender, FXSelector sel, void *);
+    long preferences::onVfsChange (FXObject * sender, FXSelector sel, void *);
     
     void preferences::setAllColor(FXButton* button,FXColor color);
     

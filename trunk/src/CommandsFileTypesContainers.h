@@ -40,4 +40,12 @@ class command_container
 
 };
 
+class vfs_container
+{
+
+void save(void);
+
+}
+
+
 #endif
