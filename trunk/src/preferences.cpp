@@ -26,6 +26,7 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_COMMAND_ADDITIONAL,preferences::ID_DEL_COMMAND_ADDITIONAL, preferences::onAdditionalCommandChange),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_BUTTON_COMMAND,preferences::ID_DEL_BUTTON_COMMAND, preferences::onAddButtonCommand),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_SHUTTER_COMMAND,preferences::ID_DEL_SHUTTER_COMMAND, preferences::onAddShutterCommand),
+	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_HEADER,preferences::ID_DEL_HEADER, preferences::onAddHeader),
 	FXMAPFUNC(SEL_CLOSE,0,preferences::close),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_DOWNLOAD_INSTALL_CMD_PLUGIN, preferences::downloadInstallCommandPlugin),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_UPDATE_CMD_PLUGIN_LIST, preferences::updateCommandPluginList),
@@ -568,8 +569,8 @@ string res;
 	FXVerticalFrame* vframe=new FXVerticalFrame (hzframe, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXLabel(vframe,"\n");
 	new FXLabel(vframe,"\n");
-	new FXArrowButton(vframe,this,ID_ADD_COMMAND_ADDITIONAL,FRAME_RAISED|FRAME_THICK|ARROW_LEFT);
-	new FXArrowButton(vframe,this,ID_DEL_COMMAND_ADDITIONAL,FRAME_RAISED|FRAME_THICK|ARROW_RIGHT);
+	new FXArrowButton(vframe,this,ID_ADD_HEADER,FRAME_RAISED|FRAME_THICK|ARROW_LEFT);
+	new FXArrowButton(vframe,this,ID_DEL_HEADER,FRAME_RAISED|FRAME_THICK|ARROW_RIGHT);
 	FXVerticalFrame *vframe1=new FXVerticalFrame (hzframe, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXLabel(vframe1,"all available headers:");
 	availableHeadersList=new FXList (vframe1,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
@@ -586,7 +587,7 @@ string res;
 	    }
 	}    
     
-
+actualvfs="";
        
 	this->onVfsChange(NULL,0,NULL);
 
@@ -595,7 +596,46 @@ string res;
 
 long preferences::onVfsChange (FXObject * sender, FXSelector sel, void *)
 {
+
+if(actualvfs!="")//not first run, save
+{
+conf->removestring ("/OpenspaceConfig/filelist/"+actualvfs+"/headers");
+conf->addstring("/OpenspaceConfig/filelist/"+actualvfs,"headers","");
+
+for (int c = 0; c < headersList->getNumItems (); c++)
+	    {
+		
+		string cmd= headersList->getItemText (c).text ();
+		conf->addstring("/OpenspaceConfig/filelist/"+actualvfs+"/headers","header",cmd);  
+	    }	
+
+
+}
+
+
 fxmessage("change");
+actualvfs=vfsList->getItem(vfsList->getCurrentItem()).text();
+availableHeadersList->clearItems();
+if (conf->openxpath ("/OpenspaceConfig/filelist/"+actualvfs+"/properties") != -1)
+	{
+	string command;
+	    while (conf->getnextnode (command))
+	    {
+		availableHeadersList->appendItem (command.c_str ());
+	    }
+	}
+headersList->clearItems();
+if (conf->openxpath ("/OpenspaceConfig/filelist/"+actualvfs+"/headers/header") != -1)
+	{
+	string command;
+	    while (conf->getnextstring (command))
+	    {
+		headersList->appendItem (command.c_str ());
+	    }
+	}
+
+
+
 }
 
 long preferences::onAddButtonCommand (FXObject * sender, FXSelector sel, void *)
@@ -611,6 +651,24 @@ FXushort id=FXSELID(sel);
 	{
 	buttonsList->removeItem(buttonsList->getCurrentItem());
 	}
+
+
+}
+
+long preferences::onAddHeader (FXObject * sender, FXSelector sel, void *)
+{
+
+FXushort id=FXSELID(sel);
+
+	if(id==ID_ADD_HEADER)
+	{
+	headersList->appendItem(availableHeadersList->getItemText(availableHeadersList->getCurrentItem()));
+	}
+	else
+	{
+	headersList->removeItem(headersList->getCurrentItem());
+	}
+
 
 
 }
@@ -706,6 +764,7 @@ long preferences::save (void)
     
     this->onCommandChange(NULL,0,NULL);
     this->onFileTypeChange(NULL,0,NULL);
+    this->onVfsChange(NULL,0,NULL);
 
     map < string, command_container >::iterator iter;
 

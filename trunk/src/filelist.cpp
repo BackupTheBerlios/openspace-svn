@@ -50,6 +50,7 @@ FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
 	FXMAPFUNCS (SEL_COMMAND, filelist::ID_LAST, filelist::ID_LAST + 50, filelist::file_operation),
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_HEADER_CHANGE, filelist::onCmdHeader),
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_SORT_CHANGE, filelist::onCmdHeader),
+	FXMAPFUNC (SEL_LEFTBUTTONRELEASE, filelist::ID_HEADER_CHANGE, filelist::onCmdResize),	
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_MAXIMIZE, filelist::onMaximize),
 	FXMAPFUNC (SEL_COMMAND, cmddialog::ID_COMMAND, filelist::onCommand),
 	FXMAPFUNC (SEL_COMMAND, cmddialog::ID_CANCEL_COMMAND, filelist::onCommandCancel),
@@ -574,6 +575,21 @@ void filelist::create ()
 
 }
 
+long filelist::onCmdResize(FXObject * sender, FXSelector sel, void *ptr)
+{
+
+//FXIconList::onHeaderResize(sender, sel,ptr);
+
+fxmessage("RESIZE ;D");
+for(int i=0;i<getNumHeaders();i++)
+	{
+	string header=getHeaderText(i).text();
+	int width=getHeaderSize(i);
+	conf->saveonestring("/OpenspaceConfig/filelist/"+this->type+"/properties/"+header+"/width",ntos(width));
+	
+	}
+}
+
 //--------------------------------------------------------------------------------
 //bind keys
 long filelist::setKeys (void)
@@ -834,6 +850,9 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
 filelist::~filelist ()
 {
+	
+
+
 
     delete sortpop;
     FXTRACE ((5, "destruct\n"));
@@ -2158,6 +2177,8 @@ long filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
     if (processing)
 	return 0;
 
+
+
     FXASSERT ((5, "CMDHEADER\n"));
     FXushort id = FXSELID (sel);
     int num;
@@ -2278,6 +2299,7 @@ long filelist::onChangeView (FXObject * sender, FXSelector sel, void *)
 	setFont (objmanager->captionfont2);
 	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
 	refresh ();
+	conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","small icons");
     }
 
     else if (id == ID_CHANGE_VIEW_BIG)
@@ -2285,6 +2307,7 @@ long filelist::onChangeView (FXObject * sender, FXSelector sel, void *)
 	setFont (objmanager->captionfont);
 	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
 	refresh ();
+	conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","big icons");
     }
 
     else if (id = ID_CHANGE_VIEW_DETAILS)
@@ -2292,6 +2315,7 @@ long filelist::onChangeView (FXObject * sender, FXSelector sel, void *)
 	setFont (objmanager->captionfont2);
 	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
 	refresh ();
+	conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","detailed");
     }
 }
 

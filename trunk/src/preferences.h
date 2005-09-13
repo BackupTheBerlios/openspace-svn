@@ -16,6 +16,34 @@ shutter_container(string s,string c):shutter(s),command(c){}
 };
 
 
+class vfsheader_container
+{
+public:
+string name;
+string width;
+string type;
+string vfs;
+
+	void load(string vfs, string name)
+	{
+	this->name=name;
+	this->vfs=vfs;
+	width=conf->readonestring("/OpenspaceConfig/filelist/"+vfs+"/properties/"+name+"/width");
+	width=conf->readonestring("/OpenspaceConfig/filelist/"+vfs+"/properties/"+name+"/type");
+	}
+	void save(void)
+	{
+	if(!conf->saveonestring("/OpenspaceConfig/filelist/"+vfs+"/properties/"+name+"/width",width))
+		conf->addstring("/OpenspaceConfig/filelist/"+vfs+"/properties/"+name,"width",width);
+	if(!conf->saveonestring("/OpenspaceConfig/filelist/"+vfs+"/properties/"+name+"/type",type))
+		conf->addstring("/OpenspaceConfig/filelist/"+vfs+"/properties/"+name,"type",type);
+	}
+
+
+};
+
+
+
 //preferences window, this is one of the most important things to be extended
 class preferences:public FXDialogBox
 {
@@ -26,7 +54,7 @@ class preferences:public FXDialogBox
     {
     }
 
-  
+    string actualvfs;
 
     bool saveconfiguration;
     FXTextField * mainwindow_width;
@@ -73,8 +101,10 @@ class preferences:public FXDialogBox
 
     map <string, command_container > commandsMap;
     map <string, filetype_container> filetypesMap;
+    
+    map <string, vfsheader_container> vfsheaderMap;
     vector <shutter_container> shutterVector;
-
+    
     FXVerticalFrame *filetypePane;
     
     public:
@@ -100,6 +130,8 @@ class preferences:public FXDialogBox
 	ID_DEL_BUTTON_COMMAND,
 	ID_ADD_SHUTTER_COMMAND,
 	ID_DEL_SHUTTER_COMMAND,
+	ID_ADD_HEADER,
+	ID_DEL_HEADER,
 	ID_SHUTTER_CHANGE,
 	ID_DOWNLOAD_INSTALL_CMD_PLUGIN,
 	ID_UPDATE_CMD_PLUGIN_LIST,
@@ -124,6 +156,7 @@ class preferences:public FXDialogBox
     long preferences::downloadInstallCommandPlugin (FXObject * sender, FXSelector sel, void *);
     long preferences::updateCommandPluginList (FXObject * sender, FXSelector sel, void *);
     long preferences::onVfsChange (FXObject * sender, FXSelector sel, void *);
+    long preferences::onAddHeader (FXObject * sender, FXSelector sel, void *);
     
     void preferences::setAllColor(FXButton* button,FXColor color);
     

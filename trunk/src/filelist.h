@@ -123,6 +123,7 @@ class filelist:public FXIconList
     long filelist::onMaximize (FXObject * sender, FXSelector, void *);
     long filelist::onGoHome (FXObject * sender, FXSelector, void *);
     long filelist::setKeys (void);
+    long filelist::onCmdResize(FXObject * sender, FXSelector, void *);
 
     long onDNDEnter (FXObject *, FXSelector, void *);
     long onDNDLeave (FXObject *, FXSelector, void *);
@@ -156,6 +157,7 @@ class filelist:public FXIconList
     string filelist::getdefaultcommand (string name);
     string filelist::resolvecommand(string command,string name);
     int filelist::runCommand(string name);
+    
 
 };
 
