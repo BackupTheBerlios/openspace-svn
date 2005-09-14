@@ -44,7 +44,7 @@ class filelist_local:public filelist_base
     string symlink (string path);
     bool symlink (string src, string dst);
     bool hardlink (string src, string dst);
-    int supportedfunctions (void);
+    vfs setup (void);
 
     void totalsize (string path, unsigned long &size);
     int copymove (thread_elem * te, bool copy = true);

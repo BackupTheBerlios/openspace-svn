@@ -16,6 +16,20 @@
 int filelist_ftp::level=0;
 
 
+vfs filelist_ftp::setup (void)
+{
+	vfs v;
+	
+	v.vfsheaders.push_back(vfsheader_container("name"));
+	v.vfsheaders.push_back(vfsheader_container("size","size"));
+	v.vfsheaders.push_back(vfsheader_container("owner"));
+	v.vfsheaders.push_back(vfsheader_container("group"));
+	v.information="FTP - default plugin";
+	v.version="1";
+	v.type="network";
+return v;	
+	
+}
 
 
 int filelist_ftp::priv_osopendir (string dir,string prefix,map <string,osfile> & filesMap,map <string,osfile>::iterator & iter)
@@ -659,9 +673,7 @@ bool filelist_ftp::symlink (string src, string dst)
 bool filelist_ftp::hardlink (string src, string dst)
 {
 }
-int filelist_ftp::supportedfunctions (void)
-{
-}
+
 int filelist_ftp::quit (void)
 {
 pftp->logout();

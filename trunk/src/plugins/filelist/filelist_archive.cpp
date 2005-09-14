@@ -4,6 +4,21 @@
 #define EXPORTFUNCTION extern "C"
 #endif
 #include "filelist_archive.h"
+
+
+vfs filelist_archive::setup (void)
+{
+	vfs v;
+	
+	v.vfsheaders.push_back(vfsheader_container("name"));
+	v.information="tar.bz2 and tar.gz archive - default plugin";
+	v.version="1";
+	v.type="vfs";
+return v;	
+	
+}
+
+
 int filelist_archive::osopendir (string dir)
 {
 fxmessage("OPENDIR");
@@ -371,9 +386,7 @@ bool filelist_archive::symlink (string src, string dst)
 bool filelist_archive::hardlink (string src, string dst)
 {
 }
-int filelist_archive::supportedfunctions (void)
-{
-}
+
 int filelist_archive::quit (void)
 {
 }

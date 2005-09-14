@@ -5,6 +5,18 @@
 #endif
 #include "filelist_search.h"
 
+vfs filelist_search::setup (void)
+{
+	vfs v;
+	
+	v.vfsheaders.push_back(vfsheader_container("name"));
+	v.information="search vfs - default plugin";
+	v.version="1";
+	v.type="search";
+return v;	
+	
+}
+
 
 int filelist_search::osopendir (string dir)
 {
@@ -157,9 +169,7 @@ bool filelist_search::symlink (string src, string dst)
 bool filelist_search::hardlink (string src, string dst)
 {
 }
-int filelist_search::supportedfunctions (void)
-{
-}
+
 int filelist_search::quit (void)
 {
 }

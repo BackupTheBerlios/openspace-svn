@@ -33,7 +33,7 @@ class filelist_sftp:public filelist_base
     string filelist_sftp::symlink (string path);
     bool filelist_sftp::symlink (string src, string dst);
     bool filelist_sftp::hardlink (string src, string dst);
-    int filelist_sftp::supportedfunctions (void);
+    vfs filelist_sftp::setup (void);
     int filelist_sftp::quit (void);
     
     

@@ -7,6 +7,8 @@
 #include <dirent.h>
 #include <stdlib.h>
 
+#include "FXDLL.h"
+#include "filelist_base.h"
 #include <fstream>
 #include <sstream>
 
@@ -28,8 +30,8 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_SHUTTER_COMMAND,preferences::ID_DEL_SHUTTER_COMMAND, preferences::onAddShutterCommand),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_ADD_HEADER,preferences::ID_DEL_HEADER, preferences::onAddHeader),
 	FXMAPFUNC(SEL_CLOSE,0,preferences::close),
-	FXMAPFUNC (SEL_COMMAND, preferences::ID_DOWNLOAD_INSTALL_CMD_PLUGIN, preferences::downloadInstallCommandPlugin),
-	FXMAPFUNC (SEL_COMMAND, preferences::ID_UPDATE_CMD_PLUGIN_LIST, preferences::updateCommandPluginList),
+	FXMAPFUNCS (SEL_COMMAND, preferences::ID_DOWNLOAD_INSTALL_CMD_PLUGIN,preferences::ID_DOWNLOAD_INSTALL_VFS_PLUGIN, preferences::downloadInstallPlugin),
+	FXMAPFUNCS (SEL_COMMAND, preferences::ID_UPDATE_CMD_PLUGIN_LIST,preferences::ID_UPDATE_VFS_PLUGIN_LIST, preferences::updatePluginList),
 	
 	
 	
@@ -54,10 +56,16 @@ FXDialogBox::onCmdAccept(sender,sel,ptr);
 FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesMap))
 
 
-long preferences::downloadInstallCommandPlugin (FXObject * sender, FXSelector sel, void *)
+long preferences::downloadInstallPlugin (FXObject * sender, FXSelector sel, void *)
 {
+FXushort id=FXSELID(sel);
+string file;
 
-string file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/commandPluginsList.txt";
+	if(id==ID_DOWNLOAD_INSTALL_CMD_PLUGIN)
+	file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/commandPluginsList.txt";
+	else
+	file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/vfsPluginsList.txt";
+	
 	if(FXFile::exists(file.c_str()))
 	{
 	
@@ -71,11 +79,13 @@ string file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/
 		std::stringstream parser (line);	
 		parser >> name;
 		parser >> download;
+		
+		if(id==ID_DOWNLOAD_INSTALL_CMD_PLUGIN)
 			if(name==availableCommandPluginsList->getItem(availableCommandPluginsList->getCurrentItem()).text())
 			{
-			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget "+ download;
+			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget -nc "+ download;
 			system(cmd.c_str());
-			fxmessage("DONWLOADED :d :d\n");
+
 			
 			 command_container ct=commandsMap[name];
    			 if(ct.name!="") // already exists
@@ -95,37 +105,98 @@ string file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/
 			
 			break;
 			}
+		else
+			if(name==availableVfsPluginsList->getItem(availableVfsPluginsList->getCurrentItem()).text())
+			{
+			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget -nc "+ download;
+			system(cmd.c_str());
+
+			string plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libfilelist")+ name+".so";
+
+    
+   			 	void *dllhandle = fxdllOpen (plugin_path.c_str ());
+    				if (dllhandle)
+    				{
+	
+				filelist_base *(*gg) (void);
+				gg = (filelist_base * (*)(void)) fxdllSymbol (dllhandle, "get_filelist");
+				filelist_base *fb = gg ();	
+				
+				vfs v=fb->setup();
+				
+				conf->removestring ("/OpenspaceConfig/filelist/"+name);
+				conf->addstring("/OpenspaceConfig/filelist",name,"");
+				conf->addstring("/OpenspaceConfig/filelist/"+name,"type",v.type);
+				conf->addstring("/OpenspaceConfig/filelist/"+name,"properties","");
+				
+				
+				
+				vector <vfsheader_container>::iterator iter;
+				
+					for(iter=v.vfsheaders.begin();iter!=v.vfsheaders.end();iter++)
+					{
+					conf->addstring("/OpenspaceConfig/filelist/"+name+"/properties",iter->name,"");
+					conf->addstring("/OpenspaceConfig/filelist/"+name+"/properties/"+ iter->name,"width",iter->width);
+					conf->addstring("/OpenspaceConfig/filelist/"+name+"/properties/"+ iter->name,"type",iter->type);
+					}
+				vfsList->appendItem(name.c_str());
+			
+				}
+
+			}	
+			
 		
 		}
 	}
 
 
 }
-long preferences::updateCommandPluginList (FXObject * sender, FXSelector sel, void *)
+long preferences::updatePluginList (FXObject * sender, FXSelector sel, void *)
 {
+string cmd;
 
-string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget http://openspace.linux.pl/0.1.0/x86/commandPluginsList.txt";
+FXushort id=FXSELID(sel);
+
+	if(id==ID_UPDATE_CMD_PLUGIN_LIST)
+	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget -nc http://openspace.linux.pl/files/0.1.0/x86/commandPluginsList.txt";
+	else
+	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget -nc http://openspace.linux.pl/files/0.1.0/x86/vfsPluginsList.txt";
+	
+	
 system(cmd.c_str());
-fxmessage("\nCOMMAND=%s",cmd.c_str());
-string file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/commandPluginsList.txt";
+string file;
+	if(id==ID_UPDATE_CMD_PLUGIN_LIST)
+	file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/commandPluginsList.txt";
+	else
+	file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/vfsPluginsList.txt";
+	
+	
 	if(FXFile::exists(file.c_str()))
 	{
 	
 	std::string line;
    	std::ifstream infile (file.c_str());
 
-  		  while (std::getline (infile, line))
-   		 {
+  		while (std::getline (infile, line))
+   		{
 		string name;
 		string download;
 		std::stringstream parser (line);	
 		parser >> name;
 		parser >> download;
-		availableCommandPluginsList->appendItem(name.c_str());
+			if(id==ID_UPDATE_CMD_PLUGIN_LIST)
+			{
+			availableCommandPluginsList->appendItem(name.c_str());
+			}
+			else
+			{
+			availableVfsPluginsList->appendItem(name.c_str());
+			}
 		}
 	}
 
 }
+
 
 
 preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", DECOR_TITLE | DECOR_BORDER | DECOR_RESIZE, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4)
@@ -253,7 +324,7 @@ commandPluginsList->setNumVisible(30);
 
  new FXLabel (commandPluginsPane, "available plugins - download from internet");
  
-availableCommandPluginsList=new FXListBox (commandPluginsPane, this, ID_COMMANDPLUGIN_CHANGE);
+availableCommandPluginsList=new FXListBox (commandPluginsPane);
 availableCommandPluginsList->setNumVisible(30);
 
 new FXButton (commandPluginsPane, "Download and Install", NULL, this, ID_DOWNLOAD_INSTALL_CMD_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
@@ -576,6 +647,16 @@ string res;
 	availableHeadersList=new FXList (vframe1,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	availableHeadersList->setNumVisible(5);
 
+
+
+ new FXLabel (vfsPane, "available plugins - download from internet");
+ 
+availableVfsPluginsList=new FXListBox (vfsPane);
+availableVfsPluginsList->setNumVisible(30);
+    
+new FXButton (vfsPane, "Download and Install", NULL, this, ID_DOWNLOAD_INSTALL_VFS_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
+new FXButton (vfsPane, "Update available plugins list", NULL, this, ID_UPDATE_VFS_PLUGIN_LIST, FRAME_RAISED | ICON_ABOVE_TEXT );
+
     
     
     if (conf->openxpath ("/OpenspaceConfig/filelist") != -1)
@@ -621,6 +702,7 @@ if (conf->openxpath ("/OpenspaceConfig/filelist/"+actualvfs+"/properties") != -1
 	string command;
 	    while (conf->getnextnode (command))
 	    {
+	    	if(command!="name")
 		availableHeadersList->appendItem (command.c_str ());
 	    }
 	}

@@ -32,7 +32,7 @@ class filelist_archive:public filelist_base
     string filelist_archive::symlink (string path);
     bool filelist_archive::symlink (string src, string dst);
     bool filelist_archive::hardlink (string src, string dst);
-    int filelist_archive::supportedfunctions (void);
+    vfs filelist_archive::setup (void);
     int filelist_archive::quit (void);
     
     int filelist_archive::filesoperation(string type,thread_elem * te);

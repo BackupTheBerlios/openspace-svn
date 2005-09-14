@@ -33,7 +33,7 @@ class filelist_search:public filelist_base
     string filelist_search::symlink (string path);
     bool filelist_search::symlink (string src, string dst);
     bool filelist_search::hardlink (string src, string dst);
-    int filelist_search::supportedfunctions (void);
+    vfs filelist_search::setup (void);
     int filelist_search::quit (void);
 };
 #endif

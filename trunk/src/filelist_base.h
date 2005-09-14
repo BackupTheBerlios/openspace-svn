@@ -2,12 +2,35 @@
 #define FILELIST_BASE
 
 #include <string>
+#include <vector>
 using namespace std;
 
 #include "osfile.h"
 #include "configure.h"
 #include "thread_elem.h"
 #include "pathtype.h"
+
+
+class vfsheader_container
+{
+public:
+string name;
+string type;
+string width;
+vfsheader_container(){}
+vfsheader_container(string n,string t="",string w="100"):name(n),type(t),width(w){}
+
+};
+
+class vfs
+{
+public:
+vector <vfsheader_container> vfsheaders;
+string information;
+string version;
+string type;
+
+};
 
 //filelist plugins need to inherit from this class
 class filelist_base
@@ -31,13 +54,24 @@ class filelist_base
     virtual void totalsize (string path, unsigned long &size) = 0;
     virtual string symlink (string path) = 0;
     virtual bool symlink (string src, string dst) = 0;
-    virtual bool hardlink (string src, string dst) = 0;
-    virtual int supportedfunctions (void) = 0;
+    virtual bool hardlink (string src, string dst) = 0;    
     virtual int quit (void) = 0;
     virtual string getinitialdir(void)
     {
     return "/";
     }
+    
+    virtual vfs setup (void) = 0;
+    
 
 };
+
+
+
+
+
+
+
+
+
 #endif

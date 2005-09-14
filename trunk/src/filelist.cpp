@@ -709,6 +709,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
   }
 
 
+	
 
 
     string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/filelist/libfilelist" + this->type;
@@ -719,10 +720,17 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 #else
     plugin_path += ".so";
 #endif
-    fxmessage (plugin_path.c_str ());
-    fxmessage ("\n");
-    fxmessage (fxdllError ().text ());
-    fxmessage ("\n");
+
+    if(!FXFile::exists(plugin_path.c_str()))
+	{
+	plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libfilelist")+ this->type;
+	#ifdef WIN32
+	plugin_path += ".dll";
+	#else
+	plugin_path += ".so";
+	#endif
+	}
+    
     void *dllhandle = fxdllOpen (plugin_path.c_str ());
     if (dllhandle)
     {

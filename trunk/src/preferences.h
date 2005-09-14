@@ -16,34 +16,6 @@ shutter_container(string s,string c):shutter(s),command(c){}
 };
 
 
-class vfsheader_container
-{
-public:
-string name;
-string width;
-string type;
-string vfs;
-
-	void load(string vfs, string name)
-	{
-	this->name=name;
-	this->vfs=vfs;
-	width=conf->readonestring("/OpenspaceConfig/filelist/"+vfs+"/properties/"+name+"/width");
-	width=conf->readonestring("/OpenspaceConfig/filelist/"+vfs+"/properties/"+name+"/type");
-	}
-	void save(void)
-	{
-	if(!conf->saveonestring("/OpenspaceConfig/filelist/"+vfs+"/properties/"+name+"/width",width))
-		conf->addstring("/OpenspaceConfig/filelist/"+vfs+"/properties/"+name,"width",width);
-	if(!conf->saveonestring("/OpenspaceConfig/filelist/"+vfs+"/properties/"+name+"/type",type))
-		conf->addstring("/OpenspaceConfig/filelist/"+vfs+"/properties/"+name,"type",type);
-	}
-
-
-};
-
-
-
 //preferences window, this is one of the most important things to be extended
 class preferences:public FXDialogBox
 {
@@ -97,12 +69,12 @@ class preferences:public FXDialogBox
     FXColorDialog *colordlg;
 
     FXListBox *commandPluginsList,*availableCommandPluginsList;
+    FXListBox * availableVfsPluginsList;
     FXList*buttonsList;
 
     map <string, command_container > commandsMap;
-    map <string, filetype_container> filetypesMap;
-    
-    map <string, vfsheader_container> vfsheaderMap;
+    map <string, filetype_container> filetypesMap;   
+  
     vector <shutter_container> shutterVector;
     
     FXVerticalFrame *filetypePane;
@@ -134,7 +106,9 @@ class preferences:public FXDialogBox
 	ID_DEL_HEADER,
 	ID_SHUTTER_CHANGE,
 	ID_DOWNLOAD_INSTALL_CMD_PLUGIN,
+	ID_DOWNLOAD_INSTALL_VFS_PLUGIN,
 	ID_UPDATE_CMD_PLUGIN_LIST,
+	ID_UPDATE_VFS_PLUGIN_LIST,
 	ID_LAST,
     };
 
@@ -153,8 +127,8 @@ class preferences:public FXDialogBox
     long preferences::onAddButtonCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::onAddShutterCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::close (FXObject * sender, FXSelector sel, void *);
-    long preferences::downloadInstallCommandPlugin (FXObject * sender, FXSelector sel, void *);
-    long preferences::updateCommandPluginList (FXObject * sender, FXSelector sel, void *);
+    long preferences::downloadInstallPlugin (FXObject * sender, FXSelector sel, void *);
+    long preferences::updatePluginList (FXObject * sender, FXSelector sel, void *);
     long preferences::onVfsChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onAddHeader (FXObject * sender, FXSelector sel, void *);
     

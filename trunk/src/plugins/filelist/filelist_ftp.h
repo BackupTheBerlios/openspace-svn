@@ -108,7 +108,7 @@ map <string,osfile>::iterator iterGlobal;
     string filelist_ftp::symlink (string path);
     bool filelist_ftp::symlink (string src, string dst);
     bool filelist_ftp::hardlink (string src, string dst);
-    int filelist_ftp::supportedfunctions (void);
+    vfs filelist_ftp::setup (void);
     int filelist_ftp::quit (void);
     string filelist_ftp::getinitialdir(void);
     

@@ -299,6 +299,9 @@
 				<owner>
 					<width>80</width>
 				</owner>
+				<group>
+					<width>80</width>
+				</group>
 				<mode>
 					<width>80</width>
 				</mode>

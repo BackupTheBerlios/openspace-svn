@@ -29,6 +29,24 @@
 
 vector < string > name;
 
+
+vfs filelist_local::setup (void)
+{
+	vfs v;
+	
+	v.vfsheaders.push_back(vfsheader_container("name"));
+	v.vfsheaders.push_back(vfsheader_container("size","size"));
+	v.vfsheaders.push_back(vfsheader_container("owner"));
+	v.vfsheaders.push_back(vfsheader_container("group"));
+	v.vfsheaders.push_back(vfsheader_container("accessed","date"));
+	v.vfsheaders.push_back(vfsheader_container("modified","date"));
+	v.information="Local file list - default plugin";
+	v.version="1";
+	
+return v;	
+	
+}
+
 int filelist_local::init (vector < string > *vector_name,pathtype pt, configure * conf)
 {
 
@@ -586,10 +604,6 @@ bool filelist_local::symlink (string src, string dst)
 bool filelist_local::hardlink (string src, string dst)
 {
     return FXFile::link (src.c_str (), dst.c_str ());
-}
-int filelist_local::supportedfunctions (void)
-{
-    return 666;
 }
 
 

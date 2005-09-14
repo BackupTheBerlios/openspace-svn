@@ -11,6 +11,19 @@
 
 
 
+vfs filelist_sftp::setup (void)
+{
+	vfs v;
+	
+	v.vfsheaders.push_back(vfsheader_container("name"));
+	v.information="SFTP - proof of concept only, not finished";
+	v.version="1";
+	v.type="network";
+return v;	
+	
+}
+
+
 
 bool filelist_sftp::getprompt (void)
 {
@@ -245,9 +258,6 @@ bool filelist_sftp::symlink (string src, string dst)
 {
 }
 bool filelist_sftp::hardlink (string src, string dst)
-{
-}
-int filelist_sftp::supportedfunctions (void)
 {
 }
 int filelist_sftp::quit (void)
