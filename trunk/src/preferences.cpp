@@ -244,6 +244,44 @@ preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", D
     defaultdir->setText(conf->readonestring ("/OpenspaceConfig/defaultdir/dir").c_str ());
     
     
+    new FXLabel (mainpane, "maximum size of image file for generating thumbnails (in Bytes)");
+    thumbsize = new FXTextField (mainpane, 50);
+    thumbsize->setText(conf->readonestring ("/OpenspaceConfig/filelist/local/thumbs/size").c_str ());
+    
+    new FXLabel (mainpane, "icons theme:");
+    iconsTheme=new FXListBox (mainpane);
+    iconsTheme->setNumVisible(5);
+    
+
+ string iconsdir=conf->readonestring ("/OpenspaceConfig/path") +"/icons";
+	    struct dirent *dp;
+	    DIR *dirp;
+dirp = opendir (iconsdir.c_str ());
+	    if(dirp)
+	    while ((dp = readdir (dirp)) != NULL)
+	    {
+		if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
+		{
+		string name=dp->d_name;
+		iconsTheme->appendItem(name.c_str());   
+		}
+	    }
+	    closedir (dirp);
+iconsdir=FXFile::getUserDirectory ("").text () +string("/.openspace/icons");
+
+dirp = opendir (iconsdir.c_str ());
+	    if(dirp)
+	    while ((dp = readdir (dirp)) != NULL)
+	    {
+		if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
+		{
+		string name=dp->d_name;
+		iconsTheme->appendItem(name.c_str());   
+		}
+	    }
+	    closedir (dirp);
+
+iconsTheme->setCurrentItem(iconsTheme->findItem(conf->readonestring ("/OpenspaceConfig/icons_theme").c_str()));
 
 //getShell()->getWidth()
 //getShell()->getHeight()
@@ -335,9 +373,7 @@ new FXButton (commandPluginsPane, "Update available plugins list", NULL, this, I
 string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/cmddialog";
 
 
-struct stat status;
-	    struct dirent *dp;
-	    DIR *dirp;
+
 
 	    dirp = opendir (plugin_path.c_str ());
 	    if(dirp)
@@ -901,6 +937,9 @@ vector <shutter_container>::iterator shutter_iter;
 conf->saveonestring ("/OpenspaceConfig/leftdir/dir",leftdir->getText().text());
 conf->saveonestring ("/OpenspaceConfig/rightdir/dir",rightdir->getText().text());
 conf->saveonestring ("/OpenspaceConfig/defaultdir/dir",defaultdir->getText().text());
+conf->saveonestring ("/OpenspaceConfig/filelist/local/thumbs/size",thumbsize->getText().text());
+conf->saveonestring ("/OpenspaceConfig/icons_theme",iconsTheme->getItem(iconsTheme->getCurrentItem()).text());
+
 
 
 }

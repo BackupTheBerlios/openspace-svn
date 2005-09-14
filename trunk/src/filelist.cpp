@@ -1074,8 +1074,8 @@ clearItems ();
 
 	    if (filet)
 	    {
-		icon = filet->icon;
 		icon2 = filet->icon;
+		icon = filet->bigicon;
 		color = filet->color;
 		backcolor = filet->backcolor;
 	    }
@@ -1093,7 +1093,6 @@ clearItems ();
 	    if (graphtype=="image" && os_file.size < thumb_size && (this->getListStyle () & ICONLIST_BIG_ICONS) )
 	    {
 
-
 		string file = returnpath( os_file.name);
 		FXString fil = file.c_str ();
 		FXIconSource *source = new FXIconSource (getApp ());
@@ -1103,11 +1102,13 @@ clearItems ();
 
 		if (ico)
 		{
+		
 		    ico->create ();
 		    icon_vec.push_back (ico);
 		    icon = ico;
 		    icon2 = ico;
 		}
+	
 		
 	    }
 

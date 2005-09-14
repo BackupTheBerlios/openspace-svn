@@ -31,9 +31,11 @@ int main (int argc, char **argv)
 	if(!FXFile::exists(file.c_str()))
 	{
 	FXFile::createDirectory(dir.c_str(),655);
+	string dir2=dir+"/icons";
+	FXFile::createDirectory(dir2.c_str(),655);	
 	dir+="/plugins";
 	FXFile::createDirectory(dir.c_str(),655);
-	string dir2=dir+"/cmddialog";
+	dir2=dir+"/cmddialog";
 	FXFile::createDirectory(dir2.c_str(),655);
 	dir2=dir+"/filelist";
 	FXFile::createDirectory(dir2.c_str(),655);

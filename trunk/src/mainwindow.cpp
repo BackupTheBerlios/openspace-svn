@@ -60,27 +60,27 @@ void MainWindow::loadicons (string icondir)
 
 FXIconSource *source = new FXIconSource (getApp ());
 FXString fil=icondir.c_str();
-FXString name=fil+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/dir/icon").c_str() + ".gif";
+FXString name=fil+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/dir/icon").c_str() + ".png";
 objmanager->specialicons[0] =  source->loadIcon (name);
 if(objmanager->specialicons[0])
 objmanager->specialicons[0]->create();
-name=fil+"big_"+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/dir/icon").c_str()+ ".gif";
+name=fil+"big_"+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/dir/icon").c_str()+ ".png";
 objmanager->specialicons[1] =  source->loadIcon (name);
 if(objmanager->specialicons[1])
 objmanager->specialicons[1]->create();
-name=fil+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/icon").c_str()+ ".gif";
+name=fil+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/icon").c_str()+ ".png";
 objmanager->specialicons[2] =  source->loadIcon (name);
 if(objmanager->specialicons[2])
 objmanager->specialicons[2]->create();
-name=fil+"big_"+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/icon").c_str()+ ".gif";
+name=fil+"big_"+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/icon").c_str()+ ".png";
 objmanager->specialicons[3] =  source->loadIcon (name);
 if(objmanager->specialicons[3])
 objmanager->specialicons[3]->create();
-name=fil+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/executable/icon").c_str()+ ".gif";
+name=fil+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/executable/icon").c_str()+ ".png";
 objmanager->specialicons[4] =  source->loadIcon (name);
 if(objmanager->specialicons[4])
 objmanager->specialicons[4]->create();
-name=fil+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/symlink/icon").c_str()+ ".gif";
+name=fil+conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/symlink/icon").c_str()+ ".png";
 objmanager->specialicons[5] =  source->loadIcon (name);
 if(objmanager->specialicons[5])
 objmanager->specialicons[5]->create();
@@ -107,6 +107,7 @@ objmanager->specialicons[5]->create();
 			 FXString fil_name=file.c_str();
   		    	 objmanager->osicons[shortname] = source->loadIcon (fil_name);
    			 objmanager->osicons[shortname]->create ();
+			
 	
 			}
 		    
@@ -176,8 +177,11 @@ if(conf->initialized())
     pref = NULL;
     
    
-    
-    loadicons(conf->readonestring ("/OpenspaceConfig/path") +"/icons/"+conf->readonestring ("/OpenspaceConfig/icons_theme") + "/");
+    string iconsdir=conf->readonestring ("/OpenspaceConfig/path") +"/icons/"+conf->readonestring ("/OpenspaceConfig/icons_theme");
+    if(!FXFile::exists(iconsdir.c_str()))
+   	 iconsdir=FXFile::getUserDirectory ("").text () +string("/.openspace/icons/")+conf->readonestring ("/OpenspaceConfig/icons_theme");
+    iconsdir+="/";
+    loadicons(iconsdir);
     
    
     string res = conf->readonestring ("/OpenspaceConfig/version");

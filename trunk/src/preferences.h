@@ -33,6 +33,7 @@ class preferences:public FXDialogBox
     FXTextField *mainwindow_height;
     FXTextField *leftdir,*rightdir,*defaultdir;
     FXTextField *newCommandEdit;
+    FXTextField *thumbsize;
     FXListBox *commandsCombo;
     FXListBox *iconsList,*iconsList2;
     FXVerticalFrame *commandsPane;
@@ -42,6 +43,7 @@ class preferences:public FXDialogBox
     FXCheckButton *commandsCapture;
     FXLabel *commandsType;
     FXLabel *commandsIcon;
+    FXListBox *iconsTheme;
     
     FXVerticalFrame *vfsPane;
     FXListBox *vfsList;
