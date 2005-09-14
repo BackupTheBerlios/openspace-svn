@@ -155,7 +155,7 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 iconsdir = $(datadir)/openspace/icons/default
-icons_DATA = *.gif *.png
+icons_DATA = *.png
 all: all-am
 
 .SUFFIXES:
