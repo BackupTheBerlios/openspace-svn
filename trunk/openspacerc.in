@@ -356,14 +356,14 @@
 				</name>
 			</properties>	
 		</search>
-		<vfs_archive>
+		<archive>
 			<type>vfs</type>
 			<properties>
 				<name>
 					<width>400</width>					
 				</name>
 			</properties>	
-		</vfs_archive>
+		</archive>
 		
 		
 		

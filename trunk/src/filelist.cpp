@@ -1093,8 +1093,9 @@ clearItems ();
 	    if (graphtype=="image" && os_file.size < thumb_size && (this->getListStyle () & ICONLIST_BIG_ICONS) )
 	    {
 
-		string file = returnpath( os_file.name);
+		string file = dir+"/" +os_file.name;
 		FXString fil = file.c_str ();
+		fxmessage("\nGRAFA=%s",fil.text());
 		FXIconSource *source = new FXIconSource (getApp ());
 		FXIcon *ico = NULL;
 

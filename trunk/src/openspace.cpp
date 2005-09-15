@@ -23,7 +23,11 @@ int main (int argc, char **argv)
 		}
 	}
 	
-	
+string tmpdir="/tmp/openspace";	
+if(!FXFile::exists(tmpdir.c_str()))
+	{
+	FXFile::createDirectory(tmpdir.c_str(),655);	
+	}
 	
     string dir = FXFile::getUserDirectory ("").text ();
     dir=dir +  "/.openspace";
