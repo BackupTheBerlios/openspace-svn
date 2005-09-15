@@ -12,9 +12,56 @@
 #include <sys/types.h>
 #include <dirent.h>
 
+    SimpleLogger::SimpleLogger()
+    {
+    te=NULL;
+    }
+    
+    void SimpleLogger::start(uint32_t bytes, const FXString & name,uint32_t size)
+    {
+    	if(te!=NULL && name!="")
+   	{
+		te->act_file_size=0;
+		te->act_file_name = name.text ();
+		if(size!=0)
+		te->file_size = size;
+	}
+    }
+    bool SimpleLogger::update(uint32_t bytes, const FXString & s)
+    {
+     if(te!=NULL)
+     {
+	te->act_file_size+=bytes;	
+	te->act_total_size+=bytes;
+	
+	if(te->cancel==true)
+	return false;
+     }	
+    return true;
+    }
+    void SimpleLogger::end(uint32_t bytes, const FXString & )
+    {
 
-int filelist_ftp::level=0;
+    }
 
+    void SimpleLogger::choke()
+    {
+
+    }
+
+    void SimpleLogger::error(int error)
+    {
+
+    }
+
+    void SimpleLogger::logLine(FXString & line)
+    {
+     fxmessage("LOG=%s\n",line.text());
+    }
+    void SimpleLogger::error(FXString & error)
+    {
+     fxmessage("ERROR=%s\n",error.text());
+    }
 
 vfs filelist_ftp::setup (void)
 {
@@ -37,7 +84,7 @@ int filelist_ftp::priv_osopendir (string dir,string prefix,map <string,osfile> &
 
 filesMap.clear();
 
-fxmessage("\nSWITCH TO=%s ",dir.c_str());
+
 	FXString di=dir.c_str();	
 	pftp->setDir(di);
 	FXString di2;
@@ -46,7 +93,6 @@ fxmessage("\nSWITCH TO=%s ",dir.c_str());
 	if(FXFile::name(di)!=FXFile::name(di2) || di2=="")
 	return -1;
 
-fxmessage("\nDIR=%s\n",dir.c_str());
 
 	
     FXMemoryStream str;
@@ -114,7 +160,6 @@ parser>>group;
 parser>>size;
 os_file.size=atoi(size.c_str());
 
-fxmessage("\nFIL SIZ=%d",os_file.size);
 
 parser>>date;
 parser>>date;
@@ -327,15 +372,13 @@ int filelist_ftp::copy (thread_elem * te)
 
 
 getRecursiveFiles(te->src,size);
-fxmessage("\nsize=%d",size);
 
 te->total_size = size; 
 for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
     {   
     if(te->cancel==true)
     break;  
-   	fxmessage("\nEL=%s",iterGlobal->first.c_str());
-	
+   	
 	if(iterGlobal->second.type&FOLDER)
 	{
 	
@@ -348,9 +391,9 @@ for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
 	string filename=te->dst+"/"+iterGlobal->first;
 	FXFile::createDirectory(FXFile::directory(filename.c_str()),str_mode_int(iterGlobal->second.mode));
 	te->file_size = iterGlobal->second.size;
-	fxmessage("\nWTF?\n");
+	
 	pftp->download(iterGlobal->first.c_str(),filename.c_str(),false);
-	fxmessage("\nMODE=%s\n",iterGlobal->second.mode.c_str());
+	
 	FXFile::mode(filename.c_str(),str_mode_int(iterGlobal->second.mode));
 	}
 	te->act_file_name=iterGlobal->first;
@@ -381,7 +424,7 @@ void filelist_ftp::goLocalRecursive (string path,string prefix,thread_elem *te)
 
      prefix=prefix+ FXFile::name(path.c_str()).text();
      string fulldir=this->dir+"/"+prefix;
-     fxmessage("\nFULL=%s PRE=%s\n",fulldir.c_str(),prefix.c_str());
+     
      pftp->mkDir(fulldir.c_str());
      this->mode (fulldir,FXFile::mode(path.c_str()),false);
      pftp->setDir(fulldir.c_str()); 
@@ -409,7 +452,7 @@ void filelist_ftp::goLocalRecursive (string path,string prefix,thread_elem *te)
      pftp->setDir(pre.c_str()); 
      this->dir=pre;
     }
-    fxmessage("\nPRE = %s UP FILE=%s",pre.c_str(),path.c_str());
+  
 		FXString fil=path.c_str();
 		pftp->upload(fil,0,false);
 		this->mode (path,FXFile::mode(fil),false);   
@@ -434,7 +477,7 @@ int filelist_ftp::move (thread_elem * te)
 void filelist_ftp::gorecursive(string file,unsigned long &size)
 {
 
-fxmessage("\nFILE=%s",file.c_str());
+
 		map <string,osfile> filesMap;
 		map <string,osfile>::iterator iter;
 		
@@ -470,7 +513,7 @@ filesMapGlobal.clear();
 
     for (iter_files = src.begin (); iter_files != src.end(); iter_files++)
     {     
-    fxmessage("\nFILE NAME=%s\n",iter_files->c_str());
+
     string name=FXFile::name(iter_files->c_str()).text();
     	osfile os_file;
 	os_file.name=name;
@@ -507,7 +550,7 @@ getRecursiveFiles(te->src,size);
 
 for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
     {     
-   	fxmessage("\nEL=%s",iterGlobal->first.c_str());
+  
 	
 	if(iterGlobal->second.type&FOLDER)
 	pftp->rmDir(iterGlobal->first.c_str());
@@ -541,7 +584,7 @@ pftp=new PFTP(pt.server.c_str(),pt.user.c_str(),pt.password.c_str(),"",log);
 
 	if(pftp->isConnected() && getinitialdir()!="")
         {	
-	fxmessage("CONNECTED :d :d :d");
+
 	}
 	else return -1;
 }
@@ -615,7 +658,7 @@ sprintf (chstr, "%d%d%d", x,y,z);
 
 		for (iterGlobal=--filesMapGlobal.end();; iterGlobal--)
   		  {     
-   			fxmessage("\nEL=%s",iterGlobal->first.c_str());
+   			
 			
 			string cmd="CHMOD "+string(chstr)+" "+ iterGlobal->first;
 			pftp->sendCmd("SITE ",cmd.c_str(),tmp );
@@ -650,7 +693,7 @@ size=0;
 	file=FXFile::name(path.substr(0,path.length()-1).c_str()).text();
 	
 	
-	fxmessage("\nF=%s P=%s\n",file.c_str(),path.c_str());
+
 	if(filesMap[file].type&FOLDER)
 	{
 	vector < string >src;
@@ -660,7 +703,7 @@ size=0;
 	else
 	size=filesMap[file].size;
 
-fxmessage("\nSIZE=%d",size);
+
 	
 }
 string filelist_ftp::symlink (string path)
@@ -683,7 +726,7 @@ string filelist_ftp::getinitialdir(void)
 {
 	FXString base;
 	pftp->pwd(base);
-fxmessage("INITIAL DIR=%s\n",base.text());	
+
 return base.text();
 }
 

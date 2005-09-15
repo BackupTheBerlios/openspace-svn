@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 //-----MAIN------------------------------------------------------------------------------------------------------------------------------------------ 
-//nothing special here, create and execute main window
+//nothing special here, create and execute main window, creating needed directoris if doesn't exist
 int main (int argc, char **argv)
 {
 
@@ -23,15 +23,16 @@ int main (int argc, char **argv)
 		}
 	}
 	
-string tmpdir="/tmp/openspace";	
-if(!FXFile::exists(tmpdir.c_str()))
+        string tmpdir="/tmp/openspace";	
+        if(!FXFile::exists(tmpdir.c_str()))
 	{
 	FXFile::createDirectory(tmpdir.c_str(),655);	
 	}
 	
-    string dir = FXFile::getUserDirectory ("").text ();
-    dir=dir +  "/.openspace";
-    string file = dir +  "/openspacerc";
+        string dir = FXFile::getUserDirectory ("").text ();
+        dir=dir +  "/.openspace";
+        string file = dir +  "/openspacerc";
+	
 	if(!FXFile::exists(file.c_str()))
 	{
 	FXFile::createDirectory(dir.c_str(),655);
@@ -48,7 +49,7 @@ if(!FXFile::exists(tmpdir.c_str()))
 	string src=PATH_CFG + string("/openspacerc");
 	FXFile::copy(src.c_str(),file.c_str());
 	}
-    fxTraceLevel = 12;
+    fxTraceLevel = 1;
     FXApp *application = new FXApp ("openspace", NULL);
     application->init (argc, argv);
     fxmessage (argv[0]);

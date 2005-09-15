@@ -3,8 +3,8 @@
 #include "../../filelist_base.h"
 class filelist_archive:public filelist_base
 {
-  public:
-  
+ 
+private:  
     string archive_filename;
     FILE *pipe;
     char readbuf[1024];
@@ -12,7 +12,7 @@ class filelist_archive:public filelist_base
     vector < string >::iterator iter;
     string dir;
     string type;
-    
+ public:    
     int filelist_archive::osopendir (string dir);
     osfile filelist_archive::osreaddir (void);
     int filelist_archive::mkdir (string dir, int mode = 0);

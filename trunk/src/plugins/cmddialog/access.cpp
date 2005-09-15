@@ -27,27 +27,8 @@ class access_cmddialog:public cmddialog
     {
     }
 
-  public:
-
-
-
-
-    enum
-    {
-	ID_PRESS = cmddialog::ID_LAST,
-	ID_RUSR,
-	ID_WUSR,
-	ID_XUSR,
-	ID_RGRP,
-	ID_WGRP,
-	ID_XGRP,
-	ID_ROTH,
-	ID_WOTH,
-	ID_XOTH,
-	ID_LAST
-    };
-
-
+  private:
+  
     FXCheckButton *ur;
     FXCheckButton *uw;
     FXCheckButton *ux;
@@ -67,8 +48,30 @@ class access_cmddialog:public cmddialog
     FXComboBox *user;
     FXComboBox *userbis;
     FXComboBox *grp;
-
     FXTextField *text;
+
+
+
+  public:
+  
+    enum
+    {
+	ID_PRESS = cmddialog::ID_LAST,
+	ID_RUSR,
+	ID_WUSR,
+	ID_XUSR,
+	ID_RGRP,
+	ID_WGRP,
+	ID_XGRP,
+	ID_ROTH,
+	ID_WOTH,
+	ID_XOTH,
+	ID_LAST
+    };
+
+
+
+    
     access_cmddialog ()
     {
     }
@@ -216,11 +219,7 @@ cmddialog (w, fb, src)
 
 long access_cmddialog::press (FXObject * sender, FXSelector, void *)
 {
-    fxmessage ("YEAH!!!!!!!!!!!!!!!!!");
 }
-
-
-
 
 
 EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src)

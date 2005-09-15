@@ -18,6 +18,8 @@ class special_cmddialog:public cmddialog
     special_cmddialog (const special_cmddialog &)
     {
     }
+  private:
+  FXTextField *text;
 
   public:
 
@@ -26,7 +28,6 @@ class special_cmddialog:public cmddialog
 	ID_ENTER = cmddialog::ID_LAST,
     };
 
-    FXTextField *text;
     special_cmddialog ()
     {
     }
@@ -65,8 +66,6 @@ long special_cmddialog::press (FXObject * sender, FXSelector, void *)
     target->handle (ok, FXSEL (SEL_COMMAND, ID_COMMAND), NULL);
 
 }
-
-
 
 
 

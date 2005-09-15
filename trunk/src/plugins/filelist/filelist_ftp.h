@@ -6,72 +6,27 @@
 
 
 
-
 class SimpleLogger : public Logger 
 {
 public:
-
-thread_elem *te;
-
-SimpleLogger()
-{
-te=NULL;
-}
-    virtual void start(uint32_t bytes, const FXString & name,uint32_t size)
-    {
-    	if(te!=NULL && name!="")
-   	{
-		te->act_file_size=0;
-		te->act_file_name = name.text ();
-		if(size!=0)
-		te->file_size = size;
-	}
-    }
-    virtual bool update(uint32_t bytes, const FXString & s)
-    {
-// fxmessage("UPDATE=%s %d\n",s.text(),bytes);
-     if(te!=NULL)
-     {
-	te->act_file_size+=bytes;	
-	te->act_total_size+=bytes;
-	
-	if(te->cancel==true)
-	return false;
-     }	
- return true;
-    }
-    virtual void end(uint32_t bytes, const FXString & )
-    {
-
-    }
-
-    virtual void choke()
-    {
-fxmessage("\n\nCHOKE\n\n");
-    }
-
-
-    virtual void error(int error)
-    {
-fxmessage("\n\nERROR\n\n");
-    }
-
-
-    virtual void logLine(FXString & line)
-    {
-     fxmessage("LOG=%s\n",line.text());
-    }
-    virtual void error(FXString & error)
-    {
-     fxmessage("ERROR=%s\n",error.text());
-    }
-
+    thread_elem *te;
+    
+    SimpleLogger::SimpleLogger();
+    void SimpleLogger::start(uint32_t bytes, const FXString & name,uint32_t size);
+    bool SimpleLogger::update(uint32_t bytes, const FXString & s);
+    void SimpleLogger::end(uint32_t bytes, const FXString & );
+    void SimpleLogger::choke();
+    void SimpleLogger::error(int error);
+    void SimpleLogger::logLine(FXString & line);
+    void SimpleLogger::error(FXString & error);
 
 };
 
 
 class filelist_ftp:public filelist_base
 {
+
+private:
 
 PFTP *pftp;
 SimpleLogger *log;
@@ -84,9 +39,16 @@ map <string,osfile>::iterator iter;
 map <string,osfile> filesMapGlobal;
 map <string,osfile>::iterator iterGlobal;
 
-    static int level;
     int fieldsnum;
     vector < string > fields;
+
+    int filelist_ftp::priv_osopendir (string dir,string prefix,map <string,osfile> & filesMap,map <string,osfile>::iterator & iter);
+    void filelist_ftp::gorecursive(string file,unsigned long &size=0);
+    osfile filelist_ftp::priv_osreaddir (map <string,osfile> & filesMap,map <string,osfile>::iterator & iter2);
+    void filelist_ftp::getRecursiveFiles(vector < string >src,unsigned long &size=0);
+    void filelist_ftp::goLocalRecursive (string path,string prefix,thread_elem *te);
+    void filelist_ftp::local_totalsize (string path, unsigned long &size);
+    int filelist_ftp::str_mode_int(string per);
 
   public:
     int filelist_ftp::osopendir (string dir);
@@ -112,12 +74,6 @@ map <string,osfile>::iterator iterGlobal;
     int filelist_ftp::quit (void);
     string filelist_ftp::getinitialdir(void);
     
-    int filelist_ftp::priv_osopendir (string dir,string prefix,map <string,osfile> & filesMap,map <string,osfile>::iterator & iter);
-    void filelist_ftp::gorecursive(string file,unsigned long &size=0);
-    osfile filelist_ftp::priv_osreaddir (map <string,osfile> & filesMap,map <string,osfile>::iterator & iter2);
-    void filelist_ftp::getRecursiveFiles(vector < string >src,unsigned long &size=0);
-    void filelist_ftp::goLocalRecursive (string path,string prefix,thread_elem *te);
-    void filelist_ftp::local_totalsize (string path, unsigned long &size);
-    int filelist_ftp::str_mode_int(string per);
+    
 };
 #endif

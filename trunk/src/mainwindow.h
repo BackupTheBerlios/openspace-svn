@@ -50,8 +50,8 @@ class MainWindow:public FXMainWindow
 	ID_LAST,
     };
 
-     MainWindow (FXApp *);
-     virtual ~ MainWindow ();
+    MainWindow (FXApp *);
+    virtual ~ MainWindow ();
     virtual void create ();
 
 
@@ -108,10 +108,6 @@ class MainWindow:public FXMainWindow
     FXTextField *password;
     FXTextField *port;
 
-
-    
-
-
     Frame *fr;
 
     Frame *current_frame;
@@ -167,15 +163,12 @@ class box
 };
 
 
-
 class Frame
 {
-
+  private:
+	
   public:
 
-    FXVerticalFrame * frame;
-    int position;
-    FXHorizontalFrame *hf;
     string pathdir;
     string type;
     filelist *f;
@@ -183,8 +176,11 @@ class Frame
     FXButton *toright;
     FXButton *toclose;
     FXButton *firstbutton;
+    
+    FXVerticalFrame * frame;
+    FXHorizontalFrame *hf;
 
-     Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, int position);
+    Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, int position);
     void generate_menu (string path, FXObject * tgt);
 
     ~Frame ()

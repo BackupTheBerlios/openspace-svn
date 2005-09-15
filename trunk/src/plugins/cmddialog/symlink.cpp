@@ -26,20 +26,18 @@ class symlink_cmddialog:public cmddialog
     {
     }
 
+  private:
+  
+    vector < FXTextField * >vec;
+    string dir;
+    FXCheckButton *hardlink;
+
   public:
-
-
-
 
     enum
     {
 	ID_ENTER = cmddialog::ID_LAST,
     };
-
-
-    vector < FXTextField * >vec;
-    string dir;
-    FXCheckButton *hardlink;
 
     symlink_cmddialog ()
     {
@@ -123,9 +121,6 @@ long symlink_cmddialog::press (FXObject * sender, FXSelector, void *)
     //target->handle (ok, FXSEL (SEL_COMMAND, ID_COMMAND), NULL);
 
 }
-
-
-
 
 
 EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src)

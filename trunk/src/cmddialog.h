@@ -6,25 +6,26 @@
 class cmddialog:public FXDialogBox
 {
   FXDECLARE (cmddialog) 
-  public:
-    FXVerticalFrame * contents;
-    FXHorizontalFrame *buttons;
+
+    
   protected:
      cmddialog ()
     {
     }
+    FXVerticalFrame * contents;
+    FXHorizontalFrame *buttons;
+    FXButton *ok;
+    FXButton *cancel;
+    filelist_base *fb;
+    vector < string > src;
+    
   public:
      cmddialog (FXWindow * owner, filelist_base * fb = NULL, vector < string > src=vector < string >());
     virtual int exec (void)
     {
     };
 
-
     virtual ~ cmddialog ();
-    filelist_base *fb;
-    vector < string > src;
-    FXButton *ok;
-    FXButton *cancel;
 
     enum
     {

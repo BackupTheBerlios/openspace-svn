@@ -14,6 +14,8 @@
 class filelist_local:public filelist_base
 {
 
+private:
+
     DIR *dp;
     dirent *dirrec;
     struct stat status;
@@ -22,6 +24,7 @@ class filelist_local:public filelist_base
     int fieldsnum;
      vector < string > fields;
 
+int copymove (thread_elem * te, bool copy = true);
 
   public:
 
@@ -45,9 +48,8 @@ class filelist_local:public filelist_base
     bool symlink (string src, string dst);
     bool hardlink (string src, string dst);
     vfs setup (void);
-
     void totalsize (string path, unsigned long &size);
-    int copymove (thread_elem * te, bool copy = true);
+    
 };
 
 

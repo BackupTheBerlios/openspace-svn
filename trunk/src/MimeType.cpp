@@ -1,10 +1,10 @@
-
 #include <string>
 #include <map>
 #include <iostream>
 #include <fstream>
 #include <list>
 #include <algorithm>
+#include <cctype>
 
 using namespace std;
 
@@ -39,7 +39,8 @@ bool MimeType::_matches (string pattern, string ext)
 
 string MimeType::getMimeFromName (string name)
 {
-//transform (name.begin (), name.end (), name.begin (), tolower);
+
+transform (name.begin (), name.end (), name.begin (), ::tolower);
 
     if (!isInitialized)
 	__initialize ();
@@ -59,13 +60,6 @@ string MimeType::getMimeFromName (string name)
     {
 
 	ext = name.substr (name.rfind ("."));
-/*
-		if (name.find(".gz") != string::npos)
-			ext=name.substr(name.length() - 6, 6);
-
-		if (name.find(".bz2") != string::npos)
-			ext= name.substr(name.length() - 7, 7);
-*/
 
 	if (name.length () >= 6 && name.substr (name.length () - 6, 6) == "tar.gz")
 	    return "application/x-compressed-tar";	//ext="tar.gz";

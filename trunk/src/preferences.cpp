@@ -40,7 +40,6 @@ FXDEFMAP (preferences) preferencesMap[] =
 
 long preferences::close (FXObject * sender, FXSelector sel, void *ptr)
 {
-fxmessage("CLOSE & SAVE\n");
 
 if(saveconfiguration)
 this->save();
@@ -454,9 +453,6 @@ command_container *ctlast;
 string res;
 	while (conf->getnextnode (res))
 	{
-	   
-		
-		fxmessage("aa=%s\n",res.c_str());
 		
 	    command_container ct;
 	    ctlast=&ct;
@@ -729,8 +725,6 @@ for (int c = 0; c < headersList->getNumItems (); c++)
 
 }
 
-
-fxmessage("change");
 actualvfs=vfsList->getItem(vfsList->getCurrentItem()).text();
 availableHeadersList->clearItems();
 if (conf->openxpath ("/OpenspaceConfig/filelist/"+actualvfs+"/properties") != -1)
@@ -844,8 +838,7 @@ void preferences::setAllColor(FXButton* button,FXColor color)
 
  if(!colordlg->execute())
 return 0;
- 
-  fxmessage("COLOR\n");
+
   
  FXColor color=colordlg->getRGBA();
  FXushort id=FXSELID(sel);
@@ -907,13 +900,9 @@ conf->removestring ("/OpenspaceConfig/button_commands");
 conf->addstring("/OpenspaceConfig","button_commands","");
 
 for (int c = 0; c < buttonsList->getNumItems (); c++)
-	    {
-		
+	    {		
 		  string cmd= buttonsList->getItemText (c).text ();
-		  fxmessage("\nCOMMAND=%s",cmd.c_str());
-		conf->addstring("/OpenspaceConfig/button_commands","command",cmd);
-
-
+		  conf->addstring("/OpenspaceConfig/button_commands","command",cmd);
 	    }
 
 
@@ -1024,7 +1013,6 @@ long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *)
     if(command_name=="")
     return 0;
     
-    fxmessage (command_name.c_str ());
     command_container ct=commandsMap[command_name];
     if(ct.name!="") // already exists
     return 0;

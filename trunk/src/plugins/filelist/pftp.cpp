@@ -122,8 +122,7 @@ void PFTP::download(const FXString & file,FXString dst, bool asc)
 
     sendCmd("RETR ", file, dummy);
    
-     fxmessage("FILE=%s DEST=%s\n",file.text(),dst.text());
-     
+
     char buffer[BUCKET];
     int c=0;
 
@@ -226,7 +225,6 @@ FXuchar* buff=NULL;
     
 	if(retransmit)
 	{
-	fxmessage("ret\n");
 	}
 	else
 	{
@@ -246,13 +244,12 @@ FXuchar* buff=NULL;
             int error = WSAGetLastError ();
             if(WSAEWOULDBLOCK == error)
 			{
-			fxmessage("BLEBLA\n");
+	
 				Sleep(delay);
                 ++count;
                 delay *= 10;
                 if(count >= 300)
                 {
-		fxmessage("TRAGEDIA\n");
                     monitor->choke();
                     closesocket(csock);
                     csock = INVALID_SOCKET;
@@ -261,13 +258,11 @@ FXuchar* buff=NULL;
                 continue;
 			}
             monitor->error(error);
-	    fxmessage("ERR\n");
             break;
 	    
         }
         else
         {
-	fxmessage("!");
          delete buff;
 	 retransmit=false;
 	offset+=delta; 
@@ -282,7 +277,7 @@ FXuchar* buff=NULL;
            delay = 10;
            count = 0;
            if(!monitor->update(delta, file))
-              { break; fxmessage("KONIEC\n");}
+              { break; }
 	      
         }
     }

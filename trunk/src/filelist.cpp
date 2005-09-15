@@ -79,9 +79,9 @@ FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
 
 
 // Handle drag-and-drop enter, remember current directory
-     long filelist::onDNDEnter (FXObject * sender, FXSelector sel, void *ptr)
+long filelist::onDNDEnter (FXObject * sender, FXSelector sel, void *ptr)
 {
-    fxmessage ("DRAAAAAAAAAAAGING");
+
     FXIconList::onDNDEnter (sender, sel, ptr);
     //orgdirectory=getDirectory();
     return 1;
@@ -141,7 +141,6 @@ long filelist::onDNDMotion (FXObject * sender, FXSelector sel, void *ptr)
 	// if(FXFile::isWritable(dropdirectory)){
 	//  FXTRACE((100,"accepting drop on %s\n",dropdirectory.text()));
 	acceptDrop (DRAG_ACCEPT);
-	// fxmessage("AKCPETUJEMY\n\n");
 	//   }
 	return 1;
     }
@@ -216,7 +215,6 @@ string filelist::returnpath(string dirname)
 // Start a drag operation
 long filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
 {
-    fxmessage ("\nBEGIN DRAG\n");
     register FXint i;
     if (FXIconList::onBeginDrag (sender, sel, ptr))
 	return 1;
@@ -312,7 +310,6 @@ string getfiletype (string name)
 long filelist::onClipboardGained (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXIconList::onClipboardGained (sender, sel, ptr);
-    fxmessage ("AA\n");
     return 1;
 }
 
@@ -321,7 +318,6 @@ long filelist::onClipboardGained (FXObject * sender, FXSelector sel, void *ptr)
 long filelist::onClipboardLost (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXIconList::onClipboardLost (sender, sel, ptr);
-    fxmessage ("BB\n");
     dragfiles=FXString::null;
     //clipped.clear();
     return 1;
@@ -334,19 +330,14 @@ long filelist::onClipboardRequest (FXObject * sender, FXSelector sel, void *ptr)
     FXEvent *event = (FXEvent *) ptr;
     FXuchar *data;
     FXuint len;
-    fxmessage ("CC\n");
-
     len = dragfiles.length ();
     FXMEMDUP (&data, dragfiles.text (), FXuchar, len);
     setDNDData (FROM_CLIPBOARD, event->target, data, len);
-//ZMIANA
     return 0;
 }
 
 long filelist::onCmdCopySel (FXObject *, FXSelector sel, void *ptr)
 {
-    
-    fxmessage ("COPY");
     FXDragType types[1];
     types[0] = urilistType;
     
@@ -358,12 +349,10 @@ long filelist::onCmdCopySel (FXObject *, FXSelector sel, void *ptr)
 
     if (id == ID_CLIP_COPY)
     {
-    fxmessage("TYLKO KOPIUJ");
     dropaction=DRAG_COPY;
     }
     else if (id == ID_CLIP_CUT)
     {
-    fxmessage("TYLKO PRZENIES");
     dropaction=DRAG_MOVE;
     }
     
@@ -373,7 +362,6 @@ long filelist::onCmdCopySel (FXObject *, FXSelector sel, void *ptr)
      
 filelist_opposite->dropaction=dropaction;
 
-	fxmessage ("ok");
 	dragfiles = FXString::null;
 	for (int i = 0; i < getNumItems (); i++)
 	{
@@ -387,9 +375,6 @@ filelist_opposite->dropaction=dropaction;
 		    if (!dragfiles.empty ())
 			dragfiles += "\r\n";
 		    dragfiles += FXURL::fileToURL (fullname.c_str ());
-		     fxmessage("\nplik: ");
-	   	 fxmessage(fullname.c_str());
-	    	fxmessage("\n");
 		    
 		}
 	    }
@@ -403,11 +388,7 @@ filelist_opposite->dropaction=dropaction;
 // Paste
 long filelist::onCmdPasteSel (FXObject *, FXSelector sel, void *)
 {
-
-
-
-    fxmessage ("PASTE");
-    dropData (true);
+   dropData (true);
 }
 
 void filelist::dropData (bool clipboard)
@@ -421,11 +402,11 @@ void filelist::dropData (bool clipboard)
 	origin = FROM_CLIPBOARD;
     else
 	origin = FROM_DRAGNDROP;
-fxmessage("KOPIUJEMY");
+
     // Get uri-list of files being dropped
     if (getDNDData (origin, urilistType, data, len))
     {
-fxmessage("TAK");    
+  
 	FXRESIZE (&data, FXuchar, len + 1);
 	data[len] = '\0';
 	FXchar *p, *q;
@@ -458,8 +439,7 @@ fxmessage("TAK");
     {
      options = "upload";
      fil = filelist_opposite->fb;
-     
-	fxmessage("DAJEMY OPOSITA \n");
+
     }
     else 
     {
@@ -580,7 +560,6 @@ long filelist::onCmdResize(FXObject * sender, FXSelector sel, void *ptr)
 
 //FXIconList::onHeaderResize(sender, sel,ptr);
 
-fxmessage("RESIZE ;D");
 for(int i=0;i<getNumHeaders();i++)
 	{
 	string header=getHeaderText(i).text();
@@ -610,39 +589,18 @@ filelist::filelist (FXComposite * p, pathtype pt):
 FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
 {
 
-
-
     flags |= FLAG_ENABLED | FLAG_DROPTARGET;
     popupmenu = NULL;
     sortpop = NULL;
 
     setKeys();
 
-    dropaction = DRAG_MOVE;
-
-
-   
+    dropaction = DRAG_MOVE;   
 
     objmanager=objectmanager::instance(getApp());
-
     setFont (objmanager->captionfont2);
-
-    fxmessage (pt.server.c_str ());
-
     specialicons = objmanager->specialicons;
-    //osicons = objmanager->osicons;
 
-    //this->file_type_settings = objmanager->file_type_settings;
-    //this->thread_vec = objmanager->thread_vec;
-/*
-int pos=path.find(":");
-fxmessage("PATH=");
-fxmessage(path.c_str());
-fxmessage("=PATH\n");
-
-this->path=path.substr(pos+1,path.length());
-this->type=path.substr(0,pos);
-*/
 
     thumb_size = 0;
     this->path = pt.dir;
@@ -688,7 +646,7 @@ int command_num=0;
 
 if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     {
-    fxmessage("OTWARTE\n\n");
+
     string res;
 	while (conf->getnextstring (res))
 	{
@@ -738,11 +696,6 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 	filelist_base *(*gg) (void);
 	gg = (filelist_base * (*)(void)) fxdllSymbol (dllhandle, "get_filelist");
 	fb = gg ();
-	fxmessage ("ZALADOWANY :)");
-
-
-
-
 
 	FXIconListSortFunc sortfunc = filelist::cmp;
 	setSortFunc (sortfunc);
@@ -980,7 +933,6 @@ void filelist::copymoveremove (string com_name)
     {
 	options = "download";
 	fil = filelist_opposite->fb;
-	fxmessage("DAJEMY OPOSITA \n");
     }
     else  //type other than local
 	options = "upload";
@@ -1013,7 +965,6 @@ bool filelist::opendir (string dir)
 
     if (fb->osopendir (dir) == -1)
     {
-    fxmessage("WYJEB\n");
     return false;
     }	
 clearItems ();
@@ -1095,7 +1046,6 @@ clearItems ();
 
 		string file = dir+"/" +os_file.name;
 		FXString fil = file.c_str ();
-		fxmessage("\nGRAFA=%s",fil.text());
 		FXIconSource *source = new FXIconSource (getApp ());
 		FXIcon *ico = NULL;
 
@@ -1153,7 +1103,6 @@ clearItems ();
 long filelist::setFocus (FXObject * obj, FXSelector sel, void *ptr)
 {
 
-fxmessage("\n FOCUS\n");
 setKeys();
     active = true;
     filelist_opposite->active = false;
@@ -1312,7 +1261,6 @@ void *filelist::thread_func (void *data)
 				FXTime t1=FXFile::modified(tmpfile.c_str());
 				string f="\""+tmpfile+"\"";
 				string exec=command.replace (pos, f.length (),f );	
-				fxmessage("COMMAND=%s\n",exec.c_str());			
 				system (exec.c_str ());
 				if(exportfile)
 				{	
@@ -1343,7 +1291,6 @@ void *filelist::thread_func (void *data)
 			if(!simple_command)
 			{
 			string exec=command.replace (pos, Flist.length (), Flist);	
-				fxmessage("COMMAND=%s\n",exec.c_str());			
 				system (exec.c_str ());	
 				
 				time_iter=Flist_vector_time.begin();
@@ -1405,7 +1352,6 @@ int filelist::runCommand(string command)
 string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command + "/type");
 
 
-fxmessage("COM=%s TYPE=%s",command.c_str(),command_type.c_str());
 /*
     int k = getCurrentItem ();
     os_ListItem *oslistitem = (os_ListItem *) getItem (k);
@@ -1537,8 +1483,6 @@ fxmessage("COM=%s TYPE=%s",command.c_str(),command_type.c_str());
 	    int c = getCurrentItem ();
 	    string sr = returnpath(getItemText (c).text ());
 	    umount2 (sr.c_str (), MNT_FORCE);
-	    fxmessage ("umount");
-	    fxmessage (sr.c_str ());
 	}
 	    
 
@@ -1944,7 +1888,6 @@ void filelist::start_thread (thread_elem * te)
 
     if (te->command == "execute" && te->options == "capture")
     {
-	fxmessage ("capture");
 	pipe (te->p);
 	fcntl (te->p[0], O_NONBLOCK);
 
@@ -2077,13 +2020,8 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
     }
     else
     {
-  //  fxmessage("\nnr=%d",fl->sort_nr);
-    
-
 	p = (const unsigned char *) a->osf.attrib[fl->sort_nr-1].c_str ();
 	q = (const unsigned char *) b->osf.attrib[fl->sort_nr-1].c_str ();
-	//fxmessage((const char*)p);
-    	//fxmessage((const char*)q);
 	
     }
     
@@ -2114,8 +2052,6 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
     time_t t1=mktime(&tm1);
     time_t t2=mktime(&tm2);
    
-   //if(ascend)
-   //fxmessage("A");
     
       if(t1>t2) 
       	if(ascend)
@@ -2204,8 +2140,6 @@ long filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
 	}
 	else
 	    num = sortmenu->getCurrentNo ();
-	fxmessage (sort.c_str ());
-
     }
     else
     {
@@ -2215,7 +2149,6 @@ fxmessage("nr=%d\n",num);
     if (num == sort_nr)
     {
 	ascend = !ascend;
-	fxmessage("zmiana trybu\n");
     }
     else
     {
@@ -2281,18 +2214,15 @@ long filelist::onMaximize (FXObject * sender, FXSelector, void *)
     if (filelist_opposite->getWidth () == 0)
 	maximize = true;
 
-    fxmessage ("MAX");
     maximize = !maximize;
     FXButton *bt = (FXButton *) sender;
     if (maximize)
     {
-	fxmessage ("zapis single");
 	bt->setIcon (objmanager->osicons["min"]);
 	conf->saveonestring ("/OpenspaceConfig/panels", "single");
     }
     else
     {
-	fxmessage ("zapis double");
 	bt->setIcon (objmanager->osicons["max"]);
 	conf->saveonestring ("/OpenspaceConfig/panels", "double");
     }

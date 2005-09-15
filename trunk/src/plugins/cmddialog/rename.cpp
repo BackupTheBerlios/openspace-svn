@@ -25,20 +25,18 @@ class rename_cmddialog:public cmddialog
     rename_cmddialog (const rename_cmddialog &)
     {
     }
+    
+  private:
+
+    vector < FXTextField * >vec;
+    string dir;  
 
   public:
-
-
-
 
     enum
     {
 	ID_ENTER = cmddialog::ID_LAST,
     };
-
-
-    vector < FXTextField * >vec;
-    string dir;
 
     rename_cmddialog ()
     {
@@ -117,8 +115,6 @@ long rename_cmddialog::press (FXObject * sender, FXSelector, void *)
     target->handle (ok, FXSEL (SEL_COMMAND, ID_COMMAND), NULL);
 
 }
-
-
 
 
 

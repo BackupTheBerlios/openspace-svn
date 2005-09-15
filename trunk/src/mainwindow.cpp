@@ -185,7 +185,7 @@ if(conf->initialized())
     
    
     string res = conf->readonestring ("/OpenspaceConfig/version");
-    FXTRACE ((1, "VERSION %s\n", res.c_str ()));
+    FXTRACE ((1, "\n openspace version %s\n\n", res.c_str ()));
     int w = atoi (conf->readonestring ("/OpenspaceConfig/mainwindow/width").c_str ());
     int h = atoi (conf->readonestring ("/OpenspaceConfig/mainwindow/height").c_str ());
     resize (w, h);
@@ -969,7 +969,7 @@ long MainWindow::onTimer (FXObject *, FXSelector, void *)
 		if (pos != string::npos)
 		{
 		    download = true;
-		    fxmessage ("\nDOWNLOAD\n");
+		
 		}
 
 		if (telem->command == "init")
@@ -1087,7 +1087,6 @@ if(!conf->initialized()) return 0;
     float widthpanel = this->getWidth () * ratio;
     left->setWidth ((int) widthpanel);
 
-    //fxmessage("RESIZE RESIZE \n\n");
 } 
 long MainWindow::onUpdate (FXObject * sender, FXSelector sel, void *ptr)
 {
@@ -1099,7 +1098,6 @@ if(!conf->initialized())return 0;
     float w = getWidth ();
     ratio = (float) l / (float) w;
 
-    //FXTRACE((5,"UPDATE %f\n",ratio));
 }
 
 //telem is canceled
@@ -1173,7 +1171,7 @@ Frame::Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, in
 	bt->setUserData (new box (this, prebutton, bt, NULL));
 	prebutton = bt;
     }
-    this->position = position;
+    
     frame = new FXVerticalFrame (p, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     f = new filelist (frame, pt);
     if (position == 0)

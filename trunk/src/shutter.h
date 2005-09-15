@@ -4,7 +4,8 @@
 //this is used in filelist popup, this scrolling popup
 class shutter:public FXShutter
 {
-    FXDECLARE (shutter) friend class FXShutterItem;
+    FXDECLARE (shutter) 
+    friend class FXShutterItem;
   public:
      shutter (FXComposite * p, FXWindow * x);
      shutter ()

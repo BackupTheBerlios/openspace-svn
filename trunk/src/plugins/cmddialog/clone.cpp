@@ -26,19 +26,17 @@ class clone_cmddialog:public cmddialog
     {
     }
 
+  private:
+    vector < FXTextField * >vec;
+    string dir;
+
   public:
-
-
-
 
     enum
     {
 	ID_ENTER = cmddialog::ID_LAST,
     };
 
-
-    vector < FXTextField * >vec;
-    string dir;
 
     clone_cmddialog ()
     {
@@ -117,8 +115,7 @@ cmddialog (w, fb, src)
   
 
 	dir = FXFile::directory (iter->c_str ()).text ();
-	//fxmessage(dir.c_str());
-	//fxmessage("\n woho");
+
 	FXString name = FXFile::name (iter->c_str ());
 	new FXLabel (contents, name);
 	FXTextField *text = new FXTextField (contents, 25, this, ID_ENTER);

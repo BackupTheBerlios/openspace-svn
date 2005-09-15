@@ -17,13 +17,94 @@ class filelist:public FXIconList
 {
 
 
-  FXDECLARE (filelist) public:
+FXDECLARE (filelist) 
+  
+private:  
+
+    
+    string previous_path;
+    string type;
+    pathtype *pt;
+    
+    FXWindow *notifyparent;
+    FXLabel *label;
+    FXLabel *info;
+    FXMenuPane *popupmenu;
+    FXMenuPane *popupwindow;   
+    FXTextField *textfield;
+    FXOptionMenu *sortmenu;
+    FXPopup *sortpop;
+    FXHorizontalFrame *bottomframe;
+    
+    vector < string > commands_tab;
+    vector < string > button_commands_tab;
+    vector < FXIcon * >icon_vec;
+    vector < string > header_vec;
+    vector < string > vector_name;
+    vector < int >vector_type;
+    vector < int >vector_width;
+    
+
+    string *fields_name;
+    unsigned int *fields_type;
+    unsigned int *fields_width;
+    int sort_nr;
+    unsigned long thumb_size;
+
+    static bool ascend;
+    static bool strcase;
+
+    bool processing;
+    bool maximize;
+    int popup_x;
+    int popup_y;
+
+    cmddialog *dial;
+    
+    FXDragAction dropaction;	// Drop action
+    FXString dragfiles;		// Dragged files
+
+    void dropData (bool clipboard);
+    void filelist::selectitem (void);
+    void filelist::start_thread (thread_elem * te);
+    
+    void filelist::copymoveremove (string com_name);
+    static void *filelist::thread_func (void *data);
+    static FXint cmp (const FXIconItem * a, const FXIconItem * b);
+    
+    
+    string returnpath(string dirname);
+    string filelist::getdefaultcommand (string name);
+    string filelist::resolvecommand(string command,string name);
+    int filelist::runCommand(string name);
+    
+public:  
+
+     filelist ()
+    {
+    }
+    virtual ~ filelist ();
+
+//==============================================
+    filelist (FXComposite * p, pathtype pt);
+//==============================================
 
 
-    filelist_base * fb;
-    filelist *filelist_opposite;
-    bool active;
-    enum
+objectmanager *objmanager;
+FXIcon **specialicons;
+FXToolBar *toolbar,*toolbar2;
+
+string path;
+bool active;
+filelist_base * fb;
+filelist *filelist_opposite;
+
+void filelist::refresh (void);
+bool filelist::init (void);
+
+
+
+enum
     {
 	ID_ICO = FXIconList::ID_LAST,
 	ID_TEXTFIELD_REG,
@@ -46,65 +127,6 @@ class filelist:public FXIconList
     };
 
 
-    string path;
-    string previous_path;
-    string type;
-    FXWindow *notifyparent;
-    FXLabel *label;
-    FXLabel *info;
-    FXMenuPane *popupmenu;
-    FXMenuPane *popupwindow;
-    vector < string > commands_tab;
-    vector < string > button_commands_tab;
-   
-    FXTextField *textfield;
-    FXOptionMenu *sortmenu;
-    FXPopup *sortpop;
-     vector < FXIcon * >icon_vec;
-     vector < string > header_vec;
-    FXHorizontalFrame *bottomframe;
-
-     
-     FXIcon **specialicons;
-
-     vector < string > vector_name;
-     vector < int >vector_type;
-     vector < int >vector_width;
-    pathtype *pt;
-
-    string *fields_name;
-    unsigned int *fields_type;
-    unsigned int *fields_width;
-    int sort_nr;
-    unsigned long thumb_size;
-
-    static bool ascend;
-    static bool strcase;
-
-    bool processing;
-    bool maximize;
-    int popup_x;
-    int popup_y;
-
-    cmddialog *dial;
-    objectmanager *objmanager;
-
-
-
-    FXDragAction dropaction;	// Drop action
-    FXString dragfiles;		// Dragged files
-    FXToolBar *toolbar,*toolbar2;
-
-
-     filelist ()
-    {
-    }
-    virtual ~ filelist ();
-
-//==============================================
-    filelist (FXComposite * p, pathtype pt);
-//==============================================
-
     virtual void create ();
 
     bool filelist::opendir (string dir);
@@ -124,7 +146,8 @@ class filelist:public FXIconList
     long filelist::onGoHome (FXObject * sender, FXSelector, void *);
     long filelist::setKeys (void);
     long filelist::onCmdResize(FXObject * sender, FXSelector, void *);
-
+    long onChangeView (FXObject * sender, FXSelector, void *);
+    
     long onDNDEnter (FXObject *, FXSelector, void *);
     long onDNDLeave (FXObject *, FXSelector, void *);
     long onDNDMotion (FXObject *, FXSelector, void *);
@@ -142,21 +165,7 @@ class filelist:public FXIconList
     long onCmdPasteSel (FXObject *, FXSelector, void *);
 
 
-    void dropData (bool clipboard);
-
-    void filelist::selectitem (void);
-    void filelist::refresh (void);
-    void filelist::start_thread (thread_elem * te);
     
-    void filelist::copymoveremove (string com_name);
-    static void *filelist::thread_func (void *data);
-    static FXint cmp (const FXIconItem * a, const FXIconItem * b);
-    bool filelist::init (void);
-    long onChangeView (FXObject * sender, FXSelector, void *);
-    string returnpath(string dirname);
-    string filelist::getdefaultcommand (string name);
-    string filelist::resolvecommand(string command,string name);
-    int filelist::runCommand(string name);
     
 
 };

@@ -5,7 +5,8 @@
 
 class filelist_search:public filelist_base
 {
-  public:
+  
+private:
   
   FILE *pipe;
   char readbuf[1024];
@@ -13,6 +14,8 @@ class filelist_search:public filelist_base
   vector < string >::iterator iter;
 
   filelist_local *fil_local;
+  
+public:
   
     int filelist_search::osopendir (string dir);
     osfile filelist_search::osreaddir (void);

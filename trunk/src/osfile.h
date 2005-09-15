@@ -5,10 +5,6 @@
 #include <vector>
 using namespace std;
 
-
-
-
-
 enum
 {
     FOLDER = 64,		// Directory item

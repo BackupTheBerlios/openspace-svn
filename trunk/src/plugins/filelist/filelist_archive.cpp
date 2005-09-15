@@ -21,7 +21,7 @@ return v;
 
 int filelist_archive::osopendir (string dir)
 {
-fxmessage("OPENDIR");
+
 this->dir=dir;
 iter=files.begin();
 }
@@ -34,13 +34,13 @@ while(iter!=files.end())
 {
 os_file.name=*iter;
 	string modfile=os_file.name.substr(0,os_file.name.length () - 1);
-	//fxmessage("\nMOD=%s",modfile.c_str());
+	
 	string::size_type pos=modfile.rfind("/");
 	if (pos != string::npos)
 	{
 		string dirf="/"+os_file.name.substr(0,pos);
 		
-		//fxmessage("\nDIR=%s  DIRF=%s",dir.c_str(),dirf.c_str()); 
+		
 		if(dirf!=dir)
 		{
 		iter++;
@@ -73,7 +73,7 @@ os_file.name=*iter;
 		os_file.type = 0;
 	    
 	    iter++;
-	    //fxmessage("\nN=%s",os_file.name.c_str());  
+	  
 	    return os_file;
 }		    
 
@@ -103,8 +103,6 @@ filesoperation("remove",te);
 int filelist_archive::filesoperation(string typeoperation,thread_elem * te)
 {
 
-fxmessage("ARCHIVE COPY");
-
  vector < string >::iterator iter;
  
 	string::size_type pos = te->options.find ("upload");
@@ -126,7 +124,7 @@ fxmessage("ARCHIVE COPY");
 			{
 			string command="cd " +te->dst +" && tar xf" + type + " " + archive_filename + " " + file_list;
 			system(command.c_str());
-			fxmessage("\nCOMMAND=%s\n",command.c_str());
+			
 			}
 			else
 			{
@@ -140,7 +138,7 @@ fxmessage("ARCHIVE COPY");
 			
 			string command="cd " +destdir +" && tar xf" + type + " " + archive_filename + " " + file_list;
 			system(command.c_str());
-			fxmessage("\nCOMMAND=%s\n",command.c_str());
+			
 				for (iter = te->src.begin (); iter != te->src.end(); iter++)
    				{	
 				string sr = (*iter);
@@ -200,7 +198,7 @@ fxmessage("ARCHIVE COPY");
 					
 			 }	
 			command="tar --delete -f " + archive_filename_decompressed + " " +file_list;
-			fxmessage("COMMAND=%s\n",command.c_str());
+		
 			system(command.c_str());
 		
 		}
@@ -223,7 +221,7 @@ fxmessage("ARCHIVE COPY");
 					if (files.end()==find(files.begin(), files.end(), file))// Search the list.
 					{
 					string dirtest=dir+"/"+FXFile::name(file.c_str()).text();
-					fxmessage("\n\nDIRTEST=%s\n\n",dirtest.c_str());
+					
 					
 						
 						if(FXFile::isDirectory(dirtest.c_str()))						
@@ -234,13 +232,13 @@ fxmessage("ARCHIVE COPY");
 					else	
 					{
 					command="cd " +dir + " && tar --delete -f " + archive_filename_decompressed + " " +file;
-					fxmessage("COMMAND=%s\n",command.c_str());
+					
 					system(command.c_str());
 					}
 				
 				command="cd " +dir + " && tar rf " + archive_filename_decompressed + " " +file;
 				system(command.c_str());
-				fxmessage("COMMAND=%s\n",command.c_str());
+				
 				}
 				else
 				{
@@ -262,7 +260,7 @@ fxmessage("ARCHIVE COPY");
 				FXFile::copy(sr.c_str(),d.c_str());
 				else if(typeoperation=="move")
 				{
-				fxmessage("MMMMMMMMMMMMMMMMMMMMMMMM");
+				
 				FXFile::move(sr.c_str(),d.c_str());
 				}
 
@@ -271,7 +269,7 @@ fxmessage("ARCHIVE COPY");
 					if (files.end()==find(files.begin(), files.end(), file))// Search the list.
 					{
 					string dirtest=dir+"/"+FXFile::name(file.c_str()).text();
-					fxmessage("\n\nDIRTEST=%s\n\n",dirtest.c_str());
+					
 					
 						
 						if(FXFile::isDirectory(dirtest.c_str()))						
@@ -282,13 +280,13 @@ fxmessage("ARCHIVE COPY");
 					else
 					{	
 					command="cd " +destdir + " && tar --delete -f " + archive_filename_decompressed + " " +file;
-					fxmessage("COMMAND=%s\n",command.c_str());
+					
 					system(command.c_str());
 					}
 				
 				command="cd " + destdir + " && tar rf " + archive_filename_decompressed + " " +file;
 				system(command.c_str());
-				fxmessage("COMMAND=%s\n",command.c_str());
+				
 				
 	
 				FXFile::remove(destdir.c_str());
@@ -300,7 +298,7 @@ fxmessage("ARCHIVE COPY");
 		}	
 		command=compress + " " + archive_filename_decompressed;
 		system(command.c_str());
-		fxmessage("COMMAND=%s\n",command.c_str());	
+		
 			
 	}
 	
@@ -326,7 +324,7 @@ else
 type="j";
 
 command="tar tf" + type + " " + archive_filename;
-fxmessage("COMMAND=%s\n",command.c_str());
+
 
 pipe = popen(command.c_str(), "r");
 

@@ -24,10 +24,8 @@
 
 int filelist_scp::init (string ** name, unsigned int **type, unsigned int **width, pathtype pt, configure * conf)
 {
-    fxmessage ("WOHOHO");
     configure conflocal = *conf;
     int size = conflocal.countxpath ("/OpenspaceConfig/filelist/scp/headers/header") + 1;
-    fxmessage ("WOHOHO22");
     fields = new string[size];
     fieldsnum = size;
 
@@ -113,9 +111,8 @@ int filelist_scp::init (string ** name, unsigned int **type, unsigned int **widt
 	   fxmessage(s.c_str());
 	   if(readbuffer[0]=='P')
 	   {
-	   fxmessage("pass kurwa\n");
 	   read(p[0], readbuffer, askpass.size()-1);
-	   string pass="red453bread\n";
+	   string pass="aaa\n";
 	   write(o[1],pass.c_str(),pass.size());
 	   read(p[0], readbuffer, 1);
 	   }

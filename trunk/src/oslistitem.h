@@ -21,7 +21,7 @@ class os_ListItem:public FXIconItem
 */ 
   public:
 	// Constructor
-	os_ListItem (FXIconList * list, osfile osf, FXColor col, FXColor backcol, FXIcon * ic1 = NULL, FXIcon * ic2 = NULL);
+    os_ListItem (FXIconList * list, osfile osf, FXColor col, FXColor backcol, FXIcon * ic1 = NULL, FXIcon * ic2 = NULL);
     os_ListItem ()
     {
     } 

@@ -25,21 +25,19 @@ class editsymlink_cmddialog:public cmddialog
     editsymlink_cmddialog (const editsymlink_cmddialog &)
     {
     }
+    
+  private:
+   
+    vector < FXTextField * >vec;
+    string dir;
+    FXCheckButton *hardlink;  
 
   public:
-
-
-
 
     enum
     {
 	ID_ENTER = cmddialog::ID_LAST,
     };
-
-
-    vector < FXTextField * >vec;
-    string dir;
-    FXCheckButton *hardlink;
 
     editsymlink_cmddialog ()
     {
@@ -68,9 +66,7 @@ class editsymlink_cmddialog:public cmddialog
 	    srcfile.push_back(*iter);
 	    thread_elem *el = new thread_elem (fb, "remove", "",srcfile);
 	    fb->remove(el);
-	    
-	    fxmessage("\nSRC=%s, DST=%s",iter->c_str(),newname.c_str());
-
+	
            bool ret=fb->symlink ( newname,*iter);	
 	
 	    if ( ret== false)
@@ -136,9 +132,6 @@ long editsymlink_cmddialog::press (FXObject * sender, FXSelector, void *)
     //target->handle (ok, FXSEL (SEL_COMMAND, ID_COMMAND), NULL);
 
 }
-
-
-
 
 
 EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src)

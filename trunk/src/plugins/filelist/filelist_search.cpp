@@ -36,7 +36,7 @@ if(iter!=files.end())
 	    os_file.size = 300;
 	
 	    iter++;
-	    fxmessage("\nN=%s",os_file.name.c_str());  
+	 
 	    return os_file;
 }		    
 
@@ -53,7 +53,7 @@ int filelist_search::mkdir (string dir, int mode)
 }
 int filelist_search::copy (thread_elem * te)
 {
-fxmessage("COPY\n"); 
+
 	string::size_type pos = te->options.find ("download");
 	if (pos == string::npos) //upload only supported
 	{
@@ -68,7 +68,7 @@ fxmessage("COPY\n");
 }
 int filelist_search::move (thread_elem * te)
 {
-fxmessage("COPY\n"); 
+
 	string::size_type pos = te->options.find ("download");
 	if (pos == string::npos) //upload only supported
 	{
@@ -87,7 +87,7 @@ return fil_local->remove(te);
 }
 int filelist_search::rename (string orgname, string newname)
 {
-fxmessage("o=%s n=%s",orgname.c_str(),newname.c_str());
+
 	int ret=fil_local->rename(orgname,newname);
 	if(ret)
 	{
@@ -103,12 +103,12 @@ fxmessage("o=%s n=%s",orgname.c_str(),newname.c_str());
 int filelist_search::init (vector < string > *vector_name, pathtype pt, configure * conf)
 {
 
-fxmessage("INIT");
+
 fil_local=new filelist_local();
 
 
     pipe = popen (pt.server.c_str(), "r");
- fxmessage(pt.server.c_str());  
+
     if (pipe != NULL)
     {
 	string line;

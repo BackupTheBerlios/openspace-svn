@@ -59,11 +59,9 @@ FXIMPLEMENT (MimeApp, FXDialogBox, MimeAppMap, ARRAYNUMBER (MimeAppMap)) MimeApp
 
 long MimeApp::onClose (FXObject * sender, FXSelector sel, void *ptr)
 {
-fxmessage("CLOSE & SAVE\n");
 string program=programsbox->getText().text();
 string mime=mime_label->getText().text();	
 save(mime,program);
-
 
 FXDialogBox::onCmdAccept(sender,sel,ptr);
 
@@ -112,16 +110,11 @@ long MimeApp::onNextPrevious(FXObject * sender, FXSelector sel, void *)
 }
 void MimeApp::fill(string tmp)
 {
-
-	//string tmp=*iter;
 	string mime, program;
 	mime = tmp.substr (0, tmp.rfind (":"));
 	program = tmp.substr (tmp.rfind (":") + 1);
 
 	mime_label->setText(mime.c_str());
-
-	
-	//fxmessage(mime.c_str());
 	
 	programsbox->clearItems();
 	

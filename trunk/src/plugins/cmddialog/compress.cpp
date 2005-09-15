@@ -26,9 +26,13 @@ class compress_cmddialog:public cmddialog
     {
     }
 
+  private:
+   
+    string dir;
+    FXTextField *textfield;
+    FXComboBox* combo;
+
   public:
-
-
 
 
     enum
@@ -37,11 +41,7 @@ class compress_cmddialog:public cmddialog
     };
 
 
-    string dir;
-    FXTextField *textfield;
-    FXComboBox* combo;
-
-    compress_cmddialog ()
+       compress_cmddialog ()
     {
     }
     compress_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src);
@@ -97,13 +97,6 @@ cmddialog (w, fb, src)
 	new FXLabel(contents,"archive filename: ");
 	textfield = new FXTextField (contents, 25, this, ID_ENTER);
 	textfield->setFocus ();
-	
-	
-	
-	
-	
-
-
 
 
 }
