@@ -557,7 +557,7 @@ string res;
 	colorbutton=new FXButton(filetypePane,"Color",NULL,this,ID_CHOOSE_COLOR);
 	new FXLabel(filetypePane,"back color:");
 	backcolorbutton=new FXButton(filetypePane,"Back Color",NULL,this,ID_CHOOSE_BACKCOLOR);
-	
+	new FXSeparator(filetypePane);
 	allMime=new FXComboBox (filetypePane,60);
 	allMime->setNumVisible(30);
 	new FXButton (filetypePane, "Add", NULL, this, preferences::ID_ADD_FILETYPE);
@@ -566,7 +566,10 @@ string res;
 	map<string,string>::iterator iter0;
 	for(iter0=MimeType::mimeMap.begin();iter0!=MimeType::mimeMap.end();iter0++)
 	{
-	allMime->appendItem(xml2mime(iter0->second).c_str());
+		if(allMime->findItem(xml2mime(iter0->second).c_str())==-1)
+		{	
+		allMime->appendItem(xml2mime(iter0->second).c_str());
+		}
 	}
 	
 	 

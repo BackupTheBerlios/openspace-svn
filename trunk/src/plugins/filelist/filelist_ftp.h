@@ -43,9 +43,9 @@ map <string,osfile>::iterator iterGlobal;
     vector < string > fields;
 
     int filelist_ftp::priv_osopendir (string dir,string prefix,map <string,osfile> & filesMap,map <string,osfile>::iterator & iter);
-    void filelist_ftp::gorecursive(string file,unsigned long &size=0);
+    void filelist_ftp::gorecursive(string file,unsigned long &size);
     osfile filelist_ftp::priv_osreaddir (map <string,osfile> & filesMap,map <string,osfile>::iterator & iter2);
-    void filelist_ftp::getRecursiveFiles(vector < string >src,unsigned long &size=0);
+    void filelist_ftp::getRecursiveFiles(vector < string >src,unsigned long &size);
     void filelist_ftp::goLocalRecursive (string path,string prefix,thread_elem *te);
     void filelist_ftp::local_totalsize (string path, unsigned long &size);
     int filelist_ftp::str_mode_int(string per);
