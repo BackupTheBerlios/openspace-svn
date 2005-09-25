@@ -231,7 +231,18 @@
 							<command>extract_tar_gz</command>
 					</commands>
 				</x-compressed-tar>
-				
+				<x-rar>
+					<icon>compressed</icon>
+					<commands>
+							<command>unrar</command>
+					</commands>
+				</x-rar>
+				<zip>
+					<icon>compressed</icon>
+					<commands>
+							<command>unzip</command>
+					</commands>
+				</zip>
 							
 			</types>	
 		</application>	
