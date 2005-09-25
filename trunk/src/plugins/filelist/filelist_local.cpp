@@ -8,7 +8,7 @@
 #include <fx.h>
 #include <errno.h>
 #include "filelist_local.h"
-#include "../../sharedobjects.h"
+#include "../../sharedFunctions.h"
 #include "OSFXFile.h"
 
 #ifdef WIN32
@@ -49,12 +49,6 @@ return v;
 
 int filelist_local::init (vector < string > *vector_name,pathtype pt, configure * conf)
 {
-
-    configure conflocal = *conf;
-
-
-
-
 
     fieldsnum = vector_name->size ();
     fields = (*vector_name);

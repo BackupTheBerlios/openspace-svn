@@ -56,24 +56,21 @@ am__installdirs = "$(DESTDIR)$(pkglibdir)"
 pkglibLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(pkglib_LTLIBRARIES)
 libfilelistarchive_la_LIBADD =
-am_libfilelistarchive_la_OBJECTS = filelist_archive.lo OSFXFile.lo \
-	thread_elem.lo configure.lo
+am_libfilelistarchive_la_OBJECTS = filelist_archive.lo thread_elem.lo
 libfilelistarchive_la_OBJECTS = $(am_libfilelistarchive_la_OBJECTS)
 libfilelistftp_la_LIBADD =
-am_libfilelistftp_la_OBJECTS = filelist_ftp.lo OSFXFile.lo \
-	thread_elem.lo configure.lo pftp.lo
+am_libfilelistftp_la_OBJECTS = filelist_ftp.lo pftp.lo thread_elem.lo
 libfilelistftp_la_OBJECTS = $(am_libfilelistftp_la_OBJECTS)
 libfilelistlocal_la_LIBADD =
 am_libfilelistlocal_la_OBJECTS = filelist_local.lo OSFXFile.lo \
-	thread_elem.lo configure.lo
+	thread_elem.lo sharedFunctions.lo
 libfilelistlocal_la_OBJECTS = $(am_libfilelistlocal_la_OBJECTS)
 libfilelistsearch_la_LIBADD =
 am_libfilelistsearch_la_OBJECTS = filelist_search.lo OSFXFile.lo \
-	thread_elem.lo configure.lo
+	thread_elem.lo
 libfilelistsearch_la_OBJECTS = $(am_libfilelistsearch_la_OBJECTS)
 libfilelistsftp_la_LIBADD =
-am_libfilelistsftp_la_OBJECTS = filelist_sftp.lo OSFXFile.lo \
-	thread_elem.lo configure.lo
+am_libfilelistsftp_la_OBJECTS = filelist_sftp.lo thread_elem.lo
 libfilelistsftp_la_OBJECTS = $(am_libfilelistsftp_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/src
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -204,15 +201,15 @@ target_alias = @target_alias@
 pkglib_LTLIBRARIES = libfilelistlocal.la  libfilelistsearch.la  libfilelistarchive.la libfilelistftp.la libfilelistsftp.la
 INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
 libfilelistlocal_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs`  
-libfilelistlocal_la_SOURCES = filelist_local.cpp filelist_local.h OSFXFile.cpp OSFXFile.h ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h
+libfilelistlocal_la_SOURCES = filelist_local.cpp filelist_local.h OSFXFile.cpp OSFXFile.h ../../thread_elem.cpp ../../thread_elem.h  ../../configure.h ../../sharedFunctions.cpp ../../sharedFunctions.h 
 libfilelistsearch_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
-libfilelistsearch_la_SOURCES = filelist_search.cpp filelist_search.h OSFXFile.cpp OSFXFile.h ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h 
+libfilelistsearch_la_SOURCES = filelist_search.cpp filelist_search.h OSFXFile.cpp OSFXFile.h ../../thread_elem.cpp ../../thread_elem.h  ../../configure.h 
 libfilelistarchive_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
-libfilelistarchive_la_SOURCES = filelist_archive.cpp filelist_archive.h OSFXFile.cpp OSFXFile.h ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h 
+libfilelistarchive_la_SOURCES = filelist_archive.cpp filelist_archive.h ../../thread_elem.cpp ../../thread_elem.h  ../../configure.h 
 libfilelistsftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
-libfilelistsftp_la_SOURCES = filelist_sftp.cpp filelist_sftp.h OSFXFile.cpp OSFXFile.h ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h 
+libfilelistsftp_la_SOURCES = filelist_sftp.cpp filelist_sftp.h  ../../thread_elem.cpp ../../thread_elem.h  ../../configure.h 
 libfilelistftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
-libfilelistftp_la_SOURCES = filelist_ftp.cpp filelist_ftp.h OSFXFile.cpp OSFXFile.h ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h pftp.cpp pftp.h
+libfilelistftp_la_SOURCES = filelist_ftp.cpp filelist_ftp.h  pftp.cpp pftp.h  ../../thread_elem.cpp ../../thread_elem.h ../../configure.h 
 all: all-am
 
 .SUFFIXES:
@@ -291,13 +288,13 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSFXFile.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/configure.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filelist_archive.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filelist_ftp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filelist_local.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filelist_search.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filelist_sftp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pftp.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sharedFunctions.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/thread_elem.Plo@am__quote@
 
 .cpp.o:
@@ -328,12 +325,12 @@ thread_elem.lo: ../../thread_elem.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o thread_elem.lo `test -f '../../thread_elem.cpp' || echo '$(srcdir)/'`../../thread_elem.cpp
 
-configure.lo: ../../configure.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT configure.lo -MD -MP -MF "$(DEPDIR)/configure.Tpo" -c -o configure.lo `test -f '../../configure.cpp' || echo '$(srcdir)/'`../../configure.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/configure.Tpo" "$(DEPDIR)/configure.Plo"; else rm -f "$(DEPDIR)/configure.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../configure.cpp' object='configure.lo' libtool=yes @AMDEPBACKSLASH@
+sharedFunctions.lo: ../../sharedFunctions.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sharedFunctions.lo -MD -MP -MF "$(DEPDIR)/sharedFunctions.Tpo" -c -o sharedFunctions.lo `test -f '../../sharedFunctions.cpp' || echo '$(srcdir)/'`../../sharedFunctions.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sharedFunctions.Tpo" "$(DEPDIR)/sharedFunctions.Plo"; else rm -f "$(DEPDIR)/sharedFunctions.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../sharedFunctions.cpp' object='sharedFunctions.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o configure.lo `test -f '../../configure.cpp' || echo '$(srcdir)/'`../../configure.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sharedFunctions.lo `test -f '../../sharedFunctions.cpp' || echo '$(srcdir)/'`../../sharedFunctions.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo

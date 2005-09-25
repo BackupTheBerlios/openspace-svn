@@ -9,7 +9,7 @@
 using namespace std;
 
 #include "MimeType.h"
-#include "sharedobjects.h"
+#include "sharedFunctions.h"
 
 bool MimeType::isInitialized = false;
 map < string, string > MimeType::mimeMap;

@@ -1,6 +1,7 @@
 #ifndef PREFERENCES_H
 #define PREFERENCES_H
 #include "sharedobjects.h"
+#include "sharedFunctions.h"
 #include "MimeApp.h"
 #include "CommandsFileTypesContainers.h"
 #include <vector>

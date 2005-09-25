@@ -62,16 +62,7 @@ class filelist_base
     }
     
     virtual vfs setup (void) = 0;
-    
-
 };
-
-
-
-
-
-
-
 
 
 #endif

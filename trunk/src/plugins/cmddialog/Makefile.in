@@ -56,32 +56,26 @@ am__installdirs = "$(DESTDIR)$(pkglibdir)"
 pkglibLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(pkglib_LTLIBRARIES)
 libaccess_la_LIBADD =
-am_libaccess_la_OBJECTS = access.lo thread_elem.lo configure.lo \
-	cmddialog.lo
+am_libaccess_la_OBJECTS = access.lo thread_elem.lo cmddialog.lo
 libaccess_la_OBJECTS = $(am_libaccess_la_OBJECTS)
 libclone_la_LIBADD =
-am_libclone_la_OBJECTS = clone.lo thread_elem.lo configure.lo \
-	cmddialog.lo
+am_libclone_la_OBJECTS = clone.lo thread_elem.lo cmddialog.lo
 libclone_la_OBJECTS = $(am_libclone_la_OBJECTS)
 libcompress_la_LIBADD =
-am_libcompress_la_OBJECTS = compress.lo thread_elem.lo configure.lo \
-	cmddialog.lo
+am_libcompress_la_OBJECTS = compress.lo thread_elem.lo cmddialog.lo
 libcompress_la_OBJECTS = $(am_libcompress_la_OBJECTS)
 libeditsymlink_la_LIBADD =
 am_libeditsymlink_la_OBJECTS = editsymlink.lo thread_elem.lo \
-	configure.lo cmddialog.lo
+	cmddialog.lo
 libeditsymlink_la_OBJECTS = $(am_libeditsymlink_la_OBJECTS)
 libmkdir_la_LIBADD =
-am_libmkdir_la_OBJECTS = mkdir.lo thread_elem.lo configure.lo \
-	cmddialog.lo
+am_libmkdir_la_OBJECTS = mkdir.lo thread_elem.lo cmddialog.lo
 libmkdir_la_OBJECTS = $(am_libmkdir_la_OBJECTS)
 librename_la_LIBADD =
-am_librename_la_OBJECTS = rename.lo thread_elem.lo configure.lo \
-	cmddialog.lo
+am_librename_la_OBJECTS = rename.lo thread_elem.lo cmddialog.lo
 librename_la_OBJECTS = $(am_librename_la_OBJECTS)
 libsymlink_la_LIBADD =
-am_libsymlink_la_OBJECTS = symlink.lo thread_elem.lo configure.lo \
-	cmddialog.lo
+am_libsymlink_la_OBJECTS = symlink.lo thread_elem.lo cmddialog.lo
 libsymlink_la_OBJECTS = $(am_libsymlink_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/src
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -213,19 +207,19 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 pkglib_LTLIBRARIES = libaccess.la libmkdir.la librename.la libclone.la libsymlink.la libeditsymlink.la libcompress.la
 INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
-libaccess_la_SOURCES = access.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h ../../cmddialog.cpp ../../cmddialog.h
+libaccess_la_SOURCES = access.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../cmddialog.cpp ../../cmddialog.h
 libaccess_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs`  
-libmkdir_la_SOURCES = mkdir.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h ../../cmddialog.cpp ../../cmddialog.h
+libmkdir_la_SOURCES = mkdir.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../cmddialog.cpp ../../cmddialog.h
 libmkdir_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
-librename_la_SOURCES = rename.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h ../../cmddialog.cpp ../../cmddialog.h
+librename_la_SOURCES = rename.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../cmddialog.cpp ../../cmddialog.h
 librename_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
-libclone_la_SOURCES = clone.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h ../../cmddialog.cpp ../../cmddialog.h
+libclone_la_SOURCES = clone.cpp  ../../thread_elem.cpp ../../thread_elem.h  ../../cmddialog.cpp ../../cmddialog.h
 libclone_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
-libsymlink_la_SOURCES = symlink.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h ../../cmddialog.cpp ../../cmddialog.h
+libsymlink_la_SOURCES = symlink.cpp  ../../thread_elem.cpp ../../thread_elem.h  ../../cmddialog.cpp ../../cmddialog.h
 libsymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
-libeditsymlink_la_SOURCES = editsymlink.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h ../../cmddialog.cpp ../../cmddialog.h
+libeditsymlink_la_SOURCES = editsymlink.cpp  ../../thread_elem.cpp ../../thread_elem.h  ../../cmddialog.cpp ../../cmddialog.h
 libeditsymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
-libcompress_la_SOURCES = compress.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../configure.cpp ../../configure.h ../../cmddialog.cpp ../../cmddialog.h
+libcompress_la_SOURCES = compress.cpp  ../../thread_elem.cpp ../../thread_elem.h  ../../cmddialog.cpp ../../cmddialog.h
 libcompress_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
 all: all-am
 
@@ -312,7 +306,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clone.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cmddialog.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/compress.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/configure.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/editsymlink.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mkdir.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rename.Plo@am__quote@
@@ -346,13 +339,6 @@ thread_elem.lo: ../../thread_elem.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../thread_elem.cpp' object='thread_elem.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o thread_elem.lo `test -f '../../thread_elem.cpp' || echo '$(srcdir)/'`../../thread_elem.cpp
-
-configure.lo: ../../configure.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT configure.lo -MD -MP -MF "$(DEPDIR)/configure.Tpo" -c -o configure.lo `test -f '../../configure.cpp' || echo '$(srcdir)/'`../../configure.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/configure.Tpo" "$(DEPDIR)/configure.Plo"; else rm -f "$(DEPDIR)/configure.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../configure.cpp' object='configure.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o configure.lo `test -f '../../configure.cpp' || echo '$(srcdir)/'`../../configure.cpp
 
 cmddialog.lo: ../../cmddialog.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT cmddialog.lo -MD -MP -MF "$(DEPDIR)/cmddialog.Tpo" -c -o cmddialog.lo `test -f '../../cmddialog.cpp' || echo '$(srcdir)/'`../../cmddialog.cpp; \

@@ -1,6 +1,8 @@
 #include "fx.h"
 #include "MimeApp.h"
 #include "sharedobjects.h"
+#include "sharedFunctions.h"
+
 #include "CommandsFileTypesContainers.h"
 
 #ifdef WIN32

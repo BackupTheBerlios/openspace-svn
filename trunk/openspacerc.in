@@ -170,6 +170,23 @@
 			<icon>music</icon>
 		</audio>
 		
+		<text>
+			<types>
+				<html>
+					<icon>html</icon>
+				</html>
+				<x-cPPsrc>
+					<icon>source</icon>
+				</x-cPPsrc>
+				<x-chdr>
+					<icon>header</icon>
+				</x-chdr>
+				<x-cPPhdr>
+					<icon>header</icon>
+				</x-cPPhdr>
+			</types>
+		</text>
+		
 		<application>
 			<types>
 				<pdf>
@@ -180,6 +197,10 @@
 				<vnd.sun.xml.writer>
 					<icon>word</icon>	
 				</vnd.sun.xml.writer>
+				
+				<vnd.ms-powerpoint>
+					<icon>presentation</icon>
+				</vnd.ms-powerpoint>
 				
 				<msword>
 					<icon>word</icon>	

@@ -34,7 +34,9 @@ openspace_SOURCES = cmddialog.cpp \
 	FirstRun.cpp \
 	FirstRun.h \
 	CommandsFileTypesContainers.h \
-	CommandsFileTypesContainers.cpp 
+	CommandsFileTypesContainers.cpp \
+	sharedFunctions.h \
+	sharedFunctions.cpp
 
 SUBDIRS = plugins
 
