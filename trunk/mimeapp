@@ -8,6 +8,7 @@ application/vnd.ms-powerpoint:ooffice ooffice2
 application/vnd.sun.xml.calc:ooffice ooffice2
 application/vnd.sun.xml.writer:ooffice ooffice2
 application/vnd.ms-excel:ooffice ooffice2
+application/msword:ooffice ooffice2
 text/plain:nedit scite gvim kedit gedit xemacs
 application/ogg:xmms freeamp bmp
 application/x-bittorrent:azerus btdownloadcurses.py
