@@ -34,6 +34,7 @@ class preferences:public FXDialogBox
     FXTextField *mainwindow_height;
     FXTextField *leftdir,*rightdir,*defaultdir;
     FXTextField *newCommandEdit;
+    FXTextField *newShutterEdit;
     FXTextField *thumbsize;
     FXListBox *commandsCombo;
     FXListBox *iconsList,*iconsList2;
@@ -92,6 +93,8 @@ class preferences:public FXDialogBox
 	ID_VFS_CHANGE,
 	ID_NEW_COMMAND,
 	ID_NEW_FILETYPE,
+	ID_NEW_SHUTTER,
+	ID_REMOVE_SHUTTER,
 	ID_REMOVE_COMMAND,
 	ID_MIME_APP,
 	ID_MIME_APP_AUTO,
@@ -123,6 +126,8 @@ class preferences:public FXDialogBox
     long preferences::onShutterChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::onRemoveCommand (FXObject * sender, FXSelector sel, void *);
+    long preferences::onNewShutter (FXObject * sender, FXSelector sel, void *);
+    long preferences::onRemoveShutter (FXObject * sender, FXSelector sel, void *);
     long preferences::onOpenMimeApp (FXObject * sender, FXSelector sel, void *);
     long preferences:: onAdditionalCommandChange( FXObject * sender, FXSelector sel, void *);
     long preferences::onAddFiletype (FXObject * sender, FXSelector sel, void *);

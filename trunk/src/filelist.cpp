@@ -446,7 +446,7 @@ void filelist::dropData (bool clipboard)
     options = "download";
     }
     
-    if(this->type=="local" || filelist_opposite->type=="local" || com_name=="romove")
+    if(this->type=="local" || filelist_opposite->type=="local")
     {
 	FXTRACE ((5, "copy/move/remove"));
 	thread_elem *el = new thread_elem (fil, com_name, options, src, path);
@@ -905,6 +905,16 @@ long filelist::keyPress (FXObject * sender, FXSelector sel, void *ptr)
 //copy/move/remove function
 void filelist::copymoveremove (string com_name)
 {
+
+	if(com_name=="remove")
+	{
+	FXMessageBox about (this, "?", "Are you sure to remove selected files?", NULL, MBOX_YES_NO | DECOR_TITLE | DECOR_BORDER);
+    
+		if(about.execute ()==MBOX_CLICKED_NO)
+		return;
+	}
+	
+	
     int selit = 0;
 
     for (int c = 0; c < getNumItems (); c++)
@@ -939,7 +949,7 @@ void filelist::copymoveremove (string com_name)
 
 
 
-    if(this->type=="local" || filelist_opposite->type=="local" || com_name=="romove")
+    if(this->type=="local" || filelist_opposite->type=="local" || com_name=="remove")
     {
     FXTRACE ((5, "copy/move/remove"));
     thread_elem *el = new thread_elem (fil, com_name, options, src,filelist_opposite->path);

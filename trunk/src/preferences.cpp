@@ -22,6 +22,8 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_VFS_CHANGE, preferences::onVfsChange),	
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_NEW_COMMAND, preferences::onNewCommand), 
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_REMOVE_COMMAND, preferences::onRemoveCommand),
+	FXMAPFUNC (SEL_COMMAND, preferences::ID_NEW_SHUTTER, preferences::onNewShutter), 
+	FXMAPFUNC (SEL_COMMAND, preferences::ID_REMOVE_SHUTTER, preferences::onRemoveShutter),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_MIME_APP, preferences::ID_MIME_APP_AUTO, preferences::onOpenMimeApp),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_ADD_FILETYPE, preferences::onAddFiletype),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_CHOOSE_COLOR,preferences::ID_CHOOSE_BACKCOLOR, preferences::onChooseColor),
@@ -321,6 +323,13 @@ new FXArrowButton(buttonsHframe2,this,ID_ADD_SHUTTER_COMMAND,FRAME_RAISED|FRAME_
 shutterCommands=new FXList (buttonsPane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 shutterCommands->setNumVisible(5);
 
+	new FXSeparator(buttonsPane);
+	FXHorizontalFrame *hfr=new FXHorizontalFrame (buttonsPane, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXButton (hfr, "Remove shutter", NULL, this, ID_REMOVE_SHUTTER, FRAME_RAISED | ICON_ABOVE_TEXT );
+	new FXButton (hfr, "New shutter", NULL, this, ID_NEW_SHUTTER, FRAME_RAISED | ICON_ABOVE_TEXT);
+	newShutterEdit = new FXTextField (hfr, 20);
+
+
  if(conf->openxpath("/OpenspaceConfig/shutter")!=-1)
 	       {
 	       string commandstr;
@@ -519,7 +528,7 @@ string res;
 
 
     filetypePane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXLabel (filetypePane, "File types settings", NULL, LAYOUT_LEFT);
+    
     new FXButton (buttons, "File types Settings", NULL, switcher, FXSwitcher::ID_OPEN_FIFTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
 
@@ -531,14 +540,17 @@ string res;
 	fileTypeList=new FXListBox (filetypePane, this, ID_FILETYPE_CHANGE);
 	fileTypeList->setNumVisible(30);
 	
-	new FXLabel(filetypePane,"default command:");
-	fileTypeDefaultBox = new FXListBox (filetypePane);
+	
+	FXGroupBox *filetypeGroup=new FXGroupBox(filetypePane,"commands",GROUPBOX_TITLE_CENTER|FRAME_RIDGE|LAYOUT_FILL_X);
+	
+	
+	new FXLabel(filetypeGroup,"default command:");
+	fileTypeDefaultBox = new FXListBox (filetypeGroup);
 	fileTypeDefaultBox->setNumVisible(30);
 	
-	iconsList2=new FXListBox (filetypePane);
-        iconsList2->setNumVisible(30);
 	
-	FXHorizontalFrame* hzframe=new FXHorizontalFrame (filetypePane, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	
+	FXHorizontalFrame* hzframe=new FXHorizontalFrame (filetypeGroup, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	FXVerticalFrame* vframe0=new FXVerticalFrame (hzframe, LAYOUT_FILL_X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXLabel(vframe0,"additional commands:");
         additionalCommands=new FXList (vframe0,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
@@ -553,14 +565,26 @@ string res;
 	additionalCommandsAvailable=new FXList (vframe1,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	additionalCommandsAvailable->setNumVisible(5);
 
-	new FXLabel(filetypePane,"color:");
-	colorbutton=new FXButton(filetypePane,"Color",NULL,this,ID_CHOOSE_COLOR);
-	new FXLabel(filetypePane,"back color:");
-	backcolorbutton=new FXButton(filetypePane,"Back Color",NULL,this,ID_CHOOSE_BACKCOLOR);
-	new FXSeparator(filetypePane);
-	allMime=new FXComboBox (filetypePane,60);
+	filetypeGroup=new FXGroupBox(filetypePane,"colors and icon",GROUPBOX_TITLE_CENTER|FRAME_RIDGE|LAYOUT_FILL_X);
+	FXHorizontalFrame* hf0=new FXHorizontalFrame (filetypeGroup, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 10, 10);
+	
+	iconsList2=new FXListBox (hf0);
+        iconsList2->setNumVisible(30);
+	//new FXLabel(hf0,"  ");
+	vframe1=new FXVerticalFrame (hf0, 0 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXLabel(vframe1,"text color:");
+	colorbutton=new FXButton(vframe1,"Color",NULL,this,ID_CHOOSE_COLOR);
+	vframe1=new FXVerticalFrame (hf0, 0 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXLabel(vframe1,"back color:");
+	backcolorbutton=new FXButton(vframe1,"Back Color",NULL,this,ID_CHOOSE_BACKCOLOR);
+	
+	
+	
+	filetypeGroup=new FXGroupBox(filetypePane,"add new file type",GROUPBOX_TITLE_CENTER|FRAME_RIDGE|LAYOUT_FILL_X);
+	
+	allMime=new FXComboBox (filetypeGroup,60);
 	allMime->setNumVisible(30);
-	new FXButton (filetypePane, "Add", NULL, this, preferences::ID_ADD_FILETYPE);
+	new FXButton (filetypeGroup, "Add", NULL, this, preferences::ID_ADD_FILETYPE);
 	
 	MimeType::__initialize();
 	map<string,string>::iterator iter0;
@@ -682,8 +706,9 @@ string res;
 	availableHeadersList=new FXList (vframe1,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	availableHeadersList->setNumVisible(5);
 
-
-
+ new FXLabel(vfsPane,""); 
+ new FXSeparator(vfsPane);
+ new FXLabel(vfsPane,"");
  new FXLabel (vfsPane, "available plugins - download from internet");
  
 availableVfsPluginsList=new FXListBox (vfsPane);
@@ -1008,6 +1033,45 @@ vector <shutter_container>::iterator iter;
 	}
 
 }
+
+long preferences::onNewShutter (FXObject * sender, FXSelector sel, void *)
+{
+string shutter_name = newShutterEdit->getText ().text ();
+    if(shutter_name=="")
+    return 0;
+
+shutterList->appendItem(shutter_name.c_str());
+
+}
+
+long preferences::onRemoveShutter (FXObject * sender, FXSelector sel, void *)
+{
+
+    string shutter =  shutterList->getItem (shutterList->getCurrentItem ()).text ();
+    int cur=shutterList->getCurrentItem ();
+    shutterList->setCurrentItem (0);
+    shutterList->removeItem (cur);    
+    this->onShutterChange(NULL,0,NULL);
+    
+    
+       string res = "/OpenspaceConfig/shutter/"+shutter;
+       conf->removestring (res);
+
+
+vector <shutter_container>::iterator shutter_iter;
+	
+	for(shutter_iter=shutterVector.begin();shutter_iter!=shutterVector.end(); shutter_iter++)
+		{
+			if(shutter_iter->shutter==shutter)
+			{
+				shutterVector.erase(shutter_iter);
+			break;
+			}
+		}
+
+
+}
+
 
 long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *)
 {

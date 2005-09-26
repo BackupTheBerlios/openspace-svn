@@ -43,7 +43,7 @@ string::size_type pos=name.find("/");
 }
 void filetype_container::save(void)
 {
-fxmessage("\nNAME=%s COMMAND=%s\n",name.c_str(),command.c_str());
+//fxmessage("\nNAME=%s COMMAND=%s\n",name.c_str(),command.c_str());
 
 if(name=="")
 return;
