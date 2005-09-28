@@ -16,11 +16,19 @@ FXIMPLEMENT (FirstRun, FXDialogBox, FirstRunMap, ARRAYNUMBER (FirstRunMap)) Firs
 {
 
 
-    FXVerticalFrame *vertical = new FXVerticalFrame (this, LAYOUT_SIDE_TOP | LAYOUT_FILL_X | LAYOUT_FILL_Y);
+    FXVerticalFrame *vertical = new FXVerticalFrame (this, LAYOUT_SIDE_TOP | LAYOUT_FILL_X | LAYOUT_FILL_Y);    
     
-    FXButton *but1 = new FXButton (vertical, "manual configuration", NULL, this,ID_CONF_MANUAL);
-    FXButton *but2 = new FXButton (vertical, "semiautomatic configuration", NULL, this,ID_CONF_SEMI);
-    FXButton *but3 = new FXButton (vertical, "full automatic configuration", NULL, this,ID_CONF_AUTOMATIC);
+    FXGroupBox *vv = new FXGroupBox (vertical, "", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0);
+    new FXLabel(vv,"Best for newbie and first run");	
+    FXButton *but3 = new FXButton (vv, "full automatic configuration", NULL, this,ID_CONF_AUTOMATIC);
+     	
+    vv = new FXGroupBox (vertical, "", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0);
+    new FXLabel(vv,"Choose which program will open given file type");	
+    FXButton *but2 = new FXButton (vv, "semiautomatic configuration", NULL, this,ID_CONF_SEMI);    
+    
+    vv = new FXGroupBox (vertical, "", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0);
+    new FXLabel(vv,"Not recomended - try better semi-auto configuration\n and then manual rather than only manual"); 
+    FXButton *but1 = new FXButton (vv, "manual configuration", NULL, this,ID_CONF_MANUAL);
 	
 	
 }

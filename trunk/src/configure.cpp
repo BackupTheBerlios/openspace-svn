@@ -19,18 +19,7 @@ configure *conf;
 configure::configure ()
 {
 
-    string dir = FXFile::getUserDirectory ("").text ();
-    file = dir +  "/.openspace/openspacerc";
-
-    if (!FXFile::exists (file.c_str ()))
-    {
-	file = "";
-	file = file + PATH_CFG + SEPARATOR + "openspacerc";
-    }
-    FXTRACE ((5, "OPENING CONFIGRATION FILE %s\n", file.c_str ()));
-//char *docname=;
-    doc = xmlParseFile (file.c_str ());
-    copy = false;
+    doc=NULL;
 }
 
 configure::configure (configure & conf)
@@ -46,18 +35,59 @@ configure::~configure ()
     if (!copy)
     {
 	FXTRACE ((5, "CONFIGURATION SAVING\n"));
-	//FILE *save = fopen (file.c_str (), "w");
-	//xmlDocDump (save, doc);
+
 	
-	 xmlSaveFormatFileEnc(file.c_str(), doc, "UTF-8", 1);
-	//fclose (save);
+	if(doc)
+	{
+	xmlSaveFormatFileEnc(file.c_str(), doc, "UTF-8", 1);
 	string cmd="xmllint --format " +file+ " -o "+file;
 	system(cmd.c_str());
 	xmlFreeDoc (doc);
 	xmlCleanupParser ();
+	}
+
     }
 
 }
+
+bool configure::loadconfig(bool restore)
+{
+
+string dir = FXFile::getUserDirectory ("").text ();
+    file = dir +  "/.openspace/openspacerc";
+    
+    if (!FXFile::exists (file.c_str ()))
+    {
+	file = "";
+	file = file + PATH_CFG + SEPARATOR + "openspacerc";
+    }
+    FXTRACE ((5, "OPENING CONFIGRATION FILE %s\n", file.c_str ()));
+
+    doc = xmlParseFile (file.c_str ());
+    copy = false;
+    
+    
+
+	if(!doc)
+	{	
+		if(restore)
+		{
+		fxmessage("restore");
+		doc = xmlParseFile (string(file+".backup").c_str());
+			if(doc)
+			return true;
+		}
+	return false;
+	}
+	else
+	{
+	FXFile::copy(file.c_str(),string(file+".backup").c_str(),true);
+	return true;
+	}
+
+}
+
+
 
 bool configure::readonestring (string path,string &ret)
 {
@@ -402,11 +432,3 @@ int configure::countxpath (string path)
     return counter;
 }
 
-bool configure::initialized(void)
-{
-	if(!doc)
-	return false;
-	else
-	return true;
-
-}

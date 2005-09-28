@@ -16,7 +16,8 @@ class configure
     configure::configure (configure & conf);
     configure::~configure ();
     
-    bool initialized(void);
+
+    bool loadconfig(bool restore=false);
     string readonestring (string path);
     bool configure::readonestring (string path,string &ret);
     bool configure::saveonestring (string path, string value);

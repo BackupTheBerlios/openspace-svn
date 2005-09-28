@@ -84,7 +84,10 @@ string file;
 		if(id==ID_DOWNLOAD_INSTALL_CMD_PLUGIN)
 			if(name==availableCommandPluginsList->getItem(availableCommandPluginsList->getCurrentItem()).text())
 			{
-			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget -nc "+ download;
+				if(name=="")
+				return 0;
+				
+			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget --connect-timeout=5 -nc "+ download;
 			system(cmd.c_str());
 
 			
@@ -109,7 +112,10 @@ string file;
 		else
 			if(name==availableVfsPluginsList->getItem(availableVfsPluginsList->getCurrentItem()).text())
 			{
-			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget -nc "+ download;
+				if(name=="")
+				return 0;
+			
+			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget --connect-timeout=5 -nc "+ download;
 			system(cmd.c_str());
 
 			string plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libfilelist")+ name+".so";
@@ -215,14 +221,15 @@ preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", D
     FXSwitcher *switcher = new FXSwitcher (horizontal, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0);
 
 
-    //new FXButton (vertical, "Save", NULL, this, preferences::ID_SAVE);
-    new FXButton (vertical, "Semi-Auto configure", NULL, this, preferences::ID_MIME_APP);
-    new FXButton (vertical, "Full-Auto configure", NULL, this, preferences::ID_MIME_APP_AUTO);
-
     FXVerticalFrame *mainpane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
     new FXLabel (mainpane, "Main settings", NULL, LAYOUT_LEFT);
     new FXButton (buttons, "Main Settings", NULL, switcher, FXSwitcher::ID_OPEN_FIRST, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+
+
+
+    new FXButton (mainpane, "Semi-Auto configure", NULL, this, preferences::ID_MIME_APP);
+    new FXButton (mainpane, "Full-Auto configure", NULL, this, preferences::ID_MIME_APP_AUTO);
 
     new FXLabel (mainpane, "width:");
     mainwindow_width = new FXTextField (mainpane, 5);
@@ -288,8 +295,10 @@ iconsTheme->setCurrentItem(iconsTheme->findItem(conf->readonestring ("/Openspace
 //getShell()->getHeight()
 
  FXVerticalFrame *buttonsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXLabel (buttonsPane, "Menu and Buttons settings", NULL, LAYOUT_LEFT);
+   
     new FXButton (buttons, "Menu and Buttons Settings", NULL, switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+
+ new FXLabel (buttonsPane, "Buttons in configurable toolbox:", NULL, LAYOUT_LEFT);
 
 	buttonsList=new FXList (buttonsPane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	buttonsList->setNumVisible(5);
@@ -308,6 +317,9 @@ iconsTheme->setCurrentItem(iconsTheme->findItem(conf->readonestring ("/Openspace
 	new FXLabel(buttonsHframe," ");
 	new FXArrowButton(buttonsHframe,this,ID_ADD_BUTTON_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_UP);
 	new FXArrowButton(buttonsHframe,this,ID_DEL_BUTTON_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_DOWN);
+	
+	new FXLabel (buttonsPane, "All available commands:", NULL, LAYOUT_LEFT);
+	
 	additionalCommandsAvailableForButtons=new FXList (buttonsPane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	additionalCommandsAvailableForButtons->setNumVisible(8);
 FXHorizontalFrame *buttonsHframe2 = new FXHorizontalFrame (buttonsPane, LAYOUT_FILL_X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);  
@@ -316,6 +328,8 @@ FXHorizontalFrame *buttonsHframe2 = new FXHorizontalFrame (buttonsPane, LAYOUT_F
 	new FXLabel(buttonsHframe2," ");
 new FXArrowButton(buttonsHframe2,this,ID_DEL_SHUTTER_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_UP);
 new FXArrowButton(buttonsHframe2,this,ID_ADD_SHUTTER_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_DOWN);
+new FXLabel (buttonsPane, "Shutter:", NULL, LAYOUT_LEFT);
+
 
        shutterList=new FXListBox (buttonsPane, this, ID_SHUTTER_CHANGE);
        shutterList->setNumVisible(10);
@@ -361,20 +375,21 @@ shutterList->setCurrentItem (shutterList->getNumItems () - 1);
 
 
     FXVerticalFrame *commandPluginsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXLabel (commandPluginsPane, "Command plugins settings", NULL, LAYOUT_LEFT);
+    
     new FXButton (buttons, "Command plugins Settings", NULL, switcher, FXSwitcher::ID_OPEN_THIRD, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
  new FXLabel (commandPluginsPane, "installed plugins");
 commandPluginsList=new FXListBox (commandPluginsPane, this, ID_COMMANDPLUGIN_CHANGE);
 commandPluginsList->setNumVisible(30);
 
- new FXLabel (commandPluginsPane, "available plugins - download from internet");
- 
-availableCommandPluginsList=new FXListBox (commandPluginsPane);
-availableCommandPluginsList->setNumVisible(30);
 
-new FXButton (commandPluginsPane, "Download and Install", NULL, this, ID_DOWNLOAD_INSTALL_CMD_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
-new FXButton (commandPluginsPane, "Update available plugins list", NULL, this, ID_UPDATE_CMD_PLUGIN_LIST, FRAME_RAISED | ICON_ABOVE_TEXT );
+FXPacker *vv = new FXGroupBox (commandPluginsPane, "available plugins - download from internet", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0); 
+
+hfr=new FXHorizontalFrame (vv, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+availableCommandPluginsList=new FXListBox (hfr);
+availableCommandPluginsList->setNumVisible(30);
+new FXButton (hfr, "Download and Install", NULL, this, ID_DOWNLOAD_INSTALL_CMD_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
+new FXButton (vv, "Update available plugins list", NULL, this, ID_UPDATE_CMD_PLUGIN_LIST, FRAME_RAISED | ICON_ABOVE_TEXT );
 
 
 
@@ -447,7 +462,7 @@ plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/
     commandsType=new FXLabel (commandsPane, "", NULL, LAYOUT_LEFT);
     commandsIcon=new FXLabel (commandsPane, "", NULL, LAYOUT_LEFT);
     
-    FXPacker *vv = new FXGroupBox (commandsPane, "Options", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0);
+    vv = new FXGroupBox (commandsPane, "Options", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0);
     commandsRescan = new FXCheckButton (vv, "rescan", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
     commandsCapture = new FXCheckButton (vv, "capture", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
    
@@ -709,14 +724,15 @@ string res;
  new FXLabel(vfsPane,""); 
  new FXSeparator(vfsPane);
  new FXLabel(vfsPane,"");
- new FXLabel (vfsPane, "available plugins - download from internet");
- 
-availableVfsPluginsList=new FXListBox (vfsPane);
-availableVfsPluginsList->setNumVisible(30);
-    
-new FXButton (vfsPane, "Download and Install", NULL, this, ID_DOWNLOAD_INSTALL_VFS_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
-new FXButton (vfsPane, "Update available plugins list", NULL, this, ID_UPDATE_VFS_PLUGIN_LIST, FRAME_RAISED | ICON_ABOVE_TEXT );
 
+vv = new FXGroupBox (vfsPane, "available plugins - download from internet", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0); 
+
+hfr=new FXHorizontalFrame (vv, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+availableVfsPluginsList=new FXListBox (hfr);
+availableVfsPluginsList->setNumVisible(30);
+new FXButton (hfr, "Download and Install", NULL, this, ID_DOWNLOAD_INSTALL_VFS_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
+new FXButton (vv, "Update available plugins list", NULL, this, ID_UPDATE_VFS_PLUGIN_LIST, FRAME_RAISED | ICON_ABOVE_TEXT );  
+  
     
     
     if (conf->openxpath ("/OpenspaceConfig/filelist") != -1)
@@ -1034,10 +1050,33 @@ vector <shutter_container>::iterator iter;
 
 }
 
+bool preferences::validateName(string name)
+{
+	if(name=="")return false;
+
+	int p,k;
+	FXRex identifier("[0-9a-zA-Z]*");
+        identifier.match(name.c_str(),name.size(),&p,&k);
+	
+
+	if(k!=name.size())
+	{
+	FXMessageBox error (this, "error", "Incorrect characters in name", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+	error.execute();
+	return false;
+	}
+	else
+	{
+	return true;
+	}
+    
+	
+}
+
 long preferences::onNewShutter (FXObject * sender, FXSelector sel, void *)
 {
 string shutter_name = newShutterEdit->getText ().text ();
-    if(shutter_name=="")
+    if(!validateName(shutter_name))
     return 0;
 
 shutterList->appendItem(shutter_name.c_str());
@@ -1077,7 +1116,7 @@ long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *)
 {
 
     string command_name = newCommandEdit->getText ().text ();
-    if(command_name=="")
+    if(!validateName(command_name))
     return 0;
     
     command_container ct=commandsMap[command_name];

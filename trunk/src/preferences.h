@@ -83,6 +83,10 @@ class preferences:public FXDialogBox
     
     FXVerticalFrame *filetypePane;
     
+    bool preferences::validateName(string name);
+    void preferences::setAllColor(FXButton* button,FXColor color);
+    
+    
     public:
     
     enum
@@ -140,7 +144,7 @@ class preferences:public FXDialogBox
     long preferences::onVfsChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onAddHeader (FXObject * sender, FXSelector sel, void *);
     
-    void preferences::setAllColor(FXButton* button,FXColor color);
+    
     
     virtual ~ preferences ();
 };

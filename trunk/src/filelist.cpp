@@ -78,511 +78,12 @@ FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
 
 
 
-// Handle drag-and-drop enter, remember current directory
-long filelist::onDNDEnter (FXObject * sender, FXSelector sel, void *ptr)
-{
-
-    FXIconList::onDNDEnter (sender, sel, ptr);
-    //orgdirectory=getDirectory();
-    return 1;
-}
-
-
-// Handle drag-and-drop leave, restore current directory prior to drag
-long filelist::onDNDLeave (FXObject * sender, FXSelector sel, void *ptr)
-{
-    FXIconList::onDNDLeave (sender, sel, ptr);
-    // getApp()->removeTimeout(this,ID_OPENTIMER);
-    stopAutoScroll ();
-    // setDirectory(orgdirectory);
-    return 1;
-}
-
-
-// Handle drag-and-drop motion
-long filelist::onDNDMotion (FXObject * sender, FXSelector sel, void *ptr)
-{
-    FXEvent *event = (FXEvent *) ptr;
-    FXint index = -1;
-
-    // Cancel open up timer
-    // getApp()->removeTimeout(this,ID_OPENTIMER);
-
-    // Start autoscrolling
-    if (startAutoScroll (event, FALSE))
-	return 1;
-
-    // Give base class a shot
-    if (FXIconList::onDNDMotion (sender, sel, ptr))
-	return 1;
-
-    // Dropping list of filenames
-    if (offeredDNDType (FROM_DRAGNDROP, urilistType))
-    {
-
-	// Drop in the background
-	//  dropdirectory=getDirectory();
-
-	// What is being done (move,copy,link)
-	dropaction = inquireDNDAction ();
-/*
-    // We will open up a folder if we can hover over it for a while
-    index=getItemAt(event->win_x,event->win_y);
-    if(0<=index && isItemDirectory(index)){
-
-      // Set open up timer
-      getApp()->addTimeout(this,ID_OPENTIMER,700);
-
-      // Directory where to drop, or directory to open up
-      dropdirectory=getItemPathname(index);
-      }
-*/
-	// See if dropdirectory is writable
-	// if(FXFile::isWritable(dropdirectory)){
-	//  FXTRACE((100,"accepting drop on %s\n",dropdirectory.text()));
-	acceptDrop (DRAG_ACCEPT);
-	//   }
-	return 1;
-    }
-    return 0;
-}
-
-
-// Handle drag-and-drop drop
-long filelist::onDNDDrop (FXObject * sender, FXSelector sel, void *ptr)
-{
-    // Cancel open up timer
-//  getApp()->removeTimeout(this,ID_OPENTIMER);
-
-    // Stop scrolling
-    stopAutoScroll ();
-
-
-    // Perhaps target wants to deal with it
-    if (FXIconList::onDNDDrop (sender, sel, ptr))
-	return 1;
-    dropData (false);
-
-
-    return 0;
-}
-
-
-// Somebody wants our dragged data
-long filelist::onDNDRequest (FXObject * sender, FXSelector sel, void *ptr)
-{
-    FXEvent *event = (FXEvent *) ptr;
-    FXuchar *data;
-    FXuint len;
-
-    // Perhaps the target wants to supply its own data
-    if (FXIconList::onDNDRequest (sender, sel, ptr))
-	return 1;
-
-    // Return list of filenames as a uri-list
-    if (event->target == urilistType)
-    {
-	if (!dragfiles.empty ())
-	{
-	    len = dragfiles.length ();
-	    FXMEMDUP (&data, dragfiles.text (), FXuchar, len);
-	    setDNDData (FROM_DRAGNDROP, event->target, data, len);
-	}
-	return 1;
-    }
-
-    // Delete selected files
-    if (event->target == deleteType)
-    {
-	FXTRACE ((100, "Delete files not yet implemented\n"));
-	return 1;
-    }
-
-    return 0;
-}
-
-string filelist::returnpath(string dirname)
-{
-	string ret;
-	if(path==SEPARATOR)
-	ret=SEPARATOR + dirname;
-	else
-	ret=path + SEPARATOR + dirname;
-	
-	return ret;
-}
-
-// Start a drag operation
-long filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
-{
-    register FXint i;
-    if (FXIconList::onBeginDrag (sender, sel, ptr))
-	return 1;
-    if (beginDrag (&urilistType, 1))
-    {
-	dragfiles = FXString::null;
-	for (i = 0; i < getNumItems (); i++)
-	{
-	    if (isItemSelected (i))
-	    {
-
-		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
-		string name = oslistitem->osf.name;
-		string fullname = returnpath(name);
-		if (name != "." && name != "..")
-		{
-		    if (!dragfiles.empty ())
-			dragfiles += "\r\n";
-
-		    dragfiles += FXURL::fileToURL (fullname.c_str ());
-		}
-	    }
-	}
-	return 1;
-    }
-    return 0;
-}
-
-
-// End drag operation
-long filelist::onEndDrag (FXObject * sender, FXSelector sel, void *ptr)
-{
-    if (FXIconList::onEndDrag (sender, sel, ptr))
-	return 1;
-    endDrag ((didAccept () != DRAG_REJECT));
-    setDragCursor (getDefaultCursor ());
-    dragfiles = FXString::null;
-    return 1;
-}
-
-
-// Dragged stuff around
-long filelist::onDragged (FXObject * sender, FXSelector sel, void *ptr)
-{
-    FXEvent *event = (FXEvent *) ptr;
-    FXDragAction action;
-    if (FXIconList::onDragged (sender, sel, ptr))
-	return 1;
-    action = DRAG_MOVE;
-    if (event->state & CONTROLMASK)
-	action = DRAG_COPY;
-    if (event->state & SHIFTMASK)
-	action = DRAG_MOVE;
-    if (event->state & ALTMASK)
-	action = DRAG_LINK;
-    handleDrag (event->root_x, event->root_y, action);
-    if (didAccept () != DRAG_REJECT)
-    {
-	if (action == DRAG_MOVE)
-	    setDragCursor (getApp ()->getDefaultCursor (DEF_DNDMOVE_CURSOR));
-	else if (action == DRAG_LINK)
-	    setDragCursor (getApp ()->getDefaultCursor (DEF_DNDLINK_CURSOR));
-	else
-	    setDragCursor (getApp ()->getDefaultCursor (DEF_DNDCOPY_CURSOR));
-    }
-    else
-    {
-	setDragCursor (getApp ()->getDefaultCursor (DEF_DNDSTOP_CURSOR));
-    }
-    return 1;
-}
-
-
-
-//return file type for given name
-string getfiletype (string name)
-{
-
-    //std::transform (name.begin (), name.end (), name.begin (), std::tolower);
-
-    string r = MimeType::getMimeFromName (name);
-
-    //printf("Name: '%s' MimeType: '%s'\n", name.c_str(), r.c_str());
-
-    return r;
-
-}
-
-//----------------------------------------------------  
-
-
-// We now really do have the clipboard, keep clipped text
-long filelist::onClipboardGained (FXObject * sender, FXSelector sel, void *ptr)
-{
-    FXIconList::onClipboardGained (sender, sel, ptr);
-    return 1;
-}
-
-
-// We lost the clipboard, free clipped text
-long filelist::onClipboardLost (FXObject * sender, FXSelector sel, void *ptr)
-{
-    FXIconList::onClipboardLost (sender, sel, ptr);
-    dragfiles=FXString::null;
-    //clipped.clear();
-    return 1;
-}
-
-
-// Somebody wants our clipped text
-long filelist::onClipboardRequest (FXObject * sender, FXSelector sel, void *ptr)
-{
-    FXEvent *event = (FXEvent *) ptr;
-    FXuchar *data;
-    FXuint len;
-    len = dragfiles.length ();
-    FXMEMDUP (&data, dragfiles.text (), FXuchar, len);
-    setDNDData (FROM_CLIPBOARD, event->target, data, len);
-    return 0;
-}
-
-long filelist::onCmdCopySel (FXObject *, FXSelector sel, void *ptr)
-{
-    FXDragType types[1];
-    types[0] = urilistType;
-    
- 
-    if (acquireClipboard (types, 1))
-    {
-   
-    FXushort id = FXSELID (sel);
-
-    if (id == ID_CLIP_COPY)
-    {
-    dropaction=DRAG_COPY;
-    }
-    else if (id == ID_CLIP_CUT)
-    {
-    dropaction=DRAG_MOVE;
-    }
-    
-    
-     //FXEvent *event = (FXEvent *) ptr;
-     //handleDrag (event->root_x, event->root_y, dropaction);
-     
-filelist_opposite->dropaction=dropaction;
-
-	dragfiles = FXString::null;
-	for (int i = 0; i < getNumItems (); i++)
-	{
-	    if (isItemSelected (i))
-	    {
-		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
-		string name = oslistitem->osf.name;
-		string fullname =returnpath(name);
-		if (name != "." && name != "..")
-		{
-		    if (!dragfiles.empty ())
-			dragfiles += "\r\n";
-		    dragfiles += FXURL::fileToURL (fullname.c_str ());
-		    
-		}
-	    }
-	}
-
-    }
-    return 1;
-}
-
-
-// Paste
-long filelist::onCmdPasteSel (FXObject *, FXSelector sel, void *)
-{
-   dropData (true);
-}
-
-void filelist::dropData (bool clipboard)
-{
-
-
-    FXuchar *data;
-    FXuint len;
-    FXDNDOrigin origin;
-    if (clipboard)
-	origin = FROM_CLIPBOARD;
-    else
-	origin = FROM_DRAGNDROP;
-
-    // Get uri-list of files being dropped
-    if (getDNDData (origin, urilistType, data, len))
-    {
-  
-	FXRESIZE (&data, FXuchar, len + 1);
-	data[len] = '\0';
-	FXchar *p, *q;
-	p = q = (FXchar *) data;
-
-	vector < string > src;
-
-	while (*p)
-	{
-	    while (*q && *q != '\r')
-		q++;
-	    FXString url (p, q - p);
-	    FXString filesrc (FXURL::fileFromURL (url));
-	    src.push_back (filesrc.text ());
-	    if (*q == '\r')
-		q += 2;
-	    p = q;
-	}
-
-
-	string com_name;
-	if (dropaction == DRAG_MOVE)
-	    com_name = "move";
-	else if (dropaction == DRAG_COPY)
-	    com_name = "copy";
-
-    filelist_base *fil = fb;
-    string options;
-    if (this->type == "local" && filelist_opposite->dragfiles!=FXString::null)
-    {
-     options = "upload";
-     fil = filelist_opposite->fb;
-
-    }
-    else 
-    {
-    options = "download";
-    }
-    
-    if(this->type=="local" || filelist_opposite->type=="local")
-    {
-	FXTRACE ((5, "copy/move/remove"));
-	thread_elem *el = new thread_elem (fil, com_name, options, src, path);
-	start_thread (el);
-    }
-    else
-    {
-    FXMessageBox about (this, "error", "copying/moving beetwen VFS not implemented (yet ;p)", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
-    about.execute ();
-    }	
-
-
-	FXFREE (&data);
-
-    }
-dropaction=DRAG_MOVE;
-filelist_opposite->dropaction=dropaction=DRAG_MOVE;
-
-}
 
 //-----FILELIST----------------------------------------------------------------------------------------------------------------------------------------- 
 
 
 
 
-//return default command for given filename
-
-string filelist::getdefaultcommand (string name)
-{
-
-    string ext = getfiletype (name);
-    string key = "";
-    if (ext != "")
-    {
-	string str = "/types/";
-	ext = ext.replace (ext.find ("/"), 1, str);
-	key = conf->readonestring ("/OpenspaceConfig/file_types/" + ext + "/default");
-    }
-
-    if (key == "")
-    {
-	ext = ext.substr (0, ext.find ("/"));
-	key = conf->readonestring ("/OpenspaceConfig/file_types/" + ext + "/default");
-    }
-
-
-   
-	return key;
-}
-
-
-
-	 
- 
-
-//return command with replaced {f} with valid path
-string filelist::resolvecommand(string command,string name)
-{
-string res;
-	if (command != "")
-	    res = conf->readonestring ("/OpenspaceConfig/commands/" + command + "/exec");
-	else
-	    return "";
-
-	if (res == "INTERNAL")
-	{
-	    FXTRACE ((5, "INTERNAL"));
-	    return "INTERNAL";
-	}
-	else if(res == "VFS")
-	{
-	 FXTRACE ((5, "VFS"));
-	    return "VFS";
-	}
-	
-	string fullname;
-	
-	if(this->type=="local")
-		fullname = "\"" + returnpath(name) + "\"";
-	else
-	{
-		fullname = "\"/tmp/openspace/" + name + "\"";
-	}	
-	
-	int pos = res.find ("{f}");
-	res.replace (pos, fullname.length (), fullname);
-	return res;
-
-
-}
-
-
-
-void filelist::create ()
-{
-
-    FXIconList::create ();
-    if (!deleteType)
-    {
-	deleteType = getApp ()->registerDragType (deleteTypeName);
-    }
-    if (!urilistType)
-    {
-	urilistType = getApp ()->registerDragType (urilistTypeName);
-    }
-
-}
-
-long filelist::onCmdResize(FXObject * sender, FXSelector sel, void *ptr)
-{
-
-//FXIconList::onHeaderResize(sender, sel,ptr);
-
-for(int i=0;i<getNumHeaders();i++)
-	{
-	string header=getHeaderText(i).text();
-	int width=getHeaderSize(i);
-	conf->saveonestring("/OpenspaceConfig/filelist/"+this->type+"/properties/"+header+"/width",ntos(width));
-	
-	}
-}
-
-//--------------------------------------------------------------------------------
-//bind keys
-long filelist::setKeys (void)
-{
-
-    FXAccelTable *table = getShell ()->getAccelTable ();
-    table->addAccel (MKUINT (KEY_a, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_SELECT_ALL));
-    table->addAccel (MKUINT (KEY_c, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_COPY));
-    table->addAccel (MKUINT (KEY_x, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_CUT));
-    table->addAccel (MKUINT (KEY_v, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_PASTE));
-    table->addAccel (MKUINT (KEY_F5, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REFRESH));
-    table->addAccel (MKUINT (KEY_Delete, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REMOVE));
-
-}
 
 
 filelist::filelist (FXComposite * p, pathtype pt):
@@ -868,6 +369,131 @@ bool filelist::init ()
     
     return opendir (this->path);
     
+
+}
+
+
+//return default command for given filename
+
+string filelist::getdefaultcommand (string name)
+{
+
+    string ext = getfiletype (name);
+    string key = "";
+    if (ext != "")
+    {
+	string str = "/types/";
+	ext = ext.replace (ext.find ("/"), 1, str);
+	key = conf->readonestring ("/OpenspaceConfig/file_types/" + ext + "/default");
+    }
+
+    if (key == "")
+    {
+	ext = ext.substr (0, ext.find ("/"));
+	key = conf->readonestring ("/OpenspaceConfig/file_types/" + ext + "/default");
+    }
+
+
+   
+	return key;
+}
+
+//return file type for given name
+string filelist::getfiletype (string name)
+{
+
+    //std::transform (name.begin (), name.end (), name.begin (), std::tolower);
+
+    string r = MimeType::getMimeFromName (name);
+
+    //printf("Name: '%s' MimeType: '%s'\n", name.c_str(), r.c_str());
+
+    return r;
+
+}
+
+	 
+ 
+
+//return command with replaced {f} with valid path
+string filelist::resolvecommand(string command,string name)
+{
+string res;
+	if (command != "")
+	    res = conf->readonestring ("/OpenspaceConfig/commands/" + command + "/exec");
+	else
+	    return "";
+
+	if (res == "INTERNAL")
+	{
+	    FXTRACE ((5, "INTERNAL"));
+	    return "INTERNAL";
+	}
+	else if(res == "VFS")
+	{
+	 FXTRACE ((5, "VFS"));
+	    return "VFS";
+	}
+	
+	string fullname;
+	
+	if(this->type=="local")
+		fullname = "\"" + returnpath(name) + "\"";
+	else
+	{
+		fullname = "\"/tmp/openspace/" + name + "\"";
+	}	
+	
+	int pos = res.find ("{f}");
+	res.replace (pos, fullname.length (), fullname);
+	return res;
+
+
+}
+
+
+
+void filelist::create ()
+{
+
+    FXIconList::create ();
+    if (!deleteType)
+    {
+	deleteType = getApp ()->registerDragType (deleteTypeName);
+    }
+    if (!urilistType)
+    {
+	urilistType = getApp ()->registerDragType (urilistTypeName);
+    }
+
+}
+
+long filelist::onCmdResize(FXObject * sender, FXSelector sel, void *ptr)
+{
+
+//FXIconList::onHeaderResize(sender, sel,ptr);
+
+for(int i=0;i<getNumHeaders();i++)
+	{
+	string header=getHeaderText(i).text();
+	int width=getHeaderSize(i);
+	conf->saveonestring("/OpenspaceConfig/filelist/"+this->type+"/properties/"+header+"/width",ntos(width));
+	
+	}
+}
+
+//--------------------------------------------------------------------------------
+//bind keys
+long filelist::setKeys (void)
+{
+
+    FXAccelTable *table = getShell ()->getAccelTable ();
+    table->addAccel (MKUINT (KEY_a, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_SELECT_ALL));
+    table->addAccel (MKUINT (KEY_c, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_COPY));
+    table->addAccel (MKUINT (KEY_x, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_CUT));
+    table->addAccel (MKUINT (KEY_v, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_PASTE));
+    table->addAccel (MKUINT (KEY_F5, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REFRESH));
+    table->addAccel (MKUINT (KEY_Delete, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REMOVE));
 
 }
 
@@ -1433,13 +1059,6 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
 		 }
 	    
 	    }
-    
-    
-    
-    
-	    
-
-
 
 
     }
@@ -2016,10 +1635,10 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
     }
     else if (fl->sort_nr == -1)	//extension sorting
     {
-	string exta = getfiletype (a->getText ().text ());
+	string exta = filelist::getfiletype (a->getText ().text ());
 	if (exta == "")
 	    exta = "zzzzz";
-	string extb = getfiletype (b->getText ().text ());
+	string extb = filelist::getfiletype (b->getText ().text ());
 	if (exta == "")
 	    extb = "zzzzz";
 
@@ -2276,3 +1895,384 @@ long filelist::onGoHome (FXObject * sender, FXSelector, void *)
     notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
     
 }
+
+//===================================================================================================
+//Below only drag and drop functions:
+
+// Handle drag-and-drop enter, remember current directory
+long filelist::onDNDEnter (FXObject * sender, FXSelector sel, void *ptr)
+{
+
+    FXIconList::onDNDEnter (sender, sel, ptr);
+    //orgdirectory=getDirectory();
+    return 1;
+}
+
+
+// Handle drag-and-drop leave, restore current directory prior to drag
+long filelist::onDNDLeave (FXObject * sender, FXSelector sel, void *ptr)
+{
+    FXIconList::onDNDLeave (sender, sel, ptr);
+    // getApp()->removeTimeout(this,ID_OPENTIMER);
+    stopAutoScroll ();
+    // setDirectory(orgdirectory);
+    return 1;
+}
+
+
+// Handle drag-and-drop motion
+long filelist::onDNDMotion (FXObject * sender, FXSelector sel, void *ptr)
+{
+    FXEvent *event = (FXEvent *) ptr;
+    FXint index = -1;
+
+    // Cancel open up timer
+    // getApp()->removeTimeout(this,ID_OPENTIMER);
+
+    // Start autoscrolling
+    if (startAutoScroll (event, FALSE))
+	return 1;
+
+    // Give base class a shot
+    if (FXIconList::onDNDMotion (sender, sel, ptr))
+	return 1;
+
+    // Dropping list of filenames
+    if (offeredDNDType (FROM_DRAGNDROP, urilistType))
+    {
+
+	// Drop in the background
+	//  dropdirectory=getDirectory();
+
+	// What is being done (move,copy,link)
+	dropaction = inquireDNDAction ();
+/*
+    // We will open up a folder if we can hover over it for a while
+    index=getItemAt(event->win_x,event->win_y);
+    if(0<=index && isItemDirectory(index)){
+
+      // Set open up timer
+      getApp()->addTimeout(this,ID_OPENTIMER,700);
+
+      // Directory where to drop, or directory to open up
+      dropdirectory=getItemPathname(index);
+      }
+*/
+	// See if dropdirectory is writable
+	// if(FXFile::isWritable(dropdirectory)){
+	//  FXTRACE((100,"accepting drop on %s\n",dropdirectory.text()));
+	acceptDrop (DRAG_ACCEPT);
+	//   }
+	return 1;
+    }
+    return 0;
+}
+
+
+// Handle drag-and-drop drop
+long filelist::onDNDDrop (FXObject * sender, FXSelector sel, void *ptr)
+{
+    // Cancel open up timer
+//  getApp()->removeTimeout(this,ID_OPENTIMER);
+
+    // Stop scrolling
+    stopAutoScroll ();
+
+
+    // Perhaps target wants to deal with it
+    if (FXIconList::onDNDDrop (sender, sel, ptr))
+	return 1;
+    dropData (false);
+
+
+    return 0;
+}
+
+
+// Somebody wants our dragged data
+long filelist::onDNDRequest (FXObject * sender, FXSelector sel, void *ptr)
+{
+    FXEvent *event = (FXEvent *) ptr;
+    FXuchar *data;
+    FXuint len;
+
+    // Perhaps the target wants to supply its own data
+    if (FXIconList::onDNDRequest (sender, sel, ptr))
+	return 1;
+
+    // Return list of filenames as a uri-list
+    if (event->target == urilistType)
+    {
+	if (!dragfiles.empty ())
+	{
+	    len = dragfiles.length ();
+	    FXMEMDUP (&data, dragfiles.text (), FXuchar, len);
+	    setDNDData (FROM_DRAGNDROP, event->target, data, len);
+	}
+	return 1;
+    }
+
+    // Delete selected files
+    if (event->target == deleteType)
+    {
+	FXTRACE ((100, "Delete files not yet implemented\n"));
+	return 1;
+    }
+
+    return 0;
+}
+
+string filelist::returnpath(string dirname)
+{
+	string ret;
+	if(path==SEPARATOR)
+	ret=SEPARATOR + dirname;
+	else
+	ret=path + SEPARATOR + dirname;
+	
+	return ret;
+}
+
+// Start a drag operation
+long filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
+{
+    register FXint i;
+    if (FXIconList::onBeginDrag (sender, sel, ptr))
+	return 1;
+    if (beginDrag (&urilistType, 1))
+    {
+	dragfiles = FXString::null;
+	for (i = 0; i < getNumItems (); i++)
+	{
+	    if (isItemSelected (i))
+	    {
+
+		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+		string name = oslistitem->osf.name;
+		string fullname = returnpath(name);
+		if (name != "." && name != "..")
+		{
+		    if (!dragfiles.empty ())
+			dragfiles += "\r\n";
+
+		    dragfiles += FXURL::fileToURL (fullname.c_str ());
+		}
+	    }
+	}
+	return 1;
+    }
+    return 0;
+}
+
+
+// End drag operation
+long filelist::onEndDrag (FXObject * sender, FXSelector sel, void *ptr)
+{
+    if (FXIconList::onEndDrag (sender, sel, ptr))
+	return 1;
+    endDrag ((didAccept () != DRAG_REJECT));
+    setDragCursor (getDefaultCursor ());
+    dragfiles = FXString::null;
+    return 1;
+}
+
+
+// Dragged stuff around
+long filelist::onDragged (FXObject * sender, FXSelector sel, void *ptr)
+{
+    FXEvent *event = (FXEvent *) ptr;
+    FXDragAction action;
+    if (FXIconList::onDragged (sender, sel, ptr))
+	return 1;
+    action = DRAG_MOVE;
+    if (event->state & CONTROLMASK)
+	action = DRAG_COPY;
+    if (event->state & SHIFTMASK)
+	action = DRAG_MOVE;
+    if (event->state & ALTMASK)
+	action = DRAG_LINK;
+    handleDrag (event->root_x, event->root_y, action);
+    if (didAccept () != DRAG_REJECT)
+    {
+	if (action == DRAG_MOVE)
+	    setDragCursor (getApp ()->getDefaultCursor (DEF_DNDMOVE_CURSOR));
+	else if (action == DRAG_LINK)
+	    setDragCursor (getApp ()->getDefaultCursor (DEF_DNDLINK_CURSOR));
+	else
+	    setDragCursor (getApp ()->getDefaultCursor (DEF_DNDCOPY_CURSOR));
+    }
+    else
+    {
+	setDragCursor (getApp ()->getDefaultCursor (DEF_DNDSTOP_CURSOR));
+    }
+    return 1;
+}
+
+
+
+
+
+//----------------------------------------------------  
+
+
+// We now really do have the clipboard, keep clipped text
+long filelist::onClipboardGained (FXObject * sender, FXSelector sel, void *ptr)
+{
+    FXIconList::onClipboardGained (sender, sel, ptr);
+    return 1;
+}
+
+
+// We lost the clipboard, free clipped text
+long filelist::onClipboardLost (FXObject * sender, FXSelector sel, void *ptr)
+{
+    FXIconList::onClipboardLost (sender, sel, ptr);
+    dragfiles=FXString::null;
+    //clipped.clear();
+    return 1;
+}
+
+
+// Somebody wants our clipped text
+long filelist::onClipboardRequest (FXObject * sender, FXSelector sel, void *ptr)
+{
+    FXEvent *event = (FXEvent *) ptr;
+    FXuchar *data;
+    FXuint len;
+    len = dragfiles.length ();
+    FXMEMDUP (&data, dragfiles.text (), FXuchar, len);
+    setDNDData (FROM_CLIPBOARD, event->target, data, len);
+    return 0;
+}
+
+long filelist::onCmdCopySel (FXObject *, FXSelector sel, void *ptr)
+{
+    FXDragType types[1];
+    types[0] = urilistType;
+    
+ 
+    if (acquireClipboard (types, 1))
+    {
+   
+    FXushort id = FXSELID (sel);
+
+    if (id == ID_CLIP_COPY)
+    {
+    dropaction=DRAG_COPY;
+    }
+    else if (id == ID_CLIP_CUT)
+    {
+    dropaction=DRAG_MOVE;
+    }
+    
+    
+     //FXEvent *event = (FXEvent *) ptr;
+     //handleDrag (event->root_x, event->root_y, dropaction);
+     
+filelist_opposite->dropaction=dropaction;
+
+	dragfiles = FXString::null;
+	for (int i = 0; i < getNumItems (); i++)
+	{
+	    if (isItemSelected (i))
+	    {
+		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+		string name = oslistitem->osf.name;
+		string fullname =returnpath(name);
+		if (name != "." && name != "..")
+		{
+		    if (!dragfiles.empty ())
+			dragfiles += "\r\n";
+		    dragfiles += FXURL::fileToURL (fullname.c_str ());
+		    
+		}
+	    }
+	}
+
+    }
+    return 1;
+}
+
+
+// Paste
+long filelist::onCmdPasteSel (FXObject *, FXSelector sel, void *)
+{
+   dropData (true);
+}
+
+void filelist::dropData (bool clipboard)
+{
+
+
+    FXuchar *data;
+    FXuint len;
+    FXDNDOrigin origin;
+    if (clipboard)
+	origin = FROM_CLIPBOARD;
+    else
+	origin = FROM_DRAGNDROP;
+
+    // Get uri-list of files being dropped
+    if (getDNDData (origin, urilistType, data, len))
+    {
+  
+	FXRESIZE (&data, FXuchar, len + 1);
+	data[len] = '\0';
+	FXchar *p, *q;
+	p = q = (FXchar *) data;
+
+	vector < string > src;
+
+	while (*p)
+	{
+	    while (*q && *q != '\r')
+		q++;
+	    FXString url (p, q - p);
+	    FXString filesrc (FXURL::fileFromURL (url));
+	    src.push_back (filesrc.text ());
+	    if (*q == '\r')
+		q += 2;
+	    p = q;
+	}
+
+
+	string com_name;
+	if (dropaction == DRAG_MOVE)
+	    com_name = "move";
+	else if (dropaction == DRAG_COPY)
+	    com_name = "copy";
+
+    filelist_base *fil = fb;
+    string options;
+    if (this->type == "local" && filelist_opposite->dragfiles!=FXString::null)
+    {
+     options = "upload";
+     fil = filelist_opposite->fb;
+
+    }
+    else 
+    {
+    options = "download";
+    }
+    
+    if(this->type=="local" || filelist_opposite->type=="local")
+    {
+	FXTRACE ((5, "copy/move/remove"));
+	thread_elem *el = new thread_elem (fil, com_name, options, src, path);
+	start_thread (el);
+    }
+    else
+    {
+    FXMessageBox about (this, "error", "copying/moving beetwen VFS not implemented (yet ;p)", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+    about.execute ();
+    }	
+
+
+	FXFREE (&data);
+
+    }
+dropaction=DRAG_MOVE;
+filelist_opposite->dropaction=dropaction=DRAG_MOVE;
+
+}
+

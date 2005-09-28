@@ -77,6 +77,8 @@ private:
     string filelist::getdefaultcommand (string name);
     string filelist::resolvecommand(string command,string name);
     int filelist::runCommand(string name);
+    static string filelist::getfiletype (string name);
+    long filelist::setKeys (void);
     
 public:  
 
@@ -98,11 +100,6 @@ string path;
 bool active;
 filelist_base * fb;
 filelist *filelist_opposite;
-
-void filelist::refresh (void);
-bool filelist::init (void);
-
-
 
 enum
     {
@@ -129,7 +126,10 @@ enum
 
     virtual void create ();
 
+    void filelist::refresh (void);
+    bool filelist::init (void);
     bool filelist::opendir (string dir);
+       
     long filelist::setFocus (FXObject * obj, FXSelector sel, void *ptr);
     long filelist::lostFocus (FXObject * obj, FXSelector sel, void *ptr);
     long filelist::openfile (FXObject *, FXSelector, void *);
@@ -143,8 +143,7 @@ enum
     long filelist::parseTextField (FXObject * sender, FXSelector, void *);
     long filelist::keyPress (FXObject * sender, FXSelector, void *);
     long filelist::onMaximize (FXObject * sender, FXSelector, void *);
-    long filelist::onGoHome (FXObject * sender, FXSelector, void *);
-    long filelist::setKeys (void);
+    long filelist::onGoHome (FXObject * sender, FXSelector, void *);    
     long filelist::onCmdResize(FXObject * sender, FXSelector, void *);
     long onChangeView (FXObject * sender, FXSelector, void *);
     
