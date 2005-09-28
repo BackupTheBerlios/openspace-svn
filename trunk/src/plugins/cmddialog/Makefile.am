@@ -1,4 +1,4 @@
-pkglib_LTLIBRARIES= libaccess.la libmkdir.la librename.la libclone.la libsymlink.la libeditsymlink.la libcompress.la
+pkglib_LTLIBRARIES= libaccess.la libmkdir.la librename.la libclone.la libsymlink.la libeditsymlink.la libcompress.la libmd5sum.la
 pkglibdir=$(datadir)/openspace/plugins/cmddialog
 INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
 
@@ -22,3 +22,6 @@ libeditsymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --l
 
 libcompress_la_SOURCES =compress.cpp  ../../thread_elem.cpp ../../thread_elem.h  ../../cmddialog.cpp ../../cmddialog.h
 libcompress_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+
+libmd5sum_la_SOURCES =md5sum.cpp  ../../thread_elem.cpp ../../thread_elem.h  ../../cmddialog.cpp ../../cmddialog.h
+libmd5sum_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 

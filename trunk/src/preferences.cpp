@@ -87,7 +87,7 @@ string file;
 				if(name=="")
 				return 0;
 				
-			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget --connect-timeout=5 -nc "+ download;
+			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget -N --connect-timeout=5  "+ download;
 			system(cmd.c_str());
 
 			
@@ -115,7 +115,7 @@ string file;
 				if(name=="")
 				return 0;
 			
-			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget --connect-timeout=5 -nc "+ download;
+			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget -N --connect-timeout=5  "+ download;
 			system(cmd.c_str());
 
 			string plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libfilelist")+ name+".so";
@@ -165,9 +165,9 @@ string cmd;
 FXushort id=FXSELID(sel);
 
 	if(id==ID_UPDATE_CMD_PLUGIN_LIST)
-	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget -nc http://openspace.linux.pl/files/0.1.0/x86/commandPluginsList.txt";
+	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget -N http://openspace.linux.pl/files/0.1.0/x86/commandPluginsList.txt";
 	else
-	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget -nc http://openspace.linux.pl/files/0.1.0/x86/vfsPluginsList.txt";
+	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget -N http://openspace.linux.pl/files/0.1.0/x86/vfsPluginsList.txt";
 	
 	
 system(cmd.c_str());
@@ -193,10 +193,12 @@ string file;
 		parser >> download;
 			if(id==ID_UPDATE_CMD_PLUGIN_LIST)
 			{
+			availableCommandPluginsList->clearItems();
 			availableCommandPluginsList->appendItem(name.c_str());
 			}
 			else
 			{
+			availableVfsPluginsList->clearItems();
 			availableVfsPluginsList->appendItem(name.c_str());
 			}
 		}
