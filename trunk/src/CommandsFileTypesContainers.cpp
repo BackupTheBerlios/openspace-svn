@@ -131,24 +131,31 @@ return;
 
 command_container::command_container(string name, string exec):name(name),exec(exec)
 {
+capture=false;
+rescan=false;
 }
 
 void command_container::save(void)
 {
 
 string com = name;
-	string value = exec;
+string value = exec;
 	
 	
 	
 	
 	if(type!="INTERNAL" && type!="PLUGIN")
 	{
+	
 		if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/exec", value))
 		{
+		fxmessage("NO\n");
 	   	 conf->addstring ("/OpenspaceConfig/commands", com, "");
-	   	 if(exec!="")
-	   	 conf->addstring ("/OpenspaceConfig/commands/" + com, "exec", value);
+		 
+	   	    if(exec!="")
+		    { 
+	   	    conf->addstring ("/OpenspaceConfig/commands/" + com, "exec", value);
+		    }
 		}
 	}
 	else

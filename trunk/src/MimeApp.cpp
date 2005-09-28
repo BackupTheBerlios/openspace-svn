@@ -144,7 +144,7 @@ void MimeApp::save(string mime, string program)
 if(program=="")
 return;
 
-
+fxmessage("M=%s P=%s",mime.c_str(),program.c_str());
 	string::size_type pos=mime.find("/");
 	
 	string mime_major;
@@ -179,8 +179,11 @@ return;
 	{
 		command_name+=mime;
 		string reg = conf->readonestring ("/OpenspaceConfig/file_types/" + mime + "/default");
-		if(reg=="" || reg!=command_name)
+		string cmd = conf->readonestring ("/OpenspaceConfig/commands/" + reg + "/exec"); 
+		
+		if(reg=="" || cmd!=command_exec)
 		{
+		
 		filetype_container ct=filetype_container();
 		ct.load(mime);
 		ct.command=command_name;
@@ -190,10 +193,7 @@ return;
 		return;
 	}
 
-	if(conf->readonestring ("/OpenspaceConfig/commands/" + command_name+"/default")=="")
-	{
-	conf->addstring ("/OpenspaceConfig/commands", command_name, "");
-	conf->addstring ("/OpenspaceConfig/commands/" + command_name, "exec", command_exec);
-	}
+	command_container cm=command_container(command_name,command_exec);
+	cm.save();
 
 }
