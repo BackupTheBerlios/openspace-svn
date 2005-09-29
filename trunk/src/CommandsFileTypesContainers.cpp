@@ -149,7 +149,7 @@ string value = exec;
 	
 		if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/exec", value))
 		{
-		fxmessage("NO\n");
+		
 	   	 conf->addstring ("/OpenspaceConfig/commands", com, "");
 		 
 	   	    if(exec!="")

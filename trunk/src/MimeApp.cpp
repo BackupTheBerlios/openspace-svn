@@ -144,7 +144,6 @@ void MimeApp::save(string mime, string program)
 if(program=="")
 return;
 
-fxmessage("M=%s P=%s",mime.c_str(),program.c_str());
 	string::size_type pos=mime.find("/");
 	
 	string mime_major;

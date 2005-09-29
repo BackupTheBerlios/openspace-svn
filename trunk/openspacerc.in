@@ -38,7 +38,7 @@
 	
 	
 		<run_shell>
-			<exec>aterm -transparent -foreground white -bg black -cr red -sl 500  -trsb -shading 80</exec>
+			<exec>xterm  -bg black -fg white</exec>
 			<icon>run_shell</icon>
 			<text>terminal</text>
 		</run_shell>	
@@ -130,9 +130,6 @@
 		<umount>
 			<exec>umount {f}</exec>
 		</umount>
-		<show_thumbs>
-			<exec>gqview {f}</exec>
-		</show_thumbs>
 		<vfs_archive>
 			<type>VFS</type>
 			<exec>archive</exec>
@@ -254,7 +251,6 @@
 			<backcolor>-3570031</backcolor>
 			<commands>
 					<command>umount</command>
-					<command>show_thumbs</command>
 			</commands>
 		</dir>
 		<executable>

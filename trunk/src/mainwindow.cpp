@@ -208,7 +208,7 @@ long MainWindow::onOpenConfigure (FXObject * sender, FXSelector sel, void *)
 //about
 long MainWindow::onAbout (FXObject * sender, FXSelector sel, void *)
 {
-    FXMessageBox about (this, "About Openspace", "Openspace File Browser V0.1.0 ALPHA\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org)\n\nCopyright (C) Mateusz Dworak (compbatant@t-nas.org) \n\n icons by Dawn Simon", objmanager->osicons["foxbig"], MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+    FXMessageBox about (this, "About Openspace", "Openspace File Browser 0.1.0 rc1 \n\nby Mateusz Dworak (compbatant@t-nas.org)\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org) \n\n icons by Dawn Simon", objmanager->osicons["foxbig"], MBOX_OK | DECOR_TITLE | DECOR_BORDER);
     about.execute ();
 }
 

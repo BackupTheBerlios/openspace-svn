@@ -11,7 +11,7 @@ int main (int argc, char **argv)
 	{
 		if(!strcmp(argv[i],"-v") || !strcmp(argv[i],"--version") )
 		{
-		fxmessage("\nopenspace 0.1.0 alpha\n");
+		fxmessage("\nopenspace 0.1.0 rc1\n");
 		return 0;
 		}
 		
