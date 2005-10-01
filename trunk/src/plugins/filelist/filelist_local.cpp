@@ -235,7 +235,7 @@ int filelist_local::mkdir (string dir, int mode)
     FXTRACE ((5, "MKDIR\n"));
     string d = this->dir + SEPARATOR + dir;
 
-    return FXFile::createDirectory (d.c_str (), 666);
+    return FXFile::createDirectory (d.c_str (), mode);
     return 0;
 }
 
