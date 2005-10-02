@@ -68,10 +68,12 @@ if(conf->loadconfig())
     pref = NULL;
     
    
-    string iconsdir=conf->readonestring ("/OpenspaceConfig/path") +"/icons/"+conf->readonestring ("/OpenspaceConfig/icons_theme");
+    string iconsdir=conf->readonestring ("/OpenspaceConfig/path") +"icons/"+conf->readonestring ("/OpenspaceConfig/icons_theme");
+    
     if(!FXFile::exists(iconsdir.c_str()))
    	 iconsdir=FXFile::getUserDirectory ("").text () +string("/.openspace/icons/")+conf->readonestring ("/OpenspaceConfig/icons_theme");
-    iconsdir+="/";
+    
+    iconsdir+=string("/");
     loadicons(iconsdir);
     
    
@@ -1048,7 +1050,8 @@ objmanager->specialicons[5]->create();
 	    DIR *dirp;
 
 	    dirp = opendir (icondir.c_str ());
-
+	    
+	    if(dirp)	
 	    while ((dp = readdir (dirp)) != NULL)
 	    {
 		if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
