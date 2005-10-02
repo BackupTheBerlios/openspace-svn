@@ -26,7 +26,7 @@ int main (int argc, char **argv)
         string tmpdir="/tmp/openspace";	
         if(!FXFile::exists(tmpdir.c_str()))
 	{
-	FXFile::createDirectory(tmpdir.c_str(),655);	
+	FXFile::createDirectory(tmpdir.c_str(),493);	
 	}
 	
         string dir = FXFile::getUserDirectory ("").text ();
@@ -35,15 +35,15 @@ int main (int argc, char **argv)
 	
 	if(!FXFile::exists(file.c_str()))
 	{
-	FXFile::createDirectory(dir.c_str(),655);
+	FXFile::createDirectory(dir.c_str(),493);
 	string dir2=dir+"/icons";
-	FXFile::createDirectory(dir2.c_str(),655);	
+	FXFile::createDirectory(dir2.c_str(),493);	
 	dir+="/plugins";
-	FXFile::createDirectory(dir.c_str(),655);
+	FXFile::createDirectory(dir.c_str(),493);
 	dir2=dir+"/cmddialog";
-	FXFile::createDirectory(dir2.c_str(),655);
+	FXFile::createDirectory(dir2.c_str(),493);
 	dir2=dir+"/filelist";
-	FXFile::createDirectory(dir2.c_str(),655);
+	FXFile::createDirectory(dir2.c_str(),493);
 	
 		
 	string src=PATH_CFG + string("/openspacerc");

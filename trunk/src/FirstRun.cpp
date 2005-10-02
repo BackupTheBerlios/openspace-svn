@@ -12,7 +12,7 @@ FXDEFMAP (FirstRun) FirstRunMap[] =
 };
 
 
-FXIMPLEMENT (FirstRun, FXDialogBox, FirstRunMap, ARRAYNUMBER (FirstRunMap)) FirstRun::FirstRun (FXWindow * owner):FXDialogBox (owner, "FirstRun", DECOR_TITLE | DECOR_BORDER | DECOR_RESIZE, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4)
+FXIMPLEMENT (FirstRun, FXDialogBox, FirstRunMap, ARRAYNUMBER (FirstRunMap)) FirstRun::FirstRun (FXWindow * owner):FXDialogBox (owner, "FirstRun", DECOR_ALL, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4)
 {
 
 

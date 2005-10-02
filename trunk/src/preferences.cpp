@@ -46,7 +46,7 @@ long preferences::close (FXObject * sender, FXSelector sel, void *ptr)
 if(saveconfiguration)
 this->save();
 
-FXMessageBox about (this, "restart", "restart openspace to apply changes", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+FXMessageBox about (this, "restart", "restart openspace to apply changes", NULL, MBOX_OK | DECOR_ALL);
 about.execute ();
 
 FXDialogBox::onCmdAccept(sender,sel,ptr);
