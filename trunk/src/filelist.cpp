@@ -50,7 +50,7 @@ FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
 	FXMAPFUNCS (SEL_COMMAND, filelist::ID_LAST, filelist::ID_LAST + 50, filelist::file_operation),
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_HEADER_CHANGE, filelist::onCmdHeader),
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_SORT_CHANGE, filelist::onCmdHeader),
-	FXMAPFUNC (SEL_LEFTBUTTONRELEASE, filelist::ID_HEADER_CHANGE, filelist::onCmdResize),	
+	FXMAPFUNC (SEL_LEAVE, filelist::ID_HEADER_CHANGE, filelist::onCmdResize),	
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_MAXIMIZE, filelist::onMaximize),
 	FXMAPFUNC (SEL_COMMAND, cmddialog::ID_COMMAND, filelist::onCommand),
 	FXMAPFUNC (SEL_COMMAND, cmddialog::ID_CANCEL_COMMAND, filelist::onCommandCancel),
@@ -157,8 +157,14 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 			if(name=="")
 			new FXButton (toolbar2, res.c_str (), NULL, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 			else
-			new FXButton (toolbar2, "", objmanager->osicons[name], this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+			{
+			string cmd_txt=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/text");
+				if(cmd_txt=="")
+				cmd_txt=res;
+			cmd_txt="\t"+cmd_txt;
 			
+			new FXButton (toolbar2, cmd_txt.c_str(), objmanager->osicons[name], this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+			}
 			
 			button_commands_tab.push_back(res);
 		        command_num++;
@@ -208,42 +214,42 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 	//bottomframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
 	textfield = new FXTextField (toolbar, 30, this, filelist::ID_TEXTFIELD_REG);
 	
-	new FXButton (toolbar, "", objmanager->osicons["pattern"], this, filelist::ID_TEXTFIELD_REG, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-	new FXButton (toolbar, "Go", 0, this, filelist::ID_TEXTFIELD_GO, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-	new FXButton (toolbar, "Get", 0, this, filelist::ID_TEXTFIELD_GET, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXButton (toolbar, "\tselect filter", objmanager->osicons["pattern"], this, filelist::ID_TEXTFIELD_REG, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXButton (toolbar, "Go\topen directory", 0, this, filelist::ID_TEXTFIELD_GO, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXButton (toolbar, "Get\tget current directory", 0, this, filelist::ID_TEXTFIELD_GET, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXSeparator (toolbar, SEPARATOR_GROOVE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
 	
 	if (conf->readonestring ("/OpenspaceConfig/panels") == "single")
-	    new FXButton (toolbar, "", objmanager->osicons["min"], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	    new FXButton (toolbar, "\tdouble panel mode", objmanager->osicons["min"], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 	else
-	new FXButton (toolbar, "", objmanager->osicons["max"], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+	new FXButton (toolbar, "\tsignle panel mode", objmanager->osicons["max"], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
   
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXSeparator (toolbar, SEPARATOR_GROOVE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
     
-    new FXButton (toolbar, "", objmanager->osicons["bigicons"], this, filelist::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", objmanager->osicons["smallicons"], this, filelist::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", objmanager->osicons["details"], this, filelist::ID_CHANGE_VIEW_DETAILS, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\tbig icons", objmanager->osicons["bigicons"], this, filelist::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\tsmall icons", objmanager->osicons["smallicons"], this, filelist::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\tdetails", objmanager->osicons["details"], this, filelist::ID_CHANGE_VIEW_DETAILS, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
   
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXSeparator (toolbar, SEPARATOR_GROOVE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
     
-    new FXButton (toolbar, "", objmanager->osicons["reload"], this, filelist::ID_REFRESH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", objmanager->osicons["home"], this, filelist::ID_HOME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", objmanager->osicons["dirup"], this, filelist::ID_PARENTDIR, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\treload", objmanager->osicons["reload"], this, filelist::ID_REFRESH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\thome", objmanager->osicons["home"], this, filelist::ID_HOME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\tdirup", objmanager->osicons["dirup"], this, filelist::ID_PARENTDIR, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
    
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXSeparator (toolbar, SEPARATOR_GROOVE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
    
-    new FXButton (toolbar, "", objmanager->osicons["copy"], this, filelist::ID_CLIP_COPY, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", objmanager->osicons["cut"], this, filelist::ID_CLIP_CUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", objmanager->osicons["paste"], this, filelist::ID_CLIP_PASTE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\tcopy", objmanager->osicons["copy"], this, filelist::ID_CLIP_COPY, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\tcut", objmanager->osicons["cut"], this, filelist::ID_CLIP_CUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\tpaste", objmanager->osicons["paste"], this, filelist::ID_CLIP_PASTE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
 
 
 	dial = NULL;
@@ -468,19 +474,6 @@ void filelist::create ()
 
 }
 
-long filelist::onCmdResize(FXObject * sender, FXSelector sel, void *ptr)
-{
-
-//FXIconList::onHeaderResize(sender, sel,ptr);
-
-for(int i=0;i<getNumHeaders();i++)
-	{
-	string header=getHeaderText(i).text();
-	int width=getHeaderSize(i);
-	conf->saveonestring("/OpenspaceConfig/filelist/"+this->type+"/properties/"+header+"/width",ntos(width));
-	
-	}
-}
 
 //--------------------------------------------------------------------------------
 //bind keys
@@ -1121,8 +1114,6 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
     {
 	
 
-	if(popupmenu)
-	popupmenu->popdown ();
 
 
 	string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/cmddialog/lib" + command;
@@ -1497,10 +1488,12 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
     com_name = commands_tab[id - ID_LAST];
     }
     
+    if(popupmenu)
+  	   popupmenu->popdown ();
+    
     runCommand(com_name);
 
-	if(popupmenu)
-  	   popupmenu->popdown ();
+	
 
 
 }
@@ -1745,13 +1738,31 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 
 }
 
+
+//--------------------------------------------------------------------
+
+long filelist::onCmdResize(FXObject * sender, FXSelector sel, void *ptr)
+{
+
+//FXIconList::onHeaderResize(sender, sel,ptr);
+
+for(int i=0;i<getNumHeaders();i++)
+	{
+	string header=getHeaderText(i).text();
+	int width=getHeaderSize(i);
+	conf->saveonestring("/OpenspaceConfig/filelist/"+this->type+"/properties/"+header+"/width",ntos(width));
+	
+	}
+}
+
+
+
 //--------------------------------------------------------------------
 //click on filelist header (change sorting)
 long filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
 {
     if (processing)
 	return 0;
-
 
 
     FXASSERT ((5, "CMDHEADER\n"));
@@ -1774,7 +1785,7 @@ long filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
     {
 	num = (int) ptr;
     }
-fxmessage("nr=%d\n",num);
+
     if (num == sort_nr)
     {
 	ascend = !ascend;

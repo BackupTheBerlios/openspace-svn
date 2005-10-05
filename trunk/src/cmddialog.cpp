@@ -27,7 +27,7 @@ FXDialogBox (owner, "command", DECOR_TITLE | DECOR_BORDER)
 
 cmddialog::~cmddialog ()
 {
-    fxmessage ("DO PIACHU\n");
+    
     delete contents;
     delete buttons;
 }

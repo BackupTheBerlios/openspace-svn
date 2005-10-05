@@ -134,17 +134,17 @@ if(conf->loadconfig())
     rightcontrolframe = new FXVerticalFrame (right, LAYOUT_FILL_X);
     rightframe = new FXVerticalFrame (right, LAYOUT_FILL_X | LAYOUT_FILL_Y);
     //   FXHorizontalFrame * buttonsframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", objmanager->osicons["plus"], this, MainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", objmanager->osicons["directory"], this, MainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", objmanager->osicons["network"], this, MainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", objmanager->osicons["search"], this, MainWindow::ID_NEW_SEARCH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\thide/show copy/move progress", objmanager->osicons["plus"], this, MainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\topen new panel", objmanager->osicons["directory"], this, MainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\tconnect", objmanager->osicons["network"], this, MainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\tsearch", objmanager->osicons["search"], this, MainWindow::ID_NEW_SEARCH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
    
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXSeparator (toolbar, SEPARATOR_GROOVE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
     
     new FXButton (toolbar, "\tconfiguration", objmanager->osicons["configure"], this, MainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "", objmanager->osicons["foxmini"], this, MainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    new FXButton (toolbar, "\tabout", objmanager->osicons["foxmini"], this, MainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     toolbar->dock(rightdock);
   
     string dir = parseDir (conf->readonestring ("/OpenspaceConfig/leftdir/dir"));
