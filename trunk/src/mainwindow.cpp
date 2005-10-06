@@ -210,7 +210,7 @@ long MainWindow::onOpenConfigure (FXObject * sender, FXSelector sel, void *)
 //about
 long MainWindow::onAbout (FXObject * sender, FXSelector sel, void *)
 {
-    FXMessageBox about (this, "About Openspace", "Openspace File Browser 0.1.0 rc1 \n\nby Mateusz Dworak (compbatant@t-nas.org)\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org) \n\n icons by Dawn Simon", objmanager->osicons["foxbig"], MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+    FXMessageBox about (this, "About Openspace", "Openspace File Browser 0.1.0 rc2 \n\nby Mateusz Dworak (compbatant@t-nas.org)\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org) \n\n icons by Dawn Simon", objmanager->osicons["foxbig"], MBOX_OK | DECOR_TITLE | DECOR_BORDER);
     about.execute ();
 }
 
@@ -537,13 +537,37 @@ long MainWindow::onChangeList (FXObject * sender, FXSelector sel, void *ptr)
     int pos = -1;
     if (id == ID_TOCLOSE)
     {
-	boxel->fr->f->fb->quit ();
-	delete boxel->fr->hf;
-	delete boxel->fr->f->toolbar;
-	delete boxel->fr->f->toolbar2;
-	delete boxel->fr->frame;
-	sender = NULL;
-	return 1;
+    bool canclose=true;
+    
+   	 vector < thread_elem * >::iterator iter;
+    	 for (iter = objmanager->thread_vec.begin (); iter != objmanager->thread_vec.end (); iter++)
+   	 {	
+		thread_elem *telem = *iter;
+		if(telem->fb==boxel->fr->f->fb)
+		{
+		canclose=false;
+		}
+   	 }	
+    		if(canclose)
+		{
+    
+		boxel->fr->f->fb->quit ();
+		delete boxel->fr->hf;
+		delete boxel->fr->f->toolbar;
+		delete boxel->fr->f->toolbar2;
+		delete boxel->fr->frame;
+		sender = NULL;
+		
+		}
+		else
+		{
+		FXMessageBox about (this, "error", "There are some processes connected with this filelist,\n finish them all and then you can close this filelist\n(this behavior will change in the next release of program)", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+  		about.execute ();
+		
+		}
+		
+	return 1;	
+		
     }
 
     else
