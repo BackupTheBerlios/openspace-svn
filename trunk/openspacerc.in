@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <OpenspaceConfig>
-	<version>0.0.1</version>
+	<version>@PACKAGE_VERSION@</version>
 	<path>@prefix@/share/@PACKAGE@/</path>
 	<icons_theme>default</icons_theme>
 	<first_run>true</first_run>

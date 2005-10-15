@@ -1,4 +1,5 @@
 #include "fx.h"
+#include "config.h"
 #include "mainwindow.h"
 #include <unistd.h>
 
@@ -11,7 +12,7 @@ int main (int argc, char **argv)
 	{
 		if(!strcmp(argv[i],"-v") || !strcmp(argv[i],"--version") )
 		{
-		fxmessage("\nopenspace 0.1.0 rc2\n");
+		fxmessage("\n%s\n",PACKAGE_STRING);
 		return 0;
 		}
 		

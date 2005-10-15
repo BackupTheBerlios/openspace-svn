@@ -1,3 +1,4 @@
+#include "config.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -74,8 +75,9 @@ if(conf->loadconfig())
    	 iconsdir=FXFile::getUserDirectory ("").text () +string("/.openspace/icons/")+conf->readonestring ("/OpenspaceConfig/icons_theme");
     
     iconsdir+=string("/");
+   
     loadicons(iconsdir);
-    
+   
    
     string res = conf->readonestring ("/OpenspaceConfig/version");
     FXTRACE ((1, "\n openspace version %s\n\n", res.c_str ()));
@@ -210,7 +212,10 @@ long MainWindow::onOpenConfigure (FXObject * sender, FXSelector sel, void *)
 //about
 long MainWindow::onAbout (FXObject * sender, FXSelector sel, void *)
 {
-    FXMessageBox about (this, "About Openspace", "Openspace File Browser 0.1.0 rc2 \n\nby Mateusz Dworak (compbatant@t-nas.org)\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org) \n\n icons by Dawn Simon", objmanager->osicons["foxbig"], MBOX_OK | DECOR_TITLE | DECOR_BORDER);
+
+    string msg="Openspace File Browser " +string(PACKAGE_VERSION)+ "\n\nby Mateusz Dworak (http://openspace.linux.pl)\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org) \n\n icons by Dawn Simon";
+ 
+    FXMessageBox about (this, "About Openspace", msg.c_str(), objmanager->osicons["foxbig"], MBOX_OK | DECOR_TITLE | DECOR_BORDER);
     about.execute ();
 }
 
@@ -1072,26 +1077,30 @@ objmanager->specialicons[5]->create();
 	    struct stat status;
 	    struct dirent *dp;
 	    DIR *dirp;
-
+ 
 	    dirp = opendir (icondir.c_str ());
 	    
 	    if(dirp)	
 	    while ((dp = readdir (dirp)) != NULL)
 	    {
+	 
 		if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
 		{
 		string name=dp->d_name;
-			if (name.length () >= 3 && (name.substr (name.length () - 3, 3) == "gif" || name.substr (name.length () - 3, 3) == "png"))
+	
+			//if (name.length () >= 3 && (name.substr (name.length () - 3, 3) == "gif" || name.substr (name.length () - 3, 3) == "png"))
 			{
-			
+		
 		   	 string file = icondir;
 		   	 file.append (name);	
 			string shortname=name.substr (0,name.length () - 4);
 			
 			 FXString fil_name=file.c_str();
-  		    	 objmanager->osicons[shortname] = source->loadIcon (fil_name);
-   			 objmanager->osicons[shortname]->create ();
 			
+  		    	 objmanager->osicons[shortname] = source->loadIcon (fil_name);
+		
+   			 objmanager->osicons[shortname]->create ();
+		
 	
 			}
 		    
