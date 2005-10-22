@@ -50,10 +50,10 @@ int main (int argc, char **argv)
 	string src=PATH_CFG + string("/openspacerc");
 	FXFile::copy(src.c_str(),file.c_str());
 	}
-    fxTraceLevel = 1;
+    fxTraceLevel = 0;
     FXApp *application = new FXApp ("openspace", NULL);
     application->init (argc, argv);
-    fxmessage (argv[0]);
+ 
     new MainWindow (application);
     application->create ();
     return application->run ();

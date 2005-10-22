@@ -11,7 +11,7 @@
 #endif
 
 #ifndef PATH_CFG
-#define PATH_CFG        "/usr/local/etc/"
+#define PATH_CFG        "/usr/local/etc"
 #endif
 
 configure *conf;

@@ -177,7 +177,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 	
 
 
-    string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/filelist/libfilelist" + this->type;
+    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/filelist/libfilelist" + this->type;
 
 
 #ifdef WIN32
@@ -1116,7 +1116,7 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
 
 
 
-	string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/cmddialog/lib" + command;
+	string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/cmddialog/lib" + command;
 #ifdef WIN32
 	plugin_path += ".dll";
 #else

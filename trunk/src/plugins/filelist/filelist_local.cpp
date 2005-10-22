@@ -433,7 +433,7 @@ void filelist_local::totalsize (string path, unsigned long &size)
 
 string filelist_local::info (void)
 {
-    return "buu";
+    return "";
 }
 
 

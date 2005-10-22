@@ -395,7 +395,7 @@ new FXButton (vv, "Update available plugins list", NULL, this, ID_UPDATE_CMD_PLU
 
 
 
-string plugin_path = conf->readonestring ("/OpenspaceConfig/path") + "plugins/cmddialog";
+string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/cmddialog";
 
 
 

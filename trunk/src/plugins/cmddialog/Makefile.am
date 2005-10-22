@@ -1,5 +1,5 @@
 pkglib_LTLIBRARIES= libaccess.la libmkdir.la librename.la libclone.la libsymlink.la libeditsymlink.la libcompress.la libmd5sum.la
-pkglibdir=$(datadir)/openspace/plugins/cmddialog
+pkglibdir=$(libdir)/openspace/plugins/cmddialog
 INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
 
 libaccess_la_SOURCES =access.cpp  ../../thread_elem.cpp ../../thread_elem.h ../../cmddialog.cpp ../../cmddialog.h

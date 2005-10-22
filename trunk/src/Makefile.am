@@ -42,7 +42,7 @@ SUBDIRS = plugins
 
 INCLUDES = -I$(top_srcdir)/src `WANT_FOX="1.4" fox-config --cflags`  `xml2-config  --cflags`  \
 	-DPATH_CFG=\"$(sysconfdir)\" \
-  	-DPATH_GRC=\"$$HOME/\" \
-  	-DLOCALEDIR=\"$(localedir)\"
+	-DPATH_LIBDIR=\"$(libdir)\"
+
 openspace_LDFLAGS = `WANT_FOX="1.4" fox-config --libs`  `xml2-config  --libs`  
 
