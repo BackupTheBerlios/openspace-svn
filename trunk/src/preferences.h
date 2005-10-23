@@ -33,6 +33,7 @@ class preferences:public FXDialogBox
     FXTextField * mainwindow_width;
     FXTextField *mainwindow_height;
     FXTextField *leftdir,*rightdir,*defaultdir;
+    FXTextField *font1,*font2,*font3;
     FXTextField *newCommandEdit;
     FXTextField *newShutterEdit;
     FXTextField *thumbsize;

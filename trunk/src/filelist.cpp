@@ -1307,6 +1307,7 @@ commands_tab.clear();
 	    but->setIconPosition (ICON_BEFORE_TEXT);
 	    but->setJustify (JUSTIFY_LEFT);
 	    but->setBackColor (FXRGB (145, 134, 201));
+	    //but->setBackColor (readcolor (conf->readonestring ("/OpenspaceConfig/colors/maincolor")));
 	    content->setBackColor (getApp ()->getShadowColor ());
 	    if (conflocal.openxpath ("/OpenspaceConfig/shutter/" + res + "/command") != -1)
 	    {

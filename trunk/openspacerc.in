@@ -5,6 +5,16 @@
 	<icons_theme>default</icons_theme>
 	<first_run>true</first_run>
 	
+	  <fonts>
+   		<captionfont>arial,90,bold,,normal,iso8859-1,0</captionfont>
+    		<captionfont1>times,80,,,normal,iso8859-1,0</captionfont1>
+  		<captionfont2>arial,90,,,normal,iso8859-1,0</captionfont2>
+ 	 </fonts>
+	
+	<colors>
+		<maincolor></maincolor>
+	</colors>
+	
  	<mainwindow>
 		<width>868</width>
 		<height>600</height>

@@ -208,7 +208,7 @@ string file;
 
 
 
-preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", DECOR_TITLE | DECOR_BORDER | DECOR_RESIZE, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4)
+preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", DECOR_ALL, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4)
 {
 
     mimeapp=NULL;
@@ -261,6 +261,19 @@ preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", D
     new FXLabel (mainpane, "icons theme:");
     iconsTheme=new FXListBox (mainpane);
     iconsTheme->setNumVisible(5);
+    
+    new FXLabel (mainpane, "font 1");
+    font1 = new FXTextField (mainpane, 50);
+    font1->setText(conf->readonestring ("/OpenspaceConfig/fonts/captionfont").c_str ());
+    
+    new FXLabel (mainpane, "font 2");
+    font2 = new FXTextField (mainpane, 50);
+    font2->setText(conf->readonestring ("/OpenspaceConfig/fonts/captionfont1").c_str ());    
+    
+    new FXLabel (mainpane, "font 3");
+    font3 = new FXTextField (mainpane, 50);
+    font3->setText(conf->readonestring ("/OpenspaceConfig/fonts/captionfont2").c_str ());
+    
     
 
  string iconsdir=conf->readonestring ("/OpenspaceConfig/path") +"/icons";
@@ -976,6 +989,9 @@ conf->saveonestring ("/OpenspaceConfig/filelist/local/thumbs/size",thumbsize->ge
 conf->saveonestring ("/OpenspaceConfig/icons_theme",iconsTheme->getItem(iconsTheme->getCurrentItem()).text());
 
 
+conf->saveonestring ("/OpenspaceConfig/fonts/captionfont",font1->getText().text());
+conf->saveonestring ("/OpenspaceConfig/fonts/captionfont1",font2->getText().text());
+conf->saveonestring ("/OpenspaceConfig/fonts/captionfont2",font3->getText().text());
 
 }
 
