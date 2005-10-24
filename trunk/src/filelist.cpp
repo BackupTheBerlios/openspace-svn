@@ -90,6 +90,12 @@ filelist::filelist (FXComposite * p, pathtype pt):
 FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
 {
 
+FXScrollArea::vertical->setArrowColor(FXRGB(255, 255, 255));
+FXScrollArea::vertical->setShadowColor(FXRGB(145, 134, 201));
+FXScrollArea::vertical->setHiliteColor(FXRGB(255, 255, 255));
+FXScrollArea::vertical->setBorderColor(FXRGB(255, 255, 255));
+FXScrollArea::vertical->setBackColor(FXRGB(145, 134, 201));
+
     flags |= FLAG_ENABLED | FLAG_DROPTARGET;
     popupmenu = NULL;
     sortpop = NULL;
