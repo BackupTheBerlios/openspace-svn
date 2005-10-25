@@ -51,6 +51,7 @@
 			<exec>xterm  -bg black -fg white</exec>
 			<icon>run_shell</icon>
 			<text>terminal</text>
+			<key>F3</key>
 		</run_shell>	
 		
 		<nedit>

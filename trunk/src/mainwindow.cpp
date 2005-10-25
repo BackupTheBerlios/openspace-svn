@@ -124,8 +124,8 @@ if(conf->loadconfig())
     FXVerticalFrame *ff = new FXVerticalFrame (this, LAYOUT_FILL_X | LAYOUT_FILL_Y);
     controlframe = new FXVerticalFrame (ff, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     splitter = new FXSplitter (ff, LAYOUT_FILL_X | SPLITTER_TRACKING | LAYOUT_FILL_Y);
-    left = new FXVerticalFrame (splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, w / 2);
-    right = new FXVerticalFrame (splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN);
+    left = new FXVerticalFrame (splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 0, 0);
+    right = new FXVerticalFrame (splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 0, 0);
     if (conf->readonestring ("/OpenspaceConfig/panels") == "single")
 	ratio = 0;
 

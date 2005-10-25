@@ -48,6 +48,7 @@ FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
 	FXMAPFUNC (SEL_RIGHTBUTTONRELEASE, filelist::ID_ICO, filelist::onPopup),
 	FXMAPFUNCS (SEL_COMMAND, filelist::ID_TEXTFIELD_REG, filelist::ID_TEXTFIELD_GET, filelist::parseTextField),
 	FXMAPFUNCS (SEL_COMMAND, filelist::ID_LAST, filelist::ID_LAST + 50, filelist::file_operation),
+	FXMAPFUNCS (SEL_COMMAND, filelist::ID_LAST+51, filelist::ID_LAST + 100, filelist::key_shortcut),	
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_HEADER_CHANGE, filelist::onCmdHeader),
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_SORT_CHANGE, filelist::onCmdHeader),
 	FXMAPFUNC (SEL_LEAVE, filelist::ID_HEADER_CHANGE, filelist::onCmdResize),	
@@ -480,13 +481,48 @@ void filelist::create ()
 
 }
 
+long filelist::key_shortcut (FXObject * obj, FXSelector sel, void *ptr)
+{
+fxmessage("SHORTCUT\n");
+
+    FXushort id = FXSELID (sel);
+    
+    string com_name;
+
+    com_name = key_commands_tab[id - ID_LAST-51];
+
+    runCommand(com_name);
+
+}
 
 //--------------------------------------------------------------------------------
 //bind keys
 long filelist::setKeys (void)
 {
+FXAccelTable *table = getShell ()->getAccelTable ();
+int counter=0;
+	if (conf->openxpath ("/OpenspaceConfig/commands") != -1)
+  	  {
+		string res;
+		while (conf->getnextnode (res))
+		{
+		configure conflocal = *conf;
+	   	string key = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/key");
+		string mask_key = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/mask_key");
+			if(key!="")
+			{
+	
+			table->addAccel (MKUINT ((FXushort)FXIntVal(key.c_str()),CONTROLMASK ), this, FXSEL (SEL_COMMAND, ID_LAST+51+counter));
+			key_commands_tab.push_back(res);
+			counter++;
+			}
+		}
+	  }	
+	    
+	    
 
-    FXAccelTable *table = getShell ()->getAccelTable ();
+
+    
     table->addAccel (MKUINT (KEY_a, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_SELECT_ALL));
     table->addAccel (MKUINT (KEY_c, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_COPY));
     table->addAccel (MKUINT (KEY_x, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_CUT));
@@ -1483,13 +1519,13 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 
     FXushort id = FXSELID (sel);
     
-
     string com_name;
-    
+
     if(((FXWindow*)obj)->getParent()==toolbar2)
     {
     com_name = button_commands_tab[id - ID_LAST];
     }
+    
     else
     {   
     com_name = commands_tab[id - ID_LAST];
@@ -1499,9 +1535,6 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
   	   popupmenu->popdown ();
     
     runCommand(com_name);
-
-	
-
 
 }
 

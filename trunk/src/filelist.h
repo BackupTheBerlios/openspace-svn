@@ -37,6 +37,7 @@ private:
     FXHorizontalFrame *bottomframe;
     
     vector < string > commands_tab;
+    vector < string > key_commands_tab;
     vector < string > button_commands_tab;
     vector < FXIcon * >icon_vec;
     vector < string > header_vec;
@@ -145,7 +146,8 @@ enum
     long filelist::onMaximize (FXObject * sender, FXSelector, void *);
     long filelist::onGoHome (FXObject * sender, FXSelector, void *);    
     long filelist::onCmdResize(FXObject * sender, FXSelector, void *);
-    long onChangeView (FXObject * sender, FXSelector, void *);
+    long filelist::onChangeView (FXObject * sender, FXSelector, void *);
+    long filelist::key_shortcut (FXObject * obj, FXSelector sel, void *ptr);
     
     long onDNDEnter (FXObject *, FXSelector, void *);
     long onDNDLeave (FXObject *, FXSelector, void *);
