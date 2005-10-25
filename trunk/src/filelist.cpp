@@ -101,11 +101,12 @@ FXScrollArea::vertical->setBackColor(FXRGB(145, 134, 201));
     popupmenu = NULL;
     sortpop = NULL;
 
-    setKeys();
+   
 
     dropaction = DRAG_MOVE;   
 
     objmanager=objectmanager::instance(getApp());
+    setKeys();
     setFont (objmanager->captionfont2);
     specialicons = objmanager->specialicons;
 
@@ -512,7 +513,7 @@ int counter=0;
 			if(key!="")
 			{
 	
-			table->addAccel (MKUINT ((FXushort)FXIntVal(key.c_str()),CONTROLMASK ), this, FXSEL (SEL_COMMAND, ID_LAST+51+counter));
+			table->addAccel (MKUINT ((FXushort)objmanager->key_map[key],CONTROLMASK ), this, FXSEL (SEL_COMMAND, ID_LAST+51+counter));
 			key_commands_tab.push_back(res);
 			counter++;
 			}

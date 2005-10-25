@@ -23,6 +23,7 @@ class objectmanager
        map < string, file_type * >file_type_settings;
        map < string, FXIcon * >osicons;
        FXIcon *specialicons[30];
+       map < string, unsigned int >key_map;
       
       
       

@@ -27,6 +27,8 @@ objectmanager::objectmanager(FXApp *app)
     captionfont2 = new FXFont(app,conf->readonestring ("/OpenspaceConfig/fonts/captionfont2").c_str());
     captionfont2->create ();
     
+    key_map["w"]=0x0077;
+    
 }
 
 
