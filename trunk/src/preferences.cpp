@@ -342,7 +342,8 @@ iconsTheme->setCurrentItem(iconsTheme->findItem(conf->readonestring ("/Openspace
 	      	 string commandstr2;
 	      		 while(conflocal.getnextstring(commandstr2))
 	      		 {     	 
-	     		 buttonsList->appendItem(commandstr2.c_str());
+			 string icon=conflocal.readonestring ("/OpenspaceConfig/commands/" + commandstr2 + "/icon");
+	     		 buttonsList->appendItem(commandstr2.c_str(),objmanager->osicons[icon]);
 			 toolbarVector.push_back(toolbar_container(commandstr,commandstr2));
 			 }
 	     	  }
@@ -760,8 +761,9 @@ string res;
 	    {
 		
 		fileTypeDefaultBox->appendItem (command.c_str (),objmanager->osicons["execute"]);
+		string icon=conf->readonestring ("/OpenspaceConfig/commands/" + command+ "/icon");
 		additionalCommandsAvailable->appendItem (command.c_str ());
-		additionalCommandsAvailableForButtons->appendItem (command.c_str ());
+		additionalCommandsAvailableForButtons->appendItem (command.c_str (),objmanager->osicons[icon]);
 	    }
 	}
 	
@@ -1214,7 +1216,10 @@ vector <toolbar_container>::iterator iter;
 	for(iter=toolbarVector.begin();iter!=toolbarVector.end();iter++)
 	{
 		if(iter->toolbar==actual_toolbar)
-	buttonsList->appendItem(iter->command.c_str());
+		{
+		string icon=conf->readonestring ("/OpenspaceConfig/commands/" + iter->command + "/icon");
+		buttonsList->appendItem(iter->command.c_str(),objmanager->osicons[icon] );
+		}
 	}
 
 }
