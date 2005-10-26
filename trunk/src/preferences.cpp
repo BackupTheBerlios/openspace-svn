@@ -363,6 +363,7 @@ toolbarList->setCurrentItem (toolbarList->getNumItems () - 1);
 	
 	additionalCommandsAvailableForButtons=new FXList (buttonsPane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	additionalCommandsAvailableForButtons->setNumVisible(8);
+	additionalCommandsAvailableForButtons->appendItem("SEPARATOR");
 FXHorizontalFrame *buttonsHframe2 = new FXHorizontalFrame (buttonsPane, LAYOUT_FILL_X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);  
 
 	new FXLabel(buttonsHframe2," ");
@@ -946,8 +947,11 @@ string actual_shutter=shutterList->getItem(shutterList->getCurrentItem()).text()
 	
 	
 	string cmd=additionalCommandsAvailableForButtons->getItemText(additionalCommandsAvailableForButtons->getCurrentItem()).text();
-	shutterVector.push_back(shutter_container(actual_shutter,cmd));
-	shutterCommands->appendItem(cmd.c_str());
+		if(cmd!="SEPARATOR")
+		{
+		shutterVector.push_back(shutter_container(actual_shutter,cmd));
+		shutterCommands->appendItem(cmd.c_str());
+		}
 	}
 	else
 	{

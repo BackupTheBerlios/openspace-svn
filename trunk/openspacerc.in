@@ -94,15 +94,84 @@
 		<copy>
 			<type>INTERNAL</type>
 		</copy>
-		<move><type>INTERNAL</type></move>
-		<select_all><type>INTERNAL</type></select_all>
+		<move>
+			<type>INTERNAL</type>
+		</move>
+		<select_all>
+			<type>INTERNAL</type>
+		</select_all>
 		<refresh>
 			<type>INTERNAL</type>
 			<icon>reload</icon>
 		</refresh>
 		
-		<clipboard_copy><type>INTERNAL</type></clipboard_copy>
-		<clipboard_paste><type>INTERNAL</type></clipboard_paste>
+		<home>
+			<type>INTERNAL</type>
+			<icon>home</icon>
+		</home>
+		
+		<dirup>
+			<type>INTERNAL</type>
+			<icon>dirup</icon>
+		</dirup>
+		
+		<change_view_mini_icons>
+			<type>INTERNAL</type>
+			<icon>smallicons</icon>
+			<text>small icons</text>
+		</change_view_mini_icons>
+		
+		<change_view_big_icons>
+			<type>INTERNAL</type>
+			<icon>bigicons</icon>
+			<text>big icons</text>
+		</change_view_big_icons>
+		
+		<change_view_detailed>
+			<type>INTERNAL</type>
+			<icon>details</icon>
+			<text>details</text>
+		</change_view_detailed>
+		
+		
+		<clipboard_copy>
+			<type>INTERNAL</type>
+			<icon>copy</icon>
+			<key>c</key>
+			<key_mask>control</key_mask>
+		</clipboard_copy>
+		<clipboard_paste>
+			<type>INTERNAL</type>
+			<icon>paste</icon>
+			<key>v</key>
+			<key_mask>control</key_mask>
+		</clipboard_paste>
+		<clipboard_cut>
+			<type>INTERNAL</type>
+			<icon>cut</icon>
+			<key>x</key>
+			<key_mask>control</key_mask>
+		</clipboard_cut>
+		
+		<switch_on_or_two_panel_mode>
+			<type>INTERNAL</type>
+			<icon>min</icon>
+		</switch_on_or_two_panel_mode>
+		
+		<get_dir>
+			<type>INTERNAL</type>
+			<text>get</text>
+		</get_dir>
+		
+		<goto_dir>
+			<type>INTERNAL</type>
+			<text>go</text>
+		</goto_dir>
+		
+		<filter_files>
+			<type>INTERNAL</type>
+			<icon>pattern</icon>
+		</filter_files>
 		
 		
 		<mkdir>
@@ -113,6 +182,7 @@
 		</access>
 		<remove>
 			<type>INTERNAL</type>
+			<key>Delete</key>
 		</remove>
 		<rename>
 			<type>PLUGIN</type>
@@ -288,7 +358,23 @@
 	
 	<toolbars>
 		<toolbar1>
-			<command>run_shell</command>
+			<command>home</command>
+			<command>dirup</command>
+			<command>refresh</command>
+			<command>SEPARATOR</command>
+			<command>change_view_mini_icons</command>
+			<command>change_view_big_icons</command>
+			<command>change_view_detailed</command>
+			<command>SEPARATOR</command>
+			<command>clipboard_copy</command>
+			<command>clipboard_cut</command>
+			<command>clipboard_paste</command>
+			<command>SEPARATOR</command>
+			<command>switch_on_or_two_panel_mode</command>
+			<command>SEPARATOR</command>
+			<command>get_dir</command>
+			<command>goto_dir</command>
+			<command>filter_files</command>
 		</toolbar1>
 		<toolbar2>
 			<command>run_shell</command>

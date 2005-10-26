@@ -43,18 +43,15 @@ FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
 	FXMAPFUNC (SEL_DOUBLECLICKED, filelist::ID_ICO, filelist::openfile),
 	FXMAPFUNC (SEL_CLICKED, filelist::ID_ICO, filelist::click),
 	FXMAPFUNC (SEL_MIDDLEBUTTONPRESS, filelist::ID_ICO, filelist::gotoparentdir),
-	FXMAPFUNC (SEL_COMMAND, filelist::ID_PARENTDIR, filelist::gotoparentdir),
 	FXMAPFUNC (SEL_RIGHTBUTTONRELEASE, filelist::ID_ICO, filelist::onPopup),
-	FXMAPFUNCS (SEL_COMMAND, filelist::ID_TEXTFIELD_REG, filelist::ID_TEXTFIELD_GET, filelist::parseTextField),
 	FXMAPFUNCS (SEL_COMMAND, filelist::ID_LAST, filelist::ID_LAST + 50, filelist::file_operation),
-	FXMAPFUNCS (SEL_COMMAND, filelist::ID_LAST+51, filelist::ID_LAST + 100, filelist::key_shortcut),	
+	FXMAPFUNCS (SEL_COMMAND, filelist::ID_LAST+51, filelist::ID_LAST + 100, filelist::key_shortcut),
+	FXMAPFUNC (SEL_COMMAND, filelist::ID_TEXTFIELD_RUN, filelist::texfield_run),	
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_HEADER_CHANGE, filelist::onCmdHeader),
 	FXMAPFUNC (SEL_COMMAND, filelist::ID_SORT_CHANGE, filelist::onCmdHeader),
 	FXMAPFUNC (SEL_LEAVE, filelist::ID_HEADER_CHANGE, filelist::onCmdResize),	
-	FXMAPFUNC (SEL_COMMAND, filelist::ID_MAXIMIZE, filelist::onMaximize),
 	FXMAPFUNC (SEL_COMMAND, cmddialog::ID_COMMAND, filelist::onCommand),
 	FXMAPFUNC (SEL_COMMAND, cmddialog::ID_CANCEL_COMMAND, filelist::onCommandCancel),
-	FXMAPFUNC (SEL_COMMAND, filelist::ID_HOME, filelist::onGoHome),
 	FXMAPFUNC (SEL_DRAGGED, 0, filelist::onDragged),
 	FXMAPFUNC (SEL_DND_ENTER, 0, filelist::onDNDEnter),
 	FXMAPFUNC (SEL_DND_LEAVE, 0, filelist::onDNDLeave),
@@ -63,13 +60,10 @@ FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
 	FXMAPFUNC (SEL_DND_REQUEST, 0, filelist::onDNDRequest),
 	FXMAPFUNC (SEL_BEGINDRAG, 0, filelist::onBeginDrag),
 	FXMAPFUNC (SEL_ENDDRAG, 0, filelist::onEndDrag),
-	FXMAPFUNCS (SEL_COMMAND, filelist::ID_CLIP_COPY,filelist::ID_CLIP_CUT, filelist::onCmdCopySel),
-	FXMAPFUNC (SEL_COMMAND, filelist::ID_CLIP_PASTE, filelist::onCmdPasteSel), 
 	//FXMAPFUNC (SEL_CLIPBOARD_LOST, 0, filelist::onClipboardLost), 
 	//FXMAPFUNC (SEL_CLIPBOARD_GAINED, 0, filelist::onClipboardGained), 
 	FXMAPFUNC (SEL_CLIPBOARD_REQUEST, 0, filelist::onClipboardRequest),
-	FXMAPFUNCS (SEL_COMMAND, filelist::ID_CHANGE_VIEW_SMALL, filelist::ID_CHANGE_VIEW_DETAILS, filelist::onChangeView),
-	
+		
 	};
 
 FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
@@ -167,7 +161,7 @@ int command_num=0;
 	      	 string res;
 	      		 while(conflocal.getnextstring(res))
 	      		 {     	 
-				string name=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/icon");
+				
 		
 			FXToolBar *toolb;
 			if(commandstr=="toolbar1")
@@ -175,6 +169,15 @@ int command_num=0;
 			else
 			toolb=toolbar2;
 			
+			if(res=="SEPARATOR")
+			{
+			 new FXSeparator (toolb, SEPARATOR_NONE);
+   			 new FXSeparator (toolb, SEPARATOR_GROOVE);
+   			 new FXSeparator (toolb, SEPARATOR_NONE);
+			}
+			else
+			{
+			string name=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/icon");
 				if(name=="")
 				new FXButton (toolb, res.c_str (), NULL, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 				else
@@ -189,6 +192,7 @@ int command_num=0;
 			
 				button_commands_tab.push_back(res);
 		       		command_num++;
+			 }	
 			 }
 	     	  }
 		 
@@ -248,15 +252,15 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 	
 
 	//bottomframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-	textfield = new FXTextField (toolbar, 30, this, filelist::ID_TEXTFIELD_REG);
-	
+	textfield = new FXTextField (toolbar, 30, this, filelist::ID_TEXTFIELD_RUN);
+/*	
 	new FXButton (toolbar, "\tselect filter", objmanager->osicons["pattern"], this, filelist::ID_TEXTFIELD_REG, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXButton (toolbar, "Go\topen directory", 0, this, filelist::ID_TEXTFIELD_GO, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXButton (toolbar, "Get\tget current directory", 0, this, filelist::ID_TEXTFIELD_GET, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-
-    new FXSeparator (toolbar, SEPARATOR_NONE);
-    new FXSeparator (toolbar, SEPARATOR_GROOVE);
-    new FXSeparator (toolbar, SEPARATOR_NONE);
+ 
+        new FXSeparator (toolbar, SEPARATOR_NONE);
+   	new FXSeparator (toolbar, SEPARATOR_GROOVE);
+        new FXSeparator (toolbar, SEPARATOR_NONE);
 	
 	if (conf->readonestring ("/OpenspaceConfig/panels") == "single")
 	    new FXButton (toolbar, "\tdouble panel mode", objmanager->osicons["min"], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -266,7 +270,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXSeparator (toolbar, SEPARATOR_GROOVE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
-    
+   
     new FXButton (toolbar, "\tbig icons", objmanager->osicons["bigicons"], this, filelist::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "\tsmall icons", objmanager->osicons["smallicons"], this, filelist::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "\tdetails", objmanager->osicons["details"], this, filelist::ID_CHANGE_VIEW_DETAILS, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -274,10 +278,10 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXSeparator (toolbar, SEPARATOR_GROOVE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
-    
+   
     //new FXButton (toolbar, "\treload", objmanager->osicons["reload"], this, filelist::ID_REFRESH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "\thome", objmanager->osicons["home"], this, filelist::ID_HOME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "\tdirup", objmanager->osicons["dirup"], this, filelist::ID_PARENTDIR, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    //new FXButton (toolbar, "\thome", objmanager->osicons["home"], this, filelist::ID_HOME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    //new FXButton (toolbar, "\tdirup", objmanager->osicons["dirup"], this, filelist::ID_PARENTDIR, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
    
     new FXSeparator (toolbar, SEPARATOR_NONE);
     new FXSeparator (toolbar, SEPARATOR_GROOVE);
@@ -286,7 +290,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     new FXButton (toolbar, "\tcopy", objmanager->osicons["copy"], this, filelist::ID_CLIP_COPY, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "\tcut", objmanager->osicons["cut"], this, filelist::ID_CLIP_CUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "\tpaste", objmanager->osicons["paste"], this, filelist::ID_CLIP_PASTE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-
+ */
 
 	dial = NULL;
 	processing = false;
@@ -350,6 +354,13 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
 
     }
+}
+
+long filelist::texfield_run (FXObject * obj, FXSelector sel, void *ptr)
+{
+
+system(textfield->getText ().text());
+
 }
 
 filelist::~filelist ()
@@ -512,7 +523,6 @@ void filelist::create ()
 
 long filelist::key_shortcut (FXObject * obj, FXSelector sel, void *ptr)
 {
-fxmessage("SHORTCUT\n");
 
     FXushort id = FXSELID (sel);
     
@@ -567,37 +577,6 @@ int counter=0;
 */
 }
 
-/*
-//button pressed
-long filelist::keyPress (FXObject * sender, FXSelector sel, void *ptr)
-{
-    FXTRACE ((5, "KEY PRESSED\n"));
-
-    if (processing)
-	return 0;
-
-
-    FXushort id = FXSELID (sel);
-
-    if (id == ID_SELECT_ALL)
-    {
-	for (int i = 0; i < getNumItems (); i++)
-	{
-	    string name = getItem (i)->getText ().text ();
-	    if (name != "." && name != "..")
-		selectItem (i);
-	}
-    }
-    //else if (id == ID_REFRESH)
-   // {
-//	refresh ();
-   // }
-    else if (id == ID_REMOVE)
-    {
-	copymoveremove ("remove");
-    }
-}
-*/
 //copy/move/remove function
 void filelist::copymoveremove (string com_name)
 {
@@ -831,52 +810,7 @@ long filelist::lostFocus (FXObject * obj, FXSelector sel, void *ptr)
 }
 
 
-//when we enter string in the text field and execute command for regexp select etc
-long filelist::parseTextField (FXObject * sender, FXSelector sel, void *)
-{
 
-    if (processing)
-	return 0;
-
-    FXushort id = FXSELID (sel);
-
-    if (id == ID_TEXTFIELD_REG)
-    {
-
-	for (int i = 0; i < getNumItems (); i++)
-	{
-	    deselectItem (i);
-	}
-
-
-	FXRex identifier (textfield->getText ());
-
-	for (int i = 0; i < getNumItems (); i++)
-	{
-	    os_ListItem *oslistitem = (os_ListItem *) getItem (i);
-	    string name = oslistitem->osf.name;
-	    if (identifier.match (name.c_str ()))
-	    {
-
-		selectItem (i);
-	    }
-	}
-
-    }
-    else if (id == ID_TEXTFIELD_GO)
-    {
-	opendir (textfield->getText ().text ());
-	path = textfield->getText ().text ();
-	notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
-    }
-    else if (id == ID_TEXTFIELD_GET)
-    {
-	textfield->setText (path.c_str ());
-    }
-
-
-
-}
 
 void *filelist::thread_func (void *data)
 {
@@ -1186,8 +1120,153 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
 	else if (command == "refresh")
 	{
 		refresh ();
-	}   
+	} 
+	else if (command == "select_all")
+	{
+		for (int i = 0; i < getNumItems (); i++)
+		{
+	  	  string name = getItem (i)->getText ().text ();
+	   		 if (name != "." && name != "..")
+			 selectItem (i);
+		}
+	}    
+	else if (command == "home")
+	{
+		 opendir(FXFile::getHomeDirectory ().text ());
+   		 path=FXFile::getHomeDirectory ().text ();
+  		 notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
+	} 
+	else if (command == "dirup")
+	{
+		 this->handle (this, FXSEL (SEL_MIDDLEBUTTONPRESS, ID_ICO), NULL);
+	} 
+	else if (command == "change_view_mini_icons")
+	{
+	setFont (objmanager->captionfont2);
+	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
+	refresh ();
+	conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","small icons");
+    	}
+    	else if (command == "change_view_big_icons")
+	{
+	setFont (objmanager->captionfont);
+	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
+	refresh ();
+	conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","big icons");
+   	}
+	else if (command == "change_view_detailed")
+	{
+	setFont (objmanager->captionfont2);
+	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
+	refresh ();
+	conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","detailed");
+    	}
+	else if(command == "clipboard_copy" || command == "clipboard_cut")
+	{
+		  FXDragType types[1];
+   		  types[0] = urilistType;
+    
+  		  if (acquireClipboard (types, 1))
+    		  {
+   
 
+  			 if(command == "clipboard_copy")
+   			 {
+   			 dropaction=DRAG_COPY;
+   			 }
+   			 else if(command == "clipboard_cut")
+   			 {
+   			 dropaction=DRAG_MOVE;
+   			 }
+    
+    
+    			 //FXEvent *event = (FXEvent *) ptr;
+   			  //handleDrag (event->root_x, event->root_y, dropaction);
+     
+			filelist_opposite->dropaction=dropaction;
+
+			dragfiles = FXString::null;
+		for (int i = 0; i < getNumItems (); i++)
+		{
+	   	 if (isItemSelected (i))
+	  	  {
+			os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+			string name = oslistitem->osf.name;
+			string fullname =returnpath(name);
+			if (name != "." && name != "..")
+			{
+			    if (!dragfiles.empty ())
+				dragfiles += "\r\n";
+			    dragfiles += FXURL::fileToURL (fullname.c_str ());
+		    
+			}
+	   	 }
+		}
+
+   	      }
+ 
+	}
+	else if(command == "clipboard_paste")
+	{
+		dropData (true);
+	}
+	else if(command == "switch_on_or_two_panel_mode")
+	{
+	
+		if (filelist_opposite->getWidth () == 0)
+		maximize = true;
+
+  		 maximize = !maximize;
+
+  		 if (maximize)
+   		 {
+			conf->saveonestring ("/OpenspaceConfig/panels", "single");
+   		 }
+   		 else
+   		 {
+			conf->saveonestring ("/OpenspaceConfig/panels", "double");
+   		 }
+   	 notifyparent->handle (this, FXSEL (SEL_COMMAND, 668), NULL);
+	
+	}
+	else if(command == "filter_files")
+	{
+
+		for (int i = 0; i < getNumItems (); i++)
+		{
+	  	  deselectItem (i);
+		}
+
+
+		FXRex identifier (textfield->getText ());
+
+		for (int i = 0; i < getNumItems (); i++)
+		{
+	 	   os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+	   	   string name = oslistitem->osf.name;
+	   	 	if (identifier.match (name.c_str ()))
+	   	 	{
+			selectItem (i);
+	   		}
+		}
+
+       }
+       else if(command == "goto_dir")
+       {
+	opendir (textfield->getText ().text ());
+	path = textfield->getText ().text ();
+	notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
+       }
+       else if (command == "get_dir")
+       {
+	textfield->setText (path.c_str ());
+       }
+
+
+	
+	
+	
+	
     }
 
     else if (command_type == "PLUGIN")
@@ -1324,7 +1403,6 @@ long filelist::gotoparentdir (FXObject *, FXSelector, void *)
 	return 0;
 
    string pathnew = FXFile::upLevel (path.c_str ()).text ();
-    //label->setText(path.c_str());
     
     if(opendir (pathnew));
     {
@@ -1926,64 +2004,9 @@ long filelist::click (FXObject *, FXSelector, void *ptr)
 
 }
 
-long filelist::onMaximize (FXObject * sender, FXSelector, void *)
-{
 
-    if (filelist_opposite->getWidth () == 0)
-	maximize = true;
-
-    maximize = !maximize;
-    FXButton *bt = (FXButton *) sender;
-    if (maximize)
-    {
-	bt->setIcon (objmanager->osicons["min"]);
-	conf->saveonestring ("/OpenspaceConfig/panels", "single");
-    }
-    else
-    {
-	bt->setIcon (objmanager->osicons["max"]);
-	conf->saveonestring ("/OpenspaceConfig/panels", "double");
-    }
-    notifyparent->handle (this, FXSEL (SEL_COMMAND, 668), NULL);
-}
-
-    //change view type: big/small/detailes 
-long filelist::onChangeView (FXObject * sender, FXSelector sel, void *)
-{
-    FXushort id = FXSELID (sel);
-
-    if (id == ID_CHANGE_VIEW_SMALL)
-    {
-	setFont (objmanager->captionfont2);
-	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
-	refresh ();
-	conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","small icons");
-    }
-
-    else if (id == ID_CHANGE_VIEW_BIG)
-    {
-	setFont (objmanager->captionfont);
-	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
-	refresh ();
-	conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","big icons");
-    }
-
-    else if (id = ID_CHANGE_VIEW_DETAILS)
-    {
-	setFont (objmanager->captionfont2);
-	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
-	refresh ();
-	conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","detailed");
-    }
-}
-
-long filelist::onGoHome (FXObject * sender, FXSelector, void *)
-{
-    opendir(FXFile::getHomeDirectory ().text ());
-    path=FXFile::getHomeDirectory ().text ();
-    notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
     
-}
+
 
 //===================================================================================================
 //Below only drag and drop functions:
@@ -2234,60 +2257,6 @@ long filelist::onClipboardRequest (FXObject * sender, FXSelector sel, void *ptr)
     return 0;
 }
 
-long filelist::onCmdCopySel (FXObject *, FXSelector sel, void *ptr)
-{
-    FXDragType types[1];
-    types[0] = urilistType;
-    
- 
-    if (acquireClipboard (types, 1))
-    {
-   
-    FXushort id = FXSELID (sel);
-
-    if (id == ID_CLIP_COPY)
-    {
-    dropaction=DRAG_COPY;
-    }
-    else if (id == ID_CLIP_CUT)
-    {
-    dropaction=DRAG_MOVE;
-    }
-    
-    
-     //FXEvent *event = (FXEvent *) ptr;
-     //handleDrag (event->root_x, event->root_y, dropaction);
-     
-filelist_opposite->dropaction=dropaction;
-
-	dragfiles = FXString::null;
-	for (int i = 0; i < getNumItems (); i++)
-	{
-	    if (isItemSelected (i))
-	    {
-		os_ListItem *oslistitem = (os_ListItem *) getItem (i);
-		string name = oslistitem->osf.name;
-		string fullname =returnpath(name);
-		if (name != "." && name != "..")
-		{
-		    if (!dragfiles.empty ())
-			dragfiles += "\r\n";
-		    dragfiles += FXURL::fileToURL (fullname.c_str ());
-		    
-		}
-	    }
-	}
-
-    }
-    return 1;
-}
-
-
-// Paste
-long filelist::onCmdPasteSel (FXObject *, FXSelector sel, void *)
-{
-   dropData (true);
-}
 
 void filelist::dropData (bool clipboard)
 {

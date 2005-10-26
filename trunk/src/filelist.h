@@ -105,21 +105,8 @@ filelist *filelist_opposite;
 enum
     {
 	ID_ICO = FXIconList::ID_LAST,
-	ID_TEXTFIELD_REG,
-	ID_TEXTFIELD_GO,
-	ID_TEXTFIELD_GET,
 	ID_SORT_CHANGE,
-	ID_SELECT_ALL,
-	ID_REMOVE,
-	ID_MAXIMIZE,
-	ID_CLIP_COPY,
-	ID_CLIP_CUT,
-	ID_CLIP_PASTE,
-	ID_CHANGE_VIEW_SMALL,
-	ID_CHANGE_VIEW_BIG,
-	ID_CHANGE_VIEW_DETAILS,
-	ID_HOME,
-	ID_PARENTDIR,
+	ID_TEXTFIELD_RUN,
 	ID_LAST,
     };
 
@@ -140,12 +127,9 @@ enum
     long filelist::onCommand (FXObject *, FXSelector, void *ptr);
     long filelist::onCommandCancel (FXObject *, FXSelector, void *ptr);
     long filelist::click (FXObject *, FXSelector, void *ptr);
-    long filelist::parseTextField (FXObject * sender, FXSelector, void *);
-    long filelist::onMaximize (FXObject * sender, FXSelector, void *);
-    long filelist::onGoHome (FXObject * sender, FXSelector, void *);    
     long filelist::onCmdResize(FXObject * sender, FXSelector, void *);
-    long filelist::onChangeView (FXObject * sender, FXSelector, void *);
     long filelist::key_shortcut (FXObject * obj, FXSelector sel, void *ptr);
+    long filelist::texfield_run (FXObject * obj, FXSelector sel, void *ptr);
     
     long onDNDEnter (FXObject *, FXSelector, void *);
     long onDNDLeave (FXObject *, FXSelector, void *);
@@ -160,8 +144,6 @@ enum
     long onClipboardGained (FXObject *, FXSelector, void *);
     long onClipboardRequest (FXObject *, FXSelector, void *);
 
-    long onCmdCopySel (FXObject *, FXSelector, void *);
-    long onCmdPasteSel (FXObject *, FXSelector, void *);
 
 
     
