@@ -94,9 +94,17 @@
 		<copy>
 			<type>INTERNAL</type>
 		</copy>
-		<move>
+		<move><type>INTERNAL</type></move>
+		<select_all><type>INTERNAL</type></select_all>
+		<refresh>
 			<type>INTERNAL</type>
-		</move>
+			<icon>reload</icon>
+		</refresh>
+		
+		<clipboard_copy><type>INTERNAL</type></clipboard_copy>
+		<clipboard_paste><type>INTERNAL</type></clipboard_paste>
+		
+		
 		<mkdir>
 			<type>PLUGIN</type>
 		</mkdir>

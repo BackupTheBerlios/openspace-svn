@@ -111,7 +111,6 @@ enum
 	ID_SORT_CHANGE,
 	ID_SELECT_ALL,
 	ID_REMOVE,
-	ID_REFRESH,
 	ID_MAXIMIZE,
 	ID_CLIP_COPY,
 	ID_CLIP_CUT,
@@ -142,7 +141,6 @@ enum
     long filelist::onCommandCancel (FXObject *, FXSelector, void *ptr);
     long filelist::click (FXObject *, FXSelector, void *ptr);
     long filelist::parseTextField (FXObject * sender, FXSelector, void *);
-    long filelist::keyPress (FXObject * sender, FXSelector, void *);
     long filelist::onMaximize (FXObject * sender, FXSelector, void *);
     long filelist::onGoHome (FXObject * sender, FXSelector, void *);    
     long filelist::onCmdResize(FXObject * sender, FXSelector, void *);

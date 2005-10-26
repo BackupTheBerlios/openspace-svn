@@ -38,6 +38,8 @@ class preferences:public FXDialogBox
     FXTextField *newShutterEdit;
     FXTextField *thumbsize;
     FXListBox *commandsCombo;
+    FXListBox *shortcutList;	
+    FXListBox *shortcutMaskList;
     FXListBox *iconsList,*iconsList2;
     FXVerticalFrame *commandsPane;
     FXTextField *commandsTextfield;
@@ -47,7 +49,7 @@ class preferences:public FXDialogBox
     FXLabel *commandsType;
     FXLabel *commandsIcon;
     FXListBox *iconsTheme;
-    
+    FXButton *removeCommandButton;
     FXVerticalFrame *vfsPane;
     FXListBox *vfsList;
     FXList*headersList,*availableHeadersList;

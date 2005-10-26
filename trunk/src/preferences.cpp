@@ -472,10 +472,34 @@ plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/
     iconsList->setNumVisible(30);
     new FXLabel (commandsPane, "exec: ", NULL, LAYOUT_LEFT);
     commandsTextfield = new FXTextField (commandsPane, 20);
+    
+    
+    
+    new FXLabel (commandsPane, "shortuct mask: ", NULL, LAYOUT_LEFT);
+    shortcutMaskList=new FXListBox (commandsPane);
+    shortcutMaskList->setNumVisible(3);
+    shortcutMaskList->appendItem("");
+    shortcutMaskList->appendItem("control");
+    shortcutMaskList->appendItem("alt");
+    
+    
+    new FXLabel (commandsPane, "shortuct: ", NULL, LAYOUT_LEFT);
+    shortcutList=new FXListBox (commandsPane);
+    shortcutList->setNumVisible(30);
+    
+    
+   	map<string,unsigned int>::iterator s_iter;
+	
+	shortcutList->appendItem("");
+	for(s_iter=objmanager->key_map.begin();s_iter!=objmanager->key_map.end();s_iter++)
+	{
+	shortcutList->appendItem(s_iter->first.c_str());
+	}
+	
     new FXLabel (commandsPane, "text: ", NULL, LAYOUT_LEFT);
     commandsTextfieldText = new FXTextField (commandsPane, 20);
     commandsType=new FXLabel (commandsPane, "", NULL, LAYOUT_LEFT);
-    commandsIcon=new FXLabel (commandsPane, "", NULL, LAYOUT_LEFT);
+    
     
     vv = new FXGroupBox (commandsPane, "Options", LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0);
     commandsRescan = new FXCheckButton (vv, "rescan", NULL, 0, JUSTIFY_LEFT | JUSTIFY_TOP | ICON_BEFORE_TEXT | LAYOUT_SIDE_TOP);
@@ -518,6 +542,9 @@ string res;
 		ct.text=conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/text");
 		ct.icon=conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/icon");
 		ct.type=conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/type");
+		ct.key=conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/key");
+		ct.key_mask=conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/key_mask");
+		
 	    commandsMap[ct.name]=ct;
 
 	}
@@ -527,7 +554,13 @@ string res;
 	    commandsTextfield->setText (ctlast->exec.c_str ());
             commandsCombo->setCurrentItem (commandsCombo->getNumItems () - 1);
 	    currentCommandName=ctlast->name;
-	    string str="command type: " + ctlast->type;
+	    
+	    string str;
+	    if(ctlast->type=="")
+	    str="command type: EXTERNAL";
+	    else
+	    str="command type: " + ctlast->type;
+	    
 	    commandsType->setText(str.c_str());
 	    string shorticonname;
 	    
@@ -545,14 +578,27 @@ string res;
 	if(ctlast->icon!="")
 	iconsList->setCurrentItem(iconsList->findItem(ctlast->icon.c_str()));
 	
+	if(ctlast->key!="")
+	shortcutList->setCurrentItem(shortcutList->findItem(ctlast->key.c_str()));
 
+	if(ctlast->key_mask!="")
+	shortcutMaskList->setCurrentItem(shortcutMaskList->findItem(ctlast->key_mask.c_str()));
+	
+	
+	
 	new FXSeparator(commandsPane);
 	FXHorizontalFrame *hfr=new FXHorizontalFrame (commandsPane, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-	new FXButton (hfr, "Remove", NULL, this, ID_REMOVE_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT );
+	removeCommandButton=new FXButton (hfr, "Remove", NULL, this, ID_REMOVE_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT );
 	new FXButton (hfr, "New Command", NULL, this, ID_NEW_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT);
 	newCommandEdit = new FXTextField (hfr, 20);
 
-	
+	if(ctlast->type=="INTERNAL" || ctlast->type=="PLUGIN")
+	{
+	commandsTextfield->disable();
+	commandsRescan->disable();
+	commandsCapture->disable();
+	removeCommandButton->disable();
+	}
 
     }
 
@@ -1004,6 +1050,8 @@ ct_prev->capture=commandsCapture->getCheck();
 ct_prev->rescan=commandsRescan->getCheck();
 ct_prev->text=commandsTextfieldText->getText().text();
 ct_prev->icon=iconsList->getItem(iconsList->getCurrentItem()).text();
+ct_prev->key=shortcutList->getItem(shortcutList->getCurrentItem()).text();
+ct_prev->key_mask=shortcutMaskList->getItem(shortcutMaskList->getCurrentItem()).text();
 
 command_container ct=commandsMap[commandsCombo->getItem (commandsCombo->getCurrentItem ()).text ()];
 
@@ -1011,8 +1059,34 @@ commandsRescan->setCheck(ct.rescan);
 commandsCapture->setCheck(ct.capture);
 commandsTextfield->setText (ct.exec.c_str ());
 commandsTextfieldText->setText (ct.text.c_str ());
+           
+	    string str;
+	    if(ct.type=="")
+	    str="command type: EXTERNAL";
+	    else
+	    str="command type: " + ct.type;
+	    
+	    commandsType->setText(str.c_str());
 
+
+	if(ct.type=="INTERNAL" || ct.type=="PLUGIN")
+	{
+	commandsTextfield->disable();
+	commandsRescan->disable();
+	commandsCapture->disable();
+	removeCommandButton->disable();
+	}
+	else
+	{
+	commandsTextfield->enable();
+	commandsRescan->enable();
+	commandsCapture->enable();
+	removeCommandButton->enable();
+	}
 iconsList->setCurrentItem(iconsList->findItem(ct.icon.c_str()));
+shortcutList->setCurrentItem(shortcutList->findItem(ct.key.c_str()));
+shortcutMaskList->setCurrentItem(shortcutMaskList->findItem(ct.key_mask.c_str()));
+
 
 currentCommandName=ct.name;
 

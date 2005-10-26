@@ -33,6 +33,8 @@ class command_container
     string text;
     string type;
     string icon;
+    string key;
+    string key_mask;
     command_container(string name,string exec);
     command_container(){}
     void save(void);

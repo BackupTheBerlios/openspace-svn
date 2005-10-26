@@ -40,7 +40,6 @@ FXDEFMAP (filelist) filelistMap[] =
 {
 FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
 	FXMAPFUNC (SEL_FOCUSOUT, filelist::ID_ICO, filelist::lostFocus),
-	FXMAPFUNCS (SEL_COMMAND, filelist::ID_SELECT_ALL, filelist::ID_REFRESH, filelist::keyPress),
 	FXMAPFUNC (SEL_DOUBLECLICKED, filelist::ID_ICO, filelist::openfile),
 	FXMAPFUNC (SEL_CLICKED, filelist::ID_ICO, filelist::click),
 	FXMAPFUNC (SEL_MIDDLEBUTTONPRESS, filelist::ID_ICO, filelist::gotoparentdir),
@@ -247,7 +246,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     new FXSeparator (toolbar, SEPARATOR_GROOVE);
     new FXSeparator (toolbar, SEPARATOR_NONE);
     
-    new FXButton (toolbar, "\treload", objmanager->osicons["reload"], this, filelist::ID_REFRESH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+    //new FXButton (toolbar, "\treload", objmanager->osicons["reload"], this, filelist::ID_REFRESH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "\thome", objmanager->osicons["home"], this, filelist::ID_HOME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXButton (toolbar, "\tdirup", objmanager->osicons["dirup"], this, filelist::ID_PARENTDIR, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
    
@@ -509,11 +508,17 @@ int counter=0;
 		{
 		configure conflocal = *conf;
 	   	string key = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/key");
-		string mask_key = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/mask_key");
+		string key_mask = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/key_mask");
 			if(key!="")
 			{
-	
-			table->addAccel (MKUINT ((FXushort)objmanager->key_map[key],CONTROLMASK ), this, FXSEL (SEL_COMMAND, ID_LAST+51+counter));
+			unsigned int mask=0;
+			
+			if(key_mask=="control")
+				mask=CONTROLMASK;
+			else if(key_mask=="alt")
+				mask=ALTMASK;
+			
+			table->addAccel (MKUINT ((FXushort)objmanager->key_map[key],mask ), this, FXSEL (SEL_COMMAND, ID_LAST+51+counter));
 			key_commands_tab.push_back(res);
 			counter++;
 			}
@@ -523,17 +528,17 @@ int counter=0;
 	    
 
 
-    
+/*    
     table->addAccel (MKUINT (KEY_a, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_SELECT_ALL));
     table->addAccel (MKUINT (KEY_c, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_COPY));
     table->addAccel (MKUINT (KEY_x, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_CUT));
     table->addAccel (MKUINT (KEY_v, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_PASTE));
     table->addAccel (MKUINT (KEY_F5, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REFRESH));
     table->addAccel (MKUINT (KEY_Delete, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REMOVE));
-
+*/
 }
 
-
+/*
 //button pressed
 long filelist::keyPress (FXObject * sender, FXSelector sel, void *ptr)
 {
@@ -554,16 +559,16 @@ long filelist::keyPress (FXObject * sender, FXSelector sel, void *ptr)
 		selectItem (i);
 	}
     }
-    else if (id == ID_REFRESH)
-    {
-	refresh ();
-    }
+    //else if (id == ID_REFRESH)
+   // {
+//	refresh ();
+   // }
     else if (id == ID_REMOVE)
     {
 	copymoveremove ("remove");
     }
 }
-
+*/
 //copy/move/remove function
 void filelist::copymoveremove (string com_name)
 {
@@ -1149,7 +1154,10 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
 	    string sr = returnpath(getItemText (c).text ());
 	    umount2 (sr.c_str (), MNT_FORCE);
 	}
-	    
+	else if (command == "refresh")
+	{
+		refresh ();
+	}   
 
     }
 

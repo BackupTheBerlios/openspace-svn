@@ -178,21 +178,40 @@ string value = exec;
 	    if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/options", options))
 		conf->addstring ("/OpenspaceConfig/commands/" + com, "options", options);
 	}
+	else
+	conf->removestring ("/OpenspaceConfig/commands/" + com+ "/options");
 
 	if (text != "")
 	{
 	    if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/text", text))
 		conf->addstring ("/OpenspaceConfig/commands/" + com, "text", text);
 	}
-
+	else
+	conf->removestring ("/OpenspaceConfig/commands/" + com+ "/text");
 
 	if (icon != "")
 	{
 	    if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/icon", icon))
 		conf->addstring ("/OpenspaceConfig/commands/" + com, "icon", icon);
 	}
-
-
+	else
+	conf->removestring ("/OpenspaceConfig/commands/" + com+ "/icon");
+	
+	if (key != "")
+	{
+	    if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/key", key))
+		conf->addstring ("/OpenspaceConfig/commands/" + com, "key", key);
+	}
+	else
+	conf->removestring ("/OpenspaceConfig/commands/" + com+ "/key");
+	
+	if (key_mask != "")
+	{
+	    if (!conf->saveonestring ("/OpenspaceConfig/commands/" + com + "/key_mask", key))
+		conf->addstring ("/OpenspaceConfig/commands/" + com, "key_mask", key);
+	}
+	else
+	conf->removestring ("/OpenspaceConfig/commands/" + com+ "/key_mask");
 
 }
 
