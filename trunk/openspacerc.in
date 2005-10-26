@@ -157,10 +157,7 @@
 		
 	</commands>
   
-  	<button_commands>
-		<command>run_shell</command>
-		<command>other</command>
-	</button_commands>
+  	
   	<file_types>
 		
 		
@@ -289,7 +286,15 @@
 	</file_types>
 	
 	
-			
+	<toolbars>
+		<toolbar1>
+			<command>run_shell</command>
+		</toolbar1>
+		<toolbar2>
+			<command>run_shell</command>
+			<command>other</command>
+		</toolbar2>	
+	</toolbars>		
 	
 	
 	<shutter>

@@ -152,29 +152,58 @@ FXScrollArea::vertical->setBackColor(FXRGB(145, 134, 201));
 int command_num=0;
 
 
+ if(conf->openxpath("/OpenspaceConfig/toolbars")!=-1)
+	       {
+	       string commandstr;
+	      	 while(conf->getnextnode(commandstr))
+	      	 {     	 
+	     	 
+
+		 
+		 configure conflocal=*conf;		 
+		 
+		  if(conflocal.openxpath("/OpenspaceConfig/toolbars/"+commandstr+"/command")!=-1)
+	     	  {
+	      	 string res;
+	      		 while(conflocal.getnextstring(res))
+	      		 {     	 
+				string name=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/icon");
+		
+			FXToolBar *toolb;
+			if(commandstr=="toolbar1")
+			toolb=toolbar;
+			else
+			toolb=toolbar2;
+			
+				if(name=="")
+				new FXButton (toolb, res.c_str (), NULL, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+				else
+				{
+				string cmd_txt=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/text");
+				if(cmd_txt=="")
+				cmd_txt=res;
+				cmd_txt="\t"+cmd_txt;
+			
+				new FXButton (toolb, cmd_txt.c_str(), objmanager->osicons[name], this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+				}
+			
+				button_commands_tab.push_back(res);
+		       		command_num++;
+			 }
+	     	  }
+		 
+		 
+	     	 }
+	       }	 
+
+
 if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     {
 
     string res;
 	while (conf->getnextstring (res))
 	{
-		   	string name=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/icon");
-		
-	
-			if(name=="")
-			new FXButton (toolbar2, res.c_str (), NULL, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-			else
-			{
-			string cmd_txt=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/text");
-				if(cmd_txt=="")
-				cmd_txt=res;
-			cmd_txt="\t"+cmd_txt;
-			
-			new FXButton (toolbar2, cmd_txt.c_str(), objmanager->osicons[name], this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-			}
-			
-			button_commands_tab.push_back(res);
-		        command_num++;
+		   	
 
 	    
 	}
@@ -1530,7 +1559,7 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
     
     string com_name;
 
-    if(((FXWindow*)obj)->getParent()==toolbar2)
+    if(((FXWindow*)obj)->getParent()==toolbar2 || ((FXWindow*)obj)->getParent()==toolbar)
     {
     com_name = button_commands_tab[id - ID_LAST];
     }

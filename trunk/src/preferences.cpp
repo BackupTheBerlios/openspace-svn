@@ -19,6 +19,7 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_COMMAND_CHANGE, preferences::onCommandChange),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_FILETYPE_CHANGE, preferences::onFileTypeChange), 
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_SHUTTER_CHANGE, preferences::onShutterChange),	
+	FXMAPFUNC (SEL_COMMAND, preferences::ID_TOOLBAR_CHANGE, preferences::onToolbarChange),
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_VFS_CHANGE, preferences::onVfsChange),	
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_NEW_COMMAND, preferences::onNewCommand), 
 	FXMAPFUNC (SEL_COMMAND, preferences::ID_REMOVE_COMMAND, preferences::onRemoveCommand),
@@ -309,23 +310,48 @@ iconsTheme->setCurrentItem(iconsTheme->findItem(conf->readonestring ("/Openspace
 //getShell()->getWidth()
 //getShell()->getHeight()
 
+
+//======================================================BUTTONS===========================================================
+
  FXVerticalFrame *buttonsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
    
     new FXButton (buttons, "Menu and Buttons Settings", NULL, switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
  new FXLabel (buttonsPane, "Buttons in configurable toolbox:", NULL, LAYOUT_LEFT);
 
+	toolbarList=new FXListBox (buttonsPane, this, ID_TOOLBAR_CHANGE);
+        toolbarList->setNumVisible(10);
+
 	buttonsList=new FXList (buttonsPane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	buttonsList->setNumVisible(5);
 
-	    if(conf->openxpath("/OpenspaceConfig/button_commands/command")!=-1)
+     
+	       	
+	     if(conf->openxpath("/OpenspaceConfig/toolbars")!=-1)
 	       {
 	       string commandstr;
-	      	 while(conf->getnextstring(commandstr))
+	      	 while(conf->getnextnode(commandstr))
 	      	 {     	 
-	     	 buttonsList->appendItem(commandstr.c_str());
+	     	 toolbarList->appendItem(commandstr.c_str());
+		 buttonsList->clearItems();
+		 
+		 configure conflocal=*conf;		 
+		 
+		  if(conflocal.openxpath("/OpenspaceConfig/toolbars/"+commandstr+"/command")!=-1)
+	     	  {
+	      	 string commandstr2;
+	      		 while(conflocal.getnextstring(commandstr2))
+	      		 {     	 
+	     		 buttonsList->appendItem(commandstr2.c_str());
+			 toolbarVector.push_back(toolbar_container(commandstr,commandstr2));
+			 }
+	     	  }
+		 
+		 
 	     	 }
-	       }	 
+	       }	  
+toolbarList->setCurrentItem (toolbarList->getNumItems () - 1);	       
+	        
 	FXHorizontalFrame *buttonsHframe = new FXHorizontalFrame (buttonsPane, LAYOUT_FILL_X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);  
 
 	new FXLabel(buttonsHframe," ");
@@ -386,7 +412,7 @@ shutterCommands->setNumVisible(5);
 shutterList->setCurrentItem (shutterList->getNumItems () - 1);
 
 
-
+//======================================================COMMANDS===========================================================
 
 
     FXVerticalFrame *commandPluginsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -859,14 +885,33 @@ long preferences::onAddButtonCommand (FXObject * sender, FXSelector sel, void *)
 {
 
 FXushort id=FXSELID(sel);
+string actual_toolbar=toolbarList->getItem(toolbarList->getCurrentItem()).text();
 
 	if(id==ID_ADD_BUTTON_COMMAND)
 	{
-	buttonsList->appendItem(additionalCommandsAvailableForButtons->getItemText(additionalCommandsAvailableForButtons->getCurrentItem()));
+	
+	
+	string cmd=additionalCommandsAvailableForButtons->getItemText(additionalCommandsAvailableForButtons->getCurrentItem()).text();
+	toolbarVector.push_back(toolbar_container(actual_toolbar,cmd));
+	buttonsList->appendItem(cmd.c_str());
 	}
 	else
 	{
+	
+	string cmd=buttonsList->getItemText(buttonsList->getCurrentItem()).text();
 	buttonsList->removeItem(buttonsList->getCurrentItem());
+	
+	vector <toolbar_container>::iterator iter;
+	
+	for(iter=toolbarVector.begin();iter!=toolbarVector.end(); iter++)
+		{
+			if(iter->command==cmd && iter->toolbar==actual_toolbar)
+			{
+			toolbarVector.erase(iter);
+			break;
+			}
+		}
+			
 	}
 
 
@@ -1026,6 +1071,21 @@ vector <shutter_container>::iterator shutter_iter;
 	
 		}
 
+conf->removestring ("/OpenspaceConfig/toolbars");
+conf->addstring("/OpenspaceConfig","toolbars","");
+
+vector <toolbar_container>::iterator toolbar_iter;
+	
+	for(toolbar_iter=toolbarVector.begin();toolbar_iter!=toolbarVector.end(); toolbar_iter++)
+		{
+		string res;
+			if(!conf->readonestring("/OpenspaceConfig/toolbars/"+toolbar_iter->toolbar,res))
+			conf->addstring("/OpenspaceConfig/toolbars",toolbar_iter->toolbar,"");
+				
+			conf->addstring("/OpenspaceConfig/toolbars/"+toolbar_iter->toolbar,"command",toolbar_iter->command);
+	
+		}
+
 
 
 conf->saveonestring ("/OpenspaceConfig/leftdir/dir",leftdir->getText().text());
@@ -1141,6 +1201,20 @@ vector <shutter_container>::iterator iter;
 	}
 
 }
+
+long preferences::onToolbarChange (FXObject * sender, FXSelector sel, void *)
+{
+string actual_toolbar=toolbarList->getItem(toolbarList->getCurrentItem()).text();
+buttonsList->clearItems();
+vector <toolbar_container>::iterator iter;
+	for(iter=toolbarVector.begin();iter!=toolbarVector.end();iter++)
+	{
+		if(iter->toolbar==actual_toolbar)
+	buttonsList->appendItem(iter->command.c_str());
+	}
+
+}
+
 
 bool preferences::validateName(string name)
 {

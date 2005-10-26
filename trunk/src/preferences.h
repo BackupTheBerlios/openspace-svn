@@ -16,6 +16,13 @@ string command;
 shutter_container(string s,string c):shutter(s),command(c){}
 };
 
+class toolbar_container
+{
+public:
+string toolbar;
+string command;
+toolbar_container(string s,string c):toolbar(s),command(c){}
+};
 
 //preferences window, this is one of the most important things to be extended
 class preferences:public FXDialogBox
@@ -68,6 +75,7 @@ class preferences:public FXDialogBox
     FXButton *backcolorbutton;
     
     FXListBox *shutterList;
+    FXListBox *toolbarList;
     FXListBox *fileTypeList;
     FXListBox *fileTypeDefaultBox;
     string filetypestring;
@@ -83,6 +91,8 @@ class preferences:public FXDialogBox
     map <string, filetype_container> filetypesMap;   
   
     vector <shutter_container> shutterVector;
+    vector <toolbar_container> toolbarVector;
+    
     
     FXVerticalFrame *filetypePane;
     
@@ -118,6 +128,7 @@ class preferences:public FXDialogBox
 	ID_ADD_HEADER,
 	ID_DEL_HEADER,
 	ID_SHUTTER_CHANGE,
+	ID_TOOLBAR_CHANGE,
 	ID_DOWNLOAD_INSTALL_CMD_PLUGIN,
 	ID_DOWNLOAD_INSTALL_VFS_PLUGIN,
 	ID_UPDATE_CMD_PLUGIN_LIST,
@@ -131,6 +142,7 @@ class preferences:public FXDialogBox
     long preferences::onCommandChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onFileTypeChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onShutterChange (FXObject * sender, FXSelector sel, void *);
+    long preferences::onToolbarChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::onRemoveCommand (FXObject * sender, FXSelector sel, void *);
     long preferences::onNewShutter (FXObject * sender, FXSelector sel, void *);
