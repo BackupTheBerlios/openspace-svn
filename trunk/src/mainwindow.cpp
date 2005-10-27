@@ -69,6 +69,25 @@ if(conf->loadconfig())
     pref = NULL;
     
    
+   
+   
+   
+  getApp()->setTypingSpeed(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/typing_speed").c_str ()));
+  getApp()->setClickSpeed(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/click_speed").c_str ()));
+  getApp()->setScrollSpeed(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/scroll_speed").c_str ()));
+  getApp()->setScrollDelay(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/scroll_delay").c_str ()));
+  getApp()->setBlinkSpeed(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/blink_speed").c_str ()));
+  getApp()->setAnimSpeed(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/anim_speed").c_str ()));
+  getApp()->setMenuPause(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/menu_pause").c_str ()));
+  getApp()->setTooltipPause(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/tooltip_pause").c_str ()));
+  getApp()->setTooltipTime(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/tooltip_time").c_str ()));
+  getApp()->setDragDelta(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/drag_delta").c_str ()));
+  getApp()->setWheelLines(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/wheel_lines").c_str ()));
+   
+   
+   
+   
+   
     string iconsdir=conf->readonestring ("/OpenspaceConfig/path") +"icons/"+conf->readonestring ("/OpenspaceConfig/icons_theme");
     
     if(!FXFile::exists(iconsdir.c_str()))
@@ -310,7 +329,7 @@ long MainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *)
 	new FXLabel (networkframe, "user:", objmanager->osicons["user"]);
 	user = new FXTextField (networkframe, 20);
 	new FXLabel (networkframe, "pass:", objmanager->osicons["password"]);
-	password = new FXTextField (networkframe, 20,NULL,0,TEXTFIELD_PASSWD);
+	password = new FXTextField (networkframe, 20,NULL,0,TEXTFIELD_PASSWD|FRAME_SUNKEN|FRAME_THICK);
 	new FXLabel (networkframe, "port:", NULL,0,TEXTFIELD_INTEGER );
 	port = new FXTextField (networkframe, 5);
 
@@ -1118,7 +1137,8 @@ FXColor readcolor (string col)
 {
     if (col == "")
 	return FXRGB (0, 0, 0);
-return FXIntVal(col.c_str());
+	
+return fxcolorfromname(col.c_str());
 
 }
 
@@ -1128,7 +1148,7 @@ FXColor readcolor2 (string col)
 {
     if (col == "")
 	return FXRGB (255, 255, 255);
-return  FXIntVal(col.c_str());
+return  fxcolorfromname(col.c_str());
 }
 
 string MainWindow::parseDir (string dir)
@@ -1207,7 +1227,7 @@ Frame::Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, in
 	FXButton *bt = new FXButton (hf, path_element.c_str (), NULL, tgt,
 				     MainWindow::ID_DIR, FRAME_THICK, 0, 0, 0, 0, 0, 0,
 				     0, 0);
-	bt->setBackColor (FXRGB (145, 134, 201));
+	bt->setBackColor (objmanager->maincolor);
 	if (prebutton != NULL)
 	{
 	    box *boxel = (box *) prebutton->getUserData ();
@@ -1232,6 +1252,9 @@ Frame::Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, in
 //generate buttons path for given path
 void Frame::generate_menu (string path, FXObject * tgt)
 {
+
+objectmanager*objmanager=objectmanager::instance(hf->getApp());
+
     FXTRACE ((5, "GENERATE MENU path %s ", path.c_str ()));
     if (path[0] == '/' && path[1] == '/')
 	path.erase (0, 1);
@@ -1267,7 +1290,7 @@ void Frame::generate_menu (string path, FXObject * tgt)
 	FXButton *bt = new FXButton (hf, path_element.c_str (), NULL, tgt,
 				     MainWindow::ID_DIR, FRAME_THICK, 0, 0, 0, 0, 0, 0,
 				     0, 0);
-	bt->setBackColor (FXRGB (145, 134, 201));
+	bt->setBackColor (objmanager->maincolor);
 	bt->create ();
 	if (prebutton != NULL)
 	{

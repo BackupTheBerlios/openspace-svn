@@ -11,6 +11,7 @@
 #include "filelist_base.h"
 #include <fstream>
 #include <sstream>
+#include "config.h"
 
 FXDEFMAP (preferences) preferencesMap[] =
 {
@@ -166,9 +167,9 @@ string cmd;
 FXushort id=FXSELID(sel);
 
 	if(id==ID_UPDATE_CMD_PLUGIN_LIST)
-	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget -N http://openspace.linux.pl/files/0.1.0/x86/commandPluginsList.txt";
+	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget -N http://openspace.linux.pl/files/"+string(PACKAGE_VERSION)+"/x86/commandPluginsList.txt";
 	else
-	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget -N http://openspace.linux.pl/files/0.1.0/x86/vfsPluginsList.txt";
+	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget -N http://openspace.linux.pl/files/"+string(PACKAGE_VERSION)+"/x86/vfsPluginsList.txt";
 	
 	
 system(cmd.c_str());
@@ -211,6 +212,33 @@ string file;
 
 preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", DECOR_ALL, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4)
 {
+
+  
+  typingSpeed =getApp()->getTypingSpeed();
+  clickSpeed  =getApp()->getClickSpeed();
+  scrollSpeed =getApp()->getScrollSpeed();
+  scrollDelay =getApp()->getScrollDelay();
+  blinkSpeed  =getApp()->getBlinkSpeed();
+  animSpeed   =getApp()->getAnimSpeed();
+  menuPause   =getApp()->getMenuPause();
+  tooltipPause=getApp()->getTooltipPause();
+  tooltipTime =getApp()->getTooltipTime();
+  dragDelta   =getApp()->getDragDelta();
+  wheelLines  =getApp()->getWheelLines();
+
+
+  target_typingspeed.connect(typingSpeed);
+  target_clickspeed.connect(clickSpeed);
+  target_scrollspeed.connect(scrollSpeed);
+  target_scrolldelay.connect(scrollDelay);
+  target_blinkspeed.connect(blinkSpeed);
+  target_animspeed.connect(animSpeed);
+  target_menupause.connect(menuPause);
+  target_tooltippause.connect(tooltipPause);
+  target_tooltiptime.connect(tooltipTime);
+  target_dragdelta.connect(dragDelta);
+  target_wheellines.connect(wheelLines);
+
 
     mimeapp=NULL;
     saveconfiguration=true;
@@ -784,10 +812,92 @@ string res;
     }
 
 
+
+
+
+
+  new FXButton (buttons, "Speed and delays", NULL, switcher, FXSwitcher::ID_OPEN_SIXTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+
+
+  FXHorizontalFrame *hframe = new FXHorizontalFrame(switcher,LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,0,0,0,0,0,0);
+
+  FXMatrix* matrix = new FXMatrix(hframe,3,LAYOUT_FILL_Y|MATRIX_BY_COLUMNS,0,0,0,0,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING);
+
+  const FXuint spinnerstyle=FRAME_SUNKEN|FRAME_THICK;
+
+  new FXLabel(matrix,"Typing Speed\t\tTyping Speed",NULL,LAYOUT_RIGHT|LAYOUT_CENTER_Y);
+  FXSpinner *spinner=new FXSpinner(matrix,4,&target_typingspeed,FXDataTarget::ID_VALUE,spinnerstyle);
+  spinner->setRange(1,9999);
+  spinner->setIncrement(500);
+  new FXLabel(matrix,"ms",NULL,LAYOUT_CENTER_Y);
+
+
+  new FXLabel(matrix,"Double Click Speed\t\tDouble Click Speed",NULL,LAYOUT_RIGHT|LAYOUT_CENTER_Y);
+  spinner=new FXSpinner(matrix,4,&target_clickspeed,FXDataTarget::ID_VALUE,spinnerstyle);
+  spinner->setRange(1,9999);
+  spinner->setIncrement(100);
+  new FXLabel(matrix,"ms",NULL,LAYOUT_CENTER_Y);
+
+  new FXLabel(matrix,"Scroll Speed\t\tScroll Speed",NULL,LAYOUT_RIGHT|LAYOUT_CENTER_Y);
+  spinner=new FXSpinner(matrix,4,&target_scrollspeed,FXDataTarget::ID_VALUE,spinnerstyle);
+  spinner->setRange(1,9999);
+  spinner->setIncrement(10);
+  new FXLabel(matrix,"ms",NULL,LAYOUT_CENTER_Y);
+
+  new FXLabel(matrix,"Scroll Delay\t\tScroll Delay",NULL,LAYOUT_RIGHT|LAYOUT_CENTER_Y);
+  spinner=new FXSpinner(matrix,4,&target_scrolldelay,FXDataTarget::ID_VALUE,spinnerstyle);
+  spinner->setRange(1,9999);
+  spinner->setIncrement(100);
+  new FXLabel(matrix,"ms",NULL,LAYOUT_CENTER_Y);
+
+  new FXLabel(matrix,"Cursor Blink Speed\t\tCursor Blink Speed",NULL,LAYOUT_RIGHT|LAYOUT_CENTER_Y);
+  spinner=new FXSpinner(matrix,4,&target_blinkspeed,FXDataTarget::ID_VALUE,spinnerstyle);
+  spinner->setRange(1,9999);
+  spinner->setIncrement(100);
+  new FXLabel(matrix,"ms",NULL,LAYOUT_CENTER_Y);
+
+  new FXLabel(matrix,"Animation Speed\t\tAnimation Speed",NULL,LAYOUT_RIGHT|LAYOUT_CENTER_Y);
+  new FXSpinner(matrix,4,&target_animspeed,FXDataTarget::ID_VALUE,spinnerstyle);
+  spinner->setRange(1,9999);
+  spinner->setIncrement(1);
+  new FXLabel(matrix,"ms",NULL,LAYOUT_CENTER_Y);
+
+  new FXLabel(matrix,"Cascade Menu Popup Delay\t\tAmount of delay before cascading menu is shown",NULL,LAYOUT_RIGHT|LAYOUT_CENTER_Y);
+  spinner=new FXSpinner(matrix,4,&target_menupause,FXDataTarget::ID_VALUE,spinnerstyle);
+  spinner->setRange(1,9999);
+  spinner->setIncrement(100);
+  new FXLabel(matrix,"ms",NULL,LAYOUT_CENTER_Y);
+
+  new FXLabel(matrix,"Tooltip Popup Delay\t\tAmount of Delay before tooltip is shown ",NULL,LAYOUT_RIGHT|LAYOUT_CENTER_Y);
+  spinner=new FXSpinner(matrix,4,&target_tooltippause,FXDataTarget::ID_VALUE,spinnerstyle);
+  spinner->setRange(1,9999);
+  spinner->setIncrement(100);
+  new FXLabel(matrix,"ms",NULL,LAYOUT_CENTER_Y);
+
+  new FXLabel(matrix,"Tooltip Time\t\tTime that tooltips are shown",NULL,LAYOUT_RIGHT|LAYOUT_CENTER_Y);
+  spinner=new FXSpinner(matrix,4,&target_tooltiptime,FXDataTarget::ID_VALUE,spinnerstyle);
+  spinner->setRange(1,9999);
+  spinner->setIncrement(500);
+  new FXLabel(matrix,"ms",NULL,LAYOUT_CENTER_Y);
+
+  new FXLabel(matrix,"Drag Delta\t\tMinimum distance considered a mouse move",NULL,LAYOUT_RIGHT|LAYOUT_CENTER_Y);
+  spinner=new FXSpinner(matrix,4,&target_dragdelta,FXDataTarget::ID_VALUE,spinnerstyle);
+  spinner->setRange(1,9999);
+  spinner->setIncrement(1);
+  new FXFrame(matrix,FRAME_NONE);
+
+  new FXLabel(matrix,"Wheel Lines",NULL,LAYOUT_RIGHT|LAYOUT_CENTER_Y);
+  spinner=new FXSpinner(matrix,4,&target_wheellines,FXDataTarget::ID_VALUE,spinnerstyle);
+  spinner->setRange(1,100);
+
+
+
+
+
     vfsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXLabel (vfsPane, "VFS settings", NULL, LAYOUT_LEFT);
 
-    new FXButton (buttons, "Virtual File System Settings", NULL, switcher, FXSwitcher::ID_OPEN_SIXTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+    new FXButton (buttons, "Virtual File System Settings", NULL, switcher, FXSwitcher::ID_OPEN_SEVENTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
     
     
@@ -1105,6 +1215,18 @@ conf->saveonestring ("/OpenspaceConfig/fonts/captionfont",font1->getText().text(
 conf->saveonestring ("/OpenspaceConfig/fonts/captionfont1",font2->getText().text());
 conf->saveonestring ("/OpenspaceConfig/fonts/captionfont2",font3->getText().text());
 
+
+conf->saveonestring ("/OpenspaceConfig/speed_delay/typing_speed",ntos(typingSpeed));
+conf->saveonestring ("/OpenspaceConfig/speed_delay/click_speed",ntos(clickSpeed));
+conf->saveonestring ("/OpenspaceConfig/speed_delay/scroll_speed",ntos(scrollSpeed));
+conf->saveonestring ("/OpenspaceConfig/speed_delay/scroll_delay",ntos(scrollDelay));
+conf->saveonestring ("/OpenspaceConfig/speed_delay/blink_speed",ntos(blinkSpeed));
+conf->saveonestring ("/OpenspaceConfig/speed_delay/anim_speed",ntos(animSpeed));
+conf->saveonestring ("/OpenspaceConfig/speed_delay/menu_pause",ntos(menuPause));
+conf->saveonestring ("/OpenspaceConfig/speed_delay/tooltip_pause",ntos(tooltipPause));
+conf->saveonestring ("/OpenspaceConfig/speed_delay/tooltip_time",ntos(tooltipTime));
+conf->saveonestring ("/OpenspaceConfig/speed_delay/drag_delta",ntos(dragDelta));
+conf->saveonestring ("/OpenspaceConfig/speed_delay/wheel_lines",ntos(wheelLines));
 }
 
 long preferences::onCommandChange (FXObject * sender, FXSelector sel, void *)
@@ -1171,8 +1293,14 @@ for(int i=0;i<additionalCommands->getNumItems ();i++)
 	ct_prev->commands.push_back(additionalCommands->getItemText(i).text());
 	}
 
-ct_prev->color=ntos(colorbutton->getBackColor());
-ct_prev->backcolor=ntos(backcolorbutton->getBackColor());
+FXchar buffer[60];
+fxnamefromcolor(buffer,colorbutton->getBackColor());
+
+ct_prev->color=buffer;
+
+fxnamefromcolor(buffer,backcolorbutton->getBackColor());
+
+ct_prev->backcolor=buffer;
 ct_prev->icon=iconsList2->getItem(iconsList2->getCurrentItem()).text();
 
 filetype_container ct=filetypesMap[mime2xml(fileTypeList->getItem (fileTypeList->getCurrentItem ()).text ())];

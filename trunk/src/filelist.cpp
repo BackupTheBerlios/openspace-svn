@@ -83,12 +83,13 @@ FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
 filelist::filelist (FXComposite * p, pathtype pt):
 FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
 {
-
+objmanager=objectmanager::instance(getApp());
+ 
 FXScrollArea::vertical->setArrowColor(FXRGB(255, 255, 255));
-FXScrollArea::vertical->setShadowColor(FXRGB(145, 134, 201));
+FXScrollArea::vertical->setShadowColor(objmanager->maincolor);
 FXScrollArea::vertical->setHiliteColor(FXRGB(255, 255, 255));
 FXScrollArea::vertical->setBorderColor(FXRGB(255, 255, 255));
-FXScrollArea::vertical->setBackColor(FXRGB(145, 134, 201));
+FXScrollArea::vertical->setBackColor(objmanager->maincolor);
 
     flags |= FLAG_ENABLED | FLAG_DROPTARGET;
     popupmenu = NULL;
@@ -98,7 +99,7 @@ FXScrollArea::vertical->setBackColor(FXRGB(145, 134, 201));
 
     dropaction = DRAG_MOVE;   
 
-    objmanager=objectmanager::instance(getApp());
+   
     setKeys();
     setFont (objmanager->captionfont2);
     specialicons = objmanager->specialicons;
@@ -253,44 +254,6 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
 	//bottomframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
 	textfield = new FXTextField (toolbar, 30, this, filelist::ID_TEXTFIELD_RUN);
-/*	
-	new FXButton (toolbar, "\tselect filter", objmanager->osicons["pattern"], this, filelist::ID_TEXTFIELD_REG, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-	new FXButton (toolbar, "Go\topen directory", 0, this, filelist::ID_TEXTFIELD_GO, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-	new FXButton (toolbar, "Get\tget current directory", 0, this, filelist::ID_TEXTFIELD_GET, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
- 
-        new FXSeparator (toolbar, SEPARATOR_NONE);
-   	new FXSeparator (toolbar, SEPARATOR_GROOVE);
-        new FXSeparator (toolbar, SEPARATOR_NONE);
-	
-	if (conf->readonestring ("/OpenspaceConfig/panels") == "single")
-	    new FXButton (toolbar, "\tdouble panel mode", objmanager->osicons["min"], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-	else
-	new FXButton (toolbar, "\tsignle panel mode", objmanager->osicons["max"], this, filelist::ID_MAXIMIZE, BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
-  
-    new FXSeparator (toolbar, SEPARATOR_NONE);
-    new FXSeparator (toolbar, SEPARATOR_GROOVE);
-    new FXSeparator (toolbar, SEPARATOR_NONE);
-   
-    new FXButton (toolbar, "\tbig icons", objmanager->osicons["bigicons"], this, filelist::ID_CHANGE_VIEW_BIG, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "\tsmall icons", objmanager->osicons["smallicons"], this, filelist::ID_CHANGE_VIEW_SMALL, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "\tdetails", objmanager->osicons["details"], this, filelist::ID_CHANGE_VIEW_DETAILS, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-  
-    new FXSeparator (toolbar, SEPARATOR_NONE);
-    new FXSeparator (toolbar, SEPARATOR_GROOVE);
-    new FXSeparator (toolbar, SEPARATOR_NONE);
-   
-    //new FXButton (toolbar, "\treload", objmanager->osicons["reload"], this, filelist::ID_REFRESH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    //new FXButton (toolbar, "\thome", objmanager->osicons["home"], this, filelist::ID_HOME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    //new FXButton (toolbar, "\tdirup", objmanager->osicons["dirup"], this, filelist::ID_PARENTDIR, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-   
-    new FXSeparator (toolbar, SEPARATOR_NONE);
-    new FXSeparator (toolbar, SEPARATOR_GROOVE);
-    new FXSeparator (toolbar, SEPARATOR_NONE);
-   
-    new FXButton (toolbar, "\tcopy", objmanager->osicons["copy"], this, filelist::ID_CLIP_COPY, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "\tcut", objmanager->osicons["cut"], this, filelist::ID_CLIP_CUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    new FXButton (toolbar, "\tpaste", objmanager->osicons["paste"], this, filelist::ID_CLIP_PASTE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
- */
 
 	dial = NULL;
 	processing = false;
@@ -399,12 +362,12 @@ bool filelist::init ()
 
     for (indx = 0; indx < header_vec.size (); indx++)
     {
-	new FXOption (sortpop, header_vec[indx].c_str (), NULL, this, ID_SORT_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
+	new FXOption (sortpop, header_vec[indx].c_str (), NULL, this, ID_SORT_CHANGE, FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
     }
 
-    new FXOption (sortpop, "extension", NULL, this, ID_SORT_CHANGE, JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
+    new FXOption (sortpop, "file type", NULL, this, ID_SORT_CHANGE, FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
 
-    sortmenu = new FXOptionMenu (toolbar, sortpop, LAYOUT_TOP | FRAME_RAISED | FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
+    sortmenu = new FXOptionMenu (toolbar, sortpop, LAYOUT_TOP |FRAME_THICK | JUSTIFY_HZ_APART | ICON_AFTER_TEXT);
 
     if (processing)
 	sortmenu->create ();
@@ -1464,7 +1427,7 @@ commands_tab.clear();
 	    but->setButtonStyle (BUTTON_TOOLBAR);
 	    but->setIconPosition (ICON_BEFORE_TEXT);
 	    but->setJustify (JUSTIFY_LEFT);
-	    but->setBackColor (FXRGB (145, 134, 201));
+	    but->setBackColor (objmanager->maincolor);
 	    //but->setBackColor (readcolor (conf->readonestring ("/OpenspaceConfig/colors/maincolor")));
 	    content->setBackColor (getApp ()->getShadowColor ());
 	    if (conflocal.openxpath ("/OpenspaceConfig/shutter/" + res + "/command") != -1)
@@ -1929,7 +1892,7 @@ long filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
     {
 	FXOption *option = sortmenu->getCurrent ();
 	string sort = option->getText ().text ();
-	if (sort == "extension")
+	if (sort == "file type")
 	{
 
 	    num = -1;

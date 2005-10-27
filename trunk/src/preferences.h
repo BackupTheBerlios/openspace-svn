@@ -98,7 +98,39 @@ class preferences:public FXDialogBox
     
     bool preferences::validateName(string name);
     void preferences::setAllColor(FXButton* button,FXColor color);
-    
+ 
+ 
+private:
+
+  FXuint            typingSpeed;
+  FXuint            clickSpeed;
+  FXuint            scrollSpeed;
+  FXuint            scrollDelay;
+  FXuint            blinkSpeed;
+  FXuint            animSpeed;
+  FXuint            menuPause;
+  FXuint            tooltipPause;
+  FXuint            tooltipTime;
+  FXuint            maxcolors;
+  FXint             dragDelta;
+  FXint             wheelLines;
+  FXfloat           gamma;
+
+private:
+
+  FXDataTarget      target_typingspeed;
+  FXDataTarget      target_clickspeed;
+  FXDataTarget      target_scrollspeed;
+  FXDataTarget      target_scrolldelay;
+  FXDataTarget      target_blinkspeed;
+  FXDataTarget      target_animspeed;
+  FXDataTarget      target_menupause;
+  FXDataTarget      target_tooltippause;
+  FXDataTarget      target_tooltiptime;
+  FXDataTarget      target_dragdelta;
+  FXDataTarget      target_wheellines;
+  FXDataTarget      target_maxcolors;
+  FXDataTarget      target_gamma;    
     
     public:
     

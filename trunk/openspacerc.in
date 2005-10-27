@@ -12,8 +12,22 @@
  	 </fonts>
 	
 	<colors>
-		<maincolor></maincolor>
+		<maincolor>#9186c9</maincolor>
 	</colors>
+	<speed_delay>
+		  <typing_speed>1000</typing_speed>
+		  <typing_speed>1000</typing_speed>
+   		  <click_speed>400</click_speed>
+  		  <scroll_speed>80</scroll_speed>
+  		  <scroll_delay>600</scroll_delay>
+ 		  <blink_speed>500</blink_speed>
+  		  <anim_speed>10</anim_speed>
+  		  <menu_pause>400</menu_pause>
+  		  <tooltip_pause>800</tooltip_pause>
+ 		  <tooltip_time>3000</tooltip_time>
+ 		  <drag_delta>6</drag_delta>
+ 		  <wheel_lines>1</wheel_lines>
+	</speed_delay>
 	
  	<mainwindow>
 		<width>868</width>
@@ -333,15 +347,15 @@
 		<types>
 		<dir>
 			<icon>directory</icon>
-			<color>-10223616</color>
-			<backcolor>-3570031</backcolor>
+			<color>#000064</color>
+			<backcolor>#9186c9</backcolor>
 			<commands>
 					<command>umount</command>
 			</commands>
 		</dir>
 		<executable>
 			<icon>executable</icon>
-			<color>-10198016</color>
+			<color>#006464</color>
 		</executable>
 		<all>
 			<icon>unknown</icon>

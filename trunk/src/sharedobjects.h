@@ -24,6 +24,7 @@ class objectmanager
        map < string, FXIcon * >osicons;
        FXIcon *specialicons[30];
        map < string, unsigned int >key_map;
+       FXColor maincolor;
       
       
       
