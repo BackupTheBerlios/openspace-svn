@@ -334,16 +334,18 @@ objmanager=objectmanager::instance(getApp());
     new FXLabel (mainpane, "Main settings", NULL, LAYOUT_LEFT);
     new FXButton (buttons, "Main Settings", NULL, switcher, FXSwitcher::ID_OPEN_FIRST, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
+    FXHorizontalFrame *hoz1 = new FXHorizontalFrame (mainpane, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
+    new FXButton (hoz1, "Semi-Auto configure", NULL, this, preferences::ID_MIME_APP);
+    new FXButton (hoz1, "Full-Auto configure", NULL, this, preferences::ID_MIME_APP_AUTO);
 
-    new FXButton (mainpane, "Semi-Auto configure", NULL, this, preferences::ID_MIME_APP);
-    new FXButton (mainpane, "Full-Auto configure", NULL, this, preferences::ID_MIME_APP_AUTO);
-
-    new FXLabel (mainpane, "width:");
-    mainwindow_width = new FXTextField (mainpane, 5);
+    FXHorizontalFrame *hoz2 = new FXHorizontalFrame (mainpane, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    
+    new FXLabel (hoz2, "width:");
+    mainwindow_width = new FXTextField (hoz2, 5);
     mainwindow_width->setText (conf->readonestring ("/OpenspaceConfig/mainwindow/width").c_str ());
-    new FXLabel (mainpane, "height:");
-    mainwindow_height = new FXTextField (mainpane, 5);
+    new FXLabel (hoz2, "height:");
+    mainwindow_height = new FXTextField (hoz2, 5);
     mainwindow_height->setText (conf->readonestring ("/OpenspaceConfig/mainwindow/height").c_str ());
     
     
@@ -361,7 +363,7 @@ objmanager=objectmanager::instance(getApp());
     
     
     new FXLabel (mainpane, "maximum size of image file for generating thumbnails (in Bytes)");
-    thumbsize = new FXTextField (mainpane, 50);
+    thumbsize = new FXTextField (mainpane, 10);
     thumbsize->setText(conf->readonestring ("/OpenspaceConfig/filelist/local/thumbs/size").c_str ());
     
     new FXLabel (mainpane, "icons theme:");
