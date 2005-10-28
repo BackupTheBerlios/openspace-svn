@@ -111,7 +111,6 @@ class preferences:public FXDialogBox
   FXColor menufore;
   FXColor hilite;
   FXColor shadow;
-  
   FXColor main;
 
   FXToolTip         *tooltip;
@@ -142,6 +141,8 @@ class preferences:public FXDialogBox
  
  
 private:
+
+  FXFont           *font;
 
   FXuint            typingSpeed;
   FXuint            clickSpeed;
@@ -220,6 +221,7 @@ private:
 	ID_UPDATE_CMD_PLUGIN_LIST,
 	ID_UPDATE_VFS_PLUGIN_LIST,
 	ID_COLORS,
+	ID_CHOOSE_FONT,
 	ID_LAST,
     };
 
@@ -246,9 +248,10 @@ private:
     long preferences::onVfsChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onAddHeader (FXObject * sender, FXSelector sel, void *);
     long preferences::onColorChanged(FXObject*,FXSelector,void*);
+    long preferences::onChooseFont(FXObject*,FXSelector,void*);
     
     void preferences::setupColors(void);
-    
+    void preferences::setupFont(void);
     virtual ~ preferences ();
 };
 

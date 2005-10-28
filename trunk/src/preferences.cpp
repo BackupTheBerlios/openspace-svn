@@ -38,6 +38,7 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_UPDATE_CMD_PLUGIN_LIST,preferences::ID_UPDATE_VFS_PLUGIN_LIST, preferences::updatePluginList),
 	FXMAPFUNC(SEL_COMMAND,preferences::ID_COLORS,preferences::onColorChanged),
 	FXMAPFUNC(SEL_CHANGED,preferences::ID_COLORS,preferences::onColorChanged),
+	FXMAPFUNC(SEL_COMMAND,preferences::ID_CHOOSE_FONT,preferences::onChooseFont),
 	
 	
 	
@@ -216,6 +217,12 @@ preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", D
 {
 
 objmanager=objectmanager::instance(getApp());
+  getApp()->getNormalFont()->create();
+  FXFontDesc fontdescription;
+  getApp()->getNormalFont()->getFontDesc(fontdescription);
+
+  font = new FXFont(getApp(),fontdescription);
+  font->create();
   
   typingSpeed =getApp()->getTypingSpeed();
   clickSpeed  =getApp()->getClickSpeed();
@@ -966,6 +973,10 @@ string res;
   label2 = new FXLabel(grpbox2,"Sample Tooltip",NULL,FRAME_LINE|LAYOUT_CENTER_X);
   label5 = new FXLabel(grpbox2,"Multiline Sample\n Tooltip",NULL,FRAME_LINE|LAYOUT_CENTER_X);
 
+  hframe = new FXHorizontalFrame(vframe,LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING);
+
+  new FXLabel(hframe,"Normal Font: ",NULL,LAYOUT_CENTER_Y);
+  fontbutton = new FXButton(hframe," ",NULL,this,ID_CHOOSE_FONT,LAYOUT_CENTER_Y|FRAME_RAISED|JUSTIFY_CENTER_X|JUSTIFY_CENTER_Y|LAYOUT_FILL_X);
 
 //====================================================SPEED AND DELAYS============================================================
 
@@ -1104,6 +1115,7 @@ actualvfs="";
 	this->onVfsChange(NULL,0,NULL);
 
 setupColors();
+setupFont();
 }
 
 long preferences::onVfsChange (FXObject * sender, FXSelector sel, void *)
@@ -1395,6 +1407,11 @@ conf->saveonestring ("/OpenspaceConfig/colors/tipback",fxnamefromcolor(buffer,ti
 conf->saveonestring ("/OpenspaceConfig/colors/selmenutext",fxnamefromcolor(buffer,menufore));
 conf->saveonestring ("/OpenspaceConfig/colors/selmenuback",fxnamefromcolor(buffer,menuback));   
 conf->saveonestring ("/OpenspaceConfig/colors/main",fxnamefromcolor(buffer,main));   
+
+FXString fontspec=font->getFont();
+conf->saveonestring ("/OpenspaceConfig/fonts/normal",fontspec.text());  
+
+
 }
 
 long preferences::onCommandChange (FXObject * sender, FXSelector sel, void *)
@@ -1838,3 +1855,76 @@ void preferences::setupColors()
   tooltip->setTextColor(tipfore);
   tooltip->setBackColor(tipback);
   }
+
+static FXString weightToString(FXuint weight){
+  switch(weight){
+    case FONTWEIGHT_THIN      : return "thin"; break;
+    case FONTWEIGHT_EXTRALIGHT: return "extralight"; break;
+    case FONTWEIGHT_LIGHT     : return "light"; break;
+    case FONTWEIGHT_NORMAL    : return "normal"; break;
+    case FONTWEIGHT_MEDIUM    : return "medium"; break;
+    case FONTWEIGHT_DEMIBOLD  : return "demibold"; break;
+    case FONTWEIGHT_BOLD      : return "bold"; break;
+    case FONTWEIGHT_EXTRABOLD : return "extrabold"; break;
+    case FONTWEIGHT_HEAVY     : return "heavy"; break;
+    default: return ""; break;
+    }
+  return "";
+  }
+
+static FXString slantToString(FXuint slant){
+  switch(slant){
+    case FONTSLANT_REGULAR : return "regular"; break;
+    case FONTSLANT_ITALIC : return "italic"; break;
+    case FONTSLANT_OBLIQUE : return "oblique"; break;
+    case FONTSLANT_REVERSE_ITALIC : return "reverse italic"; break;
+    case FONTSLANT_REVERSE_OBLIQUE : return "reverse oblique"; break;
+    default : return ""; break;
+    }
+  return "";
+  }
+
+void preferences::setupFont()
+{
+   FXString fontname = font->getActualName() +", " + FXStringVal(font->getSize()/10);
+  if(font->getWeight()!=0 && font->getWeight()!=FONTWEIGHT_NORMAL){
+    fontname += ", " + weightToString(font->getWeight());
+    }
+  if (font->getSlant()!=0 && font->getSlant()!=FONTSLANT_REGULAR){
+    fontname += ", " + slantToString(font->getSlant());
+    }
+  tabitem->setFont(font);
+  label1->setFont(font);
+  label2->setFont(font);
+  label3->setFont(font);
+  label4->setFont(font);
+  label5->setFont(font);
+
+  menulabels[0]->setFont(font);
+  menulabels[1]->setFont(font);
+  menulabels[2]->setFont(font);
+  menulabels[3]->setFont(font);
+  menulabels[4]->setFont(font);
+  menulabels[5]->setFont(font);
+
+  textfield1->setFont(font);
+  fontbutton->setText(fontname);
+  }
+
+long preferences::onChooseFont(FXObject*,FXSelector,void*)
+{
+  FXFontDialog dialog(this,"Select Normal Font");
+  FXFontDesc fontdescription;
+  font->getFontDesc(fontdescription);
+  strncpy(fontdescription.face,font->getActualName().text(),sizeof(fontdescription.face));
+  dialog.setFontSelection(fontdescription);
+  if(dialog.execute(PLACEMENT_SCREEN)){
+    FXFont *oldfont=font;
+    dialog.getFontSelection(fontdescription);
+    font=new FXFont(getApp(),fontdescription);
+    font->create();
+    delete oldfont;
+    setupFont();
+    }
+  return 1;
+}
