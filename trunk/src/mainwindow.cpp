@@ -67,10 +67,12 @@ if(conf->loadconfig())
     pane = NULL;
     filemenu = NULL;
     pref = NULL;
-    
    
-   
-   
+   string fontdesc=conf->readonestring ("/OpenspaceConfig/fonts/normalfont");
+   FXFont *font=new FXFont(getApp(),fontdesc.c_str());
+   font->create();
+   getApp()->setNormalFont(font);
+  
    
   getApp()->setTypingSpeed(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/typing_speed").c_str ()));
   getApp()->setClickSpeed(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/click_speed").c_str ()));

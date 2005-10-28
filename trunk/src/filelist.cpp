@@ -101,7 +101,7 @@ FXScrollArea::vertical->setBackColor(objmanager->maincolor);
 
    
     setKeys();
-    setFont (objmanager->captionfont2);
+    setFont (objmanager->captionfont3);
     specialicons = objmanager->specialicons;
 
 
@@ -119,7 +119,7 @@ FXScrollArea::vertical->setBackColor(objmanager->maincolor);
     if (style == "big icons")
     {
 	this->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
-	setFont (objmanager->captionfont);
+	setFont (objmanager->captionfont1);
     }
     else if (style == "small icons")
 	this->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
@@ -1105,21 +1105,21 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
 	} 
 	else if (command == "change_view_mini_icons")
 	{
-	setFont (objmanager->captionfont2);
+	setFont (objmanager->captionfont3);
 	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
 	refresh ();
 	conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","small icons");
     	}
     	else if (command == "change_view_big_icons")
 	{
-	setFont (objmanager->captionfont);
+	setFont (objmanager->captionfont1);
 	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
 	refresh ();
 	conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","big icons");
    	}
 	else if (command == "change_view_detailed")
 	{
-	setFont (objmanager->captionfont2);
+	setFont (objmanager->captionfont3);
 	setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
 	refresh ();
 	conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","detailed");

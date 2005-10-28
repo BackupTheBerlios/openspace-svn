@@ -6,9 +6,10 @@
 	<first_run>true</first_run>
 	
 	  <fonts>
-   		<captionfont>arial,90,bold,,normal,iso8859-1,0</captionfont>
-    		<captionfont1>times,80,,,normal,iso8859-1,0</captionfont1>
-  		<captionfont2>arial,90,,,normal,iso8859-1,0</captionfont2>
+	         <normalfont>arial,90,,,normal,iso8859-1,0</normalfont>
+    		 <captionfont1>arial,90,bold,,normal,iso8859-1,0</captionfont1>
+   		 <captionfont2>times,80,,,normal,iso8859-1,0</captionfont2>
+   		 <captionfont3>arial,90,,,normal,iso8859-1,0</captionfont3>
  	 </fonts>
 	
 	<colors>

@@ -17,7 +17,7 @@ class objectmanager
 {
   public:
       static objectmanager* instance(FXApp *app);
-       FXFont *captionfont, *captionfont1, *captionfont2;
+       FXFont *captionfont1, *captionfont2, *captionfont3;
        FXApp *app;
        vector < thread_elem * >thread_vec;
        map < string, file_type * >file_type_settings;

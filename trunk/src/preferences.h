@@ -134,7 +134,7 @@ class preferences:public FXDialogBox
   FXLabel           *menulabels[6];
   FXTextField       *textfield1;
   FXButton          *button1;
-  FXButton          *fontbutton;
+  FXButton          *fontbutton,*fontbutton1,*fontbutton2,*fontbutton3;
   FXSeparator       *sep1;
   FXSeparator       *sep2;
   FXSeparator       *sep3;
@@ -222,6 +222,9 @@ private:
 	ID_UPDATE_VFS_PLUGIN_LIST,
 	ID_COLORS,
 	ID_CHOOSE_FONT,
+	ID_CHOOSE_CAPTIONFONT1,
+	ID_CHOOSE_CAPTIONFONT2,
+	ID_CHOOSE_CAPTIONFONT3,
 	ID_LAST,
     };
 
@@ -251,7 +254,7 @@ private:
     long preferences::onChooseFont(FXObject*,FXSelector,void*);
     
     void preferences::setupColors(void);
-    void preferences::setupFont(void);
+    void preferences::setupFont(int nr);
     virtual ~ preferences ();
 };
 
