@@ -98,6 +98,47 @@ class preferences:public FXDialogBox
     
     bool preferences::validateName(string name);
     void preferences::setAllColor(FXButton* button,FXColor color);
+
+  FXColor base;
+  FXColor border;
+  FXColor back;
+  FXColor fore;
+  FXColor selback;
+  FXColor selfore;
+  FXColor tipback;
+  FXColor tipfore;
+  FXColor menuback;
+  FXColor menufore;
+  FXColor hilite;
+  FXColor shadow;
+  
+  FXColor main;
+
+  FXToolTip         *tooltip;
+  FXTabBook         *tabbook;
+  FXTabItem         *tabitem;
+  FXVerticalFrame   *tabframe;
+  FXVerticalFrame   *mainframe;
+  FXVerticalFrame   *menuframe;
+  FXHorizontalFrame *labeltextframe1;
+  FXHorizontalFrame *labeltextframe2;
+  FXHorizontalFrame *textframe1;
+  FXHorizontalFrame *textframe2;
+  FXHorizontalFrame *tabsubframe;
+  FXGroupBox        *grpbox1;
+  FXGroupBox        *grpbox2;
+  FXLabel           *label1;
+  FXLabel           *label2;
+  FXLabel           *label3;
+  FXLabel           *label4;
+  FXLabel           *label5;
+  FXLabel           *menulabels[6];
+  FXTextField       *textfield1;
+  FXButton          *button1;
+  FXButton          *fontbutton;
+  FXSeparator       *sep1;
+  FXSeparator       *sep2;
+  FXSeparator       *sep3;
  
  
 private:
@@ -111,12 +152,26 @@ private:
   FXuint            menuPause;
   FXuint            tooltipPause;
   FXuint            tooltipTime;
-  FXuint            maxcolors;
   FXint             dragDelta;
   FXint             wheelLines;
-  FXfloat           gamma;
+
 
 private:
+
+  FXDataTarget      target_base;
+  FXDataTarget      target_back;
+  FXDataTarget      target_border;
+  FXDataTarget      target_fore;
+  FXDataTarget      target_hilite;
+  FXDataTarget      target_shadow;
+  FXDataTarget      target_selfore;
+  FXDataTarget      target_selback;
+  FXDataTarget      target_tipfore;
+  FXDataTarget      target_tipback;
+  FXDataTarget      target_menufore;
+  FXDataTarget      target_menuback;
+    
+  FXDataTarget      target_main;
 
   FXDataTarget      target_typingspeed;
   FXDataTarget      target_clickspeed;
@@ -129,8 +184,7 @@ private:
   FXDataTarget      target_tooltiptime;
   FXDataTarget      target_dragdelta;
   FXDataTarget      target_wheellines;
-  FXDataTarget      target_maxcolors;
-  FXDataTarget      target_gamma;    
+
     
     public:
     
@@ -165,6 +219,7 @@ private:
 	ID_DOWNLOAD_INSTALL_VFS_PLUGIN,
 	ID_UPDATE_CMD_PLUGIN_LIST,
 	ID_UPDATE_VFS_PLUGIN_LIST,
+	ID_COLORS,
 	ID_LAST,
     };
 
@@ -180,7 +235,7 @@ private:
     long preferences::onNewShutter (FXObject * sender, FXSelector sel, void *);
     long preferences::onRemoveShutter (FXObject * sender, FXSelector sel, void *);
     long preferences::onOpenMimeApp (FXObject * sender, FXSelector sel, void *);
-    long preferences:: onAdditionalCommandChange( FXObject * sender, FXSelector sel, void *);
+    long preferences::onAdditionalCommandChange( FXObject * sender, FXSelector sel, void *);
     long preferences::onAddFiletype (FXObject * sender, FXSelector sel, void *);
     long preferences::onChooseColor (FXObject * sender, FXSelector sel, void *);
     long preferences::onAddButtonCommand (FXObject * sender, FXSelector sel, void *);
@@ -190,8 +245,9 @@ private:
     long preferences::updatePluginList (FXObject * sender, FXSelector sel, void *);
     long preferences::onVfsChange (FXObject * sender, FXSelector sel, void *);
     long preferences::onAddHeader (FXObject * sender, FXSelector sel, void *);
+    long preferences::onColorChanged(FXObject*,FXSelector,void*);
     
-    
+    void preferences::setupColors(void);
     
     virtual ~ preferences ();
 };

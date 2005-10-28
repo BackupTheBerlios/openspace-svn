@@ -12,7 +12,19 @@
  	 </fonts>
 	
 	<colors>
-		<maincolor>#9186c9</maincolor>
+		  <main>#9186c9</main>
+  		  <base>#d6d7d6</base>
+   		  <border>Black</border>
+   		  <fore>Black</fore>
+   		  <hilite>Gray100</hilite>
+   		  <shadow>#8d8d8d</shadow>
+   		  <selfore>Gray100</selfore>
+  		  <selback>Navy</selback>
+  		  <tipfore>Black</tipfore>
+  		  <tipback>#ffffe1</tipback>
+  		  <selmenutext>Gray100</selmenutext>
+  		  <selmenuback>Navy</selmenuback>
+		
 	</colors>
 	<speed_delay>
 		  <typing_speed>1000</typing_speed>

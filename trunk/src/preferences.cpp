@@ -36,6 +36,8 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC(SEL_CLOSE,0,preferences::close),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_DOWNLOAD_INSTALL_CMD_PLUGIN,preferences::ID_DOWNLOAD_INSTALL_VFS_PLUGIN, preferences::downloadInstallPlugin),
 	FXMAPFUNCS (SEL_COMMAND, preferences::ID_UPDATE_CMD_PLUGIN_LIST,preferences::ID_UPDATE_VFS_PLUGIN_LIST, preferences::updatePluginList),
+	FXMAPFUNC(SEL_COMMAND,preferences::ID_COLORS,preferences::onColorChanged),
+	FXMAPFUNC(SEL_CHANGED,preferences::ID_COLORS,preferences::onColorChanged),
 	
 	
 	
@@ -213,6 +215,7 @@ string file;
 preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", DECOR_ALL, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4)
 {
 
+objmanager=objectmanager::instance(getApp());
   
   typingSpeed =getApp()->getTypingSpeed();
   clickSpeed  =getApp()->getClickSpeed();
@@ -239,11 +242,69 @@ preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", D
   target_dragdelta.connect(dragDelta);
   target_wheellines.connect(wheelLines);
 
+   tooltip = new FXToolTip(getApp());
+
+  /// Retrieve Current Color Settings
+  hilite  = getApp()->getHiliteColor();
+  shadow  = getApp()->getShadowColor();  
+  base    = getApp()->getBaseColor();
+  back    = getApp()->getBackColor();
+  border  = getApp()->getBorderColor();
+  fore    = getApp()->getForeColor();
+  selfore = getApp()->getSelforeColor();
+  selback = getApp()->getSelbackColor();
+  tipfore = getApp()->getTipforeColor();
+  tipback = getApp()->getTipbackColor();
+  menufore= getApp()->getSelMenuTextColor();
+  menuback= getApp()->getSelMenuBackColor();
+  main=fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/main").c_str());
+  
+  target_base.connect(base);
+  target_back.connect(back);
+  target_border.connect(border);
+  target_fore.connect(fore);
+  target_hilite.connect(hilite);
+  target_shadow.connect(shadow);
+  target_selfore.connect(selfore);
+  target_selback.connect(selback);
+  target_tipfore.connect(tipfore);
+  target_tipback.connect(tipback);
+  target_menufore.connect(menufore);
+  target_menuback.connect(menuback);  
+  target_main.connect(main);
+
+  target_base.setTarget(this);
+  target_back.setTarget(this);
+  target_border.setTarget(this);
+  target_fore.setTarget(this);
+  target_hilite.setTarget(this);
+  target_shadow.setTarget(this);
+  target_selfore.setTarget(this);
+  target_selback.setTarget(this);
+  target_tipfore.setTarget(this);
+  target_tipback.setTarget(this);
+  target_menufore.setTarget(this);
+  target_menuback.setTarget(this);
+  target_main.setTarget(this);
+
+  target_base.setSelector(ID_COLORS);
+  target_back.setSelector(ID_COLORS);
+  target_border.setSelector(ID_COLORS);
+  target_fore.setSelector(ID_COLORS);
+  target_hilite.setSelector(ID_COLORS);
+  target_shadow.setSelector(ID_COLORS);
+  target_selfore.setSelector(ID_COLORS);
+  target_selback.setSelector(ID_COLORS);
+  target_tipfore.setSelector(ID_COLORS);
+  target_tipback.setSelector(ID_COLORS);
+  target_menufore.setSelector(ID_COLORS);
+  target_menuback.setSelector(ID_COLORS);
+  target_main.setSelector(ID_COLORS);
 
     mimeapp=NULL;
     saveconfiguration=true;
     
-    objmanager=objectmanager::instance(getApp());
+    
     colordlg=new FXColorDialog(this,"Color Dialog");
     
     FXVerticalFrame *vertical = new FXVerticalFrame (this, LAYOUT_SIDE_TOP | LAYOUT_FILL_X | LAYOUT_FILL_Y);
@@ -810,18 +871,112 @@ string res;
 	setAllColor(backcolorbutton,readcolor2(ctlast->backcolor));
 	
     }
+    
+//====================================================LOOK AND FEEL============================================================
+
+  new FXButton (buttons, "Look and feel", NULL, switcher, FXSwitcher::ID_OPEN_SIXTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+
+  FXVerticalFrame *vframe = new FXVerticalFrame(switcher,LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,0,0,0,0,0,0);
+
+  FXHorizontalFrame *hframe = new FXHorizontalFrame(vframe,LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,0,0,0,0,0,0);
+  new FXSeparator(vframe,SEPARATOR_GROOVE|LAYOUT_FILL_X);
+
+
+  frame  = new FXVerticalFrame(hframe,LAYOUT_FILL_Y,0,0,0,0,0,0,0,0,0,0);
+  new FXSeparator(hframe,SEPARATOR_GROOVE|LAYOUT_FILL_Y);
 
 
 
+  FXMatrix* matrix = new FXMatrix(frame,2,LAYOUT_FILL_Y|MATRIX_BY_COLUMNS,0,0,0,0,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING,1,1);
+
+  FXColorWell *colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_base,FXDataTarget::ID_VALUE);
+  FXLabel *label	  = new FXLabel(matrix,"Base Color");
+
+  colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_border,FXDataTarget::ID_VALUE);
+  label	  = new FXLabel(matrix,"Border Color");
+
+  colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_fore,FXDataTarget::ID_VALUE);
+  label	  = new FXLabel(matrix,"Text Color");
+
+  colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_back,FXDataTarget::ID_VALUE);
+  label	  = new FXLabel(matrix,"Background Color");
+
+  colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_selfore,FXDataTarget::ID_VALUE);
+  label	  = new FXLabel(matrix,"Selected Text Color");
+
+  colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_selback,FXDataTarget::ID_VALUE);
+  label	  = new FXLabel(matrix,"Selected Background Color");
+
+  colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_menufore,FXDataTarget::ID_VALUE);
+  label	  = new FXLabel(matrix,"Selected Menu Text Color");
+
+  colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_menuback,FXDataTarget::ID_VALUE);
+  label	  = new FXLabel(matrix,"Selected Menu Background Color");
+
+  colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_tipfore,FXDataTarget::ID_VALUE);
+  label	  = new FXLabel(matrix,"Tip Text Color");
+
+  colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_tipback,FXDataTarget::ID_VALUE);
+  label	  = new FXLabel(matrix,"Tip Background Color");
+  
+  colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_shadow,FXDataTarget::ID_VALUE);
+  label	  = new FXLabel(matrix,"Shadow Color");
+  
+  colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_hilite,FXDataTarget::ID_VALUE);
+  label	  = new FXLabel(matrix,"Hilite Color");
+  
+  colorwell = new FXColorWell(matrix,FXRGB(0,0,255),&target_main,FXDataTarget::ID_VALUE);
+  label	  = new FXLabel(matrix,"Main Color");
+
+  frame = new FXVerticalFrame(hframe,LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING,0,0);
+
+  tabbook = new FXTabBook(frame,NULL,0,LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,0,0,0,0);
+  tabitem  = new FXTabItem(tabbook," Item 1 ");
+  tabframe = new FXVerticalFrame(tabbook,LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_THICK|FRAME_RAISED);
+
+  labeltextframe1 = new FXHorizontalFrame(tabframe,LAYOUT_FILL_X);
+  label1 = new FXLabel(labeltextframe1,"Label with Text",NULL);
+  textfield1 = new FXTextField(labeltextframe1,30,NULL,0,LAYOUT_FILL_X|FRAME_THICK|FRAME_SUNKEN);
+  textfield1->setText("Select this text, to see the selected colors");
+
+  labeltextframe2 = new FXHorizontalFrame(tabframe,LAYOUT_FILL_X);
+  textframe1 = new FXHorizontalFrame(labeltextframe2,LAYOUT_FILL_X|FRAME_THICK|FRAME_SUNKEN,0,0,0,0,2,2,2,2,0,0);
+  label3 = new FXLabel(textframe1,"Selected Text (with focus)",NULL,LAYOUT_FILL_X,0,0,0,0,1,1,1,1);
+  textframe2 = new FXHorizontalFrame(labeltextframe2,LAYOUT_FILL_X|FRAME_THICK|FRAME_SUNKEN,0,0,0,0,2,2,2,2,0,0);
+  label4 = new FXLabel(textframe2,"Selected Text (no focus)",NULL,LAYOUT_FILL_X,0,0,0,0,1,1,1,1);
+
+  sep1 = new FXSeparator(tabframe,LAYOUT_FILL_X|SEPARATOR_LINE);
+
+  tabsubframe = new FXHorizontalFrame(tabframe,LAYOUT_FILL_X|LAYOUT_FILL_Y);
+
+  grpbox1 = new FXGroupBox(tabsubframe,"MenuPane",FRAME_GROOVE|LAYOUT_FILL_Y|LAYOUT_FILL_X);
+
+  menuframe = new FXVerticalFrame(grpbox1,FRAME_RAISED|FRAME_THICK|LAYOUT_CENTER_X|LAYOUT_CENTER_Y,0,0,0,0,0,0,0,0,0,0);
+  menulabels[0]=new FXLabel(menuframe,"&Open",NULL,LABEL_NORMAL,0,0,0,0,16,4);
+  menulabels[1]=new FXLabel(menuframe,"S&ave",NULL,LABEL_NORMAL,0,0,0,0,16,4);
+  sep2 = new FXSeparator(menuframe,LAYOUT_FILL_X|SEPARATOR_GROOVE);
+  menulabels[2]=new FXLabel(menuframe,"I&mport",NULL,LABEL_NORMAL,0,0,0,0,16,4);
+  menulabels[4]=new FXLabel(menuframe,"Selected Menu Entry",NULL,LABEL_NORMAL,0,0,0,0,16,4);
+  menulabels[3]=new FXLabel(menuframe,"Print",NULL,LABEL_NORMAL,0,0,0,0,16,4);
+  sep3 = new FXSeparator(menuframe,LAYOUT_FILL_X|SEPARATOR_GROOVE);
+  menulabels[5]=new FXLabel(menuframe,"&Quit",NULL,LABEL_NORMAL,0,0,0,0,16,4);
+
+  grpbox2 = new FXGroupBox(tabsubframe,"Tooltips",FRAME_GROOVE|LAYOUT_FILL_Y|LAYOUT_FILL_X);
+
+  label2 = new FXLabel(grpbox2,"Sample Tooltip",NULL,FRAME_LINE|LAYOUT_CENTER_X);
+  label5 = new FXLabel(grpbox2,"Multiline Sample\n Tooltip",NULL,FRAME_LINE|LAYOUT_CENTER_X);
+
+
+//====================================================SPEED AND DELAYS============================================================
 
 
 
-  new FXButton (buttons, "Speed and delays", NULL, switcher, FXSwitcher::ID_OPEN_SIXTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+  new FXButton (buttons, "Speed and delays", NULL, switcher, FXSwitcher::ID_OPEN_SEVENTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
 
-  FXHorizontalFrame *hframe = new FXHorizontalFrame(switcher,LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,0,0,0,0,0,0);
+  hframe = new FXHorizontalFrame(switcher,LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,0,0,0,0,0,0);
 
-  FXMatrix* matrix = new FXMatrix(hframe,3,LAYOUT_FILL_Y|MATRIX_BY_COLUMNS,0,0,0,0,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING);
+  matrix = new FXMatrix(hframe,3,LAYOUT_FILL_Y|MATRIX_BY_COLUMNS,0,0,0,0,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING);
 
   const FXuint spinnerstyle=FRAME_SUNKEN|FRAME_THICK;
 
@@ -891,13 +1046,13 @@ string res;
   spinner->setRange(1,100);
 
 
-
+//====================================================VFS============================================================
 
 
     vfsPane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     new FXLabel (vfsPane, "VFS settings", NULL, LAYOUT_LEFT);
 
-    new FXButton (buttons, "Virtual File System Settings", NULL, switcher, FXSwitcher::ID_OPEN_SEVENTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
+    new FXButton (buttons, "Virtual File System Settings", NULL, switcher, FXSwitcher::ID_OPEN_EIGHTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
 
     
     
@@ -911,7 +1066,7 @@ string res;
 	new FXLabel(vframe0,"visible headers:");
         headersList=new FXList (vframe0,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	headersList->setNumVisible(5);
-	FXVerticalFrame* vframe=new FXVerticalFrame (hzframe, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	vframe=new FXVerticalFrame (hzframe, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXLabel(vframe,"\n");
 	new FXLabel(vframe,"\n");
 	new FXArrowButton(vframe,this,ID_ADD_HEADER,FRAME_RAISED|FRAME_THICK|ARROW_LEFT);
@@ -948,7 +1103,7 @@ actualvfs="";
        
 	this->onVfsChange(NULL,0,NULL);
 
-
+setupColors();
 }
 
 long preferences::onVfsChange (FXObject * sender, FXSelector sel, void *)
@@ -1227,6 +1382,19 @@ conf->saveonestring ("/OpenspaceConfig/speed_delay/tooltip_pause",ntos(tooltipPa
 conf->saveonestring ("/OpenspaceConfig/speed_delay/tooltip_time",ntos(tooltipTime));
 conf->saveonestring ("/OpenspaceConfig/speed_delay/drag_delta",ntos(dragDelta));
 conf->saveonestring ("/OpenspaceConfig/speed_delay/wheel_lines",ntos(wheelLines));
+
+FXchar buffer[60];
+conf->saveonestring ("/OpenspaceConfig/colors/base",fxnamefromcolor(buffer,base));
+conf->saveonestring ("/OpenspaceConfig/colors/fore",fxnamefromcolor(buffer,fore));
+conf->saveonestring ("/OpenspaceConfig/colors/hilite",fxnamefromcolor(buffer,hilite));
+conf->saveonestring ("/OpenspaceConfig/colors/shadow",fxnamefromcolor(buffer,shadow));
+conf->saveonestring ("/OpenspaceConfig/colors/selfore",fxnamefromcolor(buffer,selfore));
+conf->saveonestring ("/OpenspaceConfig/colors/selback",fxnamefromcolor(buffer,selback));
+conf->saveonestring ("/OpenspaceConfig/colors/tipfore",fxnamefromcolor(buffer,tipfore));
+conf->saveonestring ("/OpenspaceConfig/colors/tipback",fxnamefromcolor(buffer,tipback));
+conf->saveonestring ("/OpenspaceConfig/colors/selmenutext",fxnamefromcolor(buffer,menufore));
+conf->saveonestring ("/OpenspaceConfig/colors/selmenuback",fxnamefromcolor(buffer,menuback));   
+conf->saveonestring ("/OpenspaceConfig/colors/main",fxnamefromcolor(buffer,main));   
 }
 
 long preferences::onCommandChange (FXObject * sender, FXSelector sel, void *)
@@ -1509,3 +1677,164 @@ this->handle (this, FXSEL (SEL_CLOSE, 0), NULL);
    
 	
 }
+
+long preferences::onColorChanged(FXObject*,FXSelector,void*)
+{
+  setupColors();
+  return 1;
+}
+
+
+void preferences::setupColors()
+{
+  //shadow = makeShadowColor(base);
+  //hilite = makeHiliteColor(base);
+
+  tabitem->setBorderColor(border);
+  tabitem->setBaseColor(base);
+  tabitem->setBackColor(base);
+  tabitem->setTextColor(fore);
+  tabitem->setShadowColor(shadow);
+  tabitem->setHiliteColor(hilite);
+
+  tabframe->setBorderColor(border);
+  tabframe->setBaseColor(base);
+  tabframe->setBackColor(base);
+  tabframe->setShadowColor(shadow);
+  tabframe->setHiliteColor(hilite);
+
+
+  tabsubframe->setBorderColor(border);
+  tabsubframe->setBaseColor(base);
+  tabsubframe->setBackColor(base);
+  tabsubframe->setShadowColor(shadow);
+  tabsubframe->setHiliteColor(hilite);
+
+  menuframe->setBorderColor(border);
+  menuframe->setBaseColor(base);
+  menuframe->setBackColor(base);
+  menuframe->setShadowColor(shadow);
+  menuframe->setHiliteColor(hilite);
+
+  grpbox1->setBorderColor(border);
+  grpbox1->setBaseColor(base);
+  grpbox1->setBackColor(base);
+  grpbox1->setShadowColor(shadow);
+  grpbox1->setHiliteColor(hilite);
+  grpbox1->setTextColor(fore);
+
+  grpbox2->setBorderColor(border);
+  grpbox2->setBaseColor(base);
+  grpbox2->setBackColor(base);
+  grpbox2->setShadowColor(shadow);
+  grpbox2->setHiliteColor(hilite);
+  grpbox2->setTextColor(fore);
+
+  sep1->setBorderColor(border);
+  sep1->setBaseColor(base);
+  sep1->setBackColor(base);
+  sep1->setShadowColor(shadow);
+  sep1->setHiliteColor(hilite);
+
+  sep2->setBorderColor(border);
+  sep2->setBaseColor(base);
+  sep2->setBackColor(base);
+  sep2->setShadowColor(shadow);
+  sep2->setHiliteColor(hilite);
+
+  sep3->setBorderColor(border);
+  sep3->setBaseColor(base);
+  sep3->setBackColor(base);
+  sep3->setShadowColor(shadow);
+  sep3->setHiliteColor(hilite);
+
+  labeltextframe1->setBorderColor(border);
+  labeltextframe1->setBaseColor(base);
+  labeltextframe1->setBackColor(base);
+  labeltextframe1->setShadowColor(shadow);
+  labeltextframe1->setHiliteColor(hilite);
+
+
+  labeltextframe2->setBorderColor(border);
+  labeltextframe2->setBaseColor(base);
+  labeltextframe2->setBackColor(base);
+  labeltextframe2->setShadowColor(shadow);
+  labeltextframe2->setHiliteColor(hilite);
+
+  label1->setBorderColor(border);
+  label1->setBaseColor(base);
+  label1->setBackColor(base);
+  label1->setTextColor(fore);
+  label1->setShadowColor(shadow);
+  label1->setHiliteColor(hilite);
+
+  label2->setBorderColor(tipfore);
+  label2->setBaseColor(tipback);
+  label2->setBackColor(tipback);
+  label2->setTextColor(tipfore);
+  label2->setShadowColor(shadow);
+  label2->setHiliteColor(hilite);
+
+  label3->setBorderColor(border);
+  label3->setBaseColor(base);
+  label3->setBackColor(selback);
+  label3->setTextColor(selfore);
+  label3->setShadowColor(shadow);
+  label3->setHiliteColor(hilite);
+
+  label4->setBorderColor(border);
+  label4->setBaseColor(base);
+  label4->setBackColor(base);
+  label4->setTextColor(fore);
+  label4->setShadowColor(shadow);
+  label4->setHiliteColor(hilite);
+
+  label5->setBorderColor(tipfore);
+  label5->setBaseColor(tipback);
+  label5->setBackColor(tipback);
+  label5->setTextColor(tipfore);
+  label5->setShadowColor(shadow);
+  label5->setHiliteColor(hilite);
+
+  for (int i=0;i<6;i++)
+  {
+    menulabels[i]->setBorderColor(border);
+    menulabels[i]->setBaseColor(base);
+    menulabels[i]->setBackColor(base);
+    menulabels[i]->setTextColor(fore);
+    menulabels[i]->setShadowColor(shadow);
+    menulabels[i]->setHiliteColor(hilite);
+  }
+
+  menulabels[4]->setBorderColor(border);
+  menulabels[4]->setBaseColor(menuback);
+  menulabels[4]->setBackColor(menuback);
+  menulabels[4]->setTextColor(menufore);
+  menulabels[4]->setShadowColor(shadow);
+  menulabels[4]->setHiliteColor(hilite);
+
+  textframe1->setBorderColor(border);
+  textframe1->setBaseColor(base);
+  textframe1->setBackColor(back);
+  textframe1->setShadowColor(shadow);
+  textframe1->setHiliteColor(hilite);
+
+  textframe2->setBorderColor(border);
+  textframe2->setBaseColor(base);
+  textframe2->setBackColor(back);
+  textframe2->setShadowColor(shadow);
+  textframe2->setHiliteColor(hilite);
+
+  textfield1->setBorderColor(border);
+  textfield1->setBackColor(back);
+  textfield1->setBaseColor(base);
+  textfield1->setTextColor(fore);
+  textfield1->setSelTextColor(selfore);
+  textfield1->setSelBackColor(selback);
+  textfield1->setCursorColor(fore);
+  textfield1->setShadowColor(shadow);
+  textfield1->setHiliteColor(hilite);
+
+  tooltip->setTextColor(tipfore);
+  tooltip->setBackColor(tipback);
+  }

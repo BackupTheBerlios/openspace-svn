@@ -28,7 +28,7 @@ objectmanager::objectmanager(FXApp *app)
     captionfont2->create ();
     
    // maincolor=FXRGB (145, 134, 201);
-    maincolor=fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/maincolor").c_str());
+    maincolor=fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/main").c_str());
     
   key_map["a"]                             = 0x0061;
   key_map["b"]                             = 0x0062;

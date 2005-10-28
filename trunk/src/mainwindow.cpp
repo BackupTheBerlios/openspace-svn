@@ -84,9 +84,17 @@ if(conf->loadconfig())
   getApp()->setDragDelta(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/drag_delta").c_str ()));
   getApp()->setWheelLines(FXIntVal(conf->readonestring ("/OpenspaceConfig/speed_delay/wheel_lines").c_str ()));
    
-   
-   
-   
+   getApp()->setBaseColor(fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/base").c_str()));
+   getApp()->setBorderColor(fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/border").c_str()));
+   getApp()->setForeColor(fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/fore").c_str()));
+   getApp()->setHiliteColor(fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/hilite").c_str()));
+   getApp()->setShadowColor(fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/shadow").c_str()));
+   getApp()->setSelforeColor(fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/selfore").c_str()));
+   getApp()->setSelbackColor(fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/selback").c_str()));
+   getApp()->setTipforeColor(fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/tipfore").c_str()));
+   getApp()->setTipbackColor(fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/tipback").c_str()));
+   getApp()->setSelMenuTextColor(fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/selmenutext").c_str()));
+   getApp()->setSelMenuBackColor(fxcolorfromname(conf->readonestring ("/OpenspaceConfig/colors/selmenuback").c_str()));
    
     string iconsdir=conf->readonestring ("/OpenspaceConfig/path") +"icons/"+conf->readonestring ("/OpenspaceConfig/icons_theme");
     
