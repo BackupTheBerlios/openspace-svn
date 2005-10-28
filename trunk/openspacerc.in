@@ -120,16 +120,22 @@
 		</unzip>
 		<copy>
 			<type>INTERNAL</type>
+			<key>F5</key>
 		</copy>
 		<move>
 			<type>INTERNAL</type>
+			<key>F6</key>
 		</move>
 		<select_all>
 			<type>INTERNAL</type>
+			<key>a</key>
+			<key_mask>control</key_mask>
 		</select_all>
 		<refresh>
 			<type>INTERNAL</type>
 			<icon>reload</icon>
+			<key>r</key>
+			<key_mask>control</key_mask>
 		</refresh>
 		
 		<home>
