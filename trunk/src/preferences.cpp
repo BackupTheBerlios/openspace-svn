@@ -221,8 +221,17 @@ objmanager=objectmanager::instance(getApp());
   FXFontDesc fontdescription;
   getApp()->getNormalFont()->getFontDesc(fontdescription);
 
-  font = new FXFont(getApp(),fontdescription);
-  font->create();
+  font[0] = new FXFont(getApp(),fontdescription);
+  font[0]->create();
+  objmanager->captionfont1->getFontDesc(fontdescription);
+  font[1]= new FXFont(getApp(),fontdescription);
+  font[1]->create();
+  objmanager->captionfont2->getFontDesc(fontdescription);
+  font[2]= new FXFont(getApp(),fontdescription);
+  font[2]->create();
+   objmanager->captionfont3->getFontDesc(fontdescription);
+  font[3]= new FXFont(getApp(),fontdescription);
+  font[3]->create();
   
   typingSpeed =getApp()->getTypingSpeed();
   clickSpeed  =getApp()->getClickSpeed();
@@ -358,19 +367,7 @@ objmanager=objectmanager::instance(getApp());
     new FXLabel (mainpane, "icons theme:");
     iconsTheme=new FXListBox (mainpane);
     iconsTheme->setNumVisible(5);
-    /*
-    new FXLabel (mainpane, "font 1");
-    font1 = new FXTextField (mainpane, 50);
-    font1->setText(conf->readonestring ("/OpenspaceConfig/fonts/captionfont").c_str ());
-    
-    new FXLabel (mainpane, "font 2");
-    font2 = new FXTextField (mainpane, 50);
-    font2->setText(conf->readonestring ("/OpenspaceConfig/fonts/captionfont1").c_str ());    
-    
-    new FXLabel (mainpane, "font 3");
-    font3 = new FXTextField (mainpane, 50);
-    font3->setText(conf->readonestring ("/OpenspaceConfig/fonts/captionfont2").c_str ());
-    */
+
     
 
  string iconsdir=conf->readonestring ("/OpenspaceConfig/path") +"/icons";
@@ -975,19 +972,19 @@ string res;
   hframe = new FXHorizontalFrame(vframe,LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING);
 
   new FXLabel(hframe,"Normal Font: ",NULL,LAYOUT_CENTER_Y);
-  fontbutton = new FXButton(hframe," ",NULL,this,ID_CHOOSE_FONT,LAYOUT_CENTER_Y|FRAME_RAISED|JUSTIFY_CENTER_X|JUSTIFY_CENTER_Y|LAYOUT_FILL_X);
+  fontbutton[0] = new FXButton(hframe," ",NULL,this,ID_CHOOSE_FONT,LAYOUT_CENTER_Y|FRAME_RAISED|JUSTIFY_CENTER_X|JUSTIFY_CENTER_Y|LAYOUT_FILL_X);
   
   hframe = new FXHorizontalFrame(vframe,LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING);
   new FXLabel(hframe,"Caption1 Font: ",NULL,LAYOUT_CENTER_Y);
-  fontbutton1 = new FXButton(hframe," ",NULL,this,ID_CHOOSE_CAPTIONFONT1,LAYOUT_CENTER_Y|FRAME_RAISED|JUSTIFY_CENTER_X|JUSTIFY_CENTER_Y|LAYOUT_FILL_X);
+  fontbutton[1] = new FXButton(hframe," ",NULL,this,ID_CHOOSE_CAPTIONFONT1,LAYOUT_CENTER_Y|FRAME_RAISED|JUSTIFY_CENTER_X|JUSTIFY_CENTER_Y|LAYOUT_FILL_X);
   
   hframe = new FXHorizontalFrame(vframe,LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING);
   new FXLabel(hframe,"Caption2 Font: ",NULL,LAYOUT_CENTER_Y);
-  fontbutton2 = new FXButton(hframe," ",NULL,this,ID_CHOOSE_CAPTIONFONT2,LAYOUT_CENTER_Y|FRAME_RAISED|JUSTIFY_CENTER_X|JUSTIFY_CENTER_Y|LAYOUT_FILL_X);
+  fontbutton[2] = new FXButton(hframe," ",NULL,this,ID_CHOOSE_CAPTIONFONT2,LAYOUT_CENTER_Y|FRAME_RAISED|JUSTIFY_CENTER_X|JUSTIFY_CENTER_Y|LAYOUT_FILL_X);
   
   hframe = new FXHorizontalFrame(vframe,LAYOUT_FILL_X|LAYOUT_FILL_Y,0,0,0,0,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING,DEFAULT_SPACING);
   new FXLabel(hframe,"Caption3 Font: ",NULL,LAYOUT_CENTER_Y);
-  fontbutton3 = new FXButton(hframe," ",NULL,this,ID_CHOOSE_CAPTIONFONT3,LAYOUT_CENTER_Y|FRAME_RAISED|JUSTIFY_CENTER_X|JUSTIFY_CENTER_Y|LAYOUT_FILL_X);
+  fontbutton[3] = new FXButton(hframe," ",NULL,this,ID_CHOOSE_CAPTIONFONT3,LAYOUT_CENTER_Y|FRAME_RAISED|JUSTIFY_CENTER_X|JUSTIFY_CENTER_Y|LAYOUT_FILL_X);
 
 //====================================================SPEED AND DELAYS============================================================
 
@@ -1391,11 +1388,6 @@ conf->saveonestring ("/OpenspaceConfig/defaultdir/dir",defaultdir->getText().tex
 conf->saveonestring ("/OpenspaceConfig/filelist/local/thumbs/size",thumbsize->getText().text());
 conf->saveonestring ("/OpenspaceConfig/icons_theme",iconsTheme->getItem(iconsTheme->getCurrentItem()).text());
 
-/*
-conf->saveonestring ("/OpenspaceConfig/fonts/captionfont",font1->getText().text());
-conf->saveonestring ("/OpenspaceConfig/fonts/captionfont1",font2->getText().text());
-conf->saveonestring ("/OpenspaceConfig/fonts/captionfont2",font3->getText().text());
-*/
 
 conf->saveonestring ("/OpenspaceConfig/speed_delay/typing_speed",ntos(typingSpeed));
 conf->saveonestring ("/OpenspaceConfig/speed_delay/click_speed",ntos(clickSpeed));
@@ -1422,16 +1414,16 @@ conf->saveonestring ("/OpenspaceConfig/colors/selmenutext",fxnamefromcolor(buffe
 conf->saveonestring ("/OpenspaceConfig/colors/selmenuback",fxnamefromcolor(buffer,menuback));   
 conf->saveonestring ("/OpenspaceConfig/colors/main",fxnamefromcolor(buffer,main));   
 
-FXString fontspec=font->getFont();
+FXString fontspec=font[0]->getFont();
 conf->saveonestring ("/OpenspaceConfig/fonts/normalfont",fontspec.text());  
 
-fontspec=objmanager->captionfont1->getFont();
+fontspec=font[1]->getFont();
 conf->saveonestring ("/OpenspaceConfig/fonts/captionfont1",fontspec.text());  
 
-fontspec=objmanager->captionfont2->getFont();
+fontspec=font[2]->getFont();
 conf->saveonestring ("/OpenspaceConfig/fonts/captionfont2",fontspec.text());  
 
-fontspec=objmanager->captionfont3->getFont();
+fontspec=font[3]->getFont();
 conf->saveonestring ("/OpenspaceConfig/fonts/captionfont3",fontspec.text());  
 
 }
@@ -1908,129 +1900,65 @@ static FXString slantToString(FXuint slant){
 
 void preferences::setupFont(int nr)
 {
-
-FXFont* curfont;
-
- 	if(nr==0)
-	{
- 	curfont=font;
-  	}
- 	else if(nr==1)
-  	{
-	curfont=objmanager->captionfont1;
- 	}
-	else if(nr==2)
-  	{
-	curfont=objmanager->captionfont2;
- 	}
-	else if(nr==3)
-  	{
-	curfont=objmanager->captionfont3;
- 	}
   
 
 
-   FXString fontname = curfont->getActualName() +", " + FXStringVal(curfont->getSize()/10);
-  if(curfont->getWeight()!=0 && curfont->getWeight()!=FONTWEIGHT_NORMAL){
-    fontname += ", " + weightToString(curfont->getWeight());
+   FXString fontname = font[nr]->getActualName() +", " + FXStringVal(font[nr]->getSize()/10);
+  if(font[nr]->getWeight()!=0 && font[nr]->getWeight()!=FONTWEIGHT_NORMAL){
+    fontname += ", " + weightToString(font[nr]->getWeight());
     }
-  if (curfont->getSlant()!=0 && curfont->getSlant()!=FONTSLANT_REGULAR){
-    fontname += ", " + slantToString(curfont->getSlant());
+  if (font[nr]->getSlant()!=0 && font[nr]->getSlant()!=FONTSLANT_REGULAR){
+    fontname += ", " + slantToString(font[nr]->getSlant());
     }
  
  	if(nr==0)
 	{
-	fxmessage("font 1");
- 	 tabitem->setFont(font);
- 	 label1->setFont(font);
- 	 label2->setFont(font);
- 	 label3->setFont(font);
- 	 label4->setFont(font);
- 	 label5->setFont(font);
+	
+ 	 tabitem->setFont(font[nr]);
+ 	 label1->setFont(font[nr]);
+ 	 label2->setFont(font[nr]);
+ 	 label3->setFont(font[nr]);
+ 	 label4->setFont(font[nr]);
+ 	 label5->setFont(font[nr]);
 
- 	 menulabels[0]->setFont(font);
- 	 menulabels[1]->setFont(font);
- 	 menulabels[2]->setFont(font);
- 	 menulabels[3]->setFont(font);
- 	 menulabels[4]->setFont(font);
- 	 menulabels[5]->setFont(font);
+ 	 menulabels[0]->setFont(font[nr]);
+ 	 menulabels[1]->setFont(font[nr]);
+ 	 menulabels[2]->setFont(font[nr]);
+ 	 menulabels[3]->setFont(font[nr]);
+ 	 menulabels[4]->setFont(font[nr]);
+ 	 menulabels[5]->setFont(font[nr]);
 
-  	textfield1->setFont(font);
- 	fontbutton->setText(fontname);
+  	textfield1->setFont(font[nr]);
+ 	
   	}
- 	else if(nr==1)
-  	{
-	fxmessage("font 2");
-	fontbutton1->setText(fontname);
- 	}
-	else if(nr==2)
-  	{
-	fontbutton2->setText(fontname);
- 	}
-	else if(nr==3)
-  	{
-	fontbutton3->setText(fontname);
- 	}
+ 	
+	
+	fontbutton[nr]->setText(fontname);
+
   
   }
 
 long preferences::onChooseFont(FXObject*,FXSelector sel,void*)
 {
-FXFont* curfont;
+
 FXushort id=FXSELID(sel);
-int nr;
-	if(id==ID_CHOOSE_FONT)
-	{	
- 	curfont=font;
-	nr=0;
-  	}
- 	else if(id==ID_CHOOSE_CAPTIONFONT1)
-  	{
-	curfont=objmanager->captionfont1;
-	nr=1;
- 	}
-	else if(id==ID_CHOOSE_CAPTIONFONT2)
-  	{
-	curfont=objmanager->captionfont2;
-	nr=2;
- 	}
-	else if(id==ID_CHOOSE_CAPTIONFONT3)
-  	{
-	curfont=objmanager->captionfont3;
-	nr=3;
- 	}
+int nr=id-ID_CHOOSE_FONT;
+
 
   FXFontDialog dialog(this,"Select Font");
   FXFontDesc fontdescription;
-  curfont->getFontDesc(fontdescription);
-  strncpy(fontdescription.face,curfont->getActualName().text(),sizeof(fontdescription.face));
+  font[nr]->getFontDesc(fontdescription);
+  strncpy(fontdescription.face,font[nr]->getActualName().text(),sizeof(fontdescription.face));
   dialog.setFontSelection(fontdescription);
   if(dialog.execute(PLACEMENT_SCREEN))
   {
-    FXFont *oldfont=curfont;
+    FXFont *oldfont=font[nr];
     dialog.getFontSelection(fontdescription);
     
-    	if(nr==0)
-	{
- 	font=new FXFont(getApp(),fontdescription);
-	font->create();
-  	}
- 	else if(nr==1)
-  	{
-	objmanager->captionfont1=new FXFont(getApp(),fontdescription);
-	objmanager->captionfont1->create();
- 	}
-	else if(nr==2)
-  	{
-	objmanager->captionfont2=new FXFont(getApp(),fontdescription);
-	objmanager->captionfont2->create();
- 	}
-	else if(nr==3)
-  	{
-	objmanager->captionfont3=new FXFont(getApp(),fontdescription);
-	objmanager->captionfont3->create();
- 	}
-    
+
+ 	font[nr]=new FXFont(getApp(),fontdescription);
+	font[nr]->create();
+      
     setupFont(nr);
     delete oldfont;
     

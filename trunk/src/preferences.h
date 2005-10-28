@@ -134,7 +134,7 @@ class preferences:public FXDialogBox
   FXLabel           *menulabels[6];
   FXTextField       *textfield1;
   FXButton          *button1;
-  FXButton          *fontbutton,*fontbutton1,*fontbutton2,*fontbutton3;
+  FXButton          *fontbutton[4];
   FXSeparator       *sep1;
   FXSeparator       *sep2;
   FXSeparator       *sep3;
@@ -142,7 +142,7 @@ class preferences:public FXDialogBox
  
 private:
 
-  FXFont           *font;
+  FXFont           *font[4];
 
   FXuint            typingSpeed;
   FXuint            clickSpeed;
