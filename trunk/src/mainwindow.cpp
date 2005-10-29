@@ -428,6 +428,11 @@ MainWindow::~MainWindow ()
 void MainWindow::create ()
 {
     FXMainWindow::create ();
+    
+    string position=conf->readonestring ("/OpenspaceConfig/position");
+    if(position=="cursor")
+    show (PLACEMENT_CURSOR);
+    else
     show (PLACEMENT_SCREEN);
 }
 

@@ -59,6 +59,8 @@ private:
     bool maximize;
     int popup_x;
     int popup_y;
+    
+    int icons_size;
 
     cmddialog *dial;
     

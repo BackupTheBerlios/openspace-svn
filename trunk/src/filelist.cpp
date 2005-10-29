@@ -95,7 +95,7 @@ FXScrollArea::vertical->setBackColor(objmanager->maincolor);
     popupmenu = NULL;
     sortpop = NULL;
 
-   
+    icons_size=atoi(conf->readonestring ("/OpenspaceConfig/icon_size").c_str());   
 
     dropaction = DRAG_MOVE;   
 
@@ -689,7 +689,7 @@ clearItems ();
 		
 	    string graphtype=ext.substr(0,5);
 			
-	    if (graphtype=="image" && os_file.size < thumb_size && (this->getListStyle () & ICONLIST_BIG_ICONS) )
+	    if ((type == "local" || type == "search") && graphtype=="image" && os_file.size < thumb_size && (this->getListStyle () & ICONLIST_BIG_ICONS) )
 	    {
 
 		string file = dir+"/" +os_file.name;
@@ -697,7 +697,7 @@ clearItems ();
 		FXIconSource *source = new FXIconSource (getApp ());
 		FXIcon *ico = NULL;
 
-		ico = source->loadScaledIcon (fil, 64);
+		ico = source->loadScaledIcon (fil, icons_size);
 
 		if (ico)
 		{

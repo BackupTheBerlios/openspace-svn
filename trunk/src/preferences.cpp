@@ -39,179 +39,23 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC(SEL_COMMAND,preferences::ID_COLORS,preferences::onColorChanged),
 	FXMAPFUNC(SEL_CHANGED,preferences::ID_COLORS,preferences::onColorChanged),
 	FXMAPFUNCS(SEL_COMMAND,preferences::ID_CHOOSE_FONT,preferences::ID_CHOOSE_CAPTIONFONT3,preferences::onChooseFont),
+	FXMAPFUNC(SEL_COMMAND,preferences::ID_UPDATE_WINDOW_SIZE,preferences::updateWindowSize),
 	
 	
 	
 	
 };
 
-long preferences::close (FXObject * sender, FXSelector sel, void *ptr)
-{
-
-if(saveconfiguration)
-this->save();
-
-FXMessageBox about (this, "restart", "restart openspace to apply changes", NULL, MBOX_OK | DECOR_ALL);
-about.execute ();
-
-FXDialogBox::onCmdAccept(sender,sel,ptr);
-
-}
-
 
 FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesMap))
 
 
-long preferences::downloadInstallPlugin (FXObject * sender, FXSelector sel, void *)
+
+long preferences::updateWindowSize(FXObject * sender, FXSelector sel, void *)
 {
-FXushort id=FXSELID(sel);
-string file;
-
-	if(id==ID_DOWNLOAD_INSTALL_CMD_PLUGIN)
-	file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/commandPluginsList.txt";
-	else
-	file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/vfsPluginsList.txt";
-	
-	if(FXFile::exists(file.c_str()))
-	{
-	
-	std::string line;
-   	std::ifstream infile (file.c_str());
-
-  		  while (std::getline (infile, line))
-   		 {
-		string name;
-		string download;
-		std::stringstream parser (line);	
-		parser >> name;
-		parser >> download;
-		
-		if(id==ID_DOWNLOAD_INSTALL_CMD_PLUGIN)
-			if(name==availableCommandPluginsList->getItem(availableCommandPluginsList->getCurrentItem()).text())
-			{
-				if(name=="")
-				return 0;
-				
-			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget -N --connect-timeout=5  "+ download;
-			system(cmd.c_str());
-
-			
-			 command_container ct=commandsMap[name];
-   			 if(ct.name!="") // already exists
-   			 return 0;
-    
-   			  ct.name=name;
-  			  ct.rescan=false;
-  			  ct.capture=false;
-			  ct.type="PLUGIN";
-   			  commandsCombo->appendItem(ct.name.c_str());
-    			  commandsMap[name]=ct;   
- 		          commandsCombo->setCurrentItem (commandsCombo->getNumItems () - 1);
-   			  this->onCommandChange(NULL,0,NULL);
-    
-  			  fileTypeDefaultBox->appendItem(ct.name.c_str());
-  			  additionalCommands->appendItem(ct.name.c_str());
-			
-			break;
-			}
-		else
-			if(name==availableVfsPluginsList->getItem(availableVfsPluginsList->getCurrentItem()).text())
-			{
-				if(name=="")
-				return 0;
-			
-			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget -N --connect-timeout=5  "+ download;
-			system(cmd.c_str());
-
-			string plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libfilelist")+ name+".so";
-
-    
-   			 	void *dllhandle = fxdllOpen (plugin_path.c_str ());
-    				if (dllhandle)
-    				{
-	
-				filelist_base *(*gg) (void);
-				gg = (filelist_base * (*)(void)) fxdllSymbol (dllhandle, "get_filelist");
-				filelist_base *fb = gg ();	
-				
-				vfs v=fb->setup();
-				
-				conf->removestring ("/OpenspaceConfig/filelist/"+name);
-				conf->addstring("/OpenspaceConfig/filelist",name,"");
-				conf->addstring("/OpenspaceConfig/filelist/"+name,"type",v.type);
-				conf->addstring("/OpenspaceConfig/filelist/"+name,"properties","");
-				
-				
-				
-				vector <vfsheader_container>::iterator iter;
-				
-					for(iter=v.vfsheaders.begin();iter!=v.vfsheaders.end();iter++)
-					{
-					conf->addstring("/OpenspaceConfig/filelist/"+name+"/properties",iter->name,"");
-					conf->addstring("/OpenspaceConfig/filelist/"+name+"/properties/"+ iter->name,"width",iter->width);
-					conf->addstring("/OpenspaceConfig/filelist/"+name+"/properties/"+ iter->name,"type",iter->type);
-					}
-				vfsList->appendItem(name.c_str());
-			
-				}
-
-			}	
-			
-		
-		}
-	}
-
-
+mainwindow_width->setValue(getOwner ()->getWidth());
+mainwindow_height->setValue(getOwner ()->getHeight());
 }
-long preferences::updatePluginList (FXObject * sender, FXSelector sel, void *)
-{
-string cmd;
-
-FXushort id=FXSELID(sel);
-
-	if(id==ID_UPDATE_CMD_PLUGIN_LIST)
-	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget -N http://openspace.linux.pl/files/"+string(PACKAGE_VERSION)+"/x86/commandPluginsList.txt";
-	else
-	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget -N http://openspace.linux.pl/files/"+string(PACKAGE_VERSION)+"/x86/vfsPluginsList.txt";
-	
-	
-system(cmd.c_str());
-string file;
-	if(id==ID_UPDATE_CMD_PLUGIN_LIST)
-	file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/commandPluginsList.txt";
-	else
-	file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/vfsPluginsList.txt";
-	
-	
-	if(FXFile::exists(file.c_str()))
-	{
-	
-	std::string line;
-   	std::ifstream infile (file.c_str());
-
-  		while (std::getline (infile, line))
-   		{
-		string name;
-		string download;
-		std::stringstream parser (line);	
-		parser >> name;
-		parser >> download;
-			if(id==ID_UPDATE_CMD_PLUGIN_LIST)
-			{
-			availableCommandPluginsList->clearItems();
-			availableCommandPluginsList->appendItem(name.c_str());
-			}
-			else
-			{
-			availableVfsPluginsList->clearItems();
-			availableVfsPluginsList->appendItem(name.c_str());
-			}
-		}
-	}
-
-}
-
-
 
 preferences::preferences (FXWindow * owner):FXDialogBox (owner, "Preferences", DECOR_ALL, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4)
 {
@@ -329,25 +173,31 @@ objmanager=objectmanager::instance(getApp());
     FXSwitcher *switcher = new FXSwitcher (horizontal, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0);
 
 
-    FXVerticalFrame *mainpane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    FXVerticalFrame *mainpane = new FXVerticalFrame (switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y);
 
-    new FXLabel (mainpane, "Main settings", NULL, LAYOUT_LEFT);
     new FXButton (buttons, "Main Settings", NULL, switcher, FXSwitcher::ID_OPEN_FIRST, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y);
-
+    new FXLabel (mainpane, "Let program to autoconfigure file type associacion settings");
     FXHorizontalFrame *hoz1 = new FXHorizontalFrame (mainpane, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
     new FXButton (hoz1, "Semi-Auto configure", NULL, this, preferences::ID_MIME_APP);
     new FXButton (hoz1, "Full-Auto configure", NULL, this, preferences::ID_MIME_APP_AUTO);
+    new	FXSeparator(mainpane);
+    
 
-    FXHorizontalFrame *hoz2 = new FXHorizontalFrame (mainpane, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     
+    FXHorizontalFrame *hoz2 = new FXHorizontalFrame (mainpane, LAYOUT_FILL_X);
     new FXLabel (hoz2, "width:");
-    mainwindow_width = new FXTextField (hoz2, 5);
-    mainwindow_width->setText (conf->readonestring ("/OpenspaceConfig/mainwindow/width").c_str ());
+    mainwindow_width=new FXSpinner(hoz2,4);
+    mainwindow_width->setRange(1,2000);
+    mainwindow_width->setIncrement(1);
+    mainwindow_width->setValue(atoi(conf->readonestring ("/OpenspaceConfig/mainwindow/width").c_str ()));
     new FXLabel (hoz2, "height:");
-    mainwindow_height = new FXTextField (hoz2, 5);
-    mainwindow_height->setText (conf->readonestring ("/OpenspaceConfig/mainwindow/height").c_str ());
+    mainwindow_height=new FXSpinner(hoz2,4);
+    mainwindow_height->setRange(1,2000);
+    mainwindow_height->setIncrement(1);
+    mainwindow_height->setValue(atoi(conf->readonestring ("/OpenspaceConfig/mainwindow/height").c_str ()));
     
+    new FXButton (hoz2, "get current openspace size", NULL, this, preferences:: ID_UPDATE_WINDOW_SIZE);
+   
     
     new FXLabel (mainpane, "left directory:");
     leftdir = new FXTextField (mainpane, 50);
@@ -363,14 +213,21 @@ objmanager=objectmanager::instance(getApp());
     
     
     new FXLabel (mainpane, "maximum size of image file for generating thumbnails (in Bytes)");
-    thumbsize = new FXTextField (mainpane, 10);
-    thumbsize->setText(conf->readonestring ("/OpenspaceConfig/filelist/local/thumbs/size").c_str ());
+    
+    thumbsize=new FXSpinner(mainpane,8);
+    thumbsize->setRange(0,10000000);
+    thumbsize->setIncrement(1000);
+    thumbsize->setValue(atoi(conf->readonestring ("/OpenspaceConfig/filelist/local/thumbs/size").c_str ()));
     
     new FXLabel (mainpane, "icons theme:");
     iconsTheme=new FXListBox (mainpane);
     iconsTheme->setNumVisible(5);
 
-    
+    new FXLabel (mainpane, "openspace placement on startup");
+    placement=new FXListBox (mainpane);
+    placement->setNumVisible(2);
+    placement->appendItem("centered");
+    placement->appendItem("cursor");
 
  string iconsdir=conf->readonestring ("/OpenspaceConfig/path") +"/icons";
 	    struct dirent *dp;
@@ -402,8 +259,7 @@ dirp = opendir (iconsdir.c_str ());
 
 iconsTheme->setCurrentItem(iconsTheme->findItem(conf->readonestring ("/OpenspaceConfig/icons_theme").c_str()));
 
-//getShell()->getWidth()
-//getShell()->getHeight()
+
 
 
 //======================================================BUTTONS===========================================================
@@ -1339,8 +1195,7 @@ map < string, filetype_container >::iterator iter2;
 	ct.save();
     }
 
-    conf->saveonestring ("/OpenspaceConfig/mainwindow/width", mainwindow_width->getText ().text ());
-    conf->saveonestring ("/OpenspaceConfig/mainwindow/height", mainwindow_height->getText ().text ());
+
 
 conf->removestring ("/OpenspaceConfig/button_commands");
 conf->addstring("/OpenspaceConfig","button_commands","");
@@ -1382,12 +1237,13 @@ vector <toolbar_container>::iterator toolbar_iter;
 	
 		}
 
-
+conf->saveonestring ("/OpenspaceConfig/mainwindow/width", ntos(mainwindow_width->getValue()));
+conf->saveonestring ("/OpenspaceConfig/mainwindow/height",ntos(mainwindow_height->getValue()));
 
 conf->saveonestring ("/OpenspaceConfig/leftdir/dir",leftdir->getText().text());
 conf->saveonestring ("/OpenspaceConfig/rightdir/dir",rightdir->getText().text());
 conf->saveonestring ("/OpenspaceConfig/defaultdir/dir",defaultdir->getText().text());
-conf->saveonestring ("/OpenspaceConfig/filelist/local/thumbs/size",thumbsize->getText().text());
+conf->saveonestring ("/OpenspaceConfig/filelist/local/thumbs/size",ntos(thumbsize->getValue()));
 conf->saveonestring ("/OpenspaceConfig/icons_theme",iconsTheme->getItem(iconsTheme->getCurrentItem()).text());
 
 
@@ -1427,6 +1283,9 @@ conf->saveonestring ("/OpenspaceConfig/fonts/captionfont2",fontspec.text());
 
 fontspec=font[3]->getFont();
 conf->saveonestring ("/OpenspaceConfig/fonts/captionfont3",fontspec.text());  
+
+
+conf->saveonestring ("/OpenspaceConfig/position",placement->getItem (placement->getCurrentItem()).text());
 
 }
 
@@ -1967,3 +1826,167 @@ int nr=id-ID_CHOOSE_FONT;
     }
   return 1;
 }
+
+long preferences::close (FXObject * sender, FXSelector sel, void *ptr)
+{
+
+if(saveconfiguration)
+this->save();
+
+FXMessageBox about (this, "restart", "restart openspace to apply changes", NULL, MBOX_OK | DECOR_ALL);
+about.execute ();
+
+FXDialogBox::onCmdAccept(sender,sel,ptr);
+
+}
+
+
+long preferences::downloadInstallPlugin (FXObject * sender, FXSelector sel, void *)
+{
+FXushort id=FXSELID(sel);
+string file;
+
+	if(id==ID_DOWNLOAD_INSTALL_CMD_PLUGIN)
+	file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/commandPluginsList.txt";
+	else
+	file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/vfsPluginsList.txt";
+	
+	if(FXFile::exists(file.c_str()))
+	{
+	
+	std::string line;
+   	std::ifstream infile (file.c_str());
+
+  		  while (std::getline (infile, line))
+   		 {
+		string name;
+		string download;
+		std::stringstream parser (line);	
+		parser >> name;
+		parser >> download;
+		
+		if(id==ID_DOWNLOAD_INSTALL_CMD_PLUGIN)
+			if(name==availableCommandPluginsList->getItem(availableCommandPluginsList->getCurrentItem()).text())
+			{
+				if(name=="")
+				return 0;
+				
+			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget -N --connect-timeout=5  "+ download;
+			system(cmd.c_str());
+
+			
+			 command_container ct=commandsMap[name];
+   			 if(ct.name!="") // already exists
+   			 return 0;
+    
+   			  ct.name=name;
+  			  ct.rescan=false;
+  			  ct.capture=false;
+			  ct.type="PLUGIN";
+   			  commandsCombo->appendItem(ct.name.c_str());
+    			  commandsMap[name]=ct;   
+ 		          commandsCombo->setCurrentItem (commandsCombo->getNumItems () - 1);
+   			  this->onCommandChange(NULL,0,NULL);
+    
+  			  fileTypeDefaultBox->appendItem(ct.name.c_str());
+  			  additionalCommands->appendItem(ct.name.c_str());
+			
+			break;
+			}
+		else
+			if(name==availableVfsPluginsList->getItem(availableVfsPluginsList->getCurrentItem()).text())
+			{
+				if(name=="")
+				return 0;
+			
+			string cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget -N --connect-timeout=5  "+ download;
+			system(cmd.c_str());
+
+			string plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libfilelist")+ name+".so";
+
+    
+   			 	void *dllhandle = fxdllOpen (plugin_path.c_str ());
+    				if (dllhandle)
+    				{
+	
+				filelist_base *(*gg) (void);
+				gg = (filelist_base * (*)(void)) fxdllSymbol (dllhandle, "get_filelist");
+				filelist_base *fb = gg ();	
+				
+				vfs v=fb->setup();
+				
+				conf->removestring ("/OpenspaceConfig/filelist/"+name);
+				conf->addstring("/OpenspaceConfig/filelist",name,"");
+				conf->addstring("/OpenspaceConfig/filelist/"+name,"type",v.type);
+				conf->addstring("/OpenspaceConfig/filelist/"+name,"properties","");
+				
+				
+				
+				vector <vfsheader_container>::iterator iter;
+				
+					for(iter=v.vfsheaders.begin();iter!=v.vfsheaders.end();iter++)
+					{
+					conf->addstring("/OpenspaceConfig/filelist/"+name+"/properties",iter->name,"");
+					conf->addstring("/OpenspaceConfig/filelist/"+name+"/properties/"+ iter->name,"width",iter->width);
+					conf->addstring("/OpenspaceConfig/filelist/"+name+"/properties/"+ iter->name,"type",iter->type);
+					}
+				vfsList->appendItem(name.c_str());
+			
+				}
+
+			}	
+			
+		
+		}
+	}
+
+
+}
+long preferences::updatePluginList (FXObject * sender, FXSelector sel, void *)
+{
+string cmd;
+
+FXushort id=FXSELID(sel);
+
+	if(id==ID_UPDATE_CMD_PLUGIN_LIST)
+	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/ && wget -N http://openspace.linux.pl/files/"+string(PACKAGE_VERSION)+"/x86/commandPluginsList.txt";
+	else
+	cmd="cd "+ string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/ && wget -N http://openspace.linux.pl/files/"+string(PACKAGE_VERSION)+"/x86/vfsPluginsList.txt";
+	
+	
+system(cmd.c_str());
+string file;
+	if(id==ID_UPDATE_CMD_PLUGIN_LIST)
+	file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/cmddialog/commandPluginsList.txt";
+	else
+	file=string(FXFile::getUserDirectory ("").text ()) +"/.openspace/plugins/filelist/vfsPluginsList.txt";
+	
+	
+	if(FXFile::exists(file.c_str()))
+	{
+	
+	std::string line;
+   	std::ifstream infile (file.c_str());
+
+  		while (std::getline (infile, line))
+   		{
+		string name;
+		string download;
+		std::stringstream parser (line);	
+		parser >> name;
+		parser >> download;
+			if(id==ID_UPDATE_CMD_PLUGIN_LIST)
+			{
+			availableCommandPluginsList->clearItems();
+			availableCommandPluginsList->appendItem(name.c_str());
+			}
+			else
+			{
+			availableVfsPluginsList->clearItems();
+			availableVfsPluginsList->appendItem(name.c_str());
+			}
+		}
+	}
+
+}
+

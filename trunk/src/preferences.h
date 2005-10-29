@@ -37,13 +37,13 @@ class preferences:public FXDialogBox
     string actualvfs;
 
     bool saveconfiguration;
-    FXTextField * mainwindow_width;
-    FXTextField *mainwindow_height;
+    FXSpinner* mainwindow_width;
+    FXSpinner* mainwindow_height;
     FXTextField *leftdir,*rightdir,*defaultdir;
     FXTextField *font1,*font2,*font3;
     FXTextField *newCommandEdit;
     FXTextField *newShutterEdit;
-    FXTextField *thumbsize;
+    FXSpinner *thumbsize;
     FXListBox *commandsCombo;
     FXListBox *shortcutList;	
     FXListBox *shortcutMaskList;
@@ -60,6 +60,7 @@ class preferences:public FXDialogBox
     FXVerticalFrame *vfsPane;
     FXListBox *vfsList;
     FXList*headersList,*availableHeadersList;
+    FXListBox *placement;
     
     FXList *additionalCommands,*additionalCommandsAvailable,*additionalCommandsAvailableForButtons;
     FXList *shutterCommands;
@@ -185,6 +186,8 @@ private:
   FXDataTarget      target_tooltiptime;
   FXDataTarget      target_dragdelta;
   FXDataTarget      target_wheellines;
+  
+ 
 
     
     public:
@@ -225,6 +228,7 @@ private:
 	ID_CHOOSE_CAPTIONFONT1,
 	ID_CHOOSE_CAPTIONFONT2,
 	ID_CHOOSE_CAPTIONFONT3,
+	ID_UPDATE_WINDOW_SIZE,
 	ID_LAST,
     };
 
@@ -252,6 +256,7 @@ private:
     long preferences::onAddHeader (FXObject * sender, FXSelector sel, void *);
     long preferences::onColorChanged(FXObject*,FXSelector,void*);
     long preferences::onChooseFont(FXObject*,FXSelector,void*);
+    long preferences::updateWindowSize(FXObject * sender, FXSelector sel, void *);
     
     void preferences::setupColors(void);
     void preferences::setupFont(int nr);
