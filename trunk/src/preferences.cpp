@@ -40,8 +40,10 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC(SEL_CHANGED,preferences::ID_COLORS,preferences::onColorChanged),
 	FXMAPFUNCS(SEL_COMMAND,preferences::ID_CHOOSE_FONT,preferences::ID_CHOOSE_CAPTIONFONT3,preferences::onChooseFont),
 	FXMAPFUNC(SEL_COMMAND,preferences::ID_UPDATE_WINDOW_SIZE,preferences::updateWindowSize),
-	FXMAPFUNCS(SEL_COMMAND,preferences::ID_UP_BUTTON_COMMAND,preferences::ID_DOWN_BUTTON_COMMAND,preferences::onUpDownButtonCommand),
-	
+	FXMAPFUNCS(SEL_COMMAND,preferences::ID_UP_BUTTON_COMMAND,preferences::ID_DOWN_SHUTTER_COMMAND,preferences::onUpDown),
+	FXMAPFUNCS(SEL_COMMAND,preferences::ID_UP_VFS_HEADER,preferences::ID_DOWN_VFS_HEADER,preferences::onUpDownVfsHeader),
+	FXMAPFUNCS(SEL_COMMAND,preferences::ID_UP_COMMAND,preferences::ID_DOWN_COMMAND,preferences::onUpDownCommand),
+
 	
 	
 	
@@ -50,38 +52,148 @@ FXDEFMAP (preferences) preferencesMap[] =
 
 FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesMap))
 
-long preferences::onUpDownButtonCommand(FXObject * sender, FXSelector sel, void *)
+long preferences::onUpDownCommand(FXObject * sender, FXSelector sel, void *)
 {
+if(additionalCommands->getNumItems ()==0)
+return 0;
+
 FXushort id=FXSELID(sel);
-	if(id==ID_UP_BUTTON_COMMAND)
+	if(id==ID_UP_COMMAND)
 	{
-		if(buttonsList->getCurrentItem()!=0)
-		buttonsList->moveItem(buttonsList->getCurrentItem()-1,buttonsList->getCurrentItem());
+		if(additionalCommands->getCurrentItem()!=0)
+		additionalCommands->moveItem(additionalCommands->getCurrentItem()-1,additionalCommands->getCurrentItem());
 	}
 	else
 	{
-		if(buttonsList->getCurrentItem()!=buttonsList->getNumItems ()-1)
-		buttonsList->moveItem(buttonsList->getCurrentItem()+1,buttonsList->getCurrentItem());
+		if(additionalCommands->getCurrentItem()!=additionalCommands->getNumItems ()-1)
+		additionalCommands->moveItem(additionalCommands->getCurrentItem()+1,additionalCommands->getCurrentItem());
 	}
 
-string actual_toolbar=toolbarList->getItem(toolbarList->getCurrentItem()).text();
+filetype_container *ct_prev=&filetypesMap[currentFileType];
+ct_prev->commands.clear();
 
+	for (int i = 0; i < additionalCommands->getNumItems (); i++)
+	{
+	ct_prev->commands.push_back(additionalCommands->getItemText(i).text());
+	}
+
+
+
+}
+
+long preferences::onUpDownVfsHeader(FXObject * sender, FXSelector sel, void *)
+{
+
+if(headersList->getNumItems ()==0)
+return 0;
+
+	FXushort id=FXSELID(sel);
+	if(id==ID_UP_VFS_HEADER)
+	{
+		if(headersList->getCurrentItem()!=0)
+		headersList->moveItem(headersList->getCurrentItem()-1,headersList->getCurrentItem());
+	}
+	else
+	{
+		if(headersList->getCurrentItem()!=headersList->getNumItems ()-1)
+		headersList->moveItem(headersList->getCurrentItem()+1,headersList->getCurrentItem());
+	}
+
+this->onVfsChange(NULL,0,NULL);
+
+}
+
+long preferences::onUpDown(FXObject * sender, FXSelector sel, void *)
+{
+
+
+
+
+FXList*updownlist;
+FXListBox * box;
+bool up;
+
+FXushort id=FXSELID(sel);
+if(id==ID_UP_BUTTON_COMMAND)
+{
+updownlist=buttonsList;
+box=toolbarList;
+up=true;
+}
+else if(id==ID_DOWN_BUTTON_COMMAND)
+{
+updownlist=buttonsList;
+box=toolbarList;
+up=false;
+}
+else if(id==ID_UP_SHUTTER_COMMAND)
+{
+updownlist=shutterCommands;
+box=shutterList;
+up=true;
+}
+else if(id==ID_DOWN_SHUTTER_COMMAND)
+{
+updownlist=shutterCommands;
+box=shutterList;
+up=false;
+}
+
+if(updownlist->getNumItems ()==0)
+return 0;
+
+	if(up)
+	{
+		if(updownlist->getCurrentItem()!=0)
+		updownlist->moveItem(updownlist->getCurrentItem()-1,updownlist->getCurrentItem());
+	}
+	else
+	{
+		if(updownlist->getCurrentItem()!=updownlist->getNumItems ()-1)
+		updownlist->moveItem(updownlist->getCurrentItem()+1,updownlist->getCurrentItem());
+	}
+
+string actual_box=box->getItem(box->getCurrentItem()).text();
+
+if(id==ID_UP_BUTTON_COMMAND || id==ID_DOWN_BUTTON_COMMAND )
+{
 	vector <toolbar_container>::iterator iter;	
 	for(iter=toolbarVector.begin();iter!=toolbarVector.end(); iter++)
 		{
-			if(iter->toolbar==actual_toolbar)
+			if(iter->toolbar==actual_box)
 			{
 			toolbarVector.erase(iter);
 			iter=toolbarVector.begin();
 			}
 		}
 			
-	for (int i = 0; i < buttonsList->getNumItems (); i++)
+	for (int i = 0; i < updownlist->getNumItems (); i++)
 	{
-	string cmd=buttonsList->getItem(i)->getText().text();
-	toolbarVector.push_back(toolbar_container(actual_toolbar,cmd));
+	string cmd=updownlist->getItem(i)->getText().text();
+	toolbarVector.push_back(toolbar_container(actual_box,cmd));
 	}
+}	
+else if(id==ID_DOWN_SHUTTER_COMMAND || id==ID_UP_SHUTTER_COMMAND )
+{
+	vector <shutter_container>::iterator iter;	
+	for(iter=shutterVector.begin();iter!=shutterVector.end(); iter++)
+		{
+			if(iter->shutter==actual_box)
+			{
+			shutterVector.erase(iter);
+			iter=shutterVector.begin();
+			}
+		}
+			
+	for (int i = 0; i < updownlist->getNumItems (); i++)
+	{
+	string cmd=updownlist->getItem(i)->getText().text();
+	shutterVector.push_back(shutter_container(actual_box,cmd));
+	}
+}	
+	
 }
+
 
 long preferences::updateWindowSize(FXObject * sender, FXSelector sel, void *)
 {
@@ -367,11 +479,20 @@ new FXLabel (buttonsPane, "Shutter:", NULL, LAYOUT_LEFT);
        shutterList=new FXListBox (buttonsPane, this, ID_SHUTTER_CHANGE);
        shutterList->setNumVisible(10);
 
-shutterCommands=new FXList (buttonsPane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
-shutterCommands->setNumVisible(5);
+	hfx = new FXHorizontalFrame (buttonsPane,LAYOUT_FILL_X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+
+	shutterCommands=new FXList (hfx,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
+	shutterCommands->setNumVisible(5);
+
+ 	new FXLabel(hfx," ");
+	  
+	new FXArrowButton(hfx,this,ID_UP_SHUTTER_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_UP);
+	new FXArrowButton(hfx,this,ID_DOWN_SHUTTER_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_DOWN);   
+
 
 	new FXSeparator(buttonsPane);
-	FXHorizontalFrame *hfr=new FXHorizontalFrame (buttonsPane, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	FXHorizontalFrame *hfr=new FXHorizontalFrame (buttonsPane, LAYOUT_FILL_X | LAYOUT_FILL_Y);
 	new FXButton (hfr, "Remove shutter", NULL, this, ID_REMOVE_SHUTTER, FRAME_RAISED | ICON_ABOVE_TEXT );
 	new FXButton (hfr, "New shutter", NULL, this, ID_NEW_SHUTTER, FRAME_RAISED | ICON_ABOVE_TEXT);
 	newShutterEdit = new FXTextField (hfr, 20);
@@ -650,7 +771,8 @@ string res;
 	additionalCommands->setNumVisible(5);
 	FXVerticalFrame* vframe=new FXVerticalFrame (hzframe, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXLabel(vframe,"\n");
-	new FXLabel(vframe,"\n");
+	new FXArrowButton(vframe,this,ID_UP_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_UP);
+	new FXArrowButton(vframe,this,ID_DOWN_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_DOWN); 
 	new FXArrowButton(vframe,this,ID_ADD_COMMAND_ADDITIONAL,FRAME_RAISED|FRAME_THICK|ARROW_LEFT);
 	new FXArrowButton(vframe,this,ID_DEL_COMMAND_ADDITIONAL,FRAME_RAISED|FRAME_THICK|ARROW_RIGHT);
 	FXVerticalFrame* vframe1=new FXVerticalFrame (hzframe, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -984,9 +1106,13 @@ string res;
 	headersList->setNumVisible(5);
 	vframe=new FXVerticalFrame (hzframe, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXLabel(vframe,"\n");
-	new FXLabel(vframe,"\n");
+	new FXArrowButton(vframe,this,ID_UP_VFS_HEADER,FRAME_RAISED|FRAME_THICK|ARROW_UP);
+	new FXArrowButton(vframe,this,ID_DOWN_VFS_HEADER,FRAME_RAISED|FRAME_THICK|ARROW_DOWN); 
 	new FXArrowButton(vframe,this,ID_ADD_HEADER,FRAME_RAISED|FRAME_THICK|ARROW_LEFT);
 	new FXArrowButton(vframe,this,ID_DEL_HEADER,FRAME_RAISED|FRAME_THICK|ARROW_RIGHT);
+	
+	
+	
 	FXVerticalFrame *vframe1=new FXVerticalFrame (hzframe, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	new FXLabel(vframe1,"all available headers:");
 	availableHeadersList=new FXList (vframe1,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
@@ -1534,7 +1660,8 @@ long preferences::onNewCommand (FXObject * sender, FXSelector sel, void *)
     this->onCommandChange(NULL,0,NULL);
     
     fileTypeDefaultBox->appendItem(ct.name.c_str());
-    additionalCommands->appendItem(ct.name.c_str());
+    additionalCommandsAvailable->appendItem(ct.name.c_str());
+    additionalCommandsAvailableForButtons->appendItem(ct.name.c_str());
 
 
 }

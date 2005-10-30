@@ -231,6 +231,12 @@ private:
 	ID_UPDATE_WINDOW_SIZE,
 	ID_UP_BUTTON_COMMAND,
 	ID_DOWN_BUTTON_COMMAND,
+	ID_UP_SHUTTER_COMMAND,
+	ID_DOWN_SHUTTER_COMMAND,
+	ID_UP_VFS_HEADER,
+	ID_DOWN_VFS_HEADER,
+	ID_UP_COMMAND,
+	ID_DOWN_COMMAND,
 	ID_LAST,
     };
 
@@ -259,7 +265,10 @@ private:
     long preferences::onColorChanged(FXObject*,FXSelector,void*);
     long preferences::onChooseFont(FXObject*,FXSelector,void*);
     long preferences::updateWindowSize(FXObject * sender, FXSelector sel, void *);
-    long preferences::onUpDownButtonCommand(FXObject * sender, FXSelector sel, void *);
+    long preferences::onUpDown(FXObject * sender, FXSelector sel, void *);
+    long preferences::onUpDownVfsHeader(FXObject * sender, FXSelector sel, void *);
+    long preferences::onUpDownCommand(FXObject * sender, FXSelector sel, void *);
+
     
     void preferences::setupColors(void);
     void preferences::setupFont(int nr);
