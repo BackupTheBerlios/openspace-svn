@@ -45,7 +45,7 @@ private:
     vector < int >vector_type;
     vector < int >vector_width;
     
-
+    bool show_hidden_files;	
     string *fields_name;
     unsigned int *fields_type;
     unsigned int *fields_width;

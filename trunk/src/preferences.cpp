@@ -40,6 +40,7 @@ FXDEFMAP (preferences) preferencesMap[] =
 	FXMAPFUNC(SEL_CHANGED,preferences::ID_COLORS,preferences::onColorChanged),
 	FXMAPFUNCS(SEL_COMMAND,preferences::ID_CHOOSE_FONT,preferences::ID_CHOOSE_CAPTIONFONT3,preferences::onChooseFont),
 	FXMAPFUNC(SEL_COMMAND,preferences::ID_UPDATE_WINDOW_SIZE,preferences::updateWindowSize),
+	FXMAPFUNCS(SEL_COMMAND,preferences::ID_UP_BUTTON_COMMAND,preferences::ID_DOWN_BUTTON_COMMAND,preferences::onUpDownButtonCommand),
 	
 	
 	
@@ -49,7 +50,38 @@ FXDEFMAP (preferences) preferencesMap[] =
 
 FXIMPLEMENT (preferences, FXDialogBox, preferencesMap, ARRAYNUMBER (preferencesMap))
 
+long preferences::onUpDownButtonCommand(FXObject * sender, FXSelector sel, void *)
+{
+FXushort id=FXSELID(sel);
+	if(id==ID_UP_BUTTON_COMMAND)
+	{
+		if(buttonsList->getCurrentItem()!=0)
+		buttonsList->moveItem(buttonsList->getCurrentItem()-1,buttonsList->getCurrentItem());
+	}
+	else
+	{
+		if(buttonsList->getCurrentItem()!=buttonsList->getNumItems ()-1)
+		buttonsList->moveItem(buttonsList->getCurrentItem()+1,buttonsList->getCurrentItem());
+	}
 
+string actual_toolbar=toolbarList->getItem(toolbarList->getCurrentItem()).text();
+
+	vector <toolbar_container>::iterator iter;	
+	for(iter=toolbarVector.begin();iter!=toolbarVector.end(); iter++)
+		{
+			if(iter->toolbar==actual_toolbar)
+			{
+			toolbarVector.erase(iter);
+			iter=toolbarVector.begin();
+			}
+		}
+			
+	for (int i = 0; i < buttonsList->getNumItems (); i++)
+	{
+	string cmd=buttonsList->getItem(i)->getText().text();
+	toolbarVector.push_back(toolbar_container(actual_toolbar,cmd));
+	}
+}
 
 long preferences::updateWindowSize(FXObject * sender, FXSelector sel, void *)
 {
@@ -198,6 +230,7 @@ objmanager=objectmanager::instance(getApp());
     
     new FXButton (hoz2, "get current openspace size", NULL, this, preferences:: ID_UPDATE_WINDOW_SIZE);
    
+    new	FXSeparator(mainpane);
     
     new FXLabel (mainpane, "left directory:");
     leftdir = new FXTextField (mainpane, 50);
@@ -211,6 +244,7 @@ objmanager=objectmanager::instance(getApp());
     defaultdir = new FXTextField (mainpane, 50);
     defaultdir->setText(conf->readonestring ("/OpenspaceConfig/defaultdir/dir").c_str ());
     
+    new	FXSeparator(mainpane);
     
     new FXLabel (mainpane, "maximum size of image file for generating thumbnails (in Bytes)");
     
@@ -273,10 +307,14 @@ iconsTheme->setCurrentItem(iconsTheme->findItem(conf->readonestring ("/Openspace
 	toolbarList=new FXListBox (buttonsPane, this, ID_TOOLBAR_CHANGE);
         toolbarList->setNumVisible(10);
 
-	buttonsList=new FXList (buttonsPane,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
+FXHorizontalFrame *hfx = new FXHorizontalFrame (buttonsPane,LAYOUT_FILL_X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+	buttonsList=new FXList (hfx,NULL, 0,LIST_NORMAL| LAYOUT_FIX_WIDTH, 0, 0,250);
 	buttonsList->setNumVisible(5);
 
-     
+ 	new FXLabel(hfx," ");
+	new FXArrowButton(hfx,this,ID_UP_BUTTON_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_UP);
+	new FXArrowButton(hfx,this,ID_DOWN_BUTTON_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_DOWN);   
 	       	
 	     if(conf->openxpath("/OpenspaceConfig/toolbars")!=-1)
 	       {
@@ -310,6 +348,7 @@ toolbarList->setCurrentItem (toolbarList->getNumItems () - 1);
 	new FXLabel(buttonsHframe," ");
 	new FXArrowButton(buttonsHframe,this,ID_ADD_BUTTON_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_UP);
 	new FXArrowButton(buttonsHframe,this,ID_DEL_BUTTON_COMMAND,FRAME_RAISED|FRAME_THICK|ARROW_DOWN);
+	
 	
 	new FXLabel (buttonsPane, "All available commands:", NULL, LAYOUT_LEFT);
 	

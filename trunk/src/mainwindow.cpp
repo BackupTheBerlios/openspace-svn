@@ -61,6 +61,10 @@ MainWindow::MainWindow (FXApp * a):FXMainWindow (a, "openspace", NULL, NULL, DEC
     
 if(conf->loadconfig())
 {
+ if(conf->readonestring ("/OpenspaceConfig/version")==PACKAGE_VERSION)
+ {
+
+
     objmanager=objectmanager::instance(getApp());
     
     new FXToolTip (getApp (), TOOLTIP_NORMAL);
@@ -210,6 +214,15 @@ if(conf->loadconfig())
 		first_run=new FirstRun(this);
 		first_run->show (PLACEMENT_SCREEN);
 	}
+  }
+  else
+  {
+  new FXLabel(this,"Configuration file version mismatch");
+  new FXLabel(this,"Please remove .openspace/openspacerc file in your home directory");
+  conf->loadconfig(true);
+  delete conf;
+  conf=NULL;
+  }
 }
 else//configuration file broken
 {
@@ -428,8 +441,10 @@ MainWindow::~MainWindow ()
 void MainWindow::create ()
 {
     FXMainWindow::create ();
+    string position;
+    if(conf)
+    position=conf->readonestring ("/OpenspaceConfig/position");
     
-    string position=conf->readonestring ("/OpenspaceConfig/position");
     if(position=="cursor")
     show (PLACEMENT_CURSOR);
     else

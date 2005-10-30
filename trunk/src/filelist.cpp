@@ -91,11 +91,21 @@ FXScrollArea::vertical->setHiliteColor(FXRGB(255, 255, 255));
 FXScrollArea::vertical->setBorderColor(FXRGB(255, 255, 255));
 FXScrollArea::vertical->setBackColor(objmanager->maincolor);
 
+FXScrollArea::horizontal->setArrowColor(FXRGB(255, 255, 255));
+FXScrollArea::horizontal->setShadowColor(objmanager->maincolor);
+FXScrollArea::horizontal->setHiliteColor(FXRGB(255, 255, 255));
+FXScrollArea::horizontal->setBorderColor(FXRGB(255, 255, 255));
+FXScrollArea::horizontal->setBackColor(objmanager->maincolor);
+
     flags |= FLAG_ENABLED | FLAG_DROPTARGET;
     popupmenu = NULL;
     sortpop = NULL;
 
     icons_size=atoi(conf->readonestring ("/OpenspaceConfig/icon_size").c_str());   
+    if(conf->readonestring ("/OpenspaceConfig/show_hidden_files")=="true")
+    show_hidden_files=true;
+    else
+    show_hidden_files=false;
 
     dropaction = DRAG_MOVE;   
 
@@ -638,6 +648,9 @@ clearItems ();
 	if (os_file.name == "")
 	    break;
 
+	if(os_file.name[0]=='.' && show_hidden_files==false)
+	continue;
+	
 	FXColor color;
 	FXColor backcolor;
 	FXIcon *icon = NULL;
@@ -1224,7 +1237,17 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
        {
 	textfield->setText (path.c_str ());
        }
-
+       else if(command=="show_hide_hidden_files")
+       {
+       show_hidden_files=!show_hidden_files;
+       refresh();
+       
+      	 if(show_hidden_files)
+	 conf->saveonestring ("/OpenspaceConfig/show_hidden_files","true");
+	 else
+	 conf->saveonestring ("/OpenspaceConfig/show_hidden_files","false");
+       
+       }
 
 	
 	
@@ -2254,6 +2277,12 @@ void filelist::dropData (bool clipboard)
 	    if (*q == '\r')
 		q += 2;
 	    p = q;
+	    
+	    if(FXFile::directory(filesrc.text ())==path.c_str())
+	    {
+	    FXFREE (&data);
+	    return;
+	    }
 	}
 
 

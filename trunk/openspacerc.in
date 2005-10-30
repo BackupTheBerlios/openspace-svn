@@ -6,7 +6,7 @@
 	<first_run>true</first_run>
 	<position>center</position>
 	<icon_size>64</icon_size>
-	
+	<show_hidden_files>true</show_hidden_files>
 	  <fonts>
 	         <normalfont>arial,90,,,normal,iso8859-1,0</normalfont>
     		 <captionfont1>arial,90,bold,,normal,iso8859-1,0</captionfont1>
@@ -168,6 +168,10 @@
 			<text>details</text>
 		</change_view_detailed>
 		
+		<show_hide_hidden_files>
+			<type>INTERNAL</type>
+			<text>hidden files</text>
+		</show_hide_hidden_files>
 		
 		<clipboard_copy>
 			<type>INTERNAL</type>
@@ -440,6 +444,7 @@
 		
 		<panel>
 			<command>other</command>
+			<command>show_hide_hidden_files</command>
 		</panel>
 		
 		<programs>
