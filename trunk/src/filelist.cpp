@@ -1925,7 +1925,7 @@ long filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
     }
     else
     {
-	num = (int) ptr;
+	num = ((int)*((int*)ptr));
     }
 
     if (num == sort_nr)
