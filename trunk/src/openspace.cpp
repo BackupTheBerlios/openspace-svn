@@ -3,8 +3,9 @@
 #include "mainwindow.h"
 #include <unistd.h>
 
-//-----MAIN------------------------------------------------------------------------------------------------------------------------------------------ 
-//nothing special here, create and execute main window, creating needed directoris if doesn't exist
+//-----MAIN--------------------------------------------------------------------------------------- 
+//nothing special here, create and execute main window,
+//creating needed directoris if doesn't exist
 int main (int argc, char **argv)
 {
 
