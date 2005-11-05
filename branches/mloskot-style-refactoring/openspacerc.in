@@ -1,0 +1,555 @@
+<?xml version="1.0"?>
+<OpenspaceConfig>
+	<version>@PACKAGE_VERSION@</version>
+	<path>@prefix@/share/@PACKAGE@/</path>
+	<icons_theme>default</icons_theme>
+	<first_run>true</first_run>
+	<position>center</position>
+	<icon_size>64</icon_size>
+	<show_hidden_files>true</show_hidden_files>
+	  <fonts>
+	         <normalfont>arial,90,,,normal,iso8859-1,0</normalfont>
+    		 <captionfont1>arial,90,bold,,normal,iso8859-1,0</captionfont1>
+   		 <captionfont2>times,80,,,normal,iso8859-1,0</captionfont2>
+   		 <captionfont3>arial,90,,,normal,iso8859-1,0</captionfont3>
+ 	 </fonts>
+	
+	<colors>
+		  <main>#9186c9</main>
+  		  <base>#d6d7d6</base>
+   		  <border>Black</border>
+   		  <fore>Black</fore>
+   		  <hilite>Gray100</hilite>
+   		  <shadow>#8d8d8d</shadow>
+   		  <selfore>Gray100</selfore>
+  		  <selback>Navy</selback>
+  		  <tipfore>Black</tipfore>
+  		  <tipback>#ffffe1</tipback>
+  		  <selmenutext>Gray100</selmenutext>
+  		  <selmenuback>Navy</selmenuback>
+		
+	</colors>
+	<speed_delay>
+		  <typing_speed>1000</typing_speed>
+		  <typing_speed>1000</typing_speed>
+   		  <click_speed>400</click_speed>
+  		  <scroll_speed>80</scroll_speed>
+  		  <scroll_delay>600</scroll_delay>
+ 		  <blink_speed>500</blink_speed>
+  		  <anim_speed>10</anim_speed>
+  		  <menu_pause>400</menu_pause>
+  		  <tooltip_pause>800</tooltip_pause>
+ 		  <tooltip_time>3000</tooltip_time>
+ 		  <drag_delta>6</drag_delta>
+ 		  <wheel_lines>1</wheel_lines>
+	</speed_delay>
+	
+ 	<mainwindow>
+		<width>868</width>
+		<height>600</height>
+	</mainwindow>
+  
+  	<defaultdir>
+		<dir>{homedir}</dir>
+		<type>local</type>
+	</defaultdir>
+	
+  	<leftdir>
+		<dir>{homedir}</dir>
+		<type>local</type>
+	</leftdir>
+  
+  	<rightdir>
+		<dir>{homedir}</dir>
+		<type>local</type>
+	</rightdir>
+	<dirs>
+		<path>
+			<dir/>
+			<type/>
+		</path>
+	</dirs>
+	
+	<show_commands>false</show_commands>
+  	<panels>single</panels>
+  	
+  	<commands>
+	
+	
+		<run_shell>
+			<exec>xterm  -bg black -fg white</exec>
+			<icon>run_shell</icon>
+			<text>terminal</text>
+			<key>F3</key>
+		</run_shell>	
+		
+		<nedit>
+			<exec>nedit</exec>
+		</nedit>
+		
+	
+		
+		<edit_image>
+			<exec>gimp-2.0 {f}</exec>
+		</edit_image>
+		
+		<view_tar>
+			<exec>tar tf {f}</exec>
+			<options>capture</options>
+		</view_tar>
+		<extract_tar>
+			<exec>tar xf {f}</exec>
+			<options>rescan</options>
+		</extract_tar>
+		
+		
+		<extract_tar_bz2>
+			<exec>tar xjf {f}</exec>
+			<options>rescan</options>
+		</extract_tar_bz2>
+		
+		<extract_tar_gz>
+			<exec>tar xzf {f}</exec>
+			<options>rescan</options>
+		</extract_tar_gz>
+		<unrar>
+			<exec>unrar x {f}</exec>
+			<options>rescan</options>
+		</unrar>
+		<unzip>
+			<exec>unzip {f}</exec>
+			<options>rescan</options>
+		</unzip>
+		<copy>
+			<type>INTERNAL</type>
+			<key>F5</key>
+		</copy>
+		<move>
+			<type>INTERNAL</type>
+			<key>F6</key>
+		</move>
+		<select_all>
+			<type>INTERNAL</type>
+			<key>a</key>
+			<key_mask>control</key_mask>
+		</select_all>
+		<refresh>
+			<type>INTERNAL</type>
+			<icon>reload</icon>
+			<key>r</key>
+			<key_mask>control</key_mask>
+		</refresh>
+		
+		<home>
+			<type>INTERNAL</type>
+			<icon>home</icon>
+		</home>
+		
+		<dirup>
+			<type>INTERNAL</type>
+			<icon>dirup</icon>
+		</dirup>
+		
+		<change_view_mini_icons>
+			<type>INTERNAL</type>
+			<icon>smallicons</icon>
+			<text>small icons</text>
+		</change_view_mini_icons>
+		
+		<change_view_big_icons>
+			<type>INTERNAL</type>
+			<icon>bigicons</icon>
+			<text>big icons</text>
+		</change_view_big_icons>
+		
+		<change_view_detailed>
+			<type>INTERNAL</type>
+			<icon>details</icon>
+			<text>details</text>
+		</change_view_detailed>
+		
+		<show_hide_hidden_files>
+			<type>INTERNAL</type>
+			<text>hidden files</text>
+		</show_hide_hidden_files>
+		
+		<clipboard_copy>
+			<type>INTERNAL</type>
+			<icon>copy</icon>
+			<key>c</key>
+			<key_mask>control</key_mask>
+		</clipboard_copy>
+		<clipboard_paste>
+			<type>INTERNAL</type>
+			<icon>paste</icon>
+			<key>v</key>
+			<key_mask>control</key_mask>
+		</clipboard_paste>
+		<clipboard_cut>
+			<type>INTERNAL</type>
+			<icon>cut</icon>
+			<key>x</key>
+			<key_mask>control</key_mask>
+		</clipboard_cut>
+		
+		<switch_on_or_two_panel_mode>
+			<type>INTERNAL</type>
+			<icon>min</icon>
+		</switch_on_or_two_panel_mode>
+		
+		<get_dir>
+			<type>INTERNAL</type>
+			<text>get</text>
+		</get_dir>
+		
+		<goto_dir>
+			<type>INTERNAL</type>
+			<text>go</text>
+		</goto_dir>
+		
+		<filter_files>
+			<type>INTERNAL</type>
+			<icon>pattern</icon>
+		</filter_files>
+		
+		
+		<mkdir>
+			<type>PLUGIN</type>
+		</mkdir>
+		<access>
+			<type>PLUGIN</type>
+		</access>
+		<remove>
+			<type>INTERNAL</type>
+			<key>Delete</key>
+		</remove>
+		<rename>
+			<type>PLUGIN</type>
+		</rename>
+		<clone>
+			<type>PLUGIN</type>
+		</clone>
+		<symlink>
+			<type>PLUGIN</type>
+		</symlink>
+		<compress>
+			<type>PLUGIN</type>
+		</compress>
+		<editsymlink>
+			<type>PLUGIN</type>
+		</editsymlink>
+		<other>
+			<type>INTERNAL</type>
+			<icon>other</icon>
+		</other>
+		<ls>
+			<exec>ls</exec>
+			<options>capture</options>
+		</ls>
+		<special>
+			<type>INTERNAL</type>
+		</special>
+		<totalsize>
+			<type>INTERNAL</type>
+		</totalsize>
+		<new_file>
+			<type>INTERNAL</type>
+		</new_file>
+		<umount>
+			<exec>umount {f}</exec>
+		</umount>
+		<vfs_archive>
+			<type>VFS</type>
+			<exec>archive</exec>
+		</vfs_archive>
+		
+		
+	</commands>
+  
+  	
+  	<file_types>
+		
+		
+		<image>
+			<icon>image</icon>
+			<types>
+				<png>
+						<commands>
+							<command>edit_image</command>
+							<command>view_image</command>
+						</commands>
+					<icon>image</icon>	
+					
+				</png>
+			</types>	
+		</image>
+		
+		<video>
+			<icon>movie</icon>
+		</video>
+		
+		<audio>
+			<icon>music</icon>
+		</audio>
+		
+		<text>
+			<types>
+				<html>
+					<icon>html</icon>
+				</html>
+				<x-cPPsrc>
+					<icon>source</icon>
+				</x-cPPsrc>
+				<x-chdr>
+					<icon>header</icon>
+				</x-chdr>
+				<x-cPPhdr>
+					<icon>header</icon>
+				</x-cPPhdr>
+			</types>
+		</text>
+		
+		<application>
+			<types>
+				<pdf>
+					<icon>doc</icon>	
+					
+				</pdf>
+				
+				<vnd.sun.xml.writer>
+					<icon>word</icon>	
+				</vnd.sun.xml.writer>
+				
+				<vnd.ms-powerpoint>
+					<icon>presentation</icon>
+				</vnd.ms-powerpoint>
+				
+				<msword>
+					<icon>word</icon>	
+				</msword>
+				<vnd.sun.xml.calc>
+					<icon>word</icon>	
+				</vnd.sun.xml.calc>
+				<vnd.ms-excel>
+					<icon>word</icon>					
+				</vnd.ms-excel>
+				<x-sharedlib>
+					<icon>library</icon>	
+				</x-sharedlib>
+				<x-shellscript>
+					<icon>script</icon>
+				</x-shellscript>
+				<x-bzip-compressed-tar>
+					<default>vfs_archive</default>
+					<icon>compressed</icon>
+					<commands>
+							<command>extract_tar_bz2</command>
+					</commands>
+				</x-bzip-compressed-tar>
+				<x-compressed-tar>
+					<default>vfs_archive</default>
+					<icon>compressed</icon>
+					<commands>
+							<command>extract_tar_gz</command>
+					</commands>
+				</x-compressed-tar>
+				<x-rar>
+					<icon>compressed</icon>
+					<commands>
+							<command>unrar</command>
+					</commands>
+				</x-rar>
+				<zip>
+					<icon>compressed</icon>
+					<commands>
+							<command>unzip</command>
+					</commands>
+				</zip>
+							
+			</types>	
+		</application>	
+		<COMMON>
+		<types>
+		<dir>
+			<icon>directory</icon>
+			<color>#000064</color>
+			<backcolor>#9186c9</backcolor>
+			<commands>
+					<command>umount</command>
+			</commands>
+		</dir>
+		<executable>
+			<icon>executable</icon>
+			<color>#006464</color>
+		</executable>
+		<all>
+			<icon>unknown</icon>
+			<default>open_text</default>
+		</all>
+		<symlink>
+			<icon>symlink</icon>
+		</symlink>
+		</types>
+		</COMMON>
+		
+	</file_types>
+	
+	
+	<toolbars>
+		<toolbar1>
+			<command>home</command>
+			<command>dirup</command>
+			<command>refresh</command>
+			<command>SEPARATOR</command>
+			<command>change_view_mini_icons</command>
+			<command>change_view_big_icons</command>
+			<command>change_view_detailed</command>
+			<command>SEPARATOR</command>
+			<command>clipboard_copy</command>
+			<command>clipboard_cut</command>
+			<command>clipboard_paste</command>
+			<command>SEPARATOR</command>
+			<command>switch_on_or_two_panel_mode</command>
+			<command>SEPARATOR</command>
+			<command>get_dir</command>
+			<command>goto_dir</command>
+			<command>filter_files</command>
+		</toolbar1>
+		<toolbar2>
+			<command>run_shell</command>
+			<command>other</command>
+		</toolbar2>	
+	</toolbars>		
+	
+	
+	<shutter>
+		<common>
+			<command>copy</command>
+			<command>move</command>
+			<command>mkdir</command>
+			<command>access</command>
+			<command>remove</command>
+			<command>rename</command>
+			<command>clone</command>
+			<command>symlink</command>
+			<command>editsymlink</command>
+			<command>special</command>
+			<command>totalsize</command>
+			<command>new_file</command>
+			<command>ls</command>
+		</common>
+		<compress>
+			<command>compress</command>
+		</compress>
+		
+		<panel>
+			<command>other</command>
+			<command>show_hide_hidden_files</command>
+		</panel>
+		
+		<programs>
+			<command>run_shell</command>
+			<command>nedit</command>
+		</programs>
+	</shutter>
+	
+	<filelist>
+		<local>
+			<headers>
+				<header>size</header>
+				<header>owner</header>
+				<header>group</header>
+				<header>mode</header>
+				<header>modified</header>
+				
+				
+			</headers>
+			<style>big icons</style>
+			<properties>
+				<name>
+					<width>180</width>					
+				</name>
+				<size>
+					<width>80</width>
+					<display>MB</display>
+					<type>size</type>
+				</size>
+				<owner>
+					<width>80</width>
+				</owner>
+				<group>
+					<width>80</width>
+				</group>
+				<mode>
+					<width>80</width>
+				</mode>
+				<accessed>
+					<width>100</width>
+					<type>date</type>
+				</accessed>
+				<modified>
+					<width>100</width>
+					<type>date</type>
+				</modified>
+			</properties>
+			<thumbs>
+				<size>100000</size>
+			</thumbs>
+		</local>
+		
+		<ftp>
+			<type>network</type>
+			<headers>
+				<header>size</header>
+				<header>owner</header>
+				<header>group</header>
+				<header>mode</header>
+	
+			</headers>
+			<properties>
+				<name>
+					<width>400</width>					
+				</name>
+				<size>
+					<width>80</width>
+					<display>MB</display>
+					<type>size</type>
+				</size>
+				<owner>
+					<width>80</width>
+				</owner>
+				<group>
+					<width>80</width>
+				</group>
+				<mode>
+					<width>80</width>
+				</mode>
+			</properties>	
+		</ftp>
+		<search>
+			<type>search</type>
+			<properties>
+				<name>
+					<width>400</width>					
+				</name>
+			</properties>	
+		</search>
+		<archive>
+			<type>vfs</type>
+			<properties>
+				<name>
+					<width>400</width>					
+				</name>
+			</properties>	
+		</archive>
+		
+		
+		
+	</filelist>
+	
+	
+	
+	
+	
+	
+</OpenspaceConfig>
