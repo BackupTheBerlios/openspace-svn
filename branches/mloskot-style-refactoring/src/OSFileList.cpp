@@ -151,11 +151,11 @@ FXScrollArea::horizontal->setBackColor(objmanager->maincolor);
 
     if (type == "local")
     {
-    string size = conf->readonestring ("/OpenspaceConfig/OSFileList/local/thumbs/size");
+    string size = conf->readonestring ("/OpenspaceConfig/filelist/local/thumbs/size");
     thumb_size = atoi (size.c_str ());
     }
 
-    string style = conf->readonestring ("/OpenspaceConfig/OSFileList/" + this->type + "/style");
+    string style = conf->readonestring ("/OpenspaceConfig/filelist/" + this->type + "/style");
     if (style == "big icons")
     {
     this->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
@@ -303,7 +303,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     vector_name.push_back ("name");
     string wi;
 
-    if ((wi = conf->readonestring ("/OpenspaceConfig/OSFileList/"+type+"/properties/name/width")) != "")
+    if ((wi = conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/name/width")) != "")
     vector_width.push_back (atoi (wi.c_str ()));
     else
     vector_width.push_back (100);
@@ -315,14 +315,14 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
    // display_size = conf->readonestring ("/OpenspaceConfig/OSFileList/"+type+"/properties/name/display");
 
-    if (conf->openxpath ("/OpenspaceConfig/OSFileList/"+type+"/headers/header") != -1)
+    if (conf->openxpath ("/OpenspaceConfig/filelist/"+type+"/headers/header") != -1)
     {
     string res;
     while (conf->getnextstring (res))
     {
 
 
-        if ((wi = conf->readonestring ("/OpenspaceConfig/OSFileList/"+type+"/properties/" + res + "/width")) != "")
+        if ((wi = conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/" + res + "/width")) != "")
         vector_width.push_back (atoi (wi.c_str ()));
         else
         vector_width.push_back (40);
@@ -330,7 +330,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
         vector_name.push_back (res);
 
-        string fieldtype=conf->readonestring ("/OpenspaceConfig/OSFileList/"+type+"/properties/" + res + "/type");
+        string fieldtype=conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/" + res + "/type");
                 
         if (fieldtype == "size")
         vector_type.push_back (1);
