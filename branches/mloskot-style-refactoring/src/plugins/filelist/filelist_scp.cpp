@@ -7,7 +7,7 @@
 
 #include <fx.h>
 #include "filelist_scp.h"
-#include "../../sharedobjects.h"
+#include "../../OSObjectManager.h"
 
 
 #include <fstream>

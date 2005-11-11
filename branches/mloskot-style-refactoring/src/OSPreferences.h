@@ -27,8 +27,8 @@
 #ifndef __OSPREFERENCES_H__
 #define __OSPREFERENCES_H__
 
-#include "sharedobjects.h"
-#include "sharedFunctions.h"
+#include "OSObjectManager.h"
+#include "OSUtils.h"
 #include "MimeApp.h"
 
 #include "OSFileTypeInfo.h"

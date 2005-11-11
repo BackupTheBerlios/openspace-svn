@@ -1,5 +1,5 @@
 #include <fx.h>
-#include "../../cmddialog.h"
+#include "../../OSCMDDialogBox.h"
 
 #include <string>
 #include <fstream>

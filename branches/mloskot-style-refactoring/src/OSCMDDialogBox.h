@@ -58,13 +58,13 @@ public:    // Public method declarations
      * @param fb - 
      * @param src -
      */
-    OSCMDDialogBox( FXWindow * owner, OSVirtualFileSystemBase* fb = NULL, std::vector<std::string> src );
+    OSCMDDialogBox( FXWindow * owner, OSVirtualFileSystemBase* fb = NULL, std::vector<std::string> src = vector < string >() );
 
     /**
      * Destructor.
      * Must be virtual because of abstract class.
      */
-    virtual ~OSCMDDialobBox( void ) {};
+    virtual ~OSCMDDialogBox( void ) {};
 
     /**
      * Execute command.

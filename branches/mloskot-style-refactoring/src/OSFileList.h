@@ -29,12 +29,12 @@
 
 #include "OSVirtualFileSystemBase.h"
 #include "OSPathType.h"
-#include "thread_elem.h"
+#include "OSThreadExec.h"
 #include "OSFileTypeSymbol.h"
-#include "cmddialog.h"
+#include "OSCMDDialogBox.h"
 #include <string>
 #include <map>
-#include "preferences.h"
+#include "OSPreferences.h"
 
 //OSFileList
 class OSFileList: public FXIconList

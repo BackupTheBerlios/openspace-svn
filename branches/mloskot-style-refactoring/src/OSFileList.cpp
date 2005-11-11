@@ -39,7 +39,7 @@
 #include "fx.h"
 #include "osfile.h"
 // #include "FXDLL.h"
-#include "cmddialog.h"
+#include "OSCMDDialogBox.h"
 #include <fcntl.h>
 #include <sys/vfs.h>
 #include <fxkeys.h>
@@ -48,7 +48,7 @@
 #include <time.h>
 
 
-#include "sharedobjects.h"
+#include "OSObjectManager.h"
 
 #include "oslistitem.h"
 #include "shutter.h"

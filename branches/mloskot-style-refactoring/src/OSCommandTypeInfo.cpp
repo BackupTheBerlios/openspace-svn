@@ -26,7 +26,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "OSCommandTypeInfo.h"
-#include "sharedobjects.h"
+#include "OSObjectManager.h"
 #include <vector>
 #include <string>
 

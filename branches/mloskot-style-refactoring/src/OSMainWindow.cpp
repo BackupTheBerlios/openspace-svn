@@ -6,9 +6,9 @@ using namespace std;
 
 #include "fx.h" 
 // #include "FXPNGIcon.h"
-#include "thread_elem.h"
+#include "OSThreadExec.h"
 #include "OSFileList.h"
-#include "sharedobjects.h"
+#include "OSObjectManager.h"
 #include "mainwindow.h"
 #include "informationpanel.h"
 #include "OSConfigure.h"
