@@ -2,41 +2,58 @@
 #define FILELIST_archive
 
 #include "../../OSVirtualFileSystemBase.h"
+#include "../../OSVirtualFileSystemInfo.h"
+#include "../../OSPathType.h"
+#include "../../OSFile.h"
 
-class filelist_archive:public filelist_base
+#include <string>
+#include <vector>
+
+// Forward declarations
+class OSThreadExec;
+class OSConfigure;
+
+/**
+ * Archive plugin of type of file list.
+ *
+ * @todo Why all filelist_* plugins redeclare the same interface?
+ */
+class filelist_archive : public OSVirtualFileSystemBase
 {
  
 private:  
-    string archive_filename;
+    std::string archive_filename;
     FILE *pipe;
     char readbuf[1024];
-    vector < string > files;
-    vector < string >::iterator iter;
-    string dir;
-    string type;
- public:    
-    int filelist_archive::osopendir (string dir);
-    osfile filelist_archive::osreaddir (void);
-    int filelist_archive::mkdir (string dir, int mode = 0);
-    int filelist_archive::copy (thread_elem * te);
-    int filelist_archive::move (thread_elem * te);
-    int filelist_archive::remove (thread_elem * te);
-    int filelist_archive::rename (string orgname, string newname);
-    int filelist_archive::init (vector < string > *vector_name, pathtype pt, configure * conf);
-    int filelist_archive::mode (string file);
-    string filelist_archive::owner (string file);
-    string filelist_archive::group (string file);
-    bool filelist_archive::mode (string file, unsigned int, bool recursive);
-    bool filelist_archive::owner (string file, string, bool recursive);
-    bool filelist_archive::group (string file, string, bool recursive);
-    string filelist_archive::info (void);
-    void filelist_archive::totalsize (string path, unsigned long &size);
-    string filelist_archive::symlink (string path);
-    bool filelist_archive::symlink (string src, string dst);
-    bool filelist_archive::hardlink (string src, string dst);
-    vfs filelist_archive::setup (void);
-    int filelist_archive::quit (void);
+    std::vector<std::string> files;
+    std::vector<std::string>::iterator iter;
+    std::string dir;
+    std::string type;
     
-    int filelist_archive::filesoperation(string type,thread_elem * te);
+public:    
+
+    int osopendir (std::string dir);
+    OSFile osreaddir (void);
+    int mkdir (std::string dir, int mode = 0);
+    int copy (OSThreadExec* te);
+    int move (OSThreadExec* te);
+    int remove (OSThreadExec* te);
+    int rename (std::string orgname, std::string newname);
+    int init (std::vector<std::string>* vector_name, OSPathType pt, OSConfigure* conf);
+    int mode (std::string file);
+    std::string owner (std::string file);
+    std::string group (std::string file);
+    bool mode (std::string file, unsigned int, bool recursive);
+    bool owner (std::string file, std::string, bool recursive);
+    bool group (std::string file, std::string, bool recursive);
+    std::string info (void);
+    void totalsize (std::string path, unsigned long &size);
+    std::string symlink (std::string path);
+    bool symlink (std::string src, std::string dst);
+    bool hardlink (std::string src, std::string dst);
+    OSVirtualFileSystemInfo setup (void);
+    int quit (void);
+    
+    int filesoperation(std::string type, OSThreadExec* te);
 };
 #endif
