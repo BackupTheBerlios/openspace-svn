@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.59)
 AC_INIT(openspace, 0.1.1, http://openspace.linux.pl)
-AC_CONFIG_SRCDIR(src/openspace.cpp)
+AC_CONFIG_SRCDIR(src/main.cpp)
 AC_CONFIG_HEADER(src/config.h)
 AM_INIT_AUTOMAKE
 # Checks for programs.
