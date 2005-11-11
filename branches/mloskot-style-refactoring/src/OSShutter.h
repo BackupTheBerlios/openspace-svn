@@ -27,6 +27,8 @@
 #ifndef __OSSHUTTER_H__
 #define __OSSHUTTER_H__
 
+#include <fx.h>
+
 /**
  * Scroll view class.
  * This is used in OSFileList popup, this scrolling popup

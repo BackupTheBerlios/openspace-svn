@@ -24,8 +24,8 @@
 // Description:
 //
 /////////////////////////////////////////////////////////////////////////////
-#ifndef __OSFILETYPEINFO_H__
-#define __OSFILETYPEINFO_H__
+#ifndef __OSCOMMANDTYPEINFO_H__
+#define __OSCOMMANDTYPEINFO_H__
 
 #include <vector>
 #include <string>
@@ -75,4 +75,4 @@ public:
     std::string backcolor;
 };
 
-#endif // #ifndef __OSFILETYPEINFO_H__
+#endif // #ifndef __OSCOMMANDTYPEINFO_H__

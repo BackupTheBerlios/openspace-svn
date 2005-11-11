@@ -28,13 +28,13 @@
 #include "OSShutter.h"
 #include <fx.h>
 
-FXDEFMAP ( OSShutter ) shutterMap[] =
+FXDEFMAP ( OSShutter ) OSShutterMap[] =
 {
     FXMAPFUNC( SEL_MOUSEWHEEL, 0, OSShutter::onMouseWheel ),
     FXMAPFUNC( SEL_COMMAND, OSShutter::ID_OPEN_SHUTTERITEM, OSShutter::onOpenItem )
 };
 
-FXIMPLEMENT( OSShutter, FXShutter, shutterMap, ARRAYNUMBER ( shutterMap ) )
+FXIMPLEMENT( OSShutter, FXShutter, OSShutterMap, ARRAYNUMBER ( OSShutterMap ) )
         
 OSShutter::OSShutter( void )
 {

@@ -25,7 +25,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#include "OSOSMimeType.h"
+#include "OSMimeType.h"
 #include "OSUtils.h"
 
 #include <string>
@@ -35,6 +35,8 @@
 #include <list>
 #include <algorithm>
 #include <cctype>
+
+using namespace std;
 
 bool OSMimeType::isInitialized = false;
 std::map<std::string, std::string> OSMimeType::mimeMap;

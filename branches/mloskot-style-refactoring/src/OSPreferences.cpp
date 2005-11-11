@@ -40,7 +40,7 @@
 #include <sstream>
 #include "config.h"
 
-FXDEFMAP ( OSPreferences ) preferencesMap[] =
+FXDEFMAP ( OSPreferences ) OSPreferencesMap[] =
     {
         //________Message_Type_____________________ID____________Message_Handler_______
         //FXMAPFUNC (SEL_COMMAND, OSPreferences::ID_SAVE, OSPreferences::onSave),
@@ -74,7 +74,7 @@ FXDEFMAP ( OSPreferences ) preferencesMap[] =
     };
 
 
-FXIMPLEMENT ( OSPreferences, FXDialogBox, preferencesMap, ARRAYNUMBER ( preferencesMap ) )
+FXIMPLEMENT ( OSPreferences, FXDialogBox, OSPreferencesMap, ARRAYNUMBER ( OSPreferencesMap ) )
 
 long OSPreferences::onUpDownCommand( FXObject * sender, FXSelector sel, void * )
 {
@@ -93,7 +93,7 @@ long OSPreferences::onUpDownCommand( FXObject * sender, FXSelector sel, void * )
             additionalCommands->moveItem( additionalCommands->getCurrentItem() + 1, additionalCommands->getCurrentItem() );
     }
 
-    filetype_container *ct_prev = &filetypesMap[ currentFileType ];
+    OSFileTypeInfo *ct_prev = &filetypesMap[ currentFileType ];
     ct_prev->commands.clear();
 
     for ( int i = 0; i < additionalCommands->getNumItems (); i++ )
@@ -228,7 +228,7 @@ long OSPreferences::updateWindowSize( FXObject * sender, FXSelector sel, void * 
 OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Preferences", DECOR_ALL, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4 )
 {
 
-    objmanager = objectmanager::instance( getApp() );
+    objmanager = OSObjectManager::instance( getApp() );
     getApp() ->getNormalFont() ->create();
     FXFontDesc fontdescription;
     getApp() ->getNormalFont() ->getFontDesc( fontdescription );
@@ -460,7 +460,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
             toolbarList->appendItem( commandstr.c_str() );
             buttonsList->clearItems();
 
-            configure conflocal = *conf;
+            OSConfigure conflocal = *conf;
 
             if ( conflocal.openxpath( "/OpenspaceConfig/toolbars/" + commandstr + "/command" ) != -1 )
             {
@@ -530,7 +530,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
             shutterList->appendItem( commandstr.c_str() );
             shutterCommands->clearItems();
 
-            configure conflocal = *conf;
+            OSConfigure conflocal = *conf;
 
             if ( conflocal.openxpath( "/OpenspaceConfig/shutter/" + commandstr + "/command" ) != -1 )
             {
@@ -674,16 +674,16 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
 
 
-        command_container * ctlast;
+        OSCommandTypeInfo * ctlast;
         string res;
         while ( conf->getnextnode ( res ) )
         {
 
-            command_container ct;
+            OSCommandTypeInfo ct;
             ctlast = &ct;
             commandsCombo->appendItem( res.c_str (), objmanager->osicons[ "execute" ] );
             ct.name = res;
-            configure conflocal = *conf;
+            OSConfigure conflocal = *conf;
             ct.exec = conflocal.readonestring ( "/OpenspaceConfig/commands/" + res + "/exec" );
 
             string options = conflocal.readonestring ( "/OpenspaceConfig/commands/" + res + "/options" );
@@ -773,7 +773,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
     if ( conf->openxpath ( "/OpenspaceConfig/file_types" ) != -1 )
     {
-        filetype_container * ctlast;
+        OSFileTypeInfo * ctlast;
         new FXLabel( filetypePane, "File Type:" );
         fileTypeList = new FXListBox ( filetypePane, this, ID_FILETYPE_CHANGE );
         fileTypeList->setNumVisible( 30 );
@@ -825,9 +825,9 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
         allMime->setNumVisible( 30 );
         new FXButton ( filetypeGroup, "Add", NULL, this, OSPreferences::ID_ADD_FILETYPE );
 
-        MimeType::__initialize();
+        OSMimeType::_initialize();
         map<string, string>::iterator iter0;
-        for ( iter0 = MimeType::mimeMap.begin();iter0 != MimeType::mimeMap.end();iter0++ )
+        for ( iter0 = OSMimeType::mimeMap.begin();iter0 != OSMimeType::mimeMap.end();iter0++ )
         {
             if ( allMime->findItem( xml2mime( iter0->second ).c_str() ) == -1 )
             {
@@ -843,7 +843,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
         {
 
 
-            configure conflocal = *conf;
+            OSConfigure conflocal = *conf;
             if ( conflocal.openxpath ( "/OpenspaceConfig/file_types/" + res + "/types" ) != -1 )
             {
                 string res2;
@@ -851,7 +851,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
                 {
 
 
-                    filetype_container ct;
+                    OSFileTypeInfo ct;
                     ct.load( res + "/" + res2 );
                     fileTypeList->appendItem( xml2mime( ct.name ).c_str (), objmanager->osicons[ "unknown" ] );
 
@@ -861,7 +861,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
                 }
 
             }
-            filetype_container ct;
+            OSFileTypeInfo ct;
             ct.load( res );
             ctlast = &ct;
             fileTypeList->appendItem( xml2mime( ct.name ) .c_str (), objmanager->osicons[ "unknown" ] );
@@ -1345,7 +1345,7 @@ long OSPreferences::onAddFiletype ( FXObject * sender, FXSelector sel, void * )
 {
     string mime = allMime->getText().text();
 
-    filetype_container ct = filetypesMap[ mime ];
+    OSFileTypeInfo ct = filetypesMap[ mime ];
     if ( ct.name != "" )    // already exists
         return 0;
 
@@ -1367,19 +1367,19 @@ long OSPreferences::save ( void )
     this->onFileTypeChange( NULL, 0, NULL );
     this->onVfsChange( NULL, 0, NULL );
 
-    map < string, command_container >::iterator iter;
+    map < string, OSCommandTypeInfo >::iterator iter;
 
     for ( iter = commandsMap.begin (); iter != commandsMap.end (); iter++ )
     {
-        command_container ct = iter->second;
+        OSCommandTypeInfo ct = iter->second;
         ct.save();
     }
 
-    map < string, filetype_container >::iterator iter2;
+    map < string, OSFileTypeInfo >::iterator iter2;
 
     for ( iter2 = filetypesMap.begin (); iter2 != filetypesMap.end (); iter2++ )
     {
-        filetype_container ct = iter2->second;
+        OSFileTypeInfo ct = iter2->second;
         ct.save();
     }
 
@@ -1480,7 +1480,7 @@ long OSPreferences::save ( void )
 long OSPreferences::onCommandChange ( FXObject * sender, FXSelector sel, void * )
 {
 
-    command_container * ct_prev = &commandsMap[ currentCommandName ];
+    OSCommandTypeInfo * ct_prev = &commandsMap[ currentCommandName ];
     ct_prev->exec = commandsTextfield->getText().text();
     ct_prev->capture = commandsCapture->getCheck();
     ct_prev->rescan = commandsRescan->getCheck();
@@ -1489,7 +1489,7 @@ long OSPreferences::onCommandChange ( FXObject * sender, FXSelector sel, void * 
     ct_prev->key = shortcutList->getItem( shortcutList->getCurrentItem() ).text();
     ct_prev->key_mask = shortcutMaskList->getItem( shortcutMaskList->getCurrentItem() ).text();
 
-    command_container ct = commandsMap[ commandsCombo->getItem ( commandsCombo->getCurrentItem () ).text () ];
+    OSCommandTypeInfo ct = commandsMap[ commandsCombo->getItem ( commandsCombo->getCurrentItem () ).text () ];
 
     commandsRescan->setCheck( ct.rescan );
     commandsCapture->setCheck( ct.capture );
@@ -1532,7 +1532,7 @@ long OSPreferences::onCommandChange ( FXObject * sender, FXSelector sel, void * 
 long OSPreferences::onFileTypeChange ( FXObject * sender, FXSelector sel, void * )
 {
 
-    filetype_container * ct_prev = &filetypesMap[ currentFileType ];
+    OSFileTypeInfo * ct_prev = &filetypesMap[ currentFileType ];
     ct_prev->command = fileTypeDefaultBox->getItem( fileTypeDefaultBox->getCurrentItem() ).text();
 
     ct_prev->commands.clear();
@@ -1551,7 +1551,7 @@ long OSPreferences::onFileTypeChange ( FXObject * sender, FXSelector sel, void *
     ct_prev->backcolor = buffer;
     ct_prev->icon = iconsList2->getItem( iconsList2->getCurrentItem() ).text();
 
-    filetype_container ct = filetypesMap[ mime2xml( fileTypeList->getItem ( fileTypeList->getCurrentItem () ).text () ) ];
+    OSFileTypeInfo ct = filetypesMap[ mime2xml( fileTypeList->getItem ( fileTypeList->getCurrentItem () ).text () ) ];
     fileTypeDefaultBox->setCurrentItem( fileTypeDefaultBox->findItem( ct.command.c_str() ) );
     additionalCommands->clearItems();
 
@@ -1670,7 +1670,7 @@ long OSPreferences::onNewCommand ( FXObject * sender, FXSelector sel, void * )
     if ( !validateName( command_name ) )
         return 0;
 
-    command_container ct = commandsMap[ command_name ];
+    OSCommandTypeInfo ct = commandsMap[ command_name ];
     if ( ct.name != "" )    // already exists
         return 0;
 
@@ -1708,7 +1708,7 @@ long OSPreferences::onRemoveCommand ( FXObject * sender, FXSelector sel, void * 
 long OSPreferences:: onAdditionalCommandChange( FXObject * sender, FXSelector sel, void * )
 {
     FXushort id = FXSELID( sel );
-    filetype_container *ct_prev = &filetypesMap[ currentFileType ];
+    OSFileTypeInfo *ct_prev = &filetypesMap[ currentFileType ];
     if ( id == ID_ADD_COMMAND_ADDITIONAL )
     {
         ct_prev->commands.push_back( additionalCommandsAvailable->getItemText( additionalCommandsAvailable->getCurrentItem() ).text() );
@@ -1735,7 +1735,7 @@ long OSPreferences::onOpenMimeApp ( FXObject * sender, FXSelector sel, void * )
 {
     if ( mimeapp == NULL )
     {
-        mimeapp = new MimeApp( this );
+        mimeapp = new OSMimeApp( this );
 
 
         FXushort id = FXSELID( sel );
@@ -2070,7 +2070,7 @@ long OSPreferences::downloadInstallPlugin ( FXObject * sender, FXSelector sel, v
                     system( cmd.c_str() );
 
 
-                    command_container ct = commandsMap[ name ];
+                    OSCommandTypeInfo ct = commandsMap[ name ];
                     if ( ct.name != "" )    // already exists
                         return 0;
 
@@ -2104,18 +2104,18 @@ long OSPreferences::downloadInstallPlugin ( FXObject * sender, FXSelector sel, v
                         if ( dllhandle )
                         {
 
-                            filelist_base * ( *gg ) ( void );
-                            gg = ( filelist_base * ( * ) ( void ) ) fxdllSymbol ( dllhandle, "get_filelist" );
-                            filelist_base *fb = gg ();
+                            OSVirtualFileSystemBase * ( *gg ) ( void );
+                            gg = ( OSVirtualFileSystemBase * ( * ) ( void ) ) fxdllSymbol ( dllhandle, "get_filelist" );
+                            OSVirtualFileSystemBase *fb = gg ();
 
-                            vfs v = fb->setup();
+                            OSVirtualFileSystemInfo v = fb->setup();
 
                             conf->removestring ( "/OpenspaceConfig/filelist/" + name );
                             conf->addstring( "/OpenspaceConfig/filelist", name, "" );
                             conf->addstring( "/OpenspaceConfig/filelist/" + name, "type", v.type );
                             conf->addstring( "/OpenspaceConfig/filelist/" + name, "properties", "" );
 
-                            vector <vfsheader_container>::iterator iter;
+                            vector <OSVirtualFileSystemHeader>::iterator iter;
 
                             for ( iter = v.vfsheaders.begin();iter != v.vfsheaders.end();iter++ )
                             {

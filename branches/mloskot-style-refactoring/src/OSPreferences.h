@@ -38,23 +38,22 @@
 #include <string>
 #include <map>
 
-class OSCommandTypeInfo;
 
 class shutter_container
 {
 public:
     std::string shutter;
     std::string command;
-    shutter_container( std::string s, std::string c ) : shutter( s ), command( c ) {}}
-;
+    shutter_container( std::string s, std::string c ) : shutter( s ), command( c ) {}
+};
 
 class toolbar_container
 {
 public:
     std::string toolbar;
     std::string command;
-    toolbar_container( std::string s, std::string c ) : toolbar( s ), command( c ) {}}
-;
+    toolbar_container( std::string s, std::string c ) : toolbar( s ), command( c ) {}
+};
 
 //OSPreferences window, this is one of the most important things to be extended
 /**
@@ -68,10 +67,7 @@ FXDECLARE ( OSPreferences ) protected:
 
 private:
 
-    /**
-     * Default constructor.
-     */
-    OSPreferences( void );
+   
    
 
     std::string actualvfs;
@@ -275,6 +271,11 @@ public:
         ID_DOWN_COMMAND,
         ID_LAST,
     };
+
+    /**
+     * Default constructor.
+     */
+    OSPreferences( void ){}
 
     /**
      * Constructor.

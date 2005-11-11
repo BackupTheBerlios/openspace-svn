@@ -24,10 +24,10 @@
 // Description:
 //
 /////////////////////////////////////////////////////////////////////////////
-
+#include "OSFileTypeInfo.h"
 #include "OSMimeApp.h"
 #include "OSCommandTypeInfo.h"
-#include "OSFileTypeInfo.h"
+
 #include "OSObjectManager.h"
 #include "OSUtils.h"
 
