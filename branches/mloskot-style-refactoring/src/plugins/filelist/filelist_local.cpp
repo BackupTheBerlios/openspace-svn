@@ -5,11 +5,13 @@
 #define EXPORTFUNCTION extern "C"
 #endif
 
-#include <fx.h>
-#include <errno.h>
 #include "filelist_local.h"
-#include "../../sharedFunctions.h"
 #include "OSFXFile.h"
+#include "../../OSVirtualFileSystemHeader.h"
+#include "../../OSVirtualFileSystemInfo.h"
+#include "../../OSThreadExec.h"
+#include "../../OSFile.h"
+#include "../../OSUtils.h"
 
 #ifdef WIN32
 #define SEPARATOR "\\"
@@ -18,36 +20,39 @@
 #define SEPARATOR "/"
 #endif
 
+#include <fx.h>
+#include <errno.h>
 #include <fstream>
 #include <sstream>
 #include <sys/mount.h>
-
 #include <sys/types.h>
+#include <unistd.h>
 #include <pwd.h>
 #include <grp.h>
 
+#include <string>
+#include <vector>
 
-vector < string > name;
+// XXX - What this global is for?
+std::vector<std::string> name;
 
-
-vfs filelist_local::setup (void)
+OSVirtualFileSystemInfo filelist_local::setup (void)
 {
-	vfs v;
+	OSVirtualFileSystemInfo v;
 	
-	v.vfsheaders.push_back(vfsheader_container("name"));
-	v.vfsheaders.push_back(vfsheader_container("size","size"));
-	v.vfsheaders.push_back(vfsheader_container("owner"));
-	v.vfsheaders.push_back(vfsheader_container("group"));
-	v.vfsheaders.push_back(vfsheader_container("accessed","date"));
-	v.vfsheaders.push_back(vfsheader_container("modified","date"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("name"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("size","size"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("owner"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("group"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("accessed","date"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("modified","date"));
 	v.information="Local file list - default plugin";
 	v.version="1";
 	
-return v;	
-	
+    return v;	
 }
 
-int filelist_local::init (vector < string > *vector_name,pathtype pt, configure * conf)
+int filelist_local::init (std::vector<std::string> *vector_name, OSPathType pt, OSConfigure * conf)
 {
 
     fieldsnum = vector_name->size ();
@@ -57,10 +62,10 @@ int filelist_local::init (vector < string > *vector_name,pathtype pt, configure 
 }
 
 
-osfile filelist_local::osreaddir ()
+OSFile filelist_local::osreaddir ()
 {
 
-    osfile os_file;
+    OSFile os_file;
     if (dp == NULL)
     {
 	os_file.name = "";
@@ -104,7 +109,7 @@ osfile filelist_local::osreaddir ()
 	       fr = fopen (dirrec->d_name, "rt"); 
 	       fgets(line, sizeof(line), fr);   
 	       fclose(fr);  
-	       string con=line;
+	       std::string con=line;
 
 	       os_file.content=con.substr(0,con.size()-1);
 	     */
@@ -146,7 +151,7 @@ osfile filelist_local::osreaddir ()
 	{
 
 	    struct stat info;
-	    string str = "---------";
+	    std::string str = "---------";
 	    if (lstat (os_file.name.c_str (), &info) == 0)
 	    {
 
@@ -177,7 +182,7 @@ osfile filelist_local::osreaddir ()
 }
 
 
-int filelist_local::osopendir (string dir)
+int filelist_local::osopendir (std::string dir)
 {
     this->dir = dir;
 
@@ -191,10 +196,10 @@ int filelist_local::osopendir (string dir)
 	std::stringstream parser (line);
 	std::string command;
 	std::string field;
-	string partition;
+	std::string partition;
 	parser >> partition;
 
-	string type;
+	std::string type;
 
 	if (partition[0] != '#')
 	{
@@ -206,8 +211,8 @@ int filelist_local::osopendir (string dir)
 
 		parser >> type;
 		parser >> field;
-		string::size_type pos = field.find ("noauto", 0);
-		if (pos != string::npos)
+		std::string::size_type pos = field.find ("noauto", 0);
+		if (pos != std::string::npos)
 		{
 
 		    if (mount (partition.c_str (), command.c_str (), type.c_str (), MS_RDONLY, "") == 0)
@@ -230,32 +235,32 @@ int filelist_local::osopendir (string dir)
 
 }
 
-int filelist_local::mkdir (string dir, int mode)
+int filelist_local::mkdir (std::string dir, int mode)
 {
     FXTRACE ((5, "MKDIR\n"));
-    string d = this->dir + SEPARATOR + dir;
+    std::string d = this->dir + SEPARATOR + dir;
 
     return FXFile::createDirectory (d.c_str (), mode);
     return 0;
 }
 
-int filelist_local::copy (thread_elem * te)
+int filelist_local::copy ( OSThreadExec * te)
 {
     copymove (te, true);
 }
 
-int filelist_local::move (thread_elem * te)
+int filelist_local::move (OSThreadExec* te)
 {
     copymove (te, false);
 }
 
 
-int filelist_local::remove (thread_elem * te)
+int filelist_local::remove (OSThreadExec* te)
 {
 
     bool canc = false;
 
-    vector < string >::iterator iter;
+    std::vector<std::string>::iterator iter;
 
     for (iter = te->src.begin (); iter != te->src.end(); iter++)
     {
@@ -263,7 +268,7 @@ int filelist_local::remove (thread_elem * te)
 	if (!canc)
 	{
 
-	    string sr = (*iter);
+	    std::string sr = (*iter);
 	    if (FXFile::isDirectory (sr.c_str ()))
 		sr.append (SEPARATOR);
 	    FXTRACE ((5, "REMOVE: %s", sr.c_str ()));
@@ -285,7 +290,7 @@ int filelist_local::remove (thread_elem * te)
 
 }
 
-int filelist_local::rename (string orgname, string newname)
+int filelist_local::rename (std::string orgname, std::string newname)
 {
 
     FXString newfile = newname.c_str ();
@@ -320,17 +325,17 @@ int filelist_local::rename (string orgname, string newname)
 }
 
 
-int filelist_local::copymove (thread_elem * te, bool copy)
+int filelist_local::copymove (OSThreadExec* te, bool copy)
 {
 
     unsigned long size = 0;
 
  
-     vector < string >::iterator iter;
+     std::vector < std::string >::iterator iter;
 
     for (iter = te->src.begin (); iter != te->src.end(); iter++)
     {
-	string sr = (*iter);
+	std::string sr = (*iter);
 	if (FXFile::isDirectory (sr.c_str ()))
 	    sr.append (SEPARATOR);
 	totalsize (sr, size);
@@ -347,12 +352,12 @@ int filelist_local::copymove (thread_elem * te, bool copy)
     {
 	if (!canc)
 	{
-	    string ds = te->dst;
+	    std::string ds = te->dst;
 	    ds.append (SEPARATOR);
 	    ds.append (FXFile::name (iter->c_str ()).text ());
 
 
-	    string sr = (*iter);
+	    std::string sr = (*iter);
 	    if (FXFile::isDirectory (sr.c_str ()))
 		sr.append (SEPARATOR);
 
@@ -383,7 +388,7 @@ int filelist_local::copymove (thread_elem * te, bool copy)
 
 
 
-void filelist_local::totalsize (string path, unsigned long &size)
+void filelist_local::totalsize (std::string path, unsigned long &size)
 {
 
     if (FXFile::isDirectory (path.c_str ()))
@@ -400,7 +405,7 @@ void filelist_local::totalsize (string path, unsigned long &size)
 	    if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
 	    {
 
-		string file = path;
+		std::string file = path;
 		file.append (dp->d_name);
 #ifndef WIN32
 		lstat (file.c_str (), &status);
@@ -431,19 +436,19 @@ void filelist_local::totalsize (string path, unsigned long &size)
 
 }
 
-string filelist_local::info (void)
+std::string filelist_local::info (void)
 {
     return "";
 }
 
 
-int filelist_local::mode (string file)
+int filelist_local::mode (std::string file)
 {
     struct stat status;
     return !file.empty () && (::stat (file.c_str (), &status) == 0) ? status.st_mode : 0;
 }
 
-bool filelist_local::mode (string file, unsigned int mod, bool recursive)
+bool filelist_local::mode (std::string file, unsigned int mod, bool recursive)
 {
     FXTRACE ((5, "MODE"));
     if (!recursive)
@@ -453,7 +458,7 @@ bool filelist_local::mode (string file, unsigned int mod, bool recursive)
     else
     {
 	FXFile::mode (file.c_str (), mod);
-	string path = file + SEPARATOR;
+	std::string path = file + SEPARATOR;
 
 	if (FXFile::isDirectory (path.c_str ()))
 	{
@@ -470,7 +475,7 @@ bool filelist_local::mode (string file, unsigned int mod, bool recursive)
 		if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
 		{
 
-		    string file = path;
+		    std::string file = path;
 		    file.append (dp->d_name);
 		    mode (file, mod, true);
 
@@ -484,40 +489,36 @@ bool filelist_local::mode (string file, unsigned int mod, bool recursive)
     }
 }
 
-string filelist_local::owner (string file)
+std::string filelist_local::owner (std::string file)
 {
     return FXFile::owner (file.c_str ()).text ();
 }
-string filelist_local::group (string file)
+std::string filelist_local::group (std::string file)
 {
     return FXFile::group (file.c_str ()).text ();
 }
 
-bool filelist_local::owner (string file, string ownername, bool recursive)
+bool filelist_local::owner (std::string file, std::string ownername, bool recursive)
 {
     FXTRACE ((5, "MODE"));
     if (!recursive)
     {
-
-
-	passwd *p = getpwnam (ownername.c_str ());
-	return chown (file.c_str (), p->pw_uid, -1);
+	passwd *p = getpwnam( ownername.c_str() );
+	return chown (file.c_str(), p->pw_uid, (gid_t)-1);
 
     }
     else
     {
-	passwd *p = getpwnam (ownername.c_str ());
-	chown (file.c_str (), p->pw_uid, -1);
+	passwd *p = getpwnam(ownername.c_str ());
+	chown (file.c_str(), p->pw_uid, (gid_t)-1);
 
-	string path = file + SEPARATOR;
+	std::string path = file + SEPARATOR;
 
 	if (FXFile::isDirectory (path.c_str ()))
 	{
-
 	    struct stat status;
 	    struct dirent *dp;
 	    DIR *dirp;
-
 
 	    dirp = opendir (path.c_str ());
 
@@ -526,43 +527,36 @@ bool filelist_local::owner (string file, string ownername, bool recursive)
 		if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
 		{
 
-		    string file = path;
+		    std::string file = path;
 		    file.append (dp->d_name);
 		    owner (file, ownername, true);
-
 		}
 	    }
 
 	    closedir (dirp);
 	}
-
-
     }
 }
 
-bool filelist_local::group (string file, string groupname, bool recursive)
+bool filelist_local::group (std::string file, std::string groupname, bool recursive)
 {
     FXTRACE ((5, "MODE"));
     if (!recursive)
     {
 	::group * grp = getgrnam (groupname.c_str ());
-	return chown (file.c_str (), -1, grp->gr_gid);
-
-
+	return chown (file.c_str(), (uid_t)-1, grp->gr_gid);
     }
     else
     {
 	::group * grp = getgrnam (groupname.c_str ());
-	chown (file.c_str (), -1, grp->gr_gid);
-	string path = file + SEPARATOR;
+	chown (file.c_str(), (uid_t)-1, grp->gr_gid);
+	std::string path = file + SEPARATOR;
 
 	if (FXFile::isDirectory (path.c_str ()))
 	{
-
 	    struct stat status;
 	    struct dirent *dp;
 	    DIR *dirp;
-
 
 	    dirp = opendir (path.c_str ());
 
@@ -571,29 +565,26 @@ bool filelist_local::group (string file, string groupname, bool recursive)
 		if (dp->d_name[0] != '.' || (dp->d_name[1] != '\0' && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
 		{
 
-		    string file = path;
+		    std::string file = path;
 		    file.append (dp->d_name);
 		    group (file, groupname, true);
-
 		}
 	    }
 
 	    closedir (dirp);
 	}
-
-
     }
 }
 
-string filelist_local::symlink (string path)
+std::string filelist_local::symlink (std::string path)
 {
     return FXFile::symlink (path.c_str ()).text ();
 }
-bool filelist_local::symlink (string src, string dst)
+bool filelist_local::symlink (std::string src, std::string dst)
 {
     return FXFile::symlink (src.c_str (), dst.c_str ());
 }
-bool filelist_local::hardlink (string src, string dst)
+bool filelist_local::hardlink (std::string src, std::string dst)
 {
     return FXFile::link (src.c_str (), dst.c_str ());
 }
@@ -604,7 +595,7 @@ int filelist_local::quit (void)
     return 0;
 }
 
-EXPORTFUNCTION filelist_base *get_filelist (void)
+EXPORTFUNCTION OSVirtualFileSystemBase* get_filelist (void)
 {
     FXTRACE ((5, "PLUGIN LOAD\n"));
     return new filelist_local ();
