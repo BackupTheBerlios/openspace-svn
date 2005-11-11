@@ -31,6 +31,8 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 // Forward declarations
 class OSVirtualFileSystemBase;
 
@@ -64,7 +66,7 @@ public:    // Public method declarations
      * Destructor.
      * Must be virtual because of abstract class.
      */
-    virtual ~OSCMDDialogBox( void ) {};
+    virtual ~OSCMDDialogBox( void );
 
     /**
      * Execute command.

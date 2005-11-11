@@ -12,7 +12,7 @@ using namespace std;
 #include "mainwindow.h"
 #include "informationpanel.h"
 #include "OSConfigure.h"
-#include "oslistitem.h"
+#include "OSFileListItem.h"
 
 #include "FirstRun.h"
 

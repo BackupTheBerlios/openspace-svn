@@ -38,6 +38,8 @@
 #include <string>
 #include <map>
 
+class OSCommandTypeInfo;
+
 class shutter_container
 {
 public:
@@ -137,7 +139,7 @@ private:
     FXList*buttonsList;
 
     std::map <std::string, OSCommandTypeInfo> commandsMap;
-    std::map <std::string, OSFieldTypeInfo> filetypesMap;
+    std::map <std::string, OSFileTypeInfo> filetypesMap;
 
     std::vector <shutter_container> shutterVector;
     std::vector <toolbar_container> toolbarVector;

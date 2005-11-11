@@ -33,11 +33,11 @@
 #include <list>
 
 
-#include "MimeType.h"
+#include "OSMimeType.h"
 
 #include "OSPathType.h"
 #include "fx.h"
-#include "osfile.h"
+#include "OSFile.h"
 // #include "FXDLL.h"
 #include "OSCMDDialogBox.h"
 #include <fcntl.h>
@@ -50,8 +50,8 @@
 
 #include "OSObjectManager.h"
 
-#include "oslistitem.h"
-#include "shutter.h"
+#include "OSFileListItem.h"
+#include "OSShutter.h"
 
 #ifdef WIN32
 #define SEPARATOR "\\"

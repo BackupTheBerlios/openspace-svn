@@ -26,7 +26,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "OSPreferences.h"
-#include "MimeType.h"
+#include "OSMimeType.h"
 #include <fx.h>
 #include <sys/types.h>
 #include <sys/stat.h>

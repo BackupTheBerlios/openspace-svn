@@ -25,7 +25,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#include "OSMimeType.h"
+#include "OSOSMimeType.h"
 #include "OSUtils.h"
 
 #include <string>

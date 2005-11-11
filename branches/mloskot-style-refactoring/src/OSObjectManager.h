@@ -34,6 +34,8 @@
 #include <fx.h>
 #include <map>
 
+using namespace std;
+
 extern OSConfigure *conf;
 
 FXColor readcolor ( string col );
