@@ -1,0 +1,405 @@
+<?xml version="1.0"?>
+<OpenspaceConfig>
+	<version>@PACKAGE_VERSION@</version>
+	<path>@prefix@/share/@PACKAGE@/</path>
+	<icons_theme>default</icons_theme>
+	<first_run>true</first_run>
+	
+ 	<mainwindow>
+		<width>868</width>
+		<height>600</height>
+	</mainwindow>
+  
+  	<defaultdir>
+		<dir>{homedir}</dir>
+		<type>local</type>
+	</defaultdir>
+	
+  	<leftdir>
+		<dir>{homedir}</dir>
+		<type>local</type>
+	</leftdir>
+  
+  	<rightdir>
+		<dir>{homedir}</dir>
+		<type>local</type>
+	</rightdir>
+	<dirs>
+		<path>
+			<dir/>
+			<type/>
+		</path>
+	</dirs>
+	
+	<show_commands>false</show_commands>
+  	<panels>single</panels>
+  	
+  	<commands>
+	
+	
+		<run_shell>
+			<exec>xterm  -bg black -fg white</exec>
+			<icon>run_shell</icon>
+			<text>terminal</text>
+		</run_shell>	
+		
+		<nedit>
+			<exec>nedit</exec>
+		</nedit>
+		
+	
+		
+		<edit_image>
+			<exec>gimp-2.0 {f}</exec>
+		</edit_image>
+		
+		<view_tar>
+			<exec>tar tf {f}</exec>
+			<options>capture</options>
+		</view_tar>
+		<extract_tar>
+			<exec>tar xf {f}</exec>
+			<options>rescan</options>
+		</extract_tar>
+		
+		
+		<extract_tar_bz2>
+			<exec>tar xjf {f}</exec>
+			<options>rescan</options>
+		</extract_tar_bz2>
+		
+		<extract_tar_gz>
+			<exec>tar xzf {f}</exec>
+			<options>rescan</options>
+		</extract_tar_gz>
+		<unrar>
+			<exec>unrar x {f}</exec>
+			<options>rescan</options>
+		</unrar>
+		<unzip>
+			<exec>unzip {f}</exec>
+			<options>rescan</options>
+		</unzip>
+		<copy>
+			<type>INTERNAL</type>
+		</copy>
+		<move>
+			<type>INTERNAL</type>
+		</move>
+		<mkdir>
+			<type>PLUGIN</type>
+		</mkdir>
+		<access>
+			<type>PLUGIN</type>
+		</access>
+		<remove>
+			<type>INTERNAL</type>
+		</remove>
+		<rename>
+			<type>PLUGIN</type>
+		</rename>
+		<clone>
+			<type>PLUGIN</type>
+		</clone>
+		<symlink>
+			<type>PLUGIN</type>
+		</symlink>
+		<compress>
+			<type>PLUGIN</type>
+		</compress>
+		<editsymlink>
+			<type>PLUGIN</type>
+		</editsymlink>
+		<other>
+			<type>INTERNAL</type>
+			<icon>other</icon>
+		</other>
+		<ls>
+			<exec>ls</exec>
+			<options>capture</options>
+		</ls>
+		<special>
+			<type>INTERNAL</type>
+		</special>
+		<totalsize>
+			<type>INTERNAL</type>
+		</totalsize>
+		<new_file>
+			<type>INTERNAL</type>
+		</new_file>
+		<umount>
+			<exec>umount {f}</exec>
+		</umount>
+		<vfs_archive>
+			<type>VFS</type>
+			<exec>archive</exec>
+		</vfs_archive>
+		
+		
+	</commands>
+  
+  	<button_commands>
+		<command>run_shell</command>
+		<command>other</command>
+	</button_commands>
+  	<file_types>
+		
+		
+		<image>
+			<icon>image</icon>
+			<types>
+				<png>
+						<commands>
+							<command>edit_image</command>
+							<command>view_image</command>
+						</commands>
+					<icon>image</icon>	
+					
+				</png>
+			</types>	
+		</image>
+		
+		<video>
+			<icon>movie</icon>
+		</video>
+		
+		<audio>
+			<icon>music</icon>
+		</audio>
+		
+		<text>
+			<types>
+				<html>
+					<icon>html</icon>
+				</html>
+				<x-cPPsrc>
+					<icon>source</icon>
+				</x-cPPsrc>
+				<x-chdr>
+					<icon>header</icon>
+				</x-chdr>
+				<x-cPPhdr>
+					<icon>header</icon>
+				</x-cPPhdr>
+			</types>
+		</text>
+		
+		<application>
+			<types>
+				<pdf>
+					<icon>doc</icon>	
+					
+				</pdf>
+				
+				<vnd.sun.xml.writer>
+					<icon>word</icon>	
+				</vnd.sun.xml.writer>
+				
+				<vnd.ms-powerpoint>
+					<icon>presentation</icon>
+				</vnd.ms-powerpoint>
+				
+				<msword>
+					<icon>word</icon>	
+				</msword>
+				<vnd.sun.xml.calc>
+					<icon>word</icon>	
+				</vnd.sun.xml.calc>
+				<vnd.ms-excel>
+					<icon>word</icon>					
+				</vnd.ms-excel>
+				<x-sharedlib>
+					<icon>library</icon>	
+				</x-sharedlib>
+				<x-shellscript>
+					<icon>script</icon>
+				</x-shellscript>
+				<x-bzip-compressed-tar>
+					<default>vfs_archive</default>
+					<icon>compressed</icon>
+					<commands>
+							<command>extract_tar_bz2</command>
+					</commands>
+				</x-bzip-compressed-tar>
+				<x-compressed-tar>
+					<default>vfs_archive</default>
+					<icon>compressed</icon>
+					<commands>
+							<command>extract_tar_gz</command>
+					</commands>
+				</x-compressed-tar>
+				<x-rar>
+					<icon>compressed</icon>
+					<commands>
+							<command>unrar</command>
+					</commands>
+				</x-rar>
+				<zip>
+					<icon>compressed</icon>
+					<commands>
+							<command>unzip</command>
+					</commands>
+				</zip>
+							
+			</types>	
+		</application>	
+		<COMMON>
+		<types>
+		<dir>
+			<icon>directory</icon>
+			<color>-10223616</color>
+			<backcolor>-3570031</backcolor>
+			<commands>
+					<command>umount</command>
+			</commands>
+		</dir>
+		<executable>
+			<icon>executable</icon>
+			<color>-10198016</color>
+		</executable>
+		<all>
+			<icon>unknown</icon>
+			<default>open_text</default>
+		</all>
+		<symlink>
+			<icon>symlink</icon>
+		</symlink>
+		</types>
+		</COMMON>
+		
+	</file_types>
+	
+	
+			
+	
+	
+	<shutter>
+		<common>
+			<command>copy</command>
+			<command>move</command>
+			<command>mkdir</command>
+			<command>access</command>
+			<command>remove</command>
+			<command>rename</command>
+			<command>clone</command>
+			<command>symlink</command>
+			<command>editsymlink</command>
+			<command>special</command>
+			<command>totalsize</command>
+			<command>new_file</command>
+			<command>ls</command>
+		</common>
+		<compress>
+			<command>compress</command>
+		</compress>
+		
+		<panel>
+			<command>other</command>
+		</panel>
+		
+		<programs>
+			<command>run_shell</command>
+			<command>nedit</command>
+		</programs>
+	</shutter>
+	
+	<filelist>
+		<local>
+			<headers>
+				<header>size</header>
+				<header>owner</header>
+				<header>group</header>
+				<header>mode</header>
+				<header>modified</header>
+				
+				
+			</headers>
+			<style>big icons</style>
+			<properties>
+				<name>
+					<width>180</width>					
+				</name>
+				<size>
+					<width>80</width>
+					<display>MB</display>
+					<type>size</type>
+				</size>
+				<owner>
+					<width>80</width>
+				</owner>
+				<group>
+					<width>80</width>
+				</group>
+				<mode>
+					<width>80</width>
+				</mode>
+				<accessed>
+					<width>100</width>
+					<type>date</type>
+				</accessed>
+				<modified>
+					<width>100</width>
+					<type>date</type>
+				</modified>
+			</properties>
+			<thumbs>
+				<size>100000</size>
+			</thumbs>
+		</local>
+		
+		<ftp>
+			<type>network</type>
+			<headers>
+				<header>size</header>
+				<header>owner</header>
+				<header>group</header>
+				<header>mode</header>
+	
+			</headers>
+			<properties>
+				<name>
+					<width>400</width>					
+				</name>
+				<size>
+					<width>80</width>
+					<display>MB</display>
+					<type>size</type>
+				</size>
+				<owner>
+					<width>80</width>
+				</owner>
+				<group>
+					<width>80</width>
+				</group>
+				<mode>
+					<width>80</width>
+				</mode>
+			</properties>	
+		</ftp>
+		<search>
+			<type>search</type>
+			<properties>
+				<name>
+					<width>400</width>					
+				</name>
+			</properties>	
+		</search>
+		<archive>
+			<type>vfs</type>
+			<properties>
+				<name>
+					<width>400</width>					
+				</name>
+			</properties>	
+		</archive>
+		
+		
+		
+	</filelist>
+	
+	
+	
+	
+	
+	
+</OpenspaceConfig>

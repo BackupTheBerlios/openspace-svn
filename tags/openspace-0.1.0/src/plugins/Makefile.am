@@ -1,0 +1,1 @@
+SUBDIRS=filelist cmddialog
