@@ -26,6 +26,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "OSFileTypeInfo.h"
+#include "OSObjectManager.h"
 #include <vector>
 #include <string>
 
@@ -63,7 +64,7 @@ bool OSFileTypeInfo::load( std::string name )
     color = conf->readonestring( path + "/color" ) ;
     backcolor = conf->readonestring( path + "/backcolor" ) ;
 
-    configure conflocal2 = *conf;
+    OSConfigure conflocal2 = *conf;
     if ( conflocal2.openxpath( path + "/commands/command" ) != -1 )
     {
         std::string commandstr;

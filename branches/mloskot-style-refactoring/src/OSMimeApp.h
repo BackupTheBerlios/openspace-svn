@@ -31,7 +31,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-
+#include <fx.h>
 /**
  * @todo Add missing class documentation.
  */

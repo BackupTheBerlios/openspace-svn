@@ -72,17 +72,7 @@ private:
      * Default constructor.
      */
     OSPreferences( void );
-
-    /**
-     * Constructor.
-     * @param owner - pointer to parent window.
-     */
-    OSPreferences ( FXWindow * owner );
-
-    /**
-     * Destructor.
-     */
-    virtual ~OSPreferences( void );
+   
 
     std::string actualvfs;
 
@@ -285,6 +275,17 @@ public:
         ID_DOWN_COMMAND,
         ID_LAST,
     };
+
+    /**
+     * Constructor.
+     * @param owner - pointer to parent window.
+     */
+    OSPreferences ( FXWindow * owner );
+    
+    /**
+     * Destructor.
+     */
+    virtual ~OSPreferences( void );
 
     long save ( void );
     long onCommandChange ( FXObject * sender, FXSelector sel, void * );

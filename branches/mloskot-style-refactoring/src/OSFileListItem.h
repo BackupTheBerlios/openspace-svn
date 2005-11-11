@@ -27,6 +27,7 @@
 #ifndef __OSFILELISTITEM_H__
 #define __OSFILELISTITEM_H__
 
+#include <fx.h>
 #include "OSFile.h"
 
 /**
@@ -50,7 +51,7 @@ public:
     /**
      * Constructor.
      */
-    OSFileListItem( FXIconList* list, osfile osf, FXColor col, FXColor backcol, FXIcon* ic1 = NULL, FXIcon* ic2 = NULL );
+    OSFileListItem( FXIconList* list, OSFile osf, FXColor col, FXColor backcol, FXIcon* ic1 = NULL, FXIcon* ic2 = NULL );
     
     OSFile osf;
     FXColor color;

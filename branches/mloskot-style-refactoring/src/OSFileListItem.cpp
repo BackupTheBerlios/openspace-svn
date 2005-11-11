@@ -29,7 +29,7 @@
 #include "OSFileList.h"
 #include "OSFile.h"
 
-#include <fx.h>
+
 
 
 // Constants definition
@@ -142,8 +142,8 @@ void OSFileListItem::drawBigIcon( const FXIconList* list, FXDC& dc, FXint x, FXi
 
 
     //=============CHANGES==========================================
-    FXFont *font = ( ( filelist* ) list ) ->objmanager->captionfont1;
-    FXFont *font1 = ( ( filelist* ) list ) ->objmanager->captionfont2;
+    FXFont *font = ( ( OSFileList* ) list ) ->objmanager->captionfont1;
+    FXFont *font1 = ( ( OSFileList* ) list ) ->objmanager->captionfont2;
 
 
     register FXint len, dw, s, space, xt, yt, xi, yi;
@@ -248,11 +248,11 @@ void OSFileListItem::drawBigIcon( const FXIconList* list, FXDC& dc, FXint x, FXi
         }
         if ( osf.type & EXECUTABLE && !( osf.type & FOLDER ) )
         {
-            dc.drawIcon( ( ( filelist* ) list ) ->specialicons[ 4 ], xi, y + 4 + font->getFontHeight() );
+            dc.drawIcon( ( ( OSFileList* ) list ) ->specialicons[ 4 ], xi, y + 4 + font->getFontHeight() );
         }
         else if ( osf.type & SYMLINK )
         {
-            dc.drawIcon( ( ( filelist* ) list ) ->specialicons[ 5 ], xi, y + 4 + font->getFontHeight() );
+            dc.drawIcon( ( ( OSFileList* ) list ) ->specialicons[ 5 ], xi, y + 4 + font->getFontHeight() );
         }
 
         if ( osf.content != "" )
@@ -267,8 +267,8 @@ void OSFileListItem::drawBigIcon( const FXIconList* list, FXDC& dc, FXint x, FXi
 
 FXint OSFileListItem::getHeight( const FXIconList* list ) const
 {
-    FXFont * font = ( ( filelist* ) list ) ->objmanager->captionfont1;
-    FXFont *font1 = ( ( filelist* ) list ) ->objmanager->captionfont2;
+    FXFont * font = ( ( OSFileList* ) list ) ->objmanager->captionfont1;
+    FXFont *font1 = ( ( OSFileList* ) list ) ->objmanager->captionfont2;
 
     register FXuint options = list->getListStyle();
     register FXint ih = 0, th = 0, h = 0, firstth = 0;
@@ -311,8 +311,8 @@ FXint OSFileListItem::getHeight( const FXIconList* list ) const
 FXint OSFileListItem::hitItem( const FXIconList* list, FXint rx, FXint ry, FXint rw, FXint rh ) const
 {
 
-    FXFont * font = ( ( filelist* ) list ) ->objmanager->captionfont1;
-    FXFont *font1 = ( ( filelist* ) list ) ->objmanager->captionfont2;
+    FXFont * font = ( ( OSFileList* ) list ) ->objmanager->captionfont1;
+    FXFont *font1 = ( ( OSFileList* ) list ) ->objmanager->captionfont2;
 
     register FXint iw = 0, tw = 0, ih = 0, th = 0, ss = 0, ix, iy, tx, ty, w, h, sp, tlen;
     register FXuint options = list->getListStyle();

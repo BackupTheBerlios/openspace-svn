@@ -84,7 +84,7 @@ int main ( int argc, char **argv )
     FXApp *application = new FXApp ( "openspace", NULL );
     application->init ( argc, argv );
 
-    new MainWindow ( application );
+    new OSMainWindow ( application );
     application->create ();
     return application->run ();
 }

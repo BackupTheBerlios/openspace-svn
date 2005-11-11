@@ -25,7 +25,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#include "OSOSMimeApp.h"
+#include "OSMimeApp.h"
 #include "OSCommandTypeInfo.h"
 #include "OSFileTypeInfo.h"
 #include "OSObjectManager.h"
@@ -47,14 +47,14 @@
 #endif
 
 
-FXDEFMAP ( OSMimeApp ) MimeAppMap[] =
+FXDEFMAP ( OSMimeApp ) OSMimeAppMap[] =
     {
         //________Message_Type_____________________ID____________Message_Handler_______
         FXMAPFUNCS ( SEL_COMMAND, OSMimeApp::ID_NEXT, OSMimeApp::ID_PREVIOUS, OSMimeApp::onNextPrevious ),
         FXMAPFUNC ( SEL_CLOSE, 0, OSMimeApp::onClose ),
     };
 
-FXIMPLEMENT ( OSMimeApp, FXDialogBox, MimeAppMap, ARRAYNUMBER ( MimeAppMap ) )
+FXIMPLEMENT ( OSMimeApp, FXDialogBox, OSMimeAppMap, ARRAYNUMBER ( OSMimeAppMap ) )
 
 OSMimeApp::OSMimeApp( void )
 {
@@ -196,7 +196,7 @@ void OSMimeApp::save( std::string mime, std::string program )
 
         if ( reg2.empty() || ( command_major != command_exec && reg2 != command_name ) )
         {
-            filetype_container ct = filetype_container();
+            OSFileTypeInfo ct = OSFileTypeInfo();
             ct.load( mime );
             ct.command = command_name;
             ct.save();
@@ -216,7 +216,7 @@ void OSMimeApp::save( std::string mime, std::string program )
         if ( reg.empty() || cmd != command_exec )
         {
 
-            filetype_container ct = filetype_container();
+            OSFileTypeInfo ct = OSFileTypeInfo();
             ct.load( mime );
             ct.command = command_name;
             ct.save();
@@ -227,6 +227,6 @@ void OSMimeApp::save( std::string mime, std::string program )
         }
     }
 
-    command_container cm = command_container( command_name, command_exec );
+    OSFileTypeInfo cm = OSFileTypeInfo( command_name, command_exec );
     cm.save();
 }

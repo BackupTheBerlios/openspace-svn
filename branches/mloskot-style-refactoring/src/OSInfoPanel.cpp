@@ -25,10 +25,12 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#include "OSInfoPanel.h"
-
 #include <fx.h>
 #include <string>
+#include "OSInfoPanel.h"
+
+
+
 
 
 OSInfoPanel::OSInfoPanel( FXComposite * p, std::string command )

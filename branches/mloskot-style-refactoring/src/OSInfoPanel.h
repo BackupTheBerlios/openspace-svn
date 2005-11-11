@@ -28,13 +28,9 @@
 #define __OSINFOPANEL_H__
 
 #include <string>
+#include <fx.h>
 
-// Forward declarations
-class FXButton;
-class FXComposite;
-class FXLabel;
-class FXProgressBar;
-class FXVerticalFrame;
+
     
 /**
  * Info panel class.

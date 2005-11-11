@@ -38,7 +38,7 @@
 #include "OSPathType.h"
 #include "fx.h"
 #include "OSFile.h"
-// #include "FXDLL.h"
+#include "FXDLL.h"
 #include "OSCMDDialogBox.h"
 #include <fcntl.h>
 #include <sys/vfs.h>
@@ -61,39 +61,39 @@
 #endif
 #include <sys/mount.h>
 
-FXDEFMAP (filelist) filelistMap[] =
+FXDEFMAP (OSFileList) OSFileListMap[] =
 {
-FXMAPFUNC (SEL_FOCUSIN, filelist::ID_ICO, filelist::setFocus),
-    FXMAPFUNC (SEL_FOCUSOUT, filelist::ID_ICO, filelist::lostFocus),
-    FXMAPFUNC (SEL_DOUBLECLICKED, filelist::ID_ICO, filelist::openfile),
-    FXMAPFUNC (SEL_CLICKED, filelist::ID_ICO, filelist::click),
-    FXMAPFUNC (SEL_MIDDLEBUTTONPRESS, filelist::ID_ICO, filelist::gotoparentdir),
-    FXMAPFUNC (SEL_RIGHTBUTTONRELEASE, filelist::ID_ICO, filelist::onPopup),
-    FXMAPFUNCS (SEL_COMMAND, filelist::ID_LAST, filelist::ID_LAST + 50, filelist::file_operation),
-    FXMAPFUNCS (SEL_COMMAND, filelist::ID_LAST+51, filelist::ID_LAST + 100, filelist::key_shortcut),
-    FXMAPFUNC (SEL_COMMAND, filelist::ID_TEXTFIELD_RUN, filelist::texfield_run),    
-    FXMAPFUNC (SEL_COMMAND, filelist::ID_HEADER_CHANGE, filelist::onCmdHeader),
-    FXMAPFUNC (SEL_COMMAND, filelist::ID_SORT_CHANGE, filelist::onCmdHeader),
-    FXMAPFUNC (SEL_LEAVE, filelist::ID_HEADER_CHANGE, filelist::onCmdResize),   
-    FXMAPFUNC (SEL_COMMAND, cmddialog::ID_COMMAND, filelist::onCommand),
-    FXMAPFUNC (SEL_COMMAND, cmddialog::ID_CANCEL_COMMAND, filelist::onCommandCancel),
-    FXMAPFUNC (SEL_DRAGGED, 0, filelist::onDragged),
-    FXMAPFUNC (SEL_DND_ENTER, 0, filelist::onDNDEnter),
-    FXMAPFUNC (SEL_DND_LEAVE, 0, filelist::onDNDLeave),
-    FXMAPFUNC (SEL_DND_DROP, 0, filelist::onDNDDrop),
-    FXMAPFUNC (SEL_DND_MOTION, 0, filelist::onDNDMotion),
-    FXMAPFUNC (SEL_DND_REQUEST, 0, filelist::onDNDRequest),
-    FXMAPFUNC (SEL_BEGINDRAG, 0, filelist::onBeginDrag),
-    FXMAPFUNC (SEL_ENDDRAG, 0, filelist::onEndDrag),
-    //FXMAPFUNC (SEL_CLIPBOARD_LOST, 0, filelist::onClipboardLost), 
-    //FXMAPFUNC (SEL_CLIPBOARD_GAINED, 0, filelist::onClipboardGained), 
-    FXMAPFUNC (SEL_CLIPBOARD_REQUEST, 0, filelist::onClipboardRequest),
+FXMAPFUNC (SEL_FOCUSIN, OSFileList::ID_ICO, OSFileList::setFocus),
+    FXMAPFUNC (SEL_FOCUSOUT, OSFileList::ID_ICO, OSFileList::lostFocus),
+    FXMAPFUNC (SEL_DOUBLECLICKED, OSFileList::ID_ICO, OSFileList::openfile),
+    FXMAPFUNC (SEL_CLICKED, OSFileList::ID_ICO, OSFileList::click),
+    FXMAPFUNC (SEL_MIDDLEBUTTONPRESS, OSFileList::ID_ICO, OSFileList::gotoparentdir),
+    FXMAPFUNC (SEL_RIGHTBUTTONRELEASE, OSFileList::ID_ICO, OSFileList::onPopup),
+    FXMAPFUNCS (SEL_COMMAND, OSFileList::ID_LAST, OSFileList::ID_LAST + 50, OSFileList::file_operation),
+    FXMAPFUNCS (SEL_COMMAND, OSFileList::ID_LAST+51, OSFileList::ID_LAST + 100, OSFileList::key_shortcut),
+    FXMAPFUNC (SEL_COMMAND, OSFileList::ID_TEXTFIELD_RUN, OSFileList::texfield_run),    
+    FXMAPFUNC (SEL_COMMAND, OSFileList::ID_HEADER_CHANGE, OSFileList::onCmdHeader),
+    FXMAPFUNC (SEL_COMMAND, OSFileList::ID_SORT_CHANGE, OSFileList::onCmdHeader),
+    FXMAPFUNC (SEL_LEAVE, OSFileList::ID_HEADER_CHANGE, OSFileList::onCmdResize),   
+    FXMAPFUNC (SEL_COMMAND, OSCMDDialogBox::ID_COMMAND, OSFileList::onCommand),
+    FXMAPFUNC (SEL_COMMAND, OSCMDDialogBox::ID_CANCEL_COMMAND, OSFileList::onCommandCancel),
+    FXMAPFUNC (SEL_DRAGGED, 0, OSFileList::onDragged),
+    FXMAPFUNC (SEL_DND_ENTER, 0, OSFileList::onDNDEnter),
+    FXMAPFUNC (SEL_DND_LEAVE, 0, OSFileList::onDNDLeave),
+    FXMAPFUNC (SEL_DND_DROP, 0, OSFileList::onDNDDrop),
+    FXMAPFUNC (SEL_DND_MOTION, 0, OSFileList::onDNDMotion),
+    FXMAPFUNC (SEL_DND_REQUEST, 0, OSFileList::onDNDRequest),
+    FXMAPFUNC (SEL_BEGINDRAG, 0, OSFileList::onBeginDrag),
+    FXMAPFUNC (SEL_ENDDRAG, 0, OSFileList::onEndDrag),
+    //FXMAPFUNC (SEL_CLIPBOARD_LOST, 0, OSFileList::onClipboardLost), 
+    //FXMAPFUNC (SEL_CLIPBOARD_GAINED, 0, OSFileList::onClipboardGained), 
+    FXMAPFUNC (SEL_CLIPBOARD_REQUEST, 0, OSFileList::onClipboardRequest),
         
     };
 
-FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
-     bool filelist::ascend = true;
-     bool filelist::strcase = false;
+FXIMPLEMENT (OSFileList, FXIconList, OSFileListMap, ARRAYNUMBER (OSFileListMap))
+     bool OSFileList::ascend = true;
+     bool OSFileList::strcase = false;
 
 
 
@@ -105,10 +105,10 @@ FXIMPLEMENT (filelist, FXIconList, filelistMap, ARRAYNUMBER (filelistMap))
 
 
 
-filelist::filelist (FXComposite * p, pathtype pt):
+OSFileList::OSFileList (FXComposite * p, OSPathType pt):
 FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
 {
-objmanager=objectmanager::instance(getApp());
+objmanager=OSObjectManager::instance(getApp());
  
 FXScrollArea::vertical->setArrowColor(FXRGB(255, 255, 255));
 FXScrollArea::vertical->setShadowColor(objmanager->maincolor);
@@ -146,11 +146,11 @@ FXScrollArea::horizontal->setBackColor(objmanager->maincolor);
 
     if (type == "local")
     {
-    string size = conf->readonestring ("/OpenspaceConfig/filelist/local/thumbs/size");
+    string size = conf->readonestring ("/OpenspaceConfig/OSFileList/local/thumbs/size");
     thumb_size = atoi (size.c_str ());
     }
 
-    string style = conf->readonestring ("/OpenspaceConfig/filelist/" + this->type + "/style");
+    string style = conf->readonestring ("/OpenspaceConfig/OSFileList/" + this->type + "/style");
     if (style == "big icons")
     {
     this->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
@@ -190,7 +190,7 @@ int command_num=0;
              
 
          
-         configure conflocal=*conf;      
+         OSConfigure conflocal=*conf;      
          
           if(conflocal.openxpath("/OpenspaceConfig/toolbars/"+commandstr+"/command")!=-1)
               {
@@ -253,7 +253,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     
 
 
-    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/filelist/libfilelist" + this->type;
+    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/OSFileList/libfilelist" + this->type;
 
 
 #ifdef WIN32
@@ -264,7 +264,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
     if(!FXFile::exists(plugin_path.c_str()))
     {
-    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libfilelist")+ this->type;
+    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/OSFileList/libfilelist")+ this->type;
     #ifdef WIN32
     plugin_path += ".dll";
     #else
@@ -276,11 +276,11 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     if (dllhandle)
     {
     
-    filelist_base *(*gg) (void);
-    gg = (filelist_base * (*)(void)) fxdllSymbol (dllhandle, "get_filelist");
+    OSVirtualFileSystemBase *(*gg) (void);
+    gg = (OSVirtualFileSystemBase * (*)(void)) fxdllSymbol (dllhandle, "get_filelist");
     fb = gg ();
 
-    FXIconListSortFunc sortfunc = filelist::cmp;
+    FXIconListSortFunc sortfunc = OSFileList::cmp;
     setSortFunc (sortfunc);
 
 //label=new FXLabel (p,this->path.c_str());
@@ -288,17 +288,17 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     
 
     //bottomframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
-    textfield = new FXTextField (toolbar, 30, this, filelist::ID_TEXTFIELD_RUN);
+    textfield = new FXTextField (toolbar, 30, this, OSFileList::ID_TEXTFIELD_RUN);
 
     dial = NULL;
     processing = false;
-    this->pt = new pathtype (pt);
+    this->pt = new OSPathType (pt);
     
     
     vector_name.push_back ("name");
     string wi;
 
-    if ((wi = conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/name/width")) != "")
+    if ((wi = conf->readonestring ("/OpenspaceConfig/OSFileList/"+type+"/properties/name/width")) != "")
     vector_width.push_back (atoi (wi.c_str ()));
     else
     vector_width.push_back (100);
@@ -308,16 +308,16 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
     int counter = 1;
 
-   // display_size = conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/name/display");
+   // display_size = conf->readonestring ("/OpenspaceConfig/OSFileList/"+type+"/properties/name/display");
 
-    if (conf->openxpath ("/OpenspaceConfig/filelist/"+type+"/headers/header") != -1)
+    if (conf->openxpath ("/OpenspaceConfig/OSFileList/"+type+"/headers/header") != -1)
     {
     string res;
     while (conf->getnextstring (res))
     {
 
 
-        if ((wi = conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/" + res + "/width")) != "")
+        if ((wi = conf->readonestring ("/OpenspaceConfig/OSFileList/"+type+"/properties/" + res + "/width")) != "")
         vector_width.push_back (atoi (wi.c_str ()));
         else
         vector_width.push_back (40);
@@ -325,7 +325,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
         vector_name.push_back (res);
 
-        string fieldtype=conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/" + res + "/type");
+        string fieldtype=conf->readonestring ("/OpenspaceConfig/OSFileList/"+type+"/properties/" + res + "/type");
                 
         if (fieldtype == "size")
         vector_type.push_back (1);
@@ -344,7 +344,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     if (1)
     {
         processing = true;
-        thread_elem *el = new thread_elem (fb, "init", "none");
+        OSThreadExec *el = new OSThreadExec ((void*)fb, string("init"), string("none"));
         start_thread (el);
     }
     else
@@ -354,14 +354,14 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     }
 }
 
-long filelist::texfield_run (FXObject * obj, FXSelector sel, void *ptr)
+long OSFileList::texfield_run (FXObject * obj, FXSelector sel, void *ptr)
 {
 
 system(textfield->getText ().text());
 
 }
 
-filelist::~filelist ()
+OSFileList::~OSFileList ()
 {
     
 
@@ -373,8 +373,8 @@ filelist::~filelist ()
 }
 
 //--------------------------------------------------------------------
-//initializing fuction, get availible headers from filelist plugin
-bool filelist::init ()
+//initializing fuction, get availible headers from OSFileList plugin
+bool OSFileList::init ()
 {
 
 
@@ -426,7 +426,7 @@ bool filelist::init ()
 
 //return default command for given filename
 
-string filelist::getdefaultcommand (string name)
+string OSFileList::getdefaultcommand (string name)
 {
 
     string ext = getfiletype (name);
@@ -450,12 +450,12 @@ string filelist::getdefaultcommand (string name)
 }
 
 //return file type for given name
-string filelist::getfiletype (string name)
+string OSFileList::getfiletype (string name)
 {
 
     //std::transform (name.begin (), name.end (), name.begin (), std::tolower);
 
-    string r = MimeType::getMimeFromName (name);
+    string r = OSMimeType::getMimeFromName (name);
 
     //printf("Name: '%s' MimeType: '%s'\n", name.c_str(), r.c_str());
 
@@ -467,7 +467,7 @@ string filelist::getfiletype (string name)
  
 
 //return command with replaced {f} with valid path
-string filelist::resolvecommand(string command,string name)
+string OSFileList::resolvecommand(string command,string name)
 {
 string res;
     if (command != "")
@@ -504,7 +504,7 @@ string res;
 
 
 
-void filelist::create ()
+void OSFileList::create ()
 {
 
     FXIconList::create ();
@@ -519,7 +519,7 @@ void filelist::create ()
 
 }
 
-long filelist::key_shortcut (FXObject * obj, FXSelector sel, void *ptr)
+long OSFileList::key_shortcut (FXObject * obj, FXSelector sel, void *ptr)
 {
 
     FXushort id = FXSELID (sel);
@@ -534,7 +534,7 @@ long filelist::key_shortcut (FXObject * obj, FXSelector sel, void *ptr)
 
 //--------------------------------------------------------------------------------
 //bind keys
-long filelist::setKeys (void)
+long OSFileList::setKeys (void)
 {
 FXAccelTable *table = getShell ()->getAccelTable ();
 int counter=0;
@@ -543,7 +543,7 @@ int counter=0;
         string res;
         while (conf->getnextnode (res))
         {
-        configure conflocal = *conf;
+        OSConfigure conflocal = *conf;
         string key = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/key");
         string key_mask = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/key_mask");
             if(key!="")
@@ -566,17 +566,17 @@ int counter=0;
 
 
 /*    
-    table->addAccel (MKUINT (KEY_a, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_SELECT_ALL));
-    table->addAccel (MKUINT (KEY_c, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_COPY));
-    table->addAccel (MKUINT (KEY_x, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_CUT));
-    table->addAccel (MKUINT (KEY_v, CONTROLMASK), this, FXSEL (SEL_COMMAND, filelist::ID_CLIP_PASTE));
-    table->addAccel (MKUINT (KEY_F5, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REFRESH));
-    table->addAccel (MKUINT (KEY_Delete, 0), this, FXSEL (SEL_COMMAND, filelist::ID_REMOVE));
+    table->addAccel (MKUINT (KEY_a, CONTROLMASK), this, FXSEL (SEL_COMMAND, OSFileList::ID_SELECT_ALL));
+    table->addAccel (MKUINT (KEY_c, CONTROLMASK), this, FXSEL (SEL_COMMAND, OSFileList::ID_CLIP_COPY));
+    table->addAccel (MKUINT (KEY_x, CONTROLMASK), this, FXSEL (SEL_COMMAND, OSFileList::ID_CLIP_CUT));
+    table->addAccel (MKUINT (KEY_v, CONTROLMASK), this, FXSEL (SEL_COMMAND, OSFileList::ID_CLIP_PASTE));
+    table->addAccel (MKUINT (KEY_F5, 0), this, FXSEL (SEL_COMMAND, OSFileList::ID_REFRESH));
+    table->addAccel (MKUINT (KEY_Delete, 0), this, FXSEL (SEL_COMMAND, OSFileList::ID_REMOVE));
 */
 }
 
 //copy/move/remove function
-void filelist::copymoveremove (string com_name)
+void OSFileList::copymoveremove (string com_name)
 {
 
     if(com_name=="remove")
@@ -609,7 +609,7 @@ void filelist::copymoveremove (string com_name)
     }
 
     string options;
-    filelist_base *fil = fb;
+    OSVirtualFileSystemBase *fil = fb;
 
 
     if (this->type == "local" && com_name != "remove")
@@ -625,7 +625,7 @@ void filelist::copymoveremove (string com_name)
     if(this->type=="local" || filelist_opposite->type=="local" || com_name=="remove")
     {
     FXTRACE ((5, "copy/move/remove"));
-    thread_elem *el = new thread_elem (fil, com_name, options, src,filelist_opposite->path);
+    OSThreadExec *el = new OSThreadExec (fil, com_name, options, src,filelist_opposite->path);
     start_thread (el);
     }
     else
@@ -638,7 +638,7 @@ void filelist::copymoveremove (string com_name)
 }
 
 //opendir
-bool filelist::opendir (string dir)
+bool OSFileList::opendir (string dir)
 {
 
 
@@ -668,7 +668,7 @@ clearItems ();
     {
 
     count++;
-    osfile os_file = fb->osreaddir ();
+    OSFile os_file = fb->osreaddir ();
 
     if (os_file.name == "")
         break;
@@ -693,7 +693,7 @@ clearItems ();
     {
 
         string ext = getfiletype (os_file.name);
-        file_type *filet = NULL;
+        OSFileTypeSymbol *filet = NULL;
         if (ext != "")
         {
         filet = objmanager->file_type_settings[ext];
@@ -759,7 +759,7 @@ clearItems ();
     }
 
 
-    appendItem (new os_ListItem (this, os_file, color, backcolor, icon, icon2));
+    appendItem (new OSFileListItem (this, os_file, color, backcolor, icon, icon2));
 
 
     }
@@ -786,7 +786,7 @@ clearItems ();
 }
 
 
-long filelist::setFocus (FXObject * obj, FXSelector sel, void *ptr)
+long OSFileList::setFocus (FXObject * obj, FXSelector sel, void *ptr)
 {
 
 setKeys();
@@ -802,7 +802,7 @@ setKeys();
     chdir (path.c_str ());
 }
 
-long filelist::lostFocus (FXObject * obj, FXSelector sel, void *ptr)
+long OSFileList::lostFocus (FXObject * obj, FXSelector sel, void *ptr)
 {
 //active=false;
     setBackColor (FXRGB (220, 220, 220));
@@ -813,15 +813,15 @@ long filelist::lostFocus (FXObject * obj, FXSelector sel, void *ptr)
 
 
 
-void *filelist::thread_func (void *data)
+void *OSFileList::thread_func (void *data)
 {
 
-    thread_elem *el = (thread_elem *) data;
-    filelist_base *fb = (filelist_base *) el->fb;
+    OSThreadExec *el = (OSThreadExec *) data;
+    OSVirtualFileSystemBase *fb = (OSVirtualFileSystemBase *) el->fb;
 
     FXASSERT ((5, "THREAD :) %s\n", el->command.c_str ()));
 
-    filelist *filel = (filelist *) el->filel;
+    OSFileList *filel = (OSFileList *) el->filel;
 
     if (el->command == "copy")
     {
@@ -852,7 +852,7 @@ void *filelist::thread_func (void *data)
     
         bool exportfile=false;
         
-        if( ((filelist*)el->filel)->type!="local" && ((filelist*)el->filel)->type!="search")
+        if( ((OSFileList*)el->filel)->type!="local" && ((OSFileList*)el->filel)->type!="search")
         exportfile=true;
             
         bool simple_command=true;
@@ -869,7 +869,7 @@ void *filelist::thread_func (void *data)
         string tmpdir;
         string destdir;
         string fbdir;
-        if(((filelist*)el->filel)->type!="local")
+        if(((OSFileList*)el->filel)->type!="local")
         {
         tmpdir=FXFile::time ("%S%H%M%d%m%y", FXFile::now()).text ();
         destdir=string("/tmp/openspace/") + tmpdir;
@@ -893,7 +893,7 @@ void *filelist::thread_func (void *data)
                 fbdir=FXFile::directory(iter->c_str()).text();
                 tmpfile=destdir+"/"+name;
             
-                thread_elem *el2 = new thread_elem (fb, "copy", "upload", *iter,destdir);
+                OSThreadExec *el2 = new OSThreadExec (fb, "copy", "upload", *iter,destdir);
                 fb->copy (el2);
                 delete el2;
                 }
@@ -908,7 +908,7 @@ void *filelist::thread_func (void *data)
                 FXTime t2=FXFile::modified(tmpfile.c_str());
                     if(t1!=t2)
                     {
-                    thread_elem *el2 = new thread_elem (fb, "copy", "download", tmpfile,fbdir);
+                    OSThreadExec *el2 = new OSThreadExec (fb, "copy", "download", tmpfile,fbdir);
                     fb->copy (el2);
                     delete el2;
                     }
@@ -951,7 +951,7 @@ void *filelist::thread_func (void *data)
                 
                 if(copysrc.size()>0)
                 {
-                thread_elem *el2 = new thread_elem (fb, "copy", "download",copysrc,fbdir);
+                OSThreadExec *el2 = new OSThreadExec (fb, "copy", "download",copysrc,fbdir);
                 fb->copy (el2);
                 delete el2;
                 
@@ -986,7 +986,7 @@ void *filelist::thread_func (void *data)
 }
 
 
-int filelist::runCommand(string command)
+int OSFileList::runCommand(string command)
 {
 
 
@@ -1028,7 +1028,7 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
         if (pos == -1)//command don't need any selected files
         {
     
-        thread_elem *el = new thread_elem (fb, "execute", options, res);
+        OSThreadExec *el = new OSThreadExec (fb, "execute", options, res);
         start_thread (el);
         }
         else
@@ -1040,13 +1040,13 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
         {
                 if (isItemSelected (i))
              {
-                 os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+                 OSFileListItem *oslistitem = (OSFileListItem *) getItem (i);
                  string name = oslistitem->osf.name;
                  string fullname = returnpath(name);
                  
                  if(simple_command==true)
                  {
-                 thread_elem *el = new thread_elem (fb, "execute", options,fullname,exec);
+                 OSThreadExec *el = new OSThreadExec (fb, "execute", options,fullname,exec);
                  start_thread (el);
                  }
                  else           
@@ -1059,7 +1059,7 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
          
          if(simple_command==false && src.size()>0) 
          {
-           thread_elem *el = new thread_elem (fb, "execute", options,src,exec);
+           OSThreadExec *el = new OSThreadExec (fb, "execute", options,src,exec);
            start_thread (el);
          }
         
@@ -1146,21 +1146,21 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
     setFont (objmanager->captionfont3);
     setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
     refresh ();
-    conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","small icons");
+    conf->saveonestring ("/OpenspaceConfig/OSFileList/" + this->type + "/style","small icons");
         }
         else if (command == "change_view_big_icons")
     {
     setFont (objmanager->captionfont1);
     setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
     refresh ();
-    conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","big icons");
+    conf->saveonestring ("/OpenspaceConfig/OSFileList/" + this->type + "/style","big icons");
     }
     else if (command == "change_view_detailed")
     {
     setFont (objmanager->captionfont3);
     setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
     refresh ();
-    conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","detailed");
+    conf->saveonestring ("/OpenspaceConfig/OSFileList/" + this->type + "/style","detailed");
         }
     else if(command == "clipboard_copy" || command == "clipboard_cut")
     {
@@ -1191,7 +1191,7 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
         {
          if (isItemSelected (i))
           {
-            os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+            OSFileListItem *oslistitem = (OSFileListItem *) getItem (i);
             string name = oslistitem->osf.name;
             string fullname =returnpath(name);
             if (name != "." && name != "..")
@@ -1243,7 +1243,7 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
 
         for (int i = 0; i < getNumItems (); i++)
         {
-           os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+           OSFileListItem *oslistitem = (OSFileListItem *) getItem (i);
            string name = oslistitem->osf.name;
             if (identifier.match (name.c_str ()))
             {
@@ -1329,8 +1329,8 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
         }
         }
     
-        cmddialog *(*gg) (FXWindow *, filelist_base * fb, vector < string > src);
-        gg = (cmddialog * (*)(FXWindow *, filelist_base * fb, vector < string > src)) fxdllSymbol (dllhandle, "get_cmddialog");
+        OSCMDDialogBox *(*gg) (FXWindow *, OSVirtualFileSystemBase * fb, vector < string > src);
+        gg = (OSCMDDialogBox * (*)(FXWindow *, OSVirtualFileSystemBase * fb, vector < string > src)) fxdllSymbol (dllhandle, "get_cmddialog");
         dial = gg (this, fb, src);
         dial->create ();
 
@@ -1345,15 +1345,15 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
 
 }
 
-//double click on file/direcotry in filelist
-long filelist::openfile (FXObject * sender, FXSelector, void *)
+//double click on file/direcotry in OSFileList
+long OSFileList::openfile (FXObject * sender, FXSelector, void *)
 {
 
     if (processing)
     return 0;
 
     int k = getCurrentItem ();
-    os_ListItem *oslistitem = (os_ListItem *) getItem (k);
+    OSFileListItem *oslistitem = (OSFileListItem *) getItem (k);
   
     if (oslistitem->osf.type & FOLDER)
     {
@@ -1408,7 +1408,7 @@ long filelist::openfile (FXObject * sender, FXSelector, void *)
 
 //----------------------------------------------------  
 // go up dir, 3rd button of mouse 
-long filelist::gotoparentdir (FXObject *, FXSelector, void *)
+long OSFileList::gotoparentdir (FXObject *, FXSelector, void *)
 {
     if (processing)
     return 0;
@@ -1426,7 +1426,7 @@ long filelist::gotoparentdir (FXObject *, FXSelector, void *)
 
 //----------------------------------------------------   
 //poup menu
-long filelist::onPopup (FXObject *, FXSelector, void *ptr)
+long OSFileList::onPopup (FXObject *, FXSelector, void *ptr)
 {
 
     if (processing)
@@ -1449,7 +1449,7 @@ commands_tab.clear();
 
 
 
-    FXShutter *shutterFrame = new shutter (popupmenu, this);
+    FXShutter *shutterFrame = new OSShutter (popupmenu, this);
     FXShutterItem *shutterItem;
 
 
@@ -1464,7 +1464,7 @@ commands_tab.clear();
     {
 
 
-        configure conflocal = *conf;
+        OSConfigure conflocal = *conf;
         //shutterItem = new FXShutterItem(shutterFrame,res.c_str(),NULL,      FRAME_SUNKEN|LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT,0,0,0,0,0,0,0,0,0,0);
         // shutterItem = new FXShutterItem(shutterFrame,res.c_str(),osicons[8],FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT,0,0,0,0,0,0,0,0,0,0);
         shutterItem = new FXShutterItem (shutterFrame, res.c_str (), objmanager->osicons["execute"], FRAME_NONE | LAYOUT_FILL_X | LAYOUT_FILL_Y | LAYOUT_TOP | LAYOUT_LEFT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -1497,7 +1497,7 @@ commands_tab.clear();
                 if (isItemSelected (i))
                 {
                 sp++;
-                os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+                OSFileListItem *oslistitem = (OSFileListItem *) getItem (i);
                 string ext = getfiletype (oslistitem->osf.name);
                 string rep;
 
@@ -1510,7 +1510,7 @@ commands_tab.clear();
                     rep = "file_types/COMMON/types/dir";
                     ext = "dir";
                 }
-                configure conflocal3 = *conf;
+                OSConfigure conflocal3 = *conf;
 
                 int open = 0;
 
@@ -1589,7 +1589,7 @@ commands_tab.clear();
                 string res = supported_commands.front ();
                 supported_commands.pop_front ();
 
-                configure conflocal2 = conflocal;
+                OSConfigure conflocal2 = conflocal;
                 string command_text = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/text");
                 if(command_text=="")command_text=res;
         
@@ -1602,7 +1602,7 @@ commands_tab.clear();
             continue;
             }
 
-            configure conflocal2 = conflocal;
+            OSConfigure conflocal2 = conflocal;
             string command_text = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/text");
             if(command_text=="")command_text=res;
     
@@ -1619,7 +1619,7 @@ commands_tab.clear();
 
 
 
-    int height_size = ((shutter *) shutterFrame)->getheight ();
+    int height_size = ((OSShutter *) shutterFrame)->getheight ();
     popupmenu->create ();
 
 
@@ -1637,7 +1637,7 @@ commands_tab.clear();
 
 //----------------------------------------------------  
 // choose command from popoup menu
-long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
+long OSFileList::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 {
     if (processing)
     return 0;
@@ -1667,7 +1667,7 @@ long filelist::file_operation (FXObject * obj, FXSelector sel, void *ptr)
 
 
 //execute function(copying files etc) as thread 
-void filelist::start_thread (thread_elem * te)
+void OSFileList::start_thread (OSThreadExec * te)
 {
 
     te->filel = (void *) this;
@@ -1711,7 +1711,7 @@ void filelist::start_thread (thread_elem * te)
     pthread_t t;
     pthread_attr_t attr;
     pthread_attr_init (&attr);
-    pthread_create (&t, &attr, filelist::thread_func, (void *) te);
+    pthread_create (&t, &attr, OSFileList::thread_func, (void *) te);
     pthread_attr_destroy (&attr);
     }
 
@@ -1723,7 +1723,7 @@ void filelist::start_thread (thread_elem * te)
 
 //----------------------------------------------------   
 
-void filelist::refresh (void)
+void OSFileList::refresh (void)
 {
     if (processing)
     return;
@@ -1732,7 +1732,7 @@ void filelist::refresh (void)
 
 //----------------------------------------------------   
 //select item using right mouse button
-void filelist::selectitem ()
+void OSFileList::selectitem ()
 {
     if (processing)
     return;
@@ -1765,15 +1765,15 @@ void filelist::selectitem ()
 }
 
 //----------------------------------------------------  
-//function for sorting files in filelist
-FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
+//function for sorting files in OSFileList
+FXint OSFileList::cmp (const FXIconItem * pa, const FXIconItem * pb)
 {
 
 
-    os_ListItem *a = (os_ListItem *) pa;
-    os_ListItem *b = (os_ListItem *) pb;
+    OSFileListItem *a = (OSFileListItem *) pa;
+    OSFileListItem *b = (OSFileListItem *) pb;
 
-    filelist *fl = (filelist *) a->list;
+    OSFileList *fl = (OSFileList *) a->list;
 
     if (b->osf.type & FOLDER && !(a->osf.type & FOLDER))
     return 1;
@@ -1795,10 +1795,10 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
     }
     else if (fl->sort_nr == -1) //extension sorting
     {
-    string exta = filelist::getfiletype (a->getText ().text ());
+    string exta = OSFileList::getfiletype (a->getText ().text ());
     if (exta == "")
         exta = "zzzzz";
-    string extb = filelist::getfiletype (b->getText ().text ());
+    string extb = OSFileList::getfiletype (b->getText ().text ());
     if (exta == "")
         extb = "zzzzz";
 
@@ -1908,7 +1908,7 @@ FXint filelist::cmp (const FXIconItem * pa, const FXIconItem * pb)
 
 //--------------------------------------------------------------------
 
-long filelist::onCmdResize(FXObject * sender, FXSelector sel, void *ptr)
+long OSFileList::onCmdResize(FXObject * sender, FXSelector sel, void *ptr)
 {
 
 //FXIconList::onHeaderResize(sender, sel,ptr);
@@ -1917,7 +1917,7 @@ for(int i=0;i<getNumHeaders();i++)
     {
     string header=getHeaderText(i).text();
     int width=getHeaderSize(i);
-    conf->saveonestring("/OpenspaceConfig/filelist/"+this->type+"/properties/"+header+"/width",ntos(width));
+    conf->saveonestring("/OpenspaceConfig/OSFileList/"+this->type+"/properties/"+header+"/width",ntos(width));
     
     }
 }
@@ -1926,7 +1926,7 @@ for(int i=0;i<getNumHeaders();i++)
 
 //--------------------------------------------------------------------
 //click on OSFileList.header (change sorting)
-long filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
+long OSFileList::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
 {
     if (processing)
     return 0;
@@ -1967,7 +1967,7 @@ long filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
 }
 
 //execute command from cmddialog plugin and hide this plugin window
-long filelist::onCommand (FXObject *, FXSelector, void *ptr)
+long OSFileList::onCommand (FXObject *, FXSelector, void *ptr)
 {
 
     if (dial->exec () != -1)
@@ -1981,25 +1981,25 @@ long filelist::onCommand (FXObject *, FXSelector, void *ptr)
 }
 
 //cancel cmddialog
-long filelist::onCommandCancel (FXObject *, FXSelector, void *ptr)
+long OSFileList::onCommandCancel (FXObject *, FXSelector, void *ptr)
 {
     dial->hide ();
     delete dial;
 }
 
 //update info about selected files
-long filelist::click (FXObject *, FXSelector, void *ptr)
+long OSFileList::click (FXObject *, FXSelector, void *ptr)
 {
     int count = 0;
     long unsigned int size = 0;
-    os_ListItem *os;
+    OSFileListItem *os;
     for (int i = 0; i < getNumItems (); i++)
     {
     if (isItemSelected (i))
     {
 
         count++;
-        os = (os_ListItem *) getItem (i);
+        os = (OSFileListItem *) getItem (i);
         size += os->osf.size;
 
     }
@@ -2023,7 +2023,7 @@ long filelist::click (FXObject *, FXSelector, void *ptr)
 //Below only drag and drop functions:
 
 // Handle drag-and-drop enter, remember current directory
-long filelist::onDNDEnter (FXObject * sender, FXSelector sel, void *ptr)
+long OSFileList::onDNDEnter (FXObject * sender, FXSelector sel, void *ptr)
 {
 
     FXIconList::onDNDEnter (sender, sel, ptr);
@@ -2033,7 +2033,7 @@ long filelist::onDNDEnter (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // Handle drag-and-drop leave, restore current directory prior to drag
-long filelist::onDNDLeave (FXObject * sender, FXSelector sel, void *ptr)
+long OSFileList::onDNDLeave (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXIconList::onDNDLeave (sender, sel, ptr);
     // getApp()->removeTimeout(this,ID_OPENTIMER);
@@ -2044,7 +2044,7 @@ long filelist::onDNDLeave (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // Handle drag-and-drop motion
-long filelist::onDNDMotion (FXObject * sender, FXSelector sel, void *ptr)
+long OSFileList::onDNDMotion (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXEvent *event = (FXEvent *) ptr;
     FXint index = -1;
@@ -2093,7 +2093,7 @@ long filelist::onDNDMotion (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // Handle drag-and-drop drop
-long filelist::onDNDDrop (FXObject * sender, FXSelector sel, void *ptr)
+long OSFileList::onDNDDrop (FXObject * sender, FXSelector sel, void *ptr)
 {
     // Cancel open up timer
 //  getApp()->removeTimeout(this,ID_OPENTIMER);
@@ -2113,7 +2113,7 @@ long filelist::onDNDDrop (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // Somebody wants our dragged data
-long filelist::onDNDRequest (FXObject * sender, FXSelector sel, void *ptr)
+long OSFileList::onDNDRequest (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXEvent *event = (FXEvent *) ptr;
     FXuchar *data;
@@ -2145,7 +2145,7 @@ long filelist::onDNDRequest (FXObject * sender, FXSelector sel, void *ptr)
     return 0;
 }
 
-string filelist::returnpath(string dirname)
+string OSFileList::returnpath(string dirname)
 {
     string ret;
     if(path==SEPARATOR)
@@ -2157,7 +2157,7 @@ string filelist::returnpath(string dirname)
 }
 
 // Start a drag operation
-long filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
+long OSFileList::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
 {
     register FXint i;
     if (FXIconList::onBeginDrag (sender, sel, ptr))
@@ -2170,7 +2170,7 @@ long filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
         if (isItemSelected (i))
         {
 
-        os_ListItem *oslistitem = (os_ListItem *) getItem (i);
+        OSFileListItem *oslistitem = (OSFileListItem *) getItem (i);
         string name = oslistitem->osf.name;
         string fullname = returnpath(name);
         if (name != "." && name != "..")
@@ -2189,7 +2189,7 @@ long filelist::onBeginDrag (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // End drag operation
-long filelist::onEndDrag (FXObject * sender, FXSelector sel, void *ptr)
+long OSFileList::onEndDrag (FXObject * sender, FXSelector sel, void *ptr)
 {
     if (FXIconList::onEndDrag (sender, sel, ptr))
     return 1;
@@ -2201,7 +2201,7 @@ long filelist::onEndDrag (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // Dragged stuff around
-long filelist::onDragged (FXObject * sender, FXSelector sel, void *ptr)
+long OSFileList::onDragged (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXEvent *event = (FXEvent *) ptr;
     FXDragAction action;
@@ -2239,7 +2239,7 @@ long filelist::onDragged (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // We now really do have the clipboard, keep clipped text
-long filelist::onClipboardGained (FXObject * sender, FXSelector sel, void *ptr)
+long OSFileList::onClipboardGained (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXIconList::onClipboardGained (sender, sel, ptr);
     return 1;
@@ -2247,7 +2247,7 @@ long filelist::onClipboardGained (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // We lost the clipboard, free clipped text
-long filelist::onClipboardLost (FXObject * sender, FXSelector sel, void *ptr)
+long OSFileList::onClipboardLost (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXIconList::onClipboardLost (sender, sel, ptr);
     dragfiles=FXString::null;
@@ -2257,7 +2257,7 @@ long filelist::onClipboardLost (FXObject * sender, FXSelector sel, void *ptr)
 
 
 // Somebody wants our clipped text
-long filelist::onClipboardRequest (FXObject * sender, FXSelector sel, void *ptr)
+long OSFileList::onClipboardRequest (FXObject * sender, FXSelector sel, void *ptr)
 {
     FXEvent *event = (FXEvent *) ptr;
     FXuchar *data;
@@ -2269,7 +2269,7 @@ long filelist::onClipboardRequest (FXObject * sender, FXSelector sel, void *ptr)
 }
 
 
-void filelist::dropData (bool clipboard)
+void OSFileList::dropData (bool clipboard)
 {
 
 
@@ -2317,7 +2317,7 @@ void filelist::dropData (bool clipboard)
     else if (dropaction == DRAG_COPY)
         com_name = "copy";
 
-    filelist_base *fil = fb;
+    OSVirtualFileSystemBase *fil = fb;
     string options;
     if (this->type == "local" && filelist_opposite->dragfiles!=FXString::null)
     {
@@ -2333,7 +2333,7 @@ void filelist::dropData (bool clipboard)
     if(this->type=="local" || filelist_opposite->type=="local")
     {
     FXTRACE ((5, "copy/move/remove"));
-    thread_elem *el = new thread_elem (fil, com_name, options, src, path);
+    OSThreadExec *el = new OSThreadExec (fil, com_name, options, src, path);
     start_thread (el);
     }
     else

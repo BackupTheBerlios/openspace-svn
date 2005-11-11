@@ -71,19 +71,19 @@ long OSFirstRunDialogBox::onConfigure( FXObject * sender, FXSelector sel, void *
     
     if ( id == ID_CONF_MANUAL )
     {
-        preferences * prefer = new preferences( this );
+        OSPreferences * prefer = new OSPreferences( this );
         prefer->create();
         prefer->execute( PLACEMENT_OWNER );
     }
     else if ( id == ID_CONF_SEMI )
     {
-        MimeApp * mimeapp = new MimeApp( this );
+        OSMimeApp * mimeapp = new OSMimeApp( this );
         mimeapp->create();
         mimeapp->execute( PLACEMENT_OWNER );
     }
     else if ( id == ID_CONF_AUTOMATIC )
     {
-        MimeApp * mimeapp = new MimeApp( this );
+        OSMimeApp * mimeapp = new OSMimeApp( this );
         mimeapp->doAutomaticConfiguration();
 
     }

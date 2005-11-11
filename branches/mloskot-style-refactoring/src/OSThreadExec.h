@@ -57,7 +57,7 @@ public:
      * @param src
      * @param dst
      */
-    OSThreadExec( void* fb, std::string command, std::string options, std::string src, std::string dst );
+    OSThreadExec( void* fb, std::string command, std::string options, std::string src, std::string dst = "" );
     
     /**
      * Constructor.
@@ -67,7 +67,7 @@ public:
      * @param src
      * @param dst
      */
-    OSThreadExec( void* fb, std::string command, std::string options, std::vector<std::string> src, std::string dst );
+    OSThreadExec( void* fb, std::string command, std::string options, std::vector<std::string> src = std::vector<std::string>(), std::string dst = "" );
     
     /**
      * Initializes thread procedure object.
