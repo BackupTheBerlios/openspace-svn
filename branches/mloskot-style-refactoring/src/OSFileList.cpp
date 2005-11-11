@@ -61,6 +61,11 @@
 #endif
 #include <sys/mount.h>
 
+
+#ifndef PATH_LIBDIR
+#define PATH_LIBDIR "/usr/local/lib"
+#endif
+
 FXDEFMAP (OSFileList) OSFileListMap[] =
 {
 FXMAPFUNC (SEL_FOCUSIN, OSFileList::ID_ICO, OSFileList::setFocus),
@@ -253,7 +258,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     
 
 
-    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/OSFileList/libfilelist" + this->type;
+    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/filelist/libfilelist" + this->type;
 
 
 #ifdef WIN32
@@ -264,14 +269,14 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
     if(!FXFile::exists(plugin_path.c_str()))
     {
-    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/OSFileList/libfilelist")+ this->type;
+    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libfilelist")+ this->type;
     #ifdef WIN32
     plugin_path += ".dll";
     #else
     plugin_path += ".so";
     #endif
     }
-    
+
     void *dllhandle = fxdllOpen (plugin_path.c_str ());
     if (dllhandle)
     {
