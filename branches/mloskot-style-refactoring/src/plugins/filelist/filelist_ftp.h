@@ -1,79 +1,128 @@
+// $Id$
+/////////////////////////////////////////////////////////////////////////////
+// This file is part of OpenSpace project.
+//
+// OpenSpace is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// OpenSpace is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with OpenSpace; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+/////////////////////////////////////////////////////////////////////////////
+//
+// C++ Interface: $MODULE$
+//
+// Author: Mateusz Dworak <http://openspace.linux.pl>, (C) 2005
+//
+// Description:
+//  FTP plugin derived from OpenSpace file list VFS plugin.
+//
+/////////////////////////////////////////////////////////////////////////////
 #ifndef FILELIST_ftp
 #define FILELIST_ftp
+
 #include "../../OSVirtualFileSystemBase.h"
+#include "../../OSPathType.h"
+#include "../../OSFile.h"
 #include "pftp.h"
+
 #include <map>
+#include <string>
+#include <vector>
 
+// Forward declarations
+class OSThreadExec;
+class OSConfigure;
 
-
-class SimpleLogger : public Logger 
+/**
+ * Events logger class.
+ * 
+ * @todo Encapsulate public data members.
+ */
+class SimpleLogger : public Logger
 {
 public:
-    thread_elem *te;
-    
-    SimpleLogger::SimpleLogger();
-    void SimpleLogger::start(uint32_t bytes, const FXString & name,uint32_t size);
-    bool SimpleLogger::update(uint32_t bytes, const FXString & s);
-    void SimpleLogger::end(uint32_t bytes, const FXString & );
-    void SimpleLogger::choke();
-    void SimpleLogger::error(int error);
-    void SimpleLogger::logLine(FXString & line);
-    void SimpleLogger::error(FXString & error);
 
-};
+    OSThreadExec* te;
+
+    /**
+     * Default constructor.
+     */
+    SimpleLogger( void );
+
+    void start( uint32_t bytes, const FXString & name, uint32_t size );
+    bool update( uint32_t bytes, const FXString & s );
+    void end( uint32_t bytes, const FXString & );
+    void choke( void );
+    void error( int error );
+    void logLine( FXString & line );
+    void error( FXString & error );
+
+}; // SimpleLogger
 
 
-class filelist_ftp:public filelist_base
+/**
+ * FTP plugin main class.
+ * 
+ * @todo Pass "big" vectors through by-reference not by-value!
+ */
+class filelist_ftp : public OSVirtualFileSystemBase
 {
 
 private:
 
-PFTP *pftp;
-SimpleLogger *log;
-string dir;
+    PFTP *pftp;
+    SimpleLogger *log;
+    std::string dir;
 
-
-map <string,osfile> filesMap;
-map <string,osfile>::iterator iter;
-
-map <string,osfile> filesMapGlobal;
-map <string,osfile>::iterator iterGlobal;
+    std::map<std::string, OSFile> filesMap;
+    std::map<std::string, OSFile>::iterator iter;
+    std::map<std::string, OSFile> filesMapGlobal;
+    std::map<std::string, OSFile>::iterator iterGlobal;
 
     int fieldsnum;
-    vector < string > fields;
+    std::vector<std::string> fields;
 
-    int filelist_ftp::priv_osopendir (string dir,string prefix,map <string,osfile> & filesMap,map <string,osfile>::iterator & iter);
-    void filelist_ftp::gorecursive(string file,unsigned long &size);
-    osfile filelist_ftp::priv_osreaddir (map <string,osfile> & filesMap,map <string,osfile>::iterator & iter2);
-    void filelist_ftp::getRecursiveFiles(vector < string >src,unsigned long &size);
-    void filelist_ftp::goLocalRecursive (string path,string prefix,thread_elem *te);
-    void filelist_ftp::local_totalsize (string path, unsigned long &size);
-    int filelist_ftp::str_mode_int(string per);
+    int priv_osopendir( std::string dir, std::string prefix, std::map <std::string, osfile> & filesMap, std::map <std::string, osfile>::iterator & iter );
+    void gorecursive( std::string file, unsigned long &size );
+    OSFile priv_osreaddir( std::map <std::string, osfile> & filesMap, std::map <std::string, OSFile>::iterator & iter2 );
+    void getRecursiveFiles( std::vector<std::string> src, unsigned long &size );
+    void goLocalRecursive( std::string path, std::string prefix, OSThreadExec* te );
+    void local_totalsize( std::string path, unsigned long &size );
+    int str_mode_int( std::string per );
 
-  public:
-    int filelist_ftp::osopendir (string dir);
-    osfile filelist_ftp::osreaddir (void);
-    int filelist_ftp::mkdir (string dir, int mode = 0);
-    int filelist_ftp::copy (thread_elem * te);
-    int filelist_ftp::move (thread_elem * te);
-    int filelist_ftp::remove (thread_elem * te);
-    int filelist_ftp::rename (string orgname, string newname);
-    int filelist_ftp::init (vector < string > *vector_name, pathtype pt, configure * conf);
-    int filelist_ftp::mode (string file);
-    string filelist_ftp::owner (string file);
-    string filelist_ftp::group (string file);
-    bool filelist_ftp::mode (string file, unsigned int, bool recursive);
-    bool filelist_ftp::owner (string file, string, bool recursive);
-    bool filelist_ftp::group (string file, string, bool recursive);
-    string filelist_ftp::info (void);
-    void filelist_ftp::totalsize (string path, unsigned long &size);
-    string filelist_ftp::symlink (string path);
-    bool filelist_ftp::symlink (string src, string dst);
-    bool filelist_ftp::hardlink (string src, string dst);
-    vfs filelist_ftp::setup (void);
-    int filelist_ftp::quit (void);
-    string filelist_ftp::getinitialdir(void);
+public:
     
-    
+    int osopendir( std::string dir );
+    OSFile osreaddir( void );
+    int mkdir( std::string dir, int mode = 0 );
+    int copy( OSThreadExec * te );
+    int move( OSThreadExec * te );
+    int remove( OSThreadExec * te );
+    int rename( std::string orgname, std::string newname );
+    int init( std::vector<std::string>* vector_name, OSPathType pt, OSConfigure * conf );
+    int mode( std::string file );
+    std::string owner( std::string file );
+    std::string group( std::string file );
+    bool mode( std::string file, unsigned int, bool recursive );
+    bool owner( std::string file, std::string, bool recursive );
+    bool group( std::string file, std::string, bool recursive );
+    std::string info( void );
+    void totalsize( std::string path, unsigned long &size );
+    std::string symlink( std::string path );
+    bool symlink( std::string src, std::string dst );
+    bool hardlink( std::string src, std::string dst );
+    OSVirtualFileSystemInfo setup( void );
+    int quit( void );
+    std::string getinitialdir( void );
+
+
 };
 #endif

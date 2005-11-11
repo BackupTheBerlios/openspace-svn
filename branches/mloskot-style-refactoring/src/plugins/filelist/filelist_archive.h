@@ -1,6 +1,8 @@
 #ifndef FILELIST_archive
 #define FILELIST_archive
+
 #include "../../OSVirtualFileSystemBase.h"
+
 class filelist_archive:public filelist_base
 {
  

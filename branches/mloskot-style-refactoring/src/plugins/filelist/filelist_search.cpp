@@ -3,13 +3,24 @@
 #else
 #define EXPORTFUNCTION extern "C"
 #endif
+
 #include "filelist_search.h"
 
-vfs filelist_search::setup (void)
+#include "../../OSVirtualFileSystemBase.h"
+#include "../../OSVirtualFileSystemInfo.h"
+#include "../../OSFile.h"
+#include "../../OSPathType.h"
+#include "../../OSConfigure.h"
+#include "../../OSThreadExec.h"
+
+#include <string>
+#include <vector>
+
+OSVirtualFileSystemInfo filelist_search::setup (void)
 {
-	vfs v;
+	OSVirtualFileSystemInfo v;
 	
-	v.vfsheaders.push_back(vfsheader_container("name"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("name"));
 	v.information="search vfs - default plugin";
 	v.version="1";
 	v.type="search";
@@ -18,15 +29,15 @@ return v;
 }
 
 
-int filelist_search::osopendir (string dir)
+int filelist_search::osopendir (std::string dir)
 {
 
   iter=files.begin(); 
 
 }
-osfile filelist_search::osreaddir (void)
+OSFile filelist_search::osreaddir (void)
 {
-    osfile os_file;
+    OSFile os_file;
 
 if(iter!=files.end())
 {
@@ -48,14 +59,14 @@ if(iter!=files.end())
 
 
 }
-int filelist_search::mkdir (string dir, int mode)
+int filelist_search::mkdir (std::string dir, int mode)
 {
 }
-int filelist_search::copy (thread_elem * te)
+int filelist_search::copy (OSThreadExec * te)
 {
 
-	string::size_type pos = te->options.find ("download");
-	if (pos == string::npos) //upload only supported
+	std::string::size_type pos = te->options.find ("download");
+	if (pos == std::string::npos) //upload only supported
 	{
 	return fil_local->copy(te);
 	}
@@ -66,11 +77,11 @@ int filelist_search::copy (thread_elem * te)
 	}
 
 }
-int filelist_search::move (thread_elem * te)
+int filelist_search::move (OSThreadExec * te)
 {
 
-	string::size_type pos = te->options.find ("download");
-	if (pos == string::npos) //upload only supported
+	std::string::size_type pos = te->options.find ("download");
+	if (pos == std::string::npos) //upload only supported
 	{
 	return fil_local->move(te);
 	}
@@ -81,17 +92,17 @@ int filelist_search::move (thread_elem * te)
 	}
 
 }
-int filelist_search::remove (thread_elem * te)
+int filelist_search::remove (OSThreadExec * te)
 {
 return fil_local->remove(te);
 }
-int filelist_search::rename (string orgname, string newname)
+int filelist_search::rename (std::string orgname, std::string newname)
 {
 
 	int ret=fil_local->rename(orgname,newname);
 	if(ret)
 	{
-		vector < string >::iterator iter = find(files.begin(), files.end(), orgname.substr(1,orgname.length()-1)); // Search the list.
+		std::vector < std::string >::iterator iter = find(files.begin(), files.end(), orgname.substr(1,orgname.length()-1)); // Search the list.
 		if (iter != files.end())
 		{
   		(*iter)=newname.substr(1,newname.length()-1);
@@ -100,23 +111,20 @@ int filelist_search::rename (string orgname, string newname)
 
 	return ret;
 }
-int filelist_search::init (vector < string > *vector_name, pathtype pt, configure * conf)
+int filelist_search::init(std::vector<std::string>* vector_name, OSPathType pt, OSConfigure* conf)
 {
-
-
-fil_local=new filelist_local();
-
+    fil_local=new filelist_local();
 
     pipe = popen (pt.server.c_str(), "r");
 
     if (pipe != NULL)
     {
-	string line;
+	std::string line;
 	while (fgets (readbuf, sizeof (readbuf), pipe) != NULL)
 	{
 
 
-	    string path = readbuf;
+	    std::string path = readbuf;
 	    path = path.substr (1, path.length () - 2);
 	    files.push_back(path);
 	   
@@ -129,51 +137,52 @@ iter=files.begin();
     
 
 }
-int filelist_search::mode (string file)
+int filelist_search::mode (std::string file)
 {
 return fil_local->mode(file);
 }
-string filelist_search::owner (string file)
+std::string filelist_search::owner (std::string file)
 {
 return fil_local->owner(file);
 }
-string filelist_search::group (string file)
+std::string filelist_search::group (std::string file)
 {
 return fil_local->group(file);
 }
-bool filelist_search::mode (string file, unsigned int mod, bool recursive)
+bool filelist_search::mode (std::string file, unsigned int mod, bool recursive)
 {
 return fil_local->mode(file,mod,recursive);
 }
-bool filelist_search::owner (string file, string ow, bool recursive)
+bool filelist_search::owner (std::string file, std::string ow, bool recursive)
 {
 return fil_local->owner(file,ow,recursive);
 }
-bool filelist_search::group (string file, string gr, bool recursive)
+bool filelist_search::group (std::string file, std::string gr, bool recursive)
 {
 return fil_local->group(file,gr,recursive);
 }
-string filelist_search::info (void)
+std::string filelist_search::info (void)
 {
 return "";
 }
-void filelist_search::totalsize (string path, unsigned long &size)
+void filelist_search::totalsize (std::string path, unsigned long &size)
 {
 }
-string filelist_search::symlink (string path)
+std::string filelist_search::symlink (std::string path)
 {
 }
-bool filelist_search::symlink (string src, string dst)
+bool filelist_search::symlink (std::string src, std::string dst)
 {
 }
-bool filelist_search::hardlink (string src, string dst)
+bool filelist_search::hardlink (std::string src, std::string dst)
 {
 }
 
 int filelist_search::quit (void)
 {
 }
-EXPORTFUNCTION filelist_base *get_filelist (void)
+
+EXPORTFUNCTION OSVirtualFileSystemBase *get_filelist(void)
 {
     FXTRACE ((5, "PLUGIN SEARCH LOAD\n"));
     return new filelist_search ();

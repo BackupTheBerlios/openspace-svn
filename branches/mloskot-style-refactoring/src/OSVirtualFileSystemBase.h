@@ -49,32 +49,32 @@ class OSThreadExec;
 class OSVirtualFileSystemBase
 {
 public:
-    virtual int osopendir ( std::string dir ) = 0;
-    virtual OSFile osreaddir ( void ) = 0;
-    virtual int mkdir ( std::string dir, int mode = 0 ) = 0;
-    virtual int copy ( OSThreadExec* te ) = 0;
-    virtual int move ( OSThreadExec* te ) = 0;
-    virtual int remove ( OSThreadExec* te ) = 0;
-    virtual int rename ( std::string orgname, std::string newname ) = 0;
-    virtual int init ( std::vector<std::string>* vector_name, OSPathType pt, OSConfigure * conf ) = 0;
-    virtual int mode ( std::string file ) = 0;
-    virtual std::string owner ( std::string file ) = 0;
-    virtual std::string group ( std::string file ) = 0;
-    virtual bool mode ( std::string file, unsigned int, bool recursive ) = 0;
-    virtual bool owner ( std::string file, std::string, bool recursive ) = 0;
-    virtual bool group ( std::string file, std::string, bool recursive ) = 0;
-    virtual std::string info ( void ) = 0;
-    virtual void totalsize ( std::string path, unsigned long &size ) = 0;
-    virtual std::string symlink ( std::string path ) = 0;
-    virtual bool symlink ( std::string src, std::string dst ) = 0;
-    virtual bool hardlink ( std::string src, std::string dst ) = 0;
-    virtual int quit ( void ) = 0;
+    virtual int osopendir( std::string dir ) = 0;
+    virtual OSFile osreaddir( void ) = 0;
+    virtual int mkdir( std::string dir, int mode = 0 ) = 0;
+    virtual int copy( OSThreadExec* te ) = 0;
+    virtual int move( OSThreadExec* te ) = 0;
+    virtual int remove( OSThreadExec* te ) = 0;
+    virtual int rename( std::string orgname, std::string newname ) = 0;
+    virtual int init( std::vector<std::string>* vector_name, OSPathType pt, OSConfigure* conf ) = 0;
+    virtual int mode( std::string file ) = 0;
+    virtual std::string owner( std::string file ) = 0;
+    virtual std::string group( std::string file ) = 0;
+    virtual bool mode( std::string file, unsigned int, bool recursive ) = 0;
+    virtual bool owner( std::string file, std::string, bool recursive ) = 0;
+    virtual bool group( std::string file, std::string, bool recursive ) = 0;
+    virtual std::string info( void ) = 0;
+    virtual void totalsize(std::string path, unsigned long &size ) = 0;
+    virtual std::string symlink( std::string path ) = 0;
+    virtual bool symlink( std::string src, std::string dst ) = 0;
+    virtual bool hardlink( std::string src, std::string dst ) = 0;
+    virtual int quit( void ) = 0;
     virtual std::string getinitialdir( void )
     {
         return "/";
     }
 
-    virtual OSVirtualFileSystemInfo setup ( void ) = 0;
+    virtual OSVirtualFileSystemInfo setup( void ) = 0;
 };
 
 #endif// #ifndef __OSVIRTUALFILESYSTEMBASE_H__
