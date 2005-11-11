@@ -2,9 +2,11 @@
 *.swp
 *LOG
 *log
-*.kdev
+*.kdev*
 *.o
 *.lo
-*.loTp
+*.loT
+.deps
 Doxyfile
 tags
+Makefile
