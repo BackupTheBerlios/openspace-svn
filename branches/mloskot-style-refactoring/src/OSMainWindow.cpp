@@ -7,11 +7,11 @@ using namespace std;
 #include "fx.h" 
 // #include "FXPNGIcon.h"
 #include "thread_elem.h"
-#include "filelist.h"
+#include "OSFileList.h"
 #include "sharedobjects.h"
 #include "mainwindow.h"
 #include "informationpanel.h"
-#include "configure.h"
+#include "OSConfigure.h"
 #include "oslistitem.h"
 
 #include "FirstRun.h"

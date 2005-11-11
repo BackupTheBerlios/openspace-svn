@@ -4,9 +4,9 @@
 #include <map>
 using namespace std;
 
-#include "pathtype.h"
-#include "filelist.h"
-#include "filetype.h"
+#include "OSPathType.h"
+#include "OSFileList.h"
+#include "OSFileTypeSymbol.h"
 
 
 #ifdef WIN32

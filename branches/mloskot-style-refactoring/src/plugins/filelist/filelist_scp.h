@@ -1,7 +1,7 @@
 #ifndef FILELIST_SCP
 #define FILELIST_SCP
 
-#include"../../filelist_base.h"
+#include"../../OSVirtualFileSystemBase.h"
 
 #include <stdio.h>
 

@@ -37,7 +37,7 @@ class OSPathType
 {
 public:
     
-    OSPathType(std::string dir, std::string type = "local", std::string server, std::string user, std::string password, std::string port);
+    OSPathType(std::string dir, std::string type = "local", std::string server = "", std::string user = "", std::string password = "", std::string port = "");
 
     std::string dir;
     std::string type;

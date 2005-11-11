@@ -27,10 +27,10 @@
 #ifndef __FILELIST_H__
 #define __FILELIST_H__
 
-#include "filelist_base.h"
-#include "pathtype.h"
+#include "OSVirtualFileSystemBase.h"
+#include "OSPathType.h"
 #include "thread_elem.h"
-#include "filetype.h"
+#include "OSFileTypeSymbol.h"
 #include "cmddialog.h"
 #include <string>
 #include <map>

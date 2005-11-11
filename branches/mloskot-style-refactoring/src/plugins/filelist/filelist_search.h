@@ -1,6 +1,6 @@
 #ifndef FILELIST_search
 #define FILELIST_search
-#include "../../filelist_base.h"
+#include "../../OSVirtualFileSystemBase.h"
 #include "filelist_local.h"
 
 class filelist_search:public filelist_base

@@ -1,6 +1,6 @@
 #ifndef FILELIST_ftp
 #define FILELIST_ftp
-#include "../../filelist_base.h"
+#include "../../OSVirtualFileSystemBase.h"
 #include "pftp.h"
 #include <map>
 

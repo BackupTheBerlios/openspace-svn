@@ -1,6 +1,6 @@
 #ifndef FILELIST_sftp
 #define FILELIST_sftp
-#include "../../filelist_base.h"
+#include "../../OSVirtualFileSystemBase.h"
 class filelist_sftp:public filelist_base
 {
     string dir;  

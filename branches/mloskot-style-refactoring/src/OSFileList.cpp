@@ -35,7 +35,7 @@
 
 #include "MimeType.h"
 
-#include "pathtype.h"
+#include "OSPathType.h"
 #include "fx.h"
 #include "osfile.h"
 // #include "FXDLL.h"
@@ -1925,7 +1925,7 @@ for(int i=0;i<getNumHeaders();i++)
 
 
 //--------------------------------------------------------------------
-//click on filelist header (change sorting)
+//click on OSFileList.header (change sorting)
 long filelist::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
 {
     if (processing)
