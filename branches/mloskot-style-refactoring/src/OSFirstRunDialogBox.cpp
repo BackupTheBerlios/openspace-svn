@@ -27,7 +27,7 @@
 
 #include "OSFirstRunDialogBox.h"
 #include "OSPreferences.h"
-#include "MimeApp.h"
+#include "OSMimeApp.h"
 #include <fx.h>
 
 FXDEFMAP( OSFirstRunDialogBox ) FirstRunMap[] =

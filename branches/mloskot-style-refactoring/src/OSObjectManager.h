@@ -77,13 +77,13 @@ protected:
     /**
      * Copy constructor.
      */
-    OSObjectManager( const objectmanager& );
+    OSObjectManager( const OSObjectManager& );
     
     /**
      * Assignment operator.
      * @param objectmanager - FXApp instance being copied.
      */
-    OSObjectManager& operator= ( const objectmanager& );
+    OSObjectManager& operator= ( const OSObjectManager& );
     
 private:
     

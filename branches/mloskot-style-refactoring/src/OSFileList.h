@@ -47,7 +47,7 @@ private:
 
     string previous_path;
     string type;
-    pathtype *pt;
+    OSPathType *pt;
 
     FXWindow *notifyparent;
     FXLabel *label;
@@ -85,14 +85,14 @@ private:
 
     int icons_size;
 
-    cmddialog *dial;
+    OSCMDDialogBox *dial;
 
     FXDragAction dropaction;    // Drop action
     FXString dragfiles;     // Dragged files
 
     void dropData ( bool clipboard );
     void OSFileList::selectitem ( void );
-    void OSFileList::start_thread ( thread_elem * te );
+    void OSFileList::start_thread ( OSThreadExec * te );
 
     void OSFileList::copymoveremove ( string com_name );
     static void *OSFileList::thread_func ( void *data );
@@ -112,17 +112,17 @@ public:
     virtual ~OSFileList( void );
 
     //==============================================
-    OSFileList ( FXComposite * p, pathtype pt );
+    OSFileList ( FXComposite * p, OSPathType pt );
     //==============================================
 
 
-    objectmanager *objmanager;
+    OSObjectManager *objmanager;
     FXIcon **specialicons;
     FXToolBar *toolbar, *toolbar2;
 
     string path;
     bool active;
-    filelist_base * fb;
+    OSVirtualFileSystemBase * fb;
     OSFileList *filelist_opposite;
 
     enum

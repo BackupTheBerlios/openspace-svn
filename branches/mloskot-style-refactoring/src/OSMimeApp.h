@@ -46,7 +46,7 @@ private:
      * 
      * @todo What is the reason to declare this constructor as private?
      */
-    OSMimeApp( void )
+    OSMimeApp( void );
 
     FXComboBox *programsbox;
     FXLabel *mime_label;

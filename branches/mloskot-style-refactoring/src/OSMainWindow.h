@@ -75,7 +75,7 @@ class MainWindow:public FXMainWindow
     long MainWindow::onUpdate (FXObject * sender, FXSelector sel, void *);
     long MainWindow::onConfigure (FXObject * sender, FXSelector sel, void *);
 
-    int MainWindow::popupDir (filelist * current_filelist, string path, int x, int y);
+    int MainWindow::popupDir (OSFileList * current_filelist, string path, int x, int y);
 
     string MainWindow::parseDir (string dir);
     bool MainWindow::loadMimeSettings (string path, string type);
@@ -114,7 +114,7 @@ class MainWindow:public FXMainWindow
     Frame *left_frame;
     Frame *right_frame;
     FXMenuPane *pane;
-    preferences *pref;
+    OSPreferences *pref;
     float ratio;
 
 
@@ -129,7 +129,7 @@ class MainWindow:public FXMainWindow
     
     FXComboBox *filelisttypecombobox;
     
-objectmanager *objmanager;
+OSObjectManager *objmanager;
 };
 
 
@@ -171,7 +171,7 @@ class Frame
 
     string pathdir;
     string type;
-    filelist *f;
+    OSFileList *f;
     FXButton *toleft;
     FXButton *toright;
     FXButton *toclose;
@@ -180,7 +180,7 @@ class Frame
     FXVerticalFrame * frame;
     FXHorizontalFrame *hf;
 
-    Frame (FXComposite * cp, FXComposite * p, pathtype pt, FXObject * tgt, int position);
+    Frame (FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt, int position);
     void generate_menu (string path, FXObject * tgt);
 
     ~Frame ()

@@ -29,7 +29,7 @@
 
 #include "OSObjectManager.h"
 #include "OSUtils.h"
-#include "MimeApp.h"
+#include "OSMimeApp.h"
 
 #include "OSFileTypeInfo.h"
 #include "OSCommandTypeInfo.h"
@@ -115,7 +115,7 @@ private:
 
     std::string currentCommandName;
     std::string currentFileType;
-    objectmanager* objmanager;
+    OSObjectManager* objmanager;
 
     FXVerticalFrame *frame;
 
@@ -129,7 +129,7 @@ private:
     FXListBox *fileTypeDefaultBox;
     std::string filetypestring;
 
-    MimeApp *mimeapp;
+    OSMimeApp *mimeapp;
     FXColorDialog *colordlg;
 
     FXListBox *commandPluginsList, *availableCommandPluginsList;

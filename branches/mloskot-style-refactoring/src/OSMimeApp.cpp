@@ -25,7 +25,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#include "OSMimeApp.h"
+#include "OSOSMimeApp.h"
 #include "OSCommandTypeInfo.h"
 #include "OSFileTypeInfo.h"
 #include "OSObjectManager.h"
