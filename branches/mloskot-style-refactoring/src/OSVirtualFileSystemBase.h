@@ -25,7 +25,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 #ifndef __OSVIRTUALFILESYSTEMBASE_H__
-#define __OSVIRTUALFILESYSTEMBASE_H_
+#define __OSVIRTUALFILESYSTEMBASE_H__
 
 #include "OSVirtualFileSystemInfo.h"
 #include "OSPathType.h"
