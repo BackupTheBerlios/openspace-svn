@@ -4,7 +4,7 @@
 #define EXPORTFUNCTION extern "C"
 #endif
 
-#include "filelist_search.h"
+#include "OSVfsSearch.h"
 
 #include "../../OSVirtualFileSystemBase.h"
 #include "../../OSVirtualFileSystemInfo.h"
@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-OSVirtualFileSystemInfo filelist_search::setup (void)
+OSVirtualFileSystemInfo OSVfsSearch::setup (void)
 {
 	OSVirtualFileSystemInfo v;
 	
@@ -29,13 +29,13 @@ return v;
 }
 
 
-int filelist_search::osopendir (std::string dir)
+int OSVfsSearch::osopendir (std::string dir)
 {
 
   iter=files.begin(); 
 
 }
-OSFile filelist_search::osreaddir (void)
+OSFile OSVfsSearch::osreaddir (void)
 {
     OSFile os_file;
 
@@ -59,10 +59,10 @@ if(iter!=files.end())
 
 
 }
-int filelist_search::mkdir (std::string dir, int mode)
+int OSVfsSearch::mkdir (std::string dir, int mode)
 {
 }
-int filelist_search::copy (OSThreadExec * te)
+int OSVfsSearch::copy (OSThreadExec * te)
 {
 
 	std::string::size_type pos = te->options.find ("download");
@@ -77,7 +77,7 @@ int filelist_search::copy (OSThreadExec * te)
 	}
 
 }
-int filelist_search::move (OSThreadExec * te)
+int OSVfsSearch::move (OSThreadExec * te)
 {
 
 	std::string::size_type pos = te->options.find ("download");
@@ -92,11 +92,11 @@ int filelist_search::move (OSThreadExec * te)
 	}
 
 }
-int filelist_search::remove (OSThreadExec * te)
+int OSVfsSearch::remove (OSThreadExec * te)
 {
 return fil_local->remove(te);
 }
-int filelist_search::rename (std::string orgname, std::string newname)
+int OSVfsSearch::rename (std::string orgname, std::string newname)
 {
 
 	int ret=fil_local->rename(orgname,newname);
@@ -111,9 +111,9 @@ int filelist_search::rename (std::string orgname, std::string newname)
 
 	return ret;
 }
-int filelist_search::init(std::vector<std::string>* vector_name, OSPathType pt, OSConfigure* conf)
+int OSVfsSearch::init(std::vector<std::string>* vector_name, OSPathType pt, OSConfigure* conf)
 {
-    fil_local=new filelist_local();
+    fil_local=new OSVfsLocal();
 
     pipe = popen (pt.server.c_str(), "r");
 
@@ -137,53 +137,53 @@ iter=files.begin();
     
 
 }
-int filelist_search::mode (std::string file)
+int OSVfsSearch::mode (std::string file)
 {
 return fil_local->mode(file);
 }
-std::string filelist_search::owner (std::string file)
+std::string OSVfsSearch::owner (std::string file)
 {
 return fil_local->owner(file);
 }
-std::string filelist_search::group (std::string file)
+std::string OSVfsSearch::group (std::string file)
 {
 return fil_local->group(file);
 }
-bool filelist_search::mode (std::string file, unsigned int mod, bool recursive)
+bool OSVfsSearch::mode (std::string file, unsigned int mod, bool recursive)
 {
 return fil_local->mode(file,mod,recursive);
 }
-bool filelist_search::owner (std::string file, std::string ow, bool recursive)
+bool OSVfsSearch::owner (std::string file, std::string ow, bool recursive)
 {
 return fil_local->owner(file,ow,recursive);
 }
-bool filelist_search::group (std::string file, std::string gr, bool recursive)
+bool OSVfsSearch::group (std::string file, std::string gr, bool recursive)
 {
 return fil_local->group(file,gr,recursive);
 }
-std::string filelist_search::info (void)
+std::string OSVfsSearch::info (void)
 {
 return "";
 }
-void filelist_search::totalsize (std::string path, unsigned long &size)
+void OSVfsSearch::totalsize (std::string path, unsigned long &size)
 {
 }
-std::string filelist_search::symlink (std::string path)
+std::string OSVfsSearch::symlink (std::string path)
 {
 }
-bool filelist_search::symlink (std::string src, std::string dst)
+bool OSVfsSearch::symlink (std::string src, std::string dst)
 {
 }
-bool filelist_search::hardlink (std::string src, std::string dst)
+bool OSVfsSearch::hardlink (std::string src, std::string dst)
 {
 }
 
-int filelist_search::quit (void)
+int OSVfsSearch::quit (void)
 {
 }
 
 EXPORTFUNCTION OSVirtualFileSystemBase *get_filelist(void)
 {
     FXTRACE ((5, "PLUGIN SEARCH LOAD\n"));
-    return new filelist_search ();
+    return new OSVfsSearch ();
 }

@@ -46,7 +46,7 @@ class OSThreadExec;
  * 
  * @todo This plugin will be reorganized/renamed.
  */
-class filelist_local: public OSVirtualFileSystemBase
+class OSVfsLocal: public OSVirtualFileSystemBase
 {
 private:
 

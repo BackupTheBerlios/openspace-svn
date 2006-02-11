@@ -3,14 +3,16 @@
 #else
 #define EXPORTFUNCTION extern "C"
 #endif
-#include "filelist_archive.h"
+#include "OSVfsArchive.h"
+#include "../../OSThreadExec.h"
 
+using namespace std;
 
-vfs filelist_archive::setup (void)
+OSVirtualFileSystemInfo OSVfsArchive::setup (void)
 {
-	vfs v;
+	OSVirtualFileSystemInfo v;
 	
-	v.vfsheaders.push_back(vfsheader_container("name"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("name"));
 	v.information="tar.bz2 and tar.gz archive - default plugin";
 	v.version="1";
 	v.type="vfs";
@@ -18,17 +20,16 @@ return v;
 	
 }
 
-
-int filelist_archive::osopendir (string dir)
+int OSVfsArchive::osopendir (string dir)
 {
-
 this->dir=dir;
 iter=files.begin();
 }
-osfile filelist_archive::osreaddir (void)
+
+OSFile OSVfsArchive::osreaddir (void)
 {
 
-osfile os_file;
+OSFile os_file;
 
 while(iter!=files.end())
 {
@@ -83,24 +84,24 @@ os_file.name=*iter;
     return os_file;
 
 }
-int filelist_archive::mkdir (string dir, int mode)
+int OSVfsArchive::mkdir (string dir, int mode)
 {
 }
-int filelist_archive::copy (thread_elem * te)
+int OSVfsArchive::copy (OSThreadExec * te)
 {
 filesoperation("copy",te);
 }
 
-int filelist_archive::move (thread_elem * te)
+int OSVfsArchive::move (OSThreadExec * te)
 {
 filesoperation("move",te);
 }
-int filelist_archive::remove (thread_elem * te)
+int OSVfsArchive::remove (OSThreadExec * te)
 {
 filesoperation("remove",te);
 }
 
-int filelist_archive::filesoperation(string typeoperation,thread_elem * te)
+int OSVfsArchive::filesoperation(string typeoperation,OSThreadExec * te)
 {
 
  vector < string >::iterator iter;
@@ -153,7 +154,7 @@ int filelist_archive::filesoperation(string typeoperation,thread_elem * te)
 		if(typeoperation=="move")
 		{
 		
-		thread_elem *el2 = new thread_elem (this, "remove", "", file_list_vec);
+		OSThreadExec *el2 = new OSThreadExec (this, "remove", "", file_list_vec);
 		this->remove(el2);
 		delete el2;
 		
@@ -308,10 +309,10 @@ te->end=true;
 }
 
 
-int filelist_archive::rename (string orgname, string newname)
+int OSVfsArchive::rename (string orgname, string newname)
 {
 }
-int filelist_archive::init (vector < string > *vector_name, pathtype pt, configure * conf)
+int OSVfsArchive::init (vector < string > *vector_name, OSPathType pt, OSConfigure * conf)
 {
 archive_filename = pt.server;
 
@@ -347,49 +348,49 @@ if (pipe != NULL)
 iter=files.begin();
 
 }
-int filelist_archive::mode (string file)
+int OSVfsArchive::mode (string file)
 {
 }
-string filelist_archive::owner (string file)
-{
-return "";
-}
-string filelist_archive::group (string file)
+string OSVfsArchive::owner (string file)
 {
 return "";
 }
-bool filelist_archive::mode (string file, unsigned int, bool recursive)
-{
-}
-bool filelist_archive::owner (string file, string, bool recursive)
-{
-}
-bool filelist_archive::group (string file, string, bool recursive)
-{
-}
-string filelist_archive::info (void)
+string OSVfsArchive::group (string file)
 {
 return "";
 }
-void filelist_archive::totalsize (string path, unsigned long &size)
+bool OSVfsArchive::mode (string file, unsigned int, bool recursive)
 {
 }
-string filelist_archive::symlink (string path)
+bool OSVfsArchive::owner (string file, string, bool recursive)
+{
+}
+bool OSVfsArchive::group (string file, string, bool recursive)
+{
+}
+string OSVfsArchive::info (void)
 {
 return "";
 }
-bool filelist_archive::symlink (string src, string dst)
+void OSVfsArchive::totalsize (string path, unsigned long &size)
 {
 }
-bool filelist_archive::hardlink (string src, string dst)
+string OSVfsArchive::symlink (string path)
+{
+return "";
+}
+bool OSVfsArchive::symlink (string src, string dst)
+{
+}
+bool OSVfsArchive::hardlink (string src, string dst)
 {
 }
 
-int filelist_archive::quit (void)
+int OSVfsArchive::quit (void)
 {
 }
-EXPORTFUNCTION filelist_base *get_filelist (void)
+EXPORTFUNCTION OSVirtualFileSystemBase *get_filelist (void)
 {
     FXTRACE ((5, "PLUGIN LOAD\n"));
-    return new filelist_archive ();
+    return new OSVfsArchive ();
 }

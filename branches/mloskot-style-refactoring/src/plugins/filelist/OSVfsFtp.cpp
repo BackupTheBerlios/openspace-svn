@@ -33,8 +33,12 @@
 #define EXPORTFUNCTION extern "C"
 #endif
 
-#include "filelist_ftp.h"
+#include "OSVfsFtp.h"
 #include "../../OSVirtualFileSystemBase.h"
+#include "../../OSFile.h"
+#include "../../OSPathType.h"
+#include "../../OSConfigure.h"
+#include "../../OSThreadExec.h"
 
 #include <sstream>
 #include <sys/types.h>
@@ -46,6 +50,8 @@
 #include <string>
 #include <vector>
 #include <map>
+using namespace std;
+
 
 SimpleLogger::SimpleLogger()
 {
@@ -92,14 +98,14 @@ void SimpleLogger::error( FXString & error )
     fxmessage( "ERROR=%s\n", error.text() );
 }
 
-vfs filelist_ftp::setup ( void )
+OSVirtualFileSystemInfo OSVfsFtp::setup ( void )
 {
-    OSVirtualFileSystemBase v;
+    OSVirtualFileSystemInfo v;
 
-    v.vfsheaders.push_back( vfsheader_container( "name" ) );
-    v.vfsheaders.push_back( vfsheader_container( "size", "size" ) );
-    v.vfsheaders.push_back( vfsheader_container( "owner" ) );
-    v.vfsheaders.push_back( vfsheader_container( "group" ) );
+    v.vfsheaders.push_back( OSVirtualFileSystemHeader( "name" ) );
+    v.vfsheaders.push_back( OSVirtualFileSystemHeader( "size", "size" ) );
+    v.vfsheaders.push_back( OSVirtualFileSystemHeader( "owner" ) );
+    v.vfsheaders.push_back( OSVirtualFileSystemHeader( "group" ) );
     v.information = "FTP - default plugin";
     v.version = "1";
     v.type = "network";
@@ -108,7 +114,7 @@ vfs filelist_ftp::setup ( void )
 }
 
 
-int filelist_ftp::priv_osopendir ( std::string dir, std::string prefix, std::map <std::string, osfile> & filesMap, std::map <std::string, osfile>::iterator & iter )
+int OSVfsFtp::priv_osopendir ( std::string dir, std::string prefix, std::map <std::string, OSFile> & filesMap, std::map <std::string, OSFile>::iterator & iter )
 {
 
     filesMap.clear();
@@ -162,7 +168,7 @@ int filelist_ftp::priv_osopendir ( std::string dir, std::string prefix, std::map
 
 
 
-        osfile os_file;
+        OSFile os_file;
         os_file.type = 0;
         if ( ptr[ 0 ] == 'd' )
             os_file.type = os_file.type | FOLDER;
@@ -170,7 +176,7 @@ int filelist_ftp::priv_osopendir ( std::string dir, std::string prefix, std::map
             os_file.type = 0;
 
         std::stringstream parser ( ptr );
-        std::std::string field;
+        std::string field;
 
         std::string user;
         std::string group;
@@ -252,7 +258,7 @@ int filelist_ftp::priv_osopendir ( std::string dir, std::string prefix, std::map
 
 
 
-int filelist_ftp::osopendir ( std::string dir )
+int OSVfsFtp::osopendir ( std::string dir )
 {
 
 
@@ -264,9 +270,9 @@ int filelist_ftp::osopendir ( std::string dir )
 
 }
 
-osfile filelist_ftp::priv_osreaddir ( std::map <std::string, osfile> & filesMap, std::map <std::string, osfile>::iterator & iter )
+OSFile OSVfsFtp::priv_osreaddir ( std::map <std::string, OSFile> & filesMap, std::map <std::string, OSFile>::iterator & iter )
 {
-    osfile os_file;
+    OSFile os_file;
 
     if ( iter != filesMap.end() )
     {
@@ -284,12 +290,12 @@ osfile filelist_ftp::priv_osreaddir ( std::map <std::string, osfile> & filesMap,
 }
 
 
-osfile filelist_ftp::osreaddir ( void )
+OSFile OSVfsFtp::osreaddir ( void )
 {
 
     return priv_osreaddir( filesMap, iter );
 }
-int filelist_ftp::mkdir ( std::string dir, int mode )
+int OSVfsFtp::mkdir ( std::string dir, int mode )
 {
     pftp->mkDir( dir.c_str() );
 }
@@ -308,7 +314,7 @@ struct Bucket
 
 
 
-void filelist_ftp::local_totalsize ( std::string path, unsigned long &size )
+void OSVfsFtp::local_totalsize ( std::string path, unsigned long &size )
 {
 
     if ( FXFile::isDirectory ( path.c_str () ) )
@@ -362,7 +368,7 @@ void filelist_ftp::local_totalsize ( std::string path, unsigned long &size )
 
 
 
-int filelist_ftp::copy ( thread_elem * te )
+int OSVfsFtp::copy ( OSThreadExec * te )
 {
     log->te = te;
     unsigned long size = 0;
@@ -440,7 +446,7 @@ int filelist_ftp::copy ( thread_elem * te )
 }
 
 
-void filelist_ftp::goLocalRecursive ( std::string path, std::string prefix, thread_elem *te )
+void OSVfsFtp::goLocalRecursive ( std::string path, std::string prefix, OSThreadExec *te )
 {
 
     if ( te->cancel == true )
@@ -499,23 +505,23 @@ void filelist_ftp::goLocalRecursive ( std::string path, std::string prefix, thre
 
 
 
-int filelist_ftp::move ( thread_elem * te )
+int OSVfsFtp::move ( OSThreadExec * te )
 {}
 
 
-void filelist_ftp::gorecursive( std::string file, unsigned long &size )
+void OSVfsFtp::gorecursive( std::string file, unsigned long &size )
 {
 
 
-    std::map <std::string, osfile> filesMap;
-    std::map <std::string, osfile>::iterator iter;
+    std::map <std::string, OSFile> filesMap;
+    std::map <std::string, OSFile>::iterator iter;
 
     if ( priv_osopendir( file, file + "/", filesMap, iter ) != -1 )
     {
 
         while ( 1 )
         {
-            osfile os_file = priv_osreaddir ( filesMap, iter );
+            OSFile os_file = priv_osreaddir ( filesMap, iter );
             if ( os_file.name == "" )
                 break;
 
@@ -532,7 +538,7 @@ void filelist_ftp::gorecursive( std::string file, unsigned long &size )
 
 }
 
-void filelist_ftp::getRecursiveFiles( std::vector < std::string >src, unsigned long &size )
+void OSVfsFtp::getRecursiveFiles( std::vector < std::string >src, unsigned long &size )
 {
 
     filesMapGlobal.clear();
@@ -544,7 +550,7 @@ void filelist_ftp::getRecursiveFiles( std::vector < std::string >src, unsigned l
     {
 
         std::string name = FXFile::name( iter_files->c_str() ).text();
-        osfile os_file;
+        OSFile os_file;
         os_file.name = name;
         os_file.type = filesMap[ name ].type;
         os_file.size = filesMap[ name ].size;
@@ -572,7 +578,7 @@ void filelist_ftp::getRecursiveFiles( std::vector < std::string >src, unsigned l
     }
 }
 
-int filelist_ftp::remove ( thread_elem * te )
+int OSVfsFtp::remove ( OSThreadExec * te )
 {
     unsigned long size;
     getRecursiveFiles( te->src, size );
@@ -594,7 +600,7 @@ int filelist_ftp::remove ( thread_elem * te )
 
 
 }
-int filelist_ftp::rename ( std::string orgname, std::string newname )
+int OSVfsFtp::rename ( std::string orgname, std::string newname )
 {
 
     FXString tmp;
@@ -602,7 +608,7 @@ int filelist_ftp::rename ( std::string orgname, std::string newname )
     pftp->sendCmd( "RNTO ", FXFile::name( newname.c_str() ), tmp );
 
 }
-int filelist_ftp::init ( std::vector < std::string > *vector_name, pathtype pt, configure * conf )
+int OSVfsFtp::init ( std::vector < std::string > *vector_name, OSPathType pt, OSConfigure * conf )
 {
 
     fieldsnum = vector_name->size ();
@@ -616,7 +622,7 @@ int filelist_ftp::init ( std::vector < std::string > *vector_name, pathtype pt, 
     else return -1;
 }
 
-int filelist_ftp::str_mode_int( std::string per )
+int OSVfsFtp::str_mode_int( std::string per )
 {
     unsigned int mode = 0;
     if ( per[ 0 ] == 'r' )
@@ -640,7 +646,7 @@ int filelist_ftp::str_mode_int( std::string per )
     return mode;
 }
 
-int filelist_ftp::mode ( std::string file )
+int OSVfsFtp::mode ( std::string file )
 {
 
     std::string per = filesMap[ FXFile::name( file.c_str() ).text() ].mode;
@@ -648,15 +654,15 @@ int filelist_ftp::mode ( std::string file )
     return str_mode_int( per );
 
 }
-std::string filelist_ftp::owner ( std::string file )
+std::string OSVfsFtp::owner ( std::string file )
 {
     return filesMap[ FXFile::name( file.c_str() ).text() ].user;
 }
-std::string filelist_ftp::group ( std::string file )
+std::string OSVfsFtp::group ( std::string file )
 {
     return filesMap[ FXFile::name( file.c_str() ).text() ].group;
 }
-bool filelist_ftp::mode ( std::string file, unsigned int per, bool recursive )
+bool OSVfsFtp::mode ( std::string file, unsigned int per, bool recursive )
 {
 
     unsigned int mode = per;
@@ -701,15 +707,15 @@ bool filelist_ftp::mode ( std::string file, unsigned int per, bool recursive )
 
 
 }
-bool filelist_ftp::owner ( std::string file, std::string, bool recursive )
+bool OSVfsFtp::owner ( std::string file, std::string, bool recursive )
 {}
-bool filelist_ftp::group ( std::string file, std::string, bool recursive )
+bool OSVfsFtp::group ( std::string file, std::string, bool recursive )
 {}
-std::string filelist_ftp::info ( void )
+std::string OSVfsFtp::info ( void )
 {
     return "";
 }
-void filelist_ftp::totalsize ( std::string path, unsigned long &size )
+void OSVfsFtp::totalsize ( std::string path, unsigned long &size )
 {
     size = 0;
 
@@ -731,21 +737,21 @@ void filelist_ftp::totalsize ( std::string path, unsigned long &size )
 
 
 }
-std::string filelist_ftp::symlink ( std::string path )
+std::string OSVfsFtp::symlink ( std::string path )
 {
     return "";
 }
-bool filelist_ftp::symlink ( std::string src, std::string dst )
+bool OSVfsFtp::symlink ( std::string src, std::string dst )
 {}
-bool filelist_ftp::hardlink ( std::string src, std::string dst )
+bool OSVfsFtp::hardlink ( std::string src, std::string dst )
 {}
 
-int filelist_ftp::quit ( void )
+int OSVfsFtp::quit ( void )
 {
     pftp->logout();
 }
 
-std::string filelist_ftp::getinitialdir( void )
+std::string OSVfsFtp::getinitialdir( void )
 {
     FXString base;
     pftp->pwd( base );
@@ -755,8 +761,8 @@ std::string filelist_ftp::getinitialdir( void )
 
 
 
-EXPORTFUNCTION filelist_base *get_filelist ( void )
+EXPORTFUNCTION OSVirtualFileSystemBase *get_filelist ( void )
 {
     FXTRACE ( ( 5, "PLUGIN LOAD\n" ) );
-    return new filelist_ftp ();
+    return new OSVfsFtp ();
 }

@@ -3,7 +3,7 @@
 
 #include "../../OSVirtualFileSystemBase.h"
 #include "../../OSPathType.h"
-#include "filelist_local.h"
+#include "OSVfsLocal.h"
 
 #include <string>
 #include <vector>
@@ -17,7 +17,7 @@ class OSConfigure;
  *
  * @todo To rename.
  */
-class filelist_search : public OSVirtualFileSystemBase
+class OSVfsSearch : public OSVirtualFileSystemBase
 {
   
 private:
@@ -27,7 +27,7 @@ private:
   std::vector<std::string> files;
   std::vector<std::string>::iterator iter;
 
-  filelist_local *fil_local;
+  OSVfsLocal *fil_local;
   
 public:
   

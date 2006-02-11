@@ -73,7 +73,7 @@ public:
  * 
  * @todo Pass "big" vectors through by-reference not by-value!
  */
-class filelist_ftp : public OSVirtualFileSystemBase
+class OSVfsFtp : public OSVirtualFileSystemBase
 {
 
 private:
@@ -90,9 +90,9 @@ private:
     int fieldsnum;
     std::vector<std::string> fields;
 
-    int priv_osopendir( std::string dir, std::string prefix, std::map <std::string, osfile> & filesMap, std::map <std::string, osfile>::iterator & iter );
+    int priv_osopendir( std::string dir, std::string prefix, std::map <std::string, OSFile> & filesMap, std::map <std::string, OSFile>::iterator & iter );
     void gorecursive( std::string file, unsigned long &size );
-    OSFile priv_osreaddir( std::map <std::string, osfile> & filesMap, std::map <std::string, OSFile>::iterator & iter2 );
+    OSFile priv_osreaddir( std::map <std::string, OSFile> & filesMap, std::map <std::string, OSFile>::iterator & iter2 );
     void getRecursiveFiles( std::vector<std::string> src, unsigned long &size );
     void goLocalRecursive( std::string path, std::string prefix, OSThreadExec* te );
     void local_totalsize( std::string path, unsigned long &size );

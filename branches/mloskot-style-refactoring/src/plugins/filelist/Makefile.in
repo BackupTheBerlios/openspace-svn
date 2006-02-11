@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-SOURCES = $(libfilelistlocal_la_SOURCES)
+SOURCES = $(libOSVfsArchive_la_SOURCES) $(libOSVfsFtp_la_SOURCES) $(libOSVfsLocal_la_SOURCES) $(libOSVfsSearch_la_SOURCES)
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -48,17 +48,30 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(pkglibdir)"
 pkglibLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(pkglib_LTLIBRARIES)
-libfilelistlocal_la_LIBADD =
-am_libfilelistlocal_la_OBJECTS = filelist_local.lo OSFXFile.lo \
+libOSVfsArchive_la_LIBADD =
+am_libOSVfsArchive_la_OBJECTS = OSVfsArchive.lo OSThreadExec.lo
+libOSVfsArchive_la_OBJECTS = $(am_libOSVfsArchive_la_OBJECTS)
+libOSVfsFtp_la_LIBADD =
+am_libOSVfsFtp_la_OBJECTS = OSVfsFtp.lo pftp.lo OSThreadExec.lo
+libOSVfsFtp_la_OBJECTS = $(am_libOSVfsFtp_la_OBJECTS)
+libOSVfsLocal_la_LIBADD =
+am_libOSVfsLocal_la_OBJECTS = OSVfsLocal.lo OSFXFile.lo \
 	OSThreadExec.lo OSUtils.lo
-libfilelistlocal_la_OBJECTS = $(am_libfilelistlocal_la_OBJECTS)
+libOSVfsLocal_la_OBJECTS = $(am_libOSVfsLocal_la_OBJECTS)
+libOSVfsSearch_la_LIBADD =
+am_libOSVfsSearch_la_OBJECTS = OSVfsSearch.lo OSFXFile.lo \
+	OSThreadExec.lo
+libOSVfsSearch_la_OBJECTS = $(am_libOSVfsSearch_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/src
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/OSFXFile.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/OSThreadExec.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/OSUtils.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/filelist_local.Plo
+@AMDEP_TRUE@	./$(DEPDIR)/OSVfsArchive.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/OSVfsFtp.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/OSVfsLocal.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/OSVfsSearch.Plo ./$(DEPDIR)/pftp.Plo
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -75,12 +88,13 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(libfilelistlocal_la_SOURCES)
-DIST_SOURCES = $(libfilelistlocal_la_SOURCES)
+SOURCES = $(libOSVfsArchive_la_SOURCES) $(libOSVfsFtp_la_SOURCES) \
+	$(libOSVfsLocal_la_SOURCES) $(libOSVfsSearch_la_SOURCES)
+DIST_SOURCES = $(libOSVfsArchive_la_SOURCES) $(libOSVfsFtp_la_SOURCES) \
+	$(libOSVfsLocal_la_SOURCES) $(libOSVfsSearch_la_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-#libfilelistsearch.la  libfilelistarchive.la libfilelistftp.la libfilelistsftp.la
 pkglibdir = $(libdir)/openspace/plugins/filelist
 ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
@@ -178,10 +192,16 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-pkglib_LTLIBRARIES = libfilelistlocal.la  
+pkglib_LTLIBRARIES = libOSVfsLocal.la libOSVfsSearch.la libOSVfsArchive.la libOSVfsFtp.la   
 INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
-libfilelistlocal_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs`  
-libfilelistlocal_la_SOURCES = filelist_local.cpp filelist_local.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h ../../OSUtils.cpp ../../OSUtils.h 
+libOSVfsLocal_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs`  
+libOSVfsLocal_la_SOURCES = OSVfsLocal.cpp OSVfsLocal.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h ../../OSUtils.cpp ../../OSUtils.h 
+libOSVfsSearch_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+libOSVfsSearch_la_SOURCES = OSVfsSearch.cpp OSVfsSearch.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+libOSVfsArchive_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+libOSVfsArchive_la_SOURCES = OSVfsArchive.cpp OSVfsArchive.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+libOSVfsFtp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+libOSVfsFtp_la_SOURCES = OSVfsFtp.cpp OSVfsFtp.h  pftp.cpp pftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSConfigure.h 
 all: all-am
 
 .SUFFIXES:
@@ -242,8 +262,14 @@ clean-pkglibLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-libfilelistlocal.la: $(libfilelistlocal_la_OBJECTS) $(libfilelistlocal_la_DEPENDENCIES) 
-	$(CXXLINK) -rpath $(pkglibdir) $(libfilelistlocal_la_LDFLAGS) $(libfilelistlocal_la_OBJECTS) $(libfilelistlocal_la_LIBADD) $(LIBS)
+libOSVfsArchive.la: $(libOSVfsArchive_la_OBJECTS) $(libOSVfsArchive_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libOSVfsArchive_la_LDFLAGS) $(libOSVfsArchive_la_OBJECTS) $(libOSVfsArchive_la_LIBADD) $(LIBS)
+libOSVfsFtp.la: $(libOSVfsFtp_la_OBJECTS) $(libOSVfsFtp_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libOSVfsFtp_la_LDFLAGS) $(libOSVfsFtp_la_OBJECTS) $(libOSVfsFtp_la_LIBADD) $(LIBS)
+libOSVfsLocal.la: $(libOSVfsLocal_la_OBJECTS) $(libOSVfsLocal_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libOSVfsLocal_la_LDFLAGS) $(libOSVfsLocal_la_OBJECTS) $(libOSVfsLocal_la_LIBADD) $(LIBS)
+libOSVfsSearch.la: $(libOSVfsSearch_la_OBJECTS) $(libOSVfsSearch_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libOSVfsSearch_la_LDFLAGS) $(libOSVfsSearch_la_OBJECTS) $(libOSVfsSearch_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -254,7 +280,11 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSFXFile.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSThreadExec.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSUtils.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filelist_local.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSVfsArchive.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSVfsFtp.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSVfsLocal.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSVfsSearch.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pftp.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -509,14 +539,8 @@ uninstall-am: uninstall-info-am uninstall-pkglibLTLIBRARIES
 	uninstall-pkglibLTLIBRARIES
 
 
-#libfilelistsearch_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
-#libfilelistsearch_la_SOURCES =filelist_search.cpp filelist_search.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
-#libfilelistarchive_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
-#libfilelistarchive_la_SOURCES =filelist_archive.cpp filelist_archive.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
 #libfilelistsftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
 #libfilelistsftp_la_SOURCES =filelist_sftp.cpp filelist_sftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
-#libfilelistftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
-#libfilelistftp_la_SOURCES =filelist_ftp.cpp filelist_ftp.h  pftp.cpp pftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSConfigure.h 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

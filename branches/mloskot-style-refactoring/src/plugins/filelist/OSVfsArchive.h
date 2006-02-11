@@ -18,7 +18,7 @@ class OSConfigure;
  *
  * @todo Why all filelist_* plugins redeclare the same interface?
  */
-class filelist_archive : public OSVirtualFileSystemBase
+class OSVfsArchive : public OSVirtualFileSystemBase
 {
  
 private:  

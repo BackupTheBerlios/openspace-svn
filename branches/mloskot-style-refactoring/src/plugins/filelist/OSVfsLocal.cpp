@@ -5,7 +5,7 @@
 #define EXPORTFUNCTION extern "C"
 #endif
 
-#include "filelist_local.h"
+#include "OSVfsLocal.h"
 #include "OSFXFile.h"
 #include "../../OSVirtualFileSystemHeader.h"
 #include "../../OSVirtualFileSystemInfo.h"
@@ -33,10 +33,8 @@
 #include <string>
 #include <vector>
 
-// XXX - What this global is for?
-std::vector<std::string> name;
 
-OSVirtualFileSystemInfo filelist_local::setup (void)
+OSVirtualFileSystemInfo OSVfsLocal::setup (void)
 {
 	OSVirtualFileSystemInfo v;
 	
@@ -52,7 +50,7 @@ OSVirtualFileSystemInfo filelist_local::setup (void)
     return v;	
 }
 
-int filelist_local::init (std::vector<std::string> *vector_name, OSPathType pt, OSConfigure * conf)
+int OSVfsLocal::init (std::vector<std::string> *vector_name, OSPathType pt, OSConfigure * conf)
 {
 
     fieldsnum = vector_name->size ();
@@ -62,7 +60,7 @@ int filelist_local::init (std::vector<std::string> *vector_name, OSPathType pt, 
 }
 
 
-OSFile filelist_local::osreaddir ()
+OSFile OSVfsLocal::osreaddir ()
 {
 
     OSFile os_file;
@@ -182,7 +180,7 @@ OSFile filelist_local::osreaddir ()
 }
 
 
-int filelist_local::osopendir (std::string dir)
+int OSVfsLocal::osopendir (std::string dir)
 {
     this->dir = dir;
 
@@ -235,7 +233,7 @@ int filelist_local::osopendir (std::string dir)
 
 }
 
-int filelist_local::mkdir (std::string dir, int mode)
+int OSVfsLocal::mkdir (std::string dir, int mode)
 {
     FXTRACE ((5, "MKDIR\n"));
     std::string d = this->dir + SEPARATOR + dir;
@@ -244,18 +242,18 @@ int filelist_local::mkdir (std::string dir, int mode)
     return 0;
 }
 
-int filelist_local::copy ( OSThreadExec * te)
+int OSVfsLocal::copy ( OSThreadExec * te)
 {
     copymove (te, true);
 }
 
-int filelist_local::move (OSThreadExec* te)
+int OSVfsLocal::move (OSThreadExec* te)
 {
     copymove (te, false);
 }
 
 
-int filelist_local::remove (OSThreadExec* te)
+int OSVfsLocal::remove (OSThreadExec* te)
 {
 
     bool canc = false;
@@ -290,7 +288,7 @@ int filelist_local::remove (OSThreadExec* te)
 
 }
 
-int filelist_local::rename (std::string orgname, std::string newname)
+int OSVfsLocal::rename (std::string orgname, std::string newname)
 {
 
     FXString newfile = newname.c_str ();
@@ -325,7 +323,7 @@ int filelist_local::rename (std::string orgname, std::string newname)
 }
 
 
-int filelist_local::copymove (OSThreadExec* te, bool copy)
+int OSVfsLocal::copymove (OSThreadExec* te, bool copy)
 {
 
     unsigned long size = 0;
@@ -388,7 +386,7 @@ int filelist_local::copymove (OSThreadExec* te, bool copy)
 
 
 
-void filelist_local::totalsize (std::string path, unsigned long &size)
+void OSVfsLocal::totalsize (std::string path, unsigned long &size)
 {
 
     if (FXFile::isDirectory (path.c_str ()))
@@ -436,19 +434,19 @@ void filelist_local::totalsize (std::string path, unsigned long &size)
 
 }
 
-std::string filelist_local::info (void)
+std::string OSVfsLocal::info (void)
 {
     return "";
 }
 
 
-int filelist_local::mode (std::string file)
+int OSVfsLocal::mode (std::string file)
 {
     struct stat status;
     return !file.empty () && (::stat (file.c_str (), &status) == 0) ? status.st_mode : 0;
 }
 
-bool filelist_local::mode (std::string file, unsigned int mod, bool recursive)
+bool OSVfsLocal::mode (std::string file, unsigned int mod, bool recursive)
 {
     FXTRACE ((5, "MODE"));
     if (!recursive)
@@ -489,16 +487,16 @@ bool filelist_local::mode (std::string file, unsigned int mod, bool recursive)
     }
 }
 
-std::string filelist_local::owner (std::string file)
+std::string OSVfsLocal::owner (std::string file)
 {
     return FXFile::owner (file.c_str ()).text ();
 }
-std::string filelist_local::group (std::string file)
+std::string OSVfsLocal::group (std::string file)
 {
     return FXFile::group (file.c_str ()).text ();
 }
 
-bool filelist_local::owner (std::string file, std::string ownername, bool recursive)
+bool OSVfsLocal::owner (std::string file, std::string ownername, bool recursive)
 {
     FXTRACE ((5, "MODE"));
     if (!recursive)
@@ -538,7 +536,7 @@ bool filelist_local::owner (std::string file, std::string ownername, bool recurs
     }
 }
 
-bool filelist_local::group (std::string file, std::string groupname, bool recursive)
+bool OSVfsLocal::group (std::string file, std::string groupname, bool recursive)
 {
     FXTRACE ((5, "MODE"));
     if (!recursive)
@@ -576,21 +574,21 @@ bool filelist_local::group (std::string file, std::string groupname, bool recurs
     }
 }
 
-std::string filelist_local::symlink (std::string path)
+std::string OSVfsLocal::symlink (std::string path)
 {
     return FXFile::symlink (path.c_str ()).text ();
 }
-bool filelist_local::symlink (std::string src, std::string dst)
+bool OSVfsLocal::symlink (std::string src, std::string dst)
 {
     return FXFile::symlink (src.c_str (), dst.c_str ());
 }
-bool filelist_local::hardlink (std::string src, std::string dst)
+bool OSVfsLocal::hardlink (std::string src, std::string dst)
 {
     return FXFile::link (src.c_str (), dst.c_str ());
 }
 
 
-int filelist_local::quit (void)
+int OSVfsLocal::quit (void)
 {
     return 0;
 }
@@ -598,5 +596,5 @@ int filelist_local::quit (void)
 EXPORTFUNCTION OSVirtualFileSystemBase* get_filelist (void)
 {
     FXTRACE ((5, "PLUGIN LOAD\n"));
-    return new filelist_local ();
+    return new OSVfsLocal ();
 }

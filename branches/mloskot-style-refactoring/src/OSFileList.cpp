@@ -254,11 +254,12 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     }
   }
 
+    string firstLetter=this->type.substr(0,1);
+    transform (firstLetter.begin(),firstLetter.end(), firstLetter.begin(), ::toupper);
 
-    
+    string pluginName="libOSVfs"+firstLetter+this->type.substr(1,this->type.length()-1);
 
-
-    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/filelist/libfilelist" + this->type;
+    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/filelist/" +pluginName;
 
 
 #ifdef WIN32
@@ -269,7 +270,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
     if(!FXFile::exists(plugin_path.c_str()))
     {
-    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libfilelist")+ this->type;
+    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libVfs")+ pluginName;
     #ifdef WIN32
     plugin_path += ".dll";
     #else
