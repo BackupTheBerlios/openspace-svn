@@ -1,5 +1,6 @@
 #include <fx.h>
 #include "../../OSCMDDialogBox.h"
+#include "../../OSThreadExec.h"
 
 #include <string>
 using namespace std;
@@ -49,7 +50,7 @@ class OSEditSymlink:public OSCMDDialogBox
     {
     
         int error = 0;
-    /*
+    
 	
 	vector < string >::iterator iter;
 	int i=0;
@@ -67,7 +68,7 @@ class OSEditSymlink:public OSCMDDialogBox
 	int error = 0;
 	    vector<string> srcfile;
 	    srcfile.push_back(*iter);
-	    thread_elem *el = new thread_elem (fb, "remove", "",srcfile);
+	    OSThreadExec *el = new OSThreadExec (fb, "remove", "",srcfile);
 	    fb->remove(el);
 	
            bool ret=fb->symlink ( newname,*iter);	
@@ -86,7 +87,7 @@ class OSEditSymlink:public OSCMDDialogBox
 	
 	}
 
-    */	
+    	
 	return error;
 	
     }

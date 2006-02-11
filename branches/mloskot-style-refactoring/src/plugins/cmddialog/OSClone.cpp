@@ -1,5 +1,6 @@
 #include <fx.h>
 #include "../../OSCMDDialogBox.h"
+#include "../../OSThreadExec.h"
 
 #include <string>
 using namespace std;
@@ -45,7 +46,7 @@ public:
     virtual int OSClone::exec ( void )
     {
         int error = 0;
-    /*
+    
         
         vector < string >::iterator iter;
         int i = 0;
@@ -58,7 +59,7 @@ public:
             string filename = FXFile::name( iter->c_str() ).text();
             string dirname = FXFile::directory( iter->c_str() ).text();
 
-            thread_elem *el2 = new OSThreadExec ( fb, "copy", "upload", *iter, destdir );
+            OSThreadExec *el2 = new OSThreadExec ( fb, "copy", "upload", *iter, destdir );
             fb->copy ( el2 );
             delete el2;
 
@@ -88,7 +89,7 @@ public:
             i++;
         }
 
-    */
+    
         return error;
 
     }
