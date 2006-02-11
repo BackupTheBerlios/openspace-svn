@@ -1052,7 +1052,7 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
                  
                  if(simple_command==true)
                  {
-                 OSThreadExec *el = new OSThreadExec (fb, "execute", options,fullname,exec);
+		 OSThreadExec *el = new OSThreadExec (fb, "execute", options,fullname,exec);
                  start_thread (el);
                  }
                  else           
@@ -1067,7 +1067,7 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
          {
            OSThreadExec *el = new OSThreadExec (fb, "execute", options,src,exec);
            start_thread (el);
-         }
+	 }
         
         }
 
@@ -1956,7 +1956,8 @@ long OSFileList::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
     }
     else
     {
-    num = ((int)*((int*)ptr));
+    //num = ((int)*((int*)ptr));
+    num = (int)ptr;
     }
 
     if (num == sort_nr)
