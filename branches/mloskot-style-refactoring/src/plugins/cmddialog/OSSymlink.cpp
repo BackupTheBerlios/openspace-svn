@@ -18,11 +18,11 @@ using namespace std;
 #define SEPARATOR "/"
 #endif
 
-class symlink_cmddialog:public cmddialog
+class OSSymlink:public OSCMDDialogBox
 {
-  FXDECLARE (symlink_cmddialog) protected:
+  FXDECLARE (OSSymlink) protected:
 
-    symlink_cmddialog (const symlink_cmddialog &)
+    OSSymlink (const OSSymlink &)
     {
     }
 
@@ -36,16 +36,16 @@ class symlink_cmddialog:public cmddialog
 
     enum
     {
-	ID_ENTER = cmddialog::ID_LAST,
+	ID_ENTER = OSCMDDialogBox::ID_LAST,
     };
 
-    symlink_cmddialog ()
+    OSSymlink ()
     {
     }
-    symlink_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src);
+    OSSymlink (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
 
-    virtual int symlink_cmddialog::exec (void)
+    virtual int OSSymlink::exec (void)
     {
 	int error = 0;
 	vector < string >::iterator iter;
@@ -80,17 +80,17 @@ class symlink_cmddialog:public cmddialog
     }
 
 
-    long symlink_cmddialog::press (FXObject * sender, FXSelector, void *);
+    long OSSymlink::press (FXObject * sender, FXSelector, void *);
 
 };
 
-FXDEFMAP (symlink_cmddialog) symlink_cmddialogMap[] =
+FXDEFMAP (OSSymlink) OSSymlinkMap[] =
 {
-FXMAPFUNC (SEL_COMMAND, symlink_cmddialog::ID_ENTER, symlink_cmddialog::press),};
-FXIMPLEMENT (symlink_cmddialog, cmddialog, symlink_cmddialogMap, ARRAYNUMBER (symlink_cmddialogMap)) 
+FXMAPFUNC (SEL_COMMAND, OSSymlink::ID_ENTER, OSSymlink::press),};
+FXIMPLEMENT (OSSymlink, OSCMDDialogBox, OSSymlinkMap, ARRAYNUMBER (OSSymlinkMap)) 
 
-symlink_cmddialog::symlink_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src):
-cmddialog (w, fb, src)
+OSSymlink::OSSymlink (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src):
+OSCMDDialogBox (w, fb, src)
 {
 
 
@@ -114,7 +114,7 @@ hardlink = new FXCheckButton (contents, "hardlink");
 
 }
 
-long symlink_cmddialog::press (FXObject * sender, FXSelector, void *)
+long OSSymlink::press (FXObject * sender, FXSelector, void *)
 {
 
     FXObject *target = (FXObject *) ok->getTarget ();
@@ -123,7 +123,7 @@ long symlink_cmddialog::press (FXObject * sender, FXSelector, void *)
 }
 
 
-EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src)
+EXPORTFUNCTION OSCMDDialogBox *get_cmddialog (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src)
 {
-    return new symlink_cmddialog (w, fb, src);
+    return new OSSymlink (w, fb, src);
 }

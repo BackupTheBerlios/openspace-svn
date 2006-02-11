@@ -18,11 +18,11 @@ using namespace std;
 #define SEPARATOR "/"
 #endif
 
-class compress_cmddialog:public cmddialog
+class OSCompress:public OSCMDDialogBox
 {
-  FXDECLARE (compress_cmddialog) protected:
+  FXDECLARE (OSCompress) protected:
 
-    compress_cmddialog (const compress_cmddialog &)
+    OSCompress (const OSCompress &)
     {
     }
 
@@ -37,17 +37,17 @@ class compress_cmddialog:public cmddialog
 
     enum
     {
-	ID_ENTER = cmddialog::ID_LAST,
+	ID_ENTER = OSCMDDialogBox::ID_LAST,
     };
 
 
-       compress_cmddialog ()
+       OSCompress ()
     {
     }
-    compress_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src);
+    OSCompress (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
 
-    virtual int compress_cmddialog::exec (void)
+    virtual int OSCompress::exec (void)
     {
 	int error = 0;
 	vector < string >::iterator iter;
@@ -74,17 +74,17 @@ class compress_cmddialog:public cmddialog
     }
 
 
-    long compress_cmddialog::press (FXObject * sender, FXSelector, void *);
+    long OSCompress::press (FXObject * sender, FXSelector, void *);
 
 };
 
-FXDEFMAP (compress_cmddialog) compress_cmddialogMap[] =
+FXDEFMAP (OSCompress) OSCompressMap[] =
 {
-FXMAPFUNC (SEL_COMMAND, compress_cmddialog::ID_ENTER, compress_cmddialog::press),};
-FXIMPLEMENT (compress_cmddialog, cmddialog, compress_cmddialogMap, ARRAYNUMBER (compress_cmddialogMap)) 
+FXMAPFUNC (SEL_COMMAND, OSCompress::ID_ENTER, OSCompress::press),};
+FXIMPLEMENT (OSCompress, OSCMDDialogBox, OSCompressMap, ARRAYNUMBER (OSCompressMap)) 
 
-compress_cmddialog::compress_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src):
-cmddialog (w, fb, src)
+OSCompress::OSCompress (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src):
+OSCMDDialogBox (w, fb, src)
 {
 
   new FXLabel(contents,"archive type: ");
@@ -101,7 +101,7 @@ cmddialog (w, fb, src)
 
 }
 
-long compress_cmddialog::press (FXObject * sender, FXSelector, void *)
+long OSCompress::press (FXObject * sender, FXSelector, void *)
 {
 
     FXObject *target = (FXObject *) ok->getTarget ();
@@ -113,7 +113,7 @@ long compress_cmddialog::press (FXObject * sender, FXSelector, void *)
 
 
 
-EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src)
+EXPORTFUNCTION OSCMDDialogBox *get_cmddialog (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src)
 {
-    return new compress_cmddialog (w, fb, src);
+    return new OSCompress (w, fb, src);
 }

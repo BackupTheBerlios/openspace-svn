@@ -18,11 +18,11 @@ using namespace std;
 #define SEPARATOR "/"
 #endif
 
-class clone_cmddialog: public cmddialog
+class OSClone: public OSCMDDialogBox
 {
-FXDECLARE ( clone_cmddialog ) protected:
+FXDECLARE ( OSClone ) protected:
 
-    clone_cmddialog ( const clone_cmddialog & )
+    OSClone ( const OSClone & )
     {}
 
 private:
@@ -33,18 +33,20 @@ public:
 
     enum
     {
-        ID_ENTER = cmddialog::ID_LAST,
+        ID_ENTER = OSCMDDialogBox::ID_LAST,
     };
 
 
-    clone_cmddialog ()
+    OSClone ()
     {}
-    clone_cmddialog ( FXWindow * w, filelist_base * fb, vector < string > src );
+    OSClone ( FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src );
 
 
-    virtual int clone_cmddialog::exec ( void )
+    virtual int OSClone::exec ( void )
     {
         int error = 0;
+    /*
+        
         vector < string >::iterator iter;
         int i = 0;
         for ( iter = src.begin (); iter != src.end(); iter++ )
@@ -56,7 +58,7 @@ public:
             string filename = FXFile::name( iter->c_str() ).text();
             string dirname = FXFile::directory( iter->c_str() ).text();
 
-            thread_elem *el2 = new thread_elem ( fb, "copy", "upload", *iter, destdir );
+            thread_elem *el2 = new OSThreadExec ( fb, "copy", "upload", *iter, destdir );
             fb->copy ( el2 );
             delete el2;
 
@@ -76,7 +78,7 @@ public:
             else
             {
 
-                el2 = new thread_elem ( fb, "move", "upload", destdir + "/" + newonlyname, dirname );
+                el2 = new OSThreadExec ( fb, "move", "upload", destdir + "/" + newonlyname, dirname );
                 fb->copy ( el2 );
                 delete el2;
 
@@ -86,23 +88,23 @@ public:
             i++;
         }
 
-
+    */
         return error;
 
     }
 
 
-    long clone_cmddialog::press ( FXObject * sender, FXSelector, void * );
+    long OSClone::press ( FXObject * sender, FXSelector, void * );
 
 };
 
-FXDEFMAP ( clone_cmddialog ) clone_cmddialogMap[] =
+FXDEFMAP ( OSClone ) OSCloneMap[] =
     {
-        FXMAPFUNC ( SEL_COMMAND, clone_cmddialog::ID_ENTER, clone_cmddialog::press ), };
-FXIMPLEMENT ( clone_cmddialog, cmddialog, clone_cmddialogMap, ARRAYNUMBER ( clone_cmddialogMap ) )
+        FXMAPFUNC ( SEL_COMMAND, OSClone::ID_ENTER, OSClone::press ), };
+FXIMPLEMENT ( OSClone, OSCMDDialogBox, OSCloneMap, ARRAYNUMBER ( OSCloneMap ) )
 
-clone_cmddialog::clone_cmddialog ( FXWindow * w, filelist_base * fb, vector < string > src ) :
-        cmddialog ( w, fb, src )
+OSClone::OSClone ( FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src ) :
+        OSCMDDialogBox ( w, fb, src )
 {
 
 
@@ -127,7 +129,7 @@ clone_cmddialog::clone_cmddialog ( FXWindow * w, filelist_base * fb, vector < st
 
 }
 
-long clone_cmddialog::press ( FXObject * sender, FXSelector, void * )
+long OSClone::press ( FXObject * sender, FXSelector, void * )
 {
 
     FXObject * target = ( FXObject * ) ok->getTarget ();
@@ -139,7 +141,7 @@ long clone_cmddialog::press ( FXObject * sender, FXSelector, void * )
 
 
 
-EXPORTFUNCTION cmddialog *get_cmddialog ( FXWindow * w, filelist_base * fb, vector < string > src )
+EXPORTFUNCTION OSCMDDialogBox *get_cmddialog ( FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src )
 {
-    return new clone_cmddialog ( w, fb, src );
+    return new OSClone ( w, fb, src );
 }

@@ -1,27 +1,27 @@
-#pkglib_LTLIBRARIES= libaccess.la libmkdir.la librename.la libclone.la libsymlink.la libeditsymlink.la libcompress.la libmd5sum.la
-#pkglibdir=$(libdir)/openspace/plugins/cmddialog
-#INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
+pkglib_LTLIBRARIES=libOSMkdir.la libOSAccess.la libOSRename.la libOSClone.la libOSSymlink.la libOSEditSymlink.la libOSCompress.la libOSMd5sum.la
+pkglibdir=$(libdir)/openspace/plugins/cmddialog
+INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
 
-#libaccess_la_SOURCES =access.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../cmddialog.cpp ../../cmddialog.h
-#libaccess_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs`  
+libOSMkdir_la_SOURCES =OSMkdir.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSMkdir_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
 
-#libmkdir_la_SOURCES =mkdir.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../cmddialog.cpp ../../cmddialog.h
-#libmkdir_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSAccess_la_SOURCES =OSAccess.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSAccess_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs`  
 
-#librename_la_SOURCES =rename.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../cmddialog.cpp ../../cmddialog.h
-#librename_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSRename_la_SOURCES =OSRename.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSRename_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
 
-#libclone_la_SOURCES =clone.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../cmddialog.cpp ../../cmddialog.h
-#libclone_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSClone_la_SOURCES =OSClone.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSClone_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
 
-#libsymlink_la_SOURCES =symlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../cmddialog.cpp ../../cmddialog.h
-#libsymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSSymlink_la_SOURCES =OSSymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSSymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
 
-#libeditsymlink_la_SOURCES =editsymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../cmddialog.cpp ../../cmddialog.h
-#libeditsymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSEditSymlink_la_SOURCES =OSEditSymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSEditSymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
 
-#libcompress_la_SOURCES =compress.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../cmddialog.cpp ../../cmddialog.h
-#libcompress_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSCompress_la_SOURCES =OSCompress.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSCompress_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
 
-#libmd5sum_la_SOURCES =md5sum.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../cmddialog.cpp ../../cmddialog.h
-#libmd5sum_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSMd5sum_la_SOURCES =OSMd5sum.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSMd5sum_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 

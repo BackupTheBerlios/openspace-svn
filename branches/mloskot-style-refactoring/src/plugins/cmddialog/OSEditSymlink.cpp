@@ -18,11 +18,11 @@ using namespace std;
 #define SEPARATOR "/"
 #endif
 
-class editsymlink_cmddialog:public cmddialog
+class OSEditSymlink:public OSCMDDialogBox
 {
-  FXDECLARE (editsymlink_cmddialog) protected:
+  FXDECLARE (OSEditSymlink) protected:
 
-    editsymlink_cmddialog (const editsymlink_cmddialog &)
+    OSEditSymlink (const OSEditSymlink &)
     {
     }
     
@@ -36,18 +36,21 @@ class editsymlink_cmddialog:public cmddialog
 
     enum
     {
-	ID_ENTER = cmddialog::ID_LAST,
+	ID_ENTER = OSCMDDialogBox::ID_LAST,
     };
 
-    editsymlink_cmddialog ()
+    OSEditSymlink ()
     {
     }
-    editsymlink_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src);
+    OSEditSymlink (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
 
-    virtual int editsymlink_cmddialog::exec (void)
+    virtual int OSEditSymlink::exec (void)
     {
-	int error = 0;
+    
+        int error = 0;
+    /*
+	
 	vector < string >::iterator iter;
 	int i=0;
     	for (iter = src.begin (); iter != src.end(); iter++)
@@ -83,24 +86,24 @@ class editsymlink_cmddialog:public cmddialog
 	
 	}
 
-
+    */	
 	return error;
-
+	
     }
 
 
 
-    long editsymlink_cmddialog::press (FXObject * sender, FXSelector, void *);
+    long OSEditSymlink::press (FXObject * sender, FXSelector, void *);
 
 };
 
-FXDEFMAP (editsymlink_cmddialog) editsymlink_cmddialogMap[] =
+FXDEFMAP (OSEditSymlink) OSEditSymlinkMap[] =
 {
-FXMAPFUNC (SEL_COMMAND, editsymlink_cmddialog::ID_ENTER, editsymlink_cmddialog::press),};
-FXIMPLEMENT (editsymlink_cmddialog, cmddialog, editsymlink_cmddialogMap, ARRAYNUMBER (editsymlink_cmddialogMap)) 
+FXMAPFUNC (SEL_COMMAND, OSEditSymlink::ID_ENTER, OSEditSymlink::press),};
+FXIMPLEMENT (OSEditSymlink, OSCMDDialogBox, OSEditSymlinkMap, ARRAYNUMBER (OSEditSymlinkMap)) 
 
-editsymlink_cmddialog::editsymlink_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src):
-cmddialog (w, fb, src)
+OSEditSymlink::OSEditSymlink (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src):
+OSCMDDialogBox (w, fb, src)
 {
 
 
@@ -125,7 +128,7 @@ cmddialog (w, fb, src)
 
 }
 
-long editsymlink_cmddialog::press (FXObject * sender, FXSelector, void *)
+long OSEditSymlink::press (FXObject * sender, FXSelector, void *)
 {
 
     FXObject *target = (FXObject *) ok->getTarget ();
@@ -134,7 +137,7 @@ long editsymlink_cmddialog::press (FXObject * sender, FXSelector, void *)
 }
 
 
-EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src)
+EXPORTFUNCTION OSCMDDialogBox *get_cmddialog (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src)
 {
-    return new editsymlink_cmddialog (w, fb, src);
+    return new OSEditSymlink (w, fb, src);
 }

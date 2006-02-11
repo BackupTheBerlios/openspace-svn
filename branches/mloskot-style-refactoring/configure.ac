@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(openspace, 0.1.1, http://openspace.linux.pl)
+AC_INIT(openspace, 0.2.0, http://openspace.linux.pl)
 AC_CONFIG_SRCDIR(src/main.cpp)
 AC_CONFIG_HEADER(src/config.h)
 AM_INIT_AUTOMAKE

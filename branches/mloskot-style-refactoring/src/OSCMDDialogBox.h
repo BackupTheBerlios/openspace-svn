@@ -31,10 +31,10 @@
 #include <vector>
 #include <string>
 
+#include "OSVirtualFileSystemBase.h"
+
 using namespace std;
 
-// Forward declarations
-class OSVirtualFileSystemBase;
 
 /**
  * Command dialog base class.

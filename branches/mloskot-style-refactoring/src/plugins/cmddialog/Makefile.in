@@ -14,35 +14,12 @@
 
 @SET_MAKE@
 
-#pkglib_LTLIBRARIES= libaccess.la libmkdir.la librename.la libclone.la libsymlink.la libeditsymlink.la libcompress.la libmd5sum.la
-#pkglibdir=$(libdir)/openspace/plugins/cmddialog
-#INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
+SOURCES = $(libOSAccess_la_SOURCES) $(libOSClone_la_SOURCES) $(libOSCompress_la_SOURCES) $(libOSEditSymlink_la_SOURCES) $(libOSMd5sum_la_SOURCES) $(libOSMkdir_la_SOURCES) $(libOSRename_la_SOURCES) $(libOSSymlink_la_SOURCES)
 
-#libaccess_la_SOURCES =access.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../cmddialog.cpp ../../cmddialog.h
-#libaccess_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs`  
-
-#libmkdir_la_SOURCES =mkdir.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../cmddialog.cpp ../../cmddialog.h
-#libmkdir_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
-
-#librename_la_SOURCES =rename.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../cmddialog.cpp ../../cmddialog.h
-#librename_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
-
-#libclone_la_SOURCES =clone.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../cmddialog.cpp ../../cmddialog.h
-#libclone_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
-
-#libsymlink_la_SOURCES =symlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../cmddialog.cpp ../../cmddialog.h
-#libsymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
-
-#libeditsymlink_la_SOURCES =editsymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../cmddialog.cpp ../../cmddialog.h
-#libeditsymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
-
-#libcompress_la_SOURCES =compress.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../cmddialog.cpp ../../cmddialog.h
-#libcompress_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
-pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
 top_builddir = ../../..
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
@@ -68,9 +45,79 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(mkdir_p)
 CONFIG_HEADER = $(top_builddir)/src/config.h
 CONFIG_CLEAN_FILES =
-SOURCES =
-DIST_SOURCES =
+am__installdirs = "$(DESTDIR)$(pkglibdir)"
+pkglibLTLIBRARIES_INSTALL = $(INSTALL)
+LTLIBRARIES = $(pkglib_LTLIBRARIES)
+libOSAccess_la_LIBADD =
+am_libOSAccess_la_OBJECTS = OSAccess.lo OSThreadExec.lo \
+	OSCMDDialogBox.lo
+libOSAccess_la_OBJECTS = $(am_libOSAccess_la_OBJECTS)
+libOSClone_la_LIBADD =
+am_libOSClone_la_OBJECTS = OSClone.lo OSThreadExec.lo \
+	OSCMDDialogBox.lo
+libOSClone_la_OBJECTS = $(am_libOSClone_la_OBJECTS)
+libOSCompress_la_LIBADD =
+am_libOSCompress_la_OBJECTS = OSCompress.lo OSThreadExec.lo \
+	OSCMDDialogBox.lo
+libOSCompress_la_OBJECTS = $(am_libOSCompress_la_OBJECTS)
+libOSEditSymlink_la_LIBADD =
+am_libOSEditSymlink_la_OBJECTS = OSEditSymlink.lo OSThreadExec.lo \
+	OSCMDDialogBox.lo
+libOSEditSymlink_la_OBJECTS = $(am_libOSEditSymlink_la_OBJECTS)
+libOSMd5sum_la_LIBADD =
+am_libOSMd5sum_la_OBJECTS = OSMd5sum.lo OSThreadExec.lo \
+	OSCMDDialogBox.lo
+libOSMd5sum_la_OBJECTS = $(am_libOSMd5sum_la_OBJECTS)
+libOSMkdir_la_LIBADD =
+am_libOSMkdir_la_OBJECTS = OSMkdir.lo OSThreadExec.lo \
+	OSCMDDialogBox.lo
+libOSMkdir_la_OBJECTS = $(am_libOSMkdir_la_OBJECTS)
+libOSRename_la_LIBADD =
+am_libOSRename_la_OBJECTS = OSRename.lo OSThreadExec.lo \
+	OSCMDDialogBox.lo
+libOSRename_la_OBJECTS = $(am_libOSRename_la_OBJECTS)
+libOSSymlink_la_LIBADD =
+am_libOSSymlink_la_OBJECTS = OSSymlink.lo OSThreadExec.lo \
+	OSCMDDialogBox.lo
+libOSSymlink_la_OBJECTS = $(am_libOSSymlink_la_OBJECTS)
+DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/src
+depcomp = $(SHELL) $(top_srcdir)/depcomp
+am__depfiles_maybe = depfiles
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/OSAccess.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/OSCMDDialogBox.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/OSClone.Plo ./$(DEPDIR)/OSCompress.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/OSEditSymlink.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/OSMd5sum.Plo ./$(DEPDIR)/OSMkdir.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/OSRename.Plo ./$(DEPDIR)/OSSymlink.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/OSThreadExec.Plo
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+SOURCES = $(libOSAccess_la_SOURCES) $(libOSClone_la_SOURCES) \
+	$(libOSCompress_la_SOURCES) $(libOSEditSymlink_la_SOURCES) \
+	$(libOSMd5sum_la_SOURCES) $(libOSMkdir_la_SOURCES) \
+	$(libOSRename_la_SOURCES) $(libOSSymlink_la_SOURCES)
+DIST_SOURCES = $(libOSAccess_la_SOURCES) $(libOSClone_la_SOURCES) \
+	$(libOSCompress_la_SOURCES) $(libOSEditSymlink_la_SOURCES) \
+	$(libOSMd5sum_la_SOURCES) $(libOSMkdir_la_SOURCES) \
+	$(libOSRename_la_SOURCES) $(libOSSymlink_la_SOURCES)
+ETAGS = etags
+CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+pkglibdir = $(libdir)/openspace/plugins/cmddialog
 ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
@@ -167,9 +214,28 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+pkglib_LTLIBRARIES = libOSMkdir.la libOSAccess.la libOSRename.la libOSClone.la libOSSymlink.la libOSEditSymlink.la libOSCompress.la libOSMd5sum.la
+INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
+libOSMkdir_la_SOURCES = OSMkdir.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSMkdir_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSAccess_la_SOURCES = OSAccess.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSAccess_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs`  
+libOSRename_la_SOURCES = OSRename.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSRename_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSClone_la_SOURCES = OSClone.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSClone_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSSymlink_la_SOURCES = OSSymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSSymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSEditSymlink_la_SOURCES = OSEditSymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSEditSymlink_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSCompress_la_SOURCES = OSCompress.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSCompress_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
+libOSMd5sum_la_SOURCES = OSMd5sum.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
+libOSMd5sum_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
 all: all-am
 
 .SUFFIXES:
+.SUFFIXES: .cpp .lo .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -199,6 +265,138 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+install-pkglibLTLIBRARIES: $(pkglib_LTLIBRARIES)
+	@$(NORMAL_INSTALL)
+	test -z "$(pkglibdir)" || $(mkdir_p) "$(DESTDIR)$(pkglibdir)"
+	@list='$(pkglib_LTLIBRARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    f="`echo $$p | sed -e 's|^.*/||'`"; \
+	    echo " $(LIBTOOL) --mode=install $(pkglibLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) '$$p' '$(DESTDIR)$(pkglibdir)/$$f'"; \
+	    $(LIBTOOL) --mode=install $(pkglibLTLIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) "$$p" "$(DESTDIR)$(pkglibdir)/$$f"; \
+	  else :; fi; \
+	done
+
+uninstall-pkglibLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pkglib_LTLIBRARIES)'; for p in $$list; do \
+	    p="`echo $$p | sed -e 's|^.*/||'`"; \
+	  echo " $(LIBTOOL) --mode=uninstall rm -f '$(DESTDIR)$(pkglibdir)/$$p'"; \
+	  $(LIBTOOL) --mode=uninstall rm -f "$(DESTDIR)$(pkglibdir)/$$p"; \
+	done
+
+clean-pkglibLTLIBRARIES:
+	-test -z "$(pkglib_LTLIBRARIES)" || rm -f $(pkglib_LTLIBRARIES)
+	@list='$(pkglib_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+libOSAccess.la: $(libOSAccess_la_OBJECTS) $(libOSAccess_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libOSAccess_la_LDFLAGS) $(libOSAccess_la_OBJECTS) $(libOSAccess_la_LIBADD) $(LIBS)
+libOSClone.la: $(libOSClone_la_OBJECTS) $(libOSClone_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libOSClone_la_LDFLAGS) $(libOSClone_la_OBJECTS) $(libOSClone_la_LIBADD) $(LIBS)
+libOSCompress.la: $(libOSCompress_la_OBJECTS) $(libOSCompress_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libOSCompress_la_LDFLAGS) $(libOSCompress_la_OBJECTS) $(libOSCompress_la_LIBADD) $(LIBS)
+libOSEditSymlink.la: $(libOSEditSymlink_la_OBJECTS) $(libOSEditSymlink_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libOSEditSymlink_la_LDFLAGS) $(libOSEditSymlink_la_OBJECTS) $(libOSEditSymlink_la_LIBADD) $(LIBS)
+libOSMd5sum.la: $(libOSMd5sum_la_OBJECTS) $(libOSMd5sum_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libOSMd5sum_la_LDFLAGS) $(libOSMd5sum_la_OBJECTS) $(libOSMd5sum_la_LIBADD) $(LIBS)
+libOSMkdir.la: $(libOSMkdir_la_OBJECTS) $(libOSMkdir_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libOSMkdir_la_LDFLAGS) $(libOSMkdir_la_OBJECTS) $(libOSMkdir_la_LIBADD) $(LIBS)
+libOSRename.la: $(libOSRename_la_OBJECTS) $(libOSRename_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libOSRename_la_LDFLAGS) $(libOSRename_la_OBJECTS) $(libOSRename_la_LIBADD) $(LIBS)
+libOSSymlink.la: $(libOSSymlink_la_OBJECTS) $(libOSSymlink_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(pkglibdir) $(libOSSymlink_la_LDFLAGS) $(libOSSymlink_la_OBJECTS) $(libOSSymlink_la_LIBADD) $(LIBS)
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT)
+
+distclean-compile:
+	-rm -f *.tab.c
+
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSAccess.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSCMDDialogBox.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSClone.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSCompress.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSEditSymlink.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSMd5sum.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSMkdir.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSRename.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSSymlink.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSThreadExec.Plo@am__quote@
+
+.cpp.o:
+@am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ $<
+
+.cpp.obj:
+@am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ `$(CYGPATH_W) '$<'`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+.cpp.lo:
+@am__fastdepCXX_TRUE@	if $(LTCXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Plo"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
+
+OSThreadExec.o: ../../OSThreadExec.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT OSThreadExec.o -MD -MP -MF "$(DEPDIR)/OSThreadExec.Tpo" -c -o OSThreadExec.o `test -f '../../OSThreadExec.cpp' || echo '$(srcdir)/'`../../OSThreadExec.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/OSThreadExec.Tpo" "$(DEPDIR)/OSThreadExec.Po"; else rm -f "$(DEPDIR)/OSThreadExec.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../OSThreadExec.cpp' object='OSThreadExec.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/OSThreadExec.Po' tmpdepfile='$(DEPDIR)/OSThreadExec.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o OSThreadExec.o `test -f '../../OSThreadExec.cpp' || echo '$(srcdir)/'`../../OSThreadExec.cpp
+
+OSThreadExec.obj: ../../OSThreadExec.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT OSThreadExec.obj -MD -MP -MF "$(DEPDIR)/OSThreadExec.Tpo" -c -o OSThreadExec.obj `if test -f '../../OSThreadExec.cpp'; then $(CYGPATH_W) '../../OSThreadExec.cpp'; else $(CYGPATH_W) '$(srcdir)/../../OSThreadExec.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/OSThreadExec.Tpo" "$(DEPDIR)/OSThreadExec.Po"; else rm -f "$(DEPDIR)/OSThreadExec.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../OSThreadExec.cpp' object='OSThreadExec.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/OSThreadExec.Po' tmpdepfile='$(DEPDIR)/OSThreadExec.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o OSThreadExec.obj `if test -f '../../OSThreadExec.cpp'; then $(CYGPATH_W) '../../OSThreadExec.cpp'; else $(CYGPATH_W) '$(srcdir)/../../OSThreadExec.cpp'; fi`
+
+OSThreadExec.lo: ../../OSThreadExec.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT OSThreadExec.lo -MD -MP -MF "$(DEPDIR)/OSThreadExec.Tpo" -c -o OSThreadExec.lo `test -f '../../OSThreadExec.cpp' || echo '$(srcdir)/'`../../OSThreadExec.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/OSThreadExec.Tpo" "$(DEPDIR)/OSThreadExec.Plo"; else rm -f "$(DEPDIR)/OSThreadExec.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../OSThreadExec.cpp' object='OSThreadExec.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/OSThreadExec.Plo' tmpdepfile='$(DEPDIR)/OSThreadExec.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o OSThreadExec.lo `test -f '../../OSThreadExec.cpp' || echo '$(srcdir)/'`../../OSThreadExec.cpp
+
+OSCMDDialogBox.o: ../../OSCMDDialogBox.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT OSCMDDialogBox.o -MD -MP -MF "$(DEPDIR)/OSCMDDialogBox.Tpo" -c -o OSCMDDialogBox.o `test -f '../../OSCMDDialogBox.cpp' || echo '$(srcdir)/'`../../OSCMDDialogBox.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/OSCMDDialogBox.Tpo" "$(DEPDIR)/OSCMDDialogBox.Po"; else rm -f "$(DEPDIR)/OSCMDDialogBox.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../OSCMDDialogBox.cpp' object='OSCMDDialogBox.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/OSCMDDialogBox.Po' tmpdepfile='$(DEPDIR)/OSCMDDialogBox.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o OSCMDDialogBox.o `test -f '../../OSCMDDialogBox.cpp' || echo '$(srcdir)/'`../../OSCMDDialogBox.cpp
+
+OSCMDDialogBox.obj: ../../OSCMDDialogBox.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT OSCMDDialogBox.obj -MD -MP -MF "$(DEPDIR)/OSCMDDialogBox.Tpo" -c -o OSCMDDialogBox.obj `if test -f '../../OSCMDDialogBox.cpp'; then $(CYGPATH_W) '../../OSCMDDialogBox.cpp'; else $(CYGPATH_W) '$(srcdir)/../../OSCMDDialogBox.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/OSCMDDialogBox.Tpo" "$(DEPDIR)/OSCMDDialogBox.Po"; else rm -f "$(DEPDIR)/OSCMDDialogBox.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../OSCMDDialogBox.cpp' object='OSCMDDialogBox.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/OSCMDDialogBox.Po' tmpdepfile='$(DEPDIR)/OSCMDDialogBox.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o OSCMDDialogBox.obj `if test -f '../../OSCMDDialogBox.cpp'; then $(CYGPATH_W) '../../OSCMDDialogBox.cpp'; else $(CYGPATH_W) '$(srcdir)/../../OSCMDDialogBox.cpp'; fi`
+
+OSCMDDialogBox.lo: ../../OSCMDDialogBox.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT OSCMDDialogBox.lo -MD -MP -MF "$(DEPDIR)/OSCMDDialogBox.Tpo" -c -o OSCMDDialogBox.lo `test -f '../../OSCMDDialogBox.cpp' || echo '$(srcdir)/'`../../OSCMDDialogBox.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/OSCMDDialogBox.Tpo" "$(DEPDIR)/OSCMDDialogBox.Plo"; else rm -f "$(DEPDIR)/OSCMDDialogBox.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../OSCMDDialogBox.cpp' object='OSCMDDialogBox.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/OSCMDDialogBox.Plo' tmpdepfile='$(DEPDIR)/OSCMDDialogBox.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o OSCMDDialogBox.lo `test -f '../../OSCMDDialogBox.cpp' || echo '$(srcdir)/'`../../OSCMDDialogBox.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -209,12 +407,54 @@ clean-libtool:
 distclean-libtool:
 	-rm -f libtool
 uninstall-info-am:
+
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	mkid -fID $$unique
 tags: TAGS
-TAGS:
 
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	if test -z "$(ETAGS_ARGS)$$tags$$unique"; then :; else \
+	  test -n "$$unique" || unique=$$empty_fix; \
+	  $(ETAGS) $(ETAGSFLAGS) $(AM_ETAGSFLAGS) $(ETAGS_ARGS) \
+	    $$tags $$unique; \
+	fi
 ctags: CTAGS
-CTAGS:
+CTAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(CTAGS_ARGS)$$tags$$unique" \
+	  || $(CTAGS) $(CTAGSFLAGS) $(AM_CTAGSFLAGS) $(CTAGS_ARGS) \
+	     $$tags $$unique
 
+GTAGS:
+	here=`$(am__cd) $(top_builddir) && pwd` \
+	  && cd $(top_srcdir) \
+	  && gtags -i $(GTAGS_ARGS) $$here
+
+distclean-tags:
+	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
@@ -245,8 +485,11 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile
+all-am: Makefile $(LTLIBRARIES)
 installdirs:
+	for dir in "$(DESTDIR)$(pkglibdir)"; do \
+	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
+	done
 install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
@@ -273,11 +516,14 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libtool mostlyclean-am
+clean-am: clean-generic clean-libtool clean-pkglibLTLIBRARIES \
+	mostlyclean-am
 
 distclean: distclean-am
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-libtool
+distclean-am: clean-am distclean-compile distclean-generic \
+	distclean-libtool distclean-tags
 
 dvi: dvi-am
 
@@ -291,7 +537,7 @@ info-am:
 
 install-data-am:
 
-install-exec-am:
+install-exec-am: install-pkglibLTLIBRARIES
 
 install-info: install-info-am
 
@@ -300,12 +546,14 @@ install-man:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
+	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-generic mostlyclean-libtool
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
 
 pdf: pdf-am
 
@@ -315,21 +563,21 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-info-am
+uninstall-am: uninstall-info-am uninstall-pkglibLTLIBRARIES
 
-.PHONY: all all-am check check-am clean clean-generic clean-libtool \
-	distclean distclean-generic distclean-libtool distdir dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-exec install-exec-am \
-	install-info install-info-am install-man install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am \
-	uninstall-info-am
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
+	clean-libtool clean-pkglibLTLIBRARIES ctags distclean \
+	distclean-compile distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am install-exec \
+	install-exec-am install-info install-info-am install-man \
+	install-pkglibLTLIBRARIES install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am uninstall-info-am \
+	uninstall-pkglibLTLIBRARIES
 
-
-#libmd5sum_la_SOURCES =md5sum.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../cmddialog.cpp ../../cmddialog.h
-#libmd5sum_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs` 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

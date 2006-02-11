@@ -19,11 +19,11 @@ using namespace std;
 #endif
 
 
-class access_cmddialog:public cmddialog
+class OSAccess:public OSCMDDialogBox
 {
-  FXDECLARE (access_cmddialog) protected:
+  FXDECLARE (OSAccess) protected:
 
-    access_cmddialog (const access_cmddialog &)
+    OSAccess (const OSAccess &)
     {
     }
 
@@ -56,7 +56,7 @@ class access_cmddialog:public cmddialog
   
     enum
     {
-	ID_PRESS = cmddialog::ID_LAST,
+	ID_PRESS = OSCMDDialogBox::ID_LAST,
 	ID_RUSR,
 	ID_WUSR,
 	ID_XUSR,
@@ -72,12 +72,12 @@ class access_cmddialog:public cmddialog
 
 
     
-    access_cmddialog ()
+    OSAccess ()
     {
     }
-    access_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src);
+    OSAccess (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
-    virtual int access_cmddialog::exec (void)
+    virtual int OSAccess::exec (void)
     {
 
 	unsigned int mode = 0;
@@ -119,17 +119,17 @@ class access_cmddialog:public cmddialog
     }
 
 
-    long access_cmddialog::press (FXObject * sender, FXSelector, void *);
+    long OSAccess::press (FXObject * sender, FXSelector, void *);
 
 };
 
-FXDEFMAP (access_cmddialog) access_cmddialogMap[] =
+FXDEFMAP (OSAccess) OSAccessMap[] =
 {
-FXMAPFUNC (SEL_COMMAND, access_cmddialog::ID_PRESS, access_cmddialog::press),};
-FXIMPLEMENT (access_cmddialog, cmddialog, access_cmddialogMap, ARRAYNUMBER (access_cmddialogMap)) 
+FXMAPFUNC (SEL_COMMAND, OSAccess::ID_PRESS, OSAccess::press),};
+FXIMPLEMENT (OSAccess, OSCMDDialogBox, OSAccessMap, ARRAYNUMBER (OSAccessMap)) 
 
-access_cmddialog::access_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src):
-cmddialog (w, fb, src)
+OSAccess::OSAccess (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src):
+OSCMDDialogBox (w, fb, src)
 {
 
    vector < string >::iterator iter;
@@ -217,12 +217,12 @@ cmddialog (w, fb, src)
 
 }
 
-long access_cmddialog::press (FXObject * sender, FXSelector, void *)
+long OSAccess::press (FXObject * sender, FXSelector, void *)
 {
 }
 
 
-EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src)
+EXPORTFUNCTION OSCMDDialogBox *get_cmddialog (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src)
 {
-    return new access_cmddialog (w, fb, src);
+    return new OSAccess (w, fb, src);
 }

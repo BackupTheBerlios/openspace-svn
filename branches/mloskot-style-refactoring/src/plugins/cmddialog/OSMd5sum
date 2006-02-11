@@ -20,11 +20,11 @@ using namespace std;
 #define SEPARATOR "/"
 #endif
 
-class md5sum_cmddialog:public cmddialog
+class OSMd5sum:public OSCMDDialogBox
 {
-  FXDECLARE (md5sum_cmddialog) protected:
+  FXDECLARE (OSMd5sum) protected:
 
-    md5sum_cmddialog (const md5sum_cmddialog &)
+    OSMd5sum (const OSMd5sum &)
     {
     }
     
@@ -36,32 +36,32 @@ class md5sum_cmddialog:public cmddialog
 
     enum
     {
-	ID_ENTER = cmddialog::ID_LAST,
+	ID_ENTER = OSCMDDialogBox::ID_LAST,
     };
 
-    md5sum_cmddialog ()
+    OSMd5sum ()
     {
     }
-    md5sum_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src);
+    OSMd5sum (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
 
-    virtual int md5sum_cmddialog::exec (void)
+    virtual int OSMd5sum::exec (void)
     {
 	
     }
 
 
-    long md5sum_cmddialog::press (FXObject * sender, FXSelector, void *);
+    long OSMd5sum::press (FXObject * sender, FXSelector, void *);
 
 };
 
-FXDEFMAP (md5sum_cmddialog) md5sum_cmddialogMap[] =
+FXDEFMAP (OSMd5sum) OSMd5sumMap[] =
 {
-FXMAPFUNC (SEL_COMMAND, md5sum_cmddialog::ID_ENTER, md5sum_cmddialog::press),};
-FXIMPLEMENT (md5sum_cmddialog, cmddialog, md5sum_cmddialogMap, ARRAYNUMBER (md5sum_cmddialogMap)) 
+FXMAPFUNC (SEL_COMMAND, OSMd5sum::ID_ENTER, OSMd5sum::press),};
+FXIMPLEMENT (OSMd5sum, OSCMDDialogBox, OSMd5sumMap, ARRAYNUMBER (OSMd5sumMap)) 
 
-md5sum_cmddialog::md5sum_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src):
-cmddialog (w, fb, src)
+OSMd5sum::OSMd5sum (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src):
+OSCMDDialogBox (w, fb, src)
 {
 FILE *pipe;
 char readbuf[1024];
@@ -97,7 +97,7 @@ new FXSeparator(contents);
 
 }
 
-long md5sum_cmddialog::press (FXObject * sender, FXSelector, void *)
+long OSMd5sum::press (FXObject * sender, FXSelector, void *)
 {
 
  
@@ -106,7 +106,7 @@ long md5sum_cmddialog::press (FXObject * sender, FXSelector, void *)
 
 
 
-EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src)
+EXPORTFUNCTION OSCMDDialogBox *get_cmddialog (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src)
 {
-    return new md5sum_cmddialog (w, fb, src);
+    return new OSMd5sum (w, fb, src);
 }

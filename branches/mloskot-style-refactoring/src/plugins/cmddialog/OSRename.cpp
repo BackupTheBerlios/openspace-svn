@@ -18,11 +18,11 @@ using namespace std;
 #define SEPARATOR "/"
 #endif
 
-class rename_cmddialog:public cmddialog
+class OSRename:public OSCMDDialogBox
 {
-  FXDECLARE (rename_cmddialog) protected:
+  FXDECLARE (OSRename) protected:
 
-    rename_cmddialog (const rename_cmddialog &)
+    OSRename (const OSRename &)
     {
     }
     
@@ -35,16 +35,16 @@ class rename_cmddialog:public cmddialog
 
     enum
     {
-	ID_ENTER = cmddialog::ID_LAST,
+	ID_ENTER = OSCMDDialogBox::ID_LAST,
     };
 
-    rename_cmddialog ()
+    OSRename ()
     {
     }
-    rename_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src);
+    OSRename (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
 
-    virtual int rename_cmddialog::exec (void)
+    virtual int OSRename::exec (void)
     {
 	int error = 0;
 	vector < string >::iterator iter;
@@ -72,17 +72,17 @@ class rename_cmddialog:public cmddialog
     }
 
 
-    long rename_cmddialog::press (FXObject * sender, FXSelector, void *);
+    long OSRename::press (FXObject * sender, FXSelector, void *);
 
 };
 
-FXDEFMAP (rename_cmddialog) rename_cmddialogMap[] =
+FXDEFMAP (OSRename) OSRenameMap[] =
 {
-FXMAPFUNC (SEL_COMMAND, rename_cmddialog::ID_ENTER, rename_cmddialog::press),};
-FXIMPLEMENT (rename_cmddialog, cmddialog, rename_cmddialogMap, ARRAYNUMBER (rename_cmddialogMap)) 
+FXMAPFUNC (SEL_COMMAND, OSRename::ID_ENTER, OSRename::press),};
+FXIMPLEMENT (OSRename, OSCMDDialogBox, OSRenameMap, ARRAYNUMBER (OSRenameMap)) 
 
-rename_cmddialog::rename_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src):
-cmddialog (w, fb, src)
+OSRename::OSRename (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src):
+OSCMDDialogBox (w, fb, src)
 {
 
 
@@ -108,7 +108,7 @@ cmddialog (w, fb, src)
 
 }
 
-long rename_cmddialog::press (FXObject * sender, FXSelector, void *)
+long OSRename::press (FXObject * sender, FXSelector, void *)
 {
 
     FXObject *target = (FXObject *) ok->getTarget ();
@@ -118,7 +118,7 @@ long rename_cmddialog::press (FXObject * sender, FXSelector, void *)
 
 
 
-EXPORTFUNCTION cmddialog *get_cmddialog (FXWindow * w, filelist_base * fb, vector < string > src)
+EXPORTFUNCTION OSCMDDialogBox *get_cmddialog (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src)
 {
-    return new rename_cmddialog (w, fb, src);
+    return new OSRename (w, fb, src);
 }

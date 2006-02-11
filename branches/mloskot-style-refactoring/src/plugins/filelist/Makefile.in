@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-SOURCES = $(libfilelistarchive_la_SOURCES) $(libfilelistftp_la_SOURCES) $(libfilelistlocal_la_SOURCES) $(libfilelistsearch_la_SOURCES) $(libfilelistsftp_la_SOURCES)
+SOURCES = $(libfilelistlocal_la_SOURCES)
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -48,34 +48,17 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(pkglibdir)"
 pkglibLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(pkglib_LTLIBRARIES)
-libfilelistarchive_la_LIBADD =
-am_libfilelistarchive_la_OBJECTS = filelist_archive.lo OSThreadExec.lo
-libfilelistarchive_la_OBJECTS = $(am_libfilelistarchive_la_OBJECTS)
-libfilelistftp_la_LIBADD =
-am_libfilelistftp_la_OBJECTS = filelist_ftp.lo pftp.lo OSThreadExec.lo
-libfilelistftp_la_OBJECTS = $(am_libfilelistftp_la_OBJECTS)
 libfilelistlocal_la_LIBADD =
 am_libfilelistlocal_la_OBJECTS = filelist_local.lo OSFXFile.lo \
 	OSThreadExec.lo OSUtils.lo
 libfilelistlocal_la_OBJECTS = $(am_libfilelistlocal_la_OBJECTS)
-libfilelistsearch_la_LIBADD =
-am_libfilelistsearch_la_OBJECTS = filelist_search.lo OSFXFile.lo \
-	OSThreadExec.lo
-libfilelistsearch_la_OBJECTS = $(am_libfilelistsearch_la_OBJECTS)
-libfilelistsftp_la_LIBADD =
-am_libfilelistsftp_la_OBJECTS = filelist_sftp.lo OSThreadExec.lo
-libfilelistsftp_la_OBJECTS = $(am_libfilelistsftp_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/src
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/OSFXFile.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/OSThreadExec.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/OSUtils.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/filelist_archive.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/filelist_ftp.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/filelist_local.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/filelist_search.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/filelist_sftp.Plo ./$(DEPDIR)/pftp.Plo
+@AMDEP_TRUE@	./$(DEPDIR)/filelist_local.Plo
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -92,15 +75,12 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(libfilelistarchive_la_SOURCES) \
-	$(libfilelistftp_la_SOURCES) $(libfilelistlocal_la_SOURCES) \
-	$(libfilelistsearch_la_SOURCES) $(libfilelistsftp_la_SOURCES)
-DIST_SOURCES = $(libfilelistarchive_la_SOURCES) \
-	$(libfilelistftp_la_SOURCES) $(libfilelistlocal_la_SOURCES) \
-	$(libfilelistsearch_la_SOURCES) $(libfilelistsftp_la_SOURCES)
+SOURCES = $(libfilelistlocal_la_SOURCES)
+DIST_SOURCES = $(libfilelistlocal_la_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+#libfilelistsearch.la  libfilelistarchive.la libfilelistftp.la libfilelistsftp.la
 pkglibdir = $(libdir)/openspace/plugins/filelist
 ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
@@ -198,18 +178,10 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-pkglib_LTLIBRARIES = libfilelistlocal.la  libfilelistsearch.la  libfilelistarchive.la libfilelistftp.la libfilelistsftp.la
+pkglib_LTLIBRARIES = libfilelistlocal.la  
 INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
 libfilelistlocal_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs`  
 libfilelistlocal_la_SOURCES = filelist_local.cpp filelist_local.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h ../../OSUtils.cpp ../../OSUtils.h 
-libfilelistsearch_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
-libfilelistsearch_la_SOURCES = filelist_search.cpp filelist_search.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
-libfilelistarchive_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
-libfilelistarchive_la_SOURCES = filelist_archive.cpp filelist_archive.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
-libfilelistsftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
-libfilelistsftp_la_SOURCES = filelist_sftp.cpp filelist_sftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
-libfilelistftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
-libfilelistftp_la_SOURCES = filelist_ftp.cpp filelist_ftp.h  pftp.cpp pftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSConfigure.h 
 all: all-am
 
 .SUFFIXES:
@@ -270,16 +242,8 @@ clean-pkglibLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-libfilelistarchive.la: $(libfilelistarchive_la_OBJECTS) $(libfilelistarchive_la_DEPENDENCIES) 
-	$(CXXLINK) -rpath $(pkglibdir) $(libfilelistarchive_la_LDFLAGS) $(libfilelistarchive_la_OBJECTS) $(libfilelistarchive_la_LIBADD) $(LIBS)
-libfilelistftp.la: $(libfilelistftp_la_OBJECTS) $(libfilelistftp_la_DEPENDENCIES) 
-	$(CXXLINK) -rpath $(pkglibdir) $(libfilelistftp_la_LDFLAGS) $(libfilelistftp_la_OBJECTS) $(libfilelistftp_la_LIBADD) $(LIBS)
 libfilelistlocal.la: $(libfilelistlocal_la_OBJECTS) $(libfilelistlocal_la_DEPENDENCIES) 
 	$(CXXLINK) -rpath $(pkglibdir) $(libfilelistlocal_la_LDFLAGS) $(libfilelistlocal_la_OBJECTS) $(libfilelistlocal_la_LIBADD) $(LIBS)
-libfilelistsearch.la: $(libfilelistsearch_la_OBJECTS) $(libfilelistsearch_la_DEPENDENCIES) 
-	$(CXXLINK) -rpath $(pkglibdir) $(libfilelistsearch_la_LDFLAGS) $(libfilelistsearch_la_OBJECTS) $(libfilelistsearch_la_LIBADD) $(LIBS)
-libfilelistsftp.la: $(libfilelistsftp_la_OBJECTS) $(libfilelistsftp_la_DEPENDENCIES) 
-	$(CXXLINK) -rpath $(pkglibdir) $(libfilelistsftp_la_LDFLAGS) $(libfilelistsftp_la_OBJECTS) $(libfilelistsftp_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -290,12 +254,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSFXFile.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSThreadExec.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSUtils.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filelist_archive.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filelist_ftp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filelist_local.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filelist_search.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filelist_sftp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pftp.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -549,6 +508,15 @@ uninstall-am: uninstall-info-am uninstall-pkglibLTLIBRARIES
 	tags uninstall uninstall-am uninstall-info-am \
 	uninstall-pkglibLTLIBRARIES
 
+
+#libfilelistsearch_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+#libfilelistsearch_la_SOURCES =filelist_search.cpp filelist_search.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+#libfilelistarchive_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+#libfilelistarchive_la_SOURCES =filelist_archive.cpp filelist_archive.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+#libfilelistsftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+#libfilelistsftp_la_SOURCES =filelist_sftp.cpp filelist_sftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+#libfilelistftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+#libfilelistftp_la_SOURCES =filelist_ftp.cpp filelist_ftp.h  pftp.cpp pftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSConfigure.h 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
