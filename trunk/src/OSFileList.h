@@ -44,7 +44,7 @@ class OSFileList: public FXIconList
 
 private:
 
-
+    string path;
     string previous_path;
     string type;
     OSPathType *pt;
@@ -91,20 +91,20 @@ private:
     FXString dragfiles;     // Dragged files
 
     void dropData ( bool clipboard );
-    void OSFileList::selectitem ( void );
-    void OSFileList::start_thread ( OSThreadExec * te );
+    void selectitem ( void );
+    void start_thread ( OSThreadExec * te );
 
-    void OSFileList::copymoveremove ( string com_name );
-    static void *OSFileList::thread_func ( void *data );
+    void copymoveremove ( string com_name );
+    static void *thread_func ( void *data );
     static FXint cmp ( const FXIconItem * a, const FXIconItem * b );
 
 
     string returnpath( string dirname );
-    string OSFileList::getdefaultcommand ( string name );
-    string OSFileList::resolvecommand( string command, string name );
-    int OSFileList::runCommand( string name );
-    static string OSFileList::getfiletype ( string name );
-    long OSFileList::setKeys ( void );
+    string getdefaultcommand ( string name );
+    string resolvecommand( string command, string name );
+    int runCommand( string name );
+    static string getfiletype ( string name );
+    long setKeys ( void );
 
 public:
 
@@ -120,7 +120,7 @@ public:
     FXIcon **specialicons;
     FXToolBar *toolbar, *toolbar2;
 
-    string path;
+    
     bool active;
     OSVirtualFileSystemBase * fb;
     OSFileList *filelist_opposite;
@@ -138,7 +138,8 @@ public:
 
     void OSFileList::refresh ( void );
     bool OSFileList::init ( void );
-    bool OSFileList::opendir ( string dir );
+    bool OSFileList::openDir ( string dir );
+    string OSFileList::getDir (  ){return path;}
 
     long OSFileList::setFocus ( FXObject * obj, FXSelector sel, void *ptr );
     long OSFileList::lostFocus ( FXObject * obj, FXSelector sel, void *ptr );

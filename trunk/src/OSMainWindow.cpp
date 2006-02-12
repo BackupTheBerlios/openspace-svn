@@ -123,7 +123,10 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
                 }
             }
 
-
+    	    if ( conf->readonestring ( "/OpenspaceConfig/panels" ) == "single" )
+                ratio = 0;
+            else
+                ratio = 1.0 / 2.0;
 
 
             topdock = new FXDockSite ( this, LAYOUT_SIDE_TOP | LAYOUT_FILL_X );
@@ -137,24 +140,18 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             FXToolBar *toolbar = new FXToolBar ( topdock, dragshell1, LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | FRAME_RAISED );
             new FXToolBarGrip ( toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_SINGLE );
 
-
-
-
             FXVerticalFrame *ff = new FXVerticalFrame ( this, LAYOUT_FILL_X | LAYOUT_FILL_Y );
             controlframe = new FXVerticalFrame ( ff, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
             splitter = new FXSplitter ( ff, LAYOUT_FILL_X | SPLITTER_TRACKING | LAYOUT_FILL_Y );
             left = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 0, 0 );
             right = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 0, 0 );
-            if ( conf->readonestring ( "/OpenspaceConfig/panels" ) == "single" )
-                ratio = 0;
-
-            else
-                ratio = 1.0 / 2.0;
+	    
+     		
             leftcontrolframe = new FXVerticalFrame ( left, LAYOUT_FILL_X );
             leftframe = new FXVerticalFrame ( left, LAYOUT_FILL_X | LAYOUT_FILL_Y );
             rightcontrolframe = new FXVerticalFrame ( right, LAYOUT_FILL_X );
             rightframe = new FXVerticalFrame ( right, LAYOUT_FILL_X | LAYOUT_FILL_Y );
-            //   FXHorizontalFrame * buttonsframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
+
             new FXButton ( toolbar, "\thide/show copy/move progress", objmanager->osicons[ "plus" ], this, OSMainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
             new FXButton ( toolbar, "\topen new panel", objmanager->osicons[ "directory" ], this, OSMainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
             new FXButton ( toolbar, "\tconnect", objmanager->osicons[ "network" ], this, OSMainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
@@ -174,7 +171,6 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             left_frame = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
 	    	   
          
-
             dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/rightdir/dir" ) );
             type = conf->readonestring ( "/OpenspaceConfig/rightdir/type" );
             OSPathType pt2 ( dir, type );
@@ -264,10 +260,8 @@ long OSMainWindow::onNewFrame ( FXObject * sender, FXSelector, void *ptr )
     else
     {
 
-
         if ( networkframe == NULL )  //search
         {
-
 
             string s_size_greater = search_size_greater->getText().text();
             string s_size_less = search_size_less->getText().text();
@@ -376,9 +370,9 @@ long OSMainWindow::onNewSearchFrame ( FXObject * sender, FXSelector, void * )
         new FXLabel ( searchframe, "path: " );
         search_path = new FXTextField ( searchframe, 20 );
         if ( left_frame->f->active )
-            search_path->setText( left_frame->f->path.c_str() );
+            search_path->setText( left_frame->getDir().c_str() );
         else
-            search_path->setText( right_frame->f->path.c_str() );
+            search_path->setText( right_frame->getDir().c_str() );
         new FXLabel ( searchframe, "size" );
         new FXLabel ( searchframe, "greater than(KB):" );
         search_size_greater = new FXTextField ( searchframe, 10 );
@@ -441,22 +435,21 @@ long OSMainWindow::commandsShow ( FXObject * sender, FXSelector, void *ptr )
 //executed when we change directory clicking directory name in popoup window
 long OSMainWindow::onChangeDir ( FXObject * sender, FXSelector, void *ptr )
 {
-    OSFileList * fil = current_frame->f;
-    FXTRACE ( ( 5, "CHANGE DIR\n", fil->path.c_str () ) );
+
     FXMenuCommand *mc = ( FXMenuCommand * ) sender;
     FXEvent *event = ( FXEvent * ) ptr;
     FXWindow *win = ( FXWindow * ) mc->getParent ();
     int x = win->getX ();
     int y = win->getY ();
-    string p = fil->path;
-    string current_path = p;
+ 
+    string current_path = current_frame->getDir();
 
     if ( current_path != "/" )
         current_path.append ( SEPARATOR );
 
     current_path.append ( mc->getText ().text () );
-    current_frame->f->path = current_path;
-    current_frame->f->opendir ( current_path );
+    current_frame->openDir( current_path );
+
     current_frame->generateMenu ( current_path, this );
     popupDir ( current_frame->f, current_path, x, y );
 }
@@ -526,13 +519,45 @@ long OSMainWindow::onListDirs ( FXObject * sender, FXSelector, void *ptr )
         path.append ( boxel->bt->getText ().text () );
         boxel = ( box * ) boxel->nextbutton->getUserData ();
     }
-    current_frame->f->path = path;
-    current_frame->f->opendir ( path );
+    current_frame->openDir ( path );
     FXEvent *event = ( FXEvent * ) ptr;
     int x = event->root_x;
     int y = event->root_y;
     popupDir ( current_frame->f, path, x, y );
 }
+
+
+
+//pressed button in path
+long OSMainWindow::onOpenDir ( FXObject * sender, FXSelector, void *ptr )
+{
+    FXTRACE ( ( 5, "OPEN DIR\n" ) );
+    FXButton *bt = ( FXButton * ) sender;
+    box *boxel = ( box * ) bt->getUserData ();
+    box *boxbackup = boxel;
+    if ( boxel->fr != right_frame && boxel->fr != left_frame )
+        return 0;
+    string path = "";
+    while ( boxel->prebutton != NULL )
+    {
+        boxel = ( box * ) boxel->prebutton->getUserData ();
+    }
+    while ( boxel != NULL )
+    {
+        if ( boxel == boxbackup )
+        {
+            break;
+        }
+        path.append ( boxel->bt->getText ().text () );
+        boxel = ( box * ) boxel->nextbutton->getUserData ();
+    }
+    if ( path == "" )
+        path = "/";
+
+    boxbackup->fr->openDir ( path );
+    boxbackup->fr->generateMenu( path, this );
+}
+
 
 //change position or close frame
 long OSMainWindow::onChangeList ( FXObject * sender, FXSelector sel, void *ptr )
@@ -567,10 +592,10 @@ long OSMainWindow::onChangeList ( FXObject * sender, FXSelector sel, void *ptr )
     }
     else
     {
-        if ( left_frame->f->getWidth() == 0 )
+        if ( leftframe->getWidth() == 0 )
             id = ID_TORIGHT;
 
-        if ( right_frame->f->getWidth() == 0 )
+        if ( rightframe->getWidth() == 0 )
             id = ID_TOLEFT;
 	    	    
 		if ( id == ID_TOLEFT )
@@ -633,10 +658,10 @@ long OSMainWindow::onNotify ( FXObject * sender, FXSelector sel, void *ptr )
     else if ( id == 666 )       //directory change, for example user clicked double on direcotry, or clicked with 3rd button to go to parent dir
     {
         if ( left_frame->f->active )
-            left_frame->generateMenu( left_frame->f->path, this );
+            left_frame->generateMenu( left_frame->getDir(), this );
 
         else
-            right_frame->generateMenu ( right_frame->f->path, this );
+            right_frame->generateMenu ( right_frame->getDir(), this );
     }
 
     else if ( id == 668 )
@@ -656,35 +681,6 @@ long OSMainWindow::onNotify ( FXObject * sender, FXSelector sel, void *ptr )
 }
 
 
-//pressed button in path
-long OSMainWindow::onOpenDir ( FXObject * sender, FXSelector, void *ptr )
-{
-    FXTRACE ( ( 5, "OPEN DIR\n" ) );
-    FXButton *bt = ( FXButton * ) sender;
-    box *boxel = ( box * ) bt->getUserData ();
-    box *boxbackup = boxel;
-    if ( boxel->fr != right_frame && boxel->fr != left_frame )
-        return 0;
-    string path = "";
-    while ( boxel->prebutton != NULL )
-    {
-        boxel = ( box * ) boxel->prebutton->getUserData ();
-    }
-    while ( boxel != NULL )
-    {
-        if ( boxel == boxbackup )
-        {
-            break;
-        }
-        path.append ( boxel->bt->getText ().text () );
-        boxel = ( box * ) boxel->nextbutton->getUserData ();
-    }
-    if ( path == "" )
-        path = "/";
-    boxbackup->fr->f->path = path;
-    boxbackup->fr->f->opendir ( path );
-    boxbackup->fr->generateMenu( path, this );
-}
 
 
 //executed cyclically to update informations about progress of copying/moving/deleteing files
@@ -834,9 +830,9 @@ long OSMainWindow::onTimer ( FXObject *, FXSelector, void * )
                     if ( fil->init () != false )
                     {
                         if ( left_frame->f->active )
-                            left_frame->generateMenu( fil->path, this );
+                            left_frame->generateMenu( fil->getDir(), this );
                         else
-                            right_frame->generateMenu( fil->path, this );
+                            right_frame->generateMenu( fil->getDir(), this );
                     }
                     else
                     {

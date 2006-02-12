@@ -369,9 +369,8 @@ system(textfield->getText ().text());
 
 OSFileList::~OSFileList ()
 {
-    
 
-
+    fb->quit ();
 
     delete sortpop;
     FXTRACE ((5, "destruct\n"));
@@ -424,7 +423,7 @@ bool OSFileList::init ()
     
     }
     
-    return opendir (this->path);
+    return openDir (this->path);
     
 
 }
@@ -644,7 +643,7 @@ void OSFileList::copymoveremove (string com_name)
 }
 
 //opendir
-bool OSFileList::opendir (string dir)
+bool OSFileList::openDir (string dir)
 {
 
 
@@ -655,7 +654,9 @@ bool OSFileList::opendir (string dir)
     if (fb->osopendir (dir) == -1)
     {
     return false;
-    }   
+    }
+path=dir;    
+       
 clearItems ();
 
 
@@ -1080,10 +1081,8 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
 
     if (command == "other")
     {
-        path = filelist_opposite->path;
-        //label->setText(path.c_str());
-        notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
-        opendir (filelist_opposite->path);
+        openDir (filelist_opposite->path);
+	notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
     }
     else if (command == "copy" || command == "move" || command == "remove")
     {
@@ -1139,8 +1138,7 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
     }    
     else if (command == "home")
     {
-         opendir(FXFile::getHomeDirectory ().text ());
-         path=FXFile::getHomeDirectory ().text ();
+         openDir(FXFile::getHomeDirectory ().text ());
          notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
     } 
     else if (command == "dirup")
@@ -1260,8 +1258,7 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
        }
        else if(command == "goto_dir")
        {
-    opendir (textfield->getText ().text ());
-    path = textfield->getText ().text ();
+    openDir (textfield->getText ().text ());
     notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
        }
        else if (command == "get_dir")
@@ -1382,11 +1379,9 @@ long OSFileList::openfile (FXObject * sender, FXSelector, void *)
     ;
     //label->setText(path.c_str());
     
-    if(opendir (dir))
+    if(openDir (dir))
     {
-    path = dir;
     notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
-    
     }  
     }
     else
@@ -1421,9 +1416,8 @@ long OSFileList::gotoparentdir (FXObject *, FXSelector, void *)
 
    string pathnew = FXFile::upLevel (path.c_str ()).text ();
     
-    if(opendir (pathnew));
+    if(openDir (pathnew));
     {
-    this->path = pathnew;
     notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
     
     }
@@ -1733,7 +1727,7 @@ void OSFileList::refresh (void)
 {
     if (processing)
     return;
-    opendir (path);
+    openDir (path);
 }
 
 //----------------------------------------------------   

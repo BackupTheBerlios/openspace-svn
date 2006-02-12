@@ -46,8 +46,6 @@ class OSMainWindow:public FXMainWindow
     virtual ~ OSMainWindow ();
     virtual void create ();
 
-
-
     long OSMainWindow::onListDirs (FXObject * sender, FXSelector, void *);
     long OSMainWindow::onChangeDir (FXObject * sender, FXSelector, void *);
     long OSMainWindow::onChangeList (FXObject * sender, FXSelector, void *);
@@ -67,19 +65,17 @@ class OSMainWindow:public FXMainWindow
     long OSMainWindow::onUpdate (FXObject * sender, FXSelector sel, void *);
     long OSMainWindow::onConfigure (FXObject * sender, FXSelector sel, void *);
 
-    int OSMainWindow::popupDir (OSFileList * current_filelist, string path, int x, int y);
-
-    string OSMainWindow::parseDir (string dir);
-    bool OSMainWindow::loadMimeSettings (string path, string type);
-
-
 
   private:
-     OSMainWindow ()
+    OSMainWindow ()
     {
     }
+    
     void OSMainWindow::loadicons (string dir);
-
+    int OSMainWindow::popupDir (OSFileList * current_filelist, string path, int x, int y);
+    string OSMainWindow::parseDir (string dir);
+    bool OSMainWindow::loadMimeSettings (string path, string type);
+    
     FXVerticalFrame *leftframe;
     FXVerticalFrame *rightframe;
     FXVerticalFrame *infoframe;
@@ -108,23 +104,18 @@ class OSMainWindow:public FXMainWindow
     float ratio;
 
 
-    FXToolBarShell *dragshell1;	// Shell for floating menubar
-    FXToolBarShell *dragshell2;	// Shell for floating toolbar
-    FXToolBarShell *dragshell3;	// Shell for floating toolbar
-    FXToolBarShell *dragshell4;	// Shell for floating toolbar
+    FXToolBarShell *dragshell1;	
+    FXToolBarShell *dragshell2;	
+    FXToolBarShell *dragshell3;
+    FXToolBarShell *dragshell4;
     FXDockSite *topdock;
     FXDockSite *bottomdock;
     FXDockSite *leftdock;
     FXDockSite *rightdock;
     
-    FXComboBox *filelisttypecombobox;
-    
-OSObjectManager *objmanager;
+    FXComboBox *filelisttypecombobox;    
+    OSObjectManager *objmanager;
 };
-
-
-
-
 
 
 #endif
