@@ -1215,14 +1215,13 @@ Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,
     string path = pathdir;
     hf = new FXHorizontalFrame ( cp, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     pathdir = path;
-
-    //generate_menu(path,tgt);
-    int z = 0;
+    firstbutton=NULL;
+    
+    
     FXButton *prebutton = NULL;
     FXButton *nextbutton = NULL;
 
     OSObjectManager*objmanager = OSObjectManager::instance( cp->getApp() );
-
 
     toleft = new FXButton ( hf, "", objmanager->osicons[ "left" ], tgt, OSMainWindow::ID_TOLEFT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
     toleft->setUserData ( new box ( this, NULL, NULL, NULL ) );
@@ -1236,38 +1235,14 @@ Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,
         new FXLabel( hf, lab.c_str() );
     }
 
-    //new FXLabel (hf," ");
     if ( position != 0 )
     {
         toleft->hide ();
         toclose->hide ();
         toright->hide ();
     }
-    while ( z != -1 )
-    {
-        string path_element = "";
-        z = path.find ( SEPARATOR, 1 );
-        if ( z == -1 )
-            path_element.append ( path );
-
-        else
-            path_element.append ( path.substr ( 0, z ) );
-        path.erase ( 0, z );
-        FXButton *bt = new FXButton ( hf, path_element.c_str (), NULL, tgt,
-                                      OSMainWindow::ID_DIR, FRAME_THICK, 0, 0, 0, 0, 0, 0,
-                                      0, 0 );
-        bt->setBackColor ( objmanager->maincolor );
-        if ( prebutton != NULL )
-        {
-            box * boxel = ( box * ) prebutton->getUserData ();
-            boxel->nextbutton = bt;
-        }
-
-        else
-            firstbutton = bt;
-        bt->setUserData ( new box ( this, prebutton, bt, NULL ) );
-        prebutton = bt;
-    }
+   
+    generate_menu(pathdir,tgt);
 
     frame = new FXVerticalFrame ( p, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     f = new OSFileList ( frame, pt );
@@ -1284,24 +1259,28 @@ void Frame::generate_menu ( string path, FXObject * tgt )
 
     OSObjectManager * objmanager = OSObjectManager::instance( hf->getApp() );
 
-    FXTRACE ( ( 5, "GENERATE MENU path %s ", path.c_str () ) );
-    if ( path[ 0 ] == '/' && path[ 1 ] == '/' )
+    if (path.length()>1 && path[ 0 ] == '/' && path[ 1 ] == '/' )
         path.erase ( 0, 1 );
-    box *boxel = ( box * ) firstbutton->getUserData ();
-    box *boxbackup = boxel;
-    while ( boxel )
-    {
-        box * boxel_del = boxel;
-        if ( boxel->nextbutton != NULL )
-            boxel = ( box * ) boxel->nextbutton->getUserData ();
-
-        else
-            boxel = NULL;
-        delete boxel_del->bt;
-        delete boxel_del;
-        boxel_del->bt = NULL;
-        boxel_del = NULL;
-    }
+	
+    	if(firstbutton!=NULL)
+	{	
+    	box *boxel = ( box * ) firstbutton->getUserData ();
+    	box *boxbackup = boxel;
+    		while ( boxel )
+    		{
+        		box * boxel_del = boxel;
+       			if ( boxel->nextbutton != NULL )
+            		boxel = ( box * ) boxel->nextbutton->getUserData ();
+        		else
+            		boxel = NULL;
+			
+       		delete boxel_del->bt;
+        	delete boxel_del;
+       		boxel_del->bt = NULL;
+        	boxel_del = NULL;
+    		}
+    	}
+	
     this->pathdir = path;
     int z = 0;
     FXButton *prebutton = NULL;
