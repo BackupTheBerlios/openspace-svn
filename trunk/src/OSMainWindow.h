@@ -167,6 +167,8 @@ class Frame
 {
   private:
 	
+	FXDockSite* dock1;
+	FXDockSite* dock2;
   public:
 
     string pathdir;
@@ -180,11 +182,12 @@ class Frame
     FXVerticalFrame * frame;
     FXHorizontalFrame *hf;
 
-    Frame (FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt, int position);
+    Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,FXDockSite* dock1,FXDockSite* dock2);
     void generateMenu (string path, FXObject * tgt);
     void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite);
     void Frame::moveToBack(FXComposite * controlframeContainer);
     ~Frame ();
+    void create(void);
 
 
 

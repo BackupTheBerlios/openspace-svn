@@ -185,22 +185,19 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             string dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/leftdir/dir" ) );
             string type = conf->readonestring ( "/OpenspaceConfig/leftdir/type" );
             OSPathType pt ( dir, type );
-            left_frame = new Frame ( leftcontrolframe, leftframe, pt, this, -1 );
-            left_frame->f->toolbar->dock( topdock );
-            left_frame->f->toolbar->hide();
-            left_frame->f->toolbar2->dock( rightdock );
-            left_frame->f->toolbar2->hide();
+            left_frame = new Frame ( controlframe, leftframe, pt, this,topdock,rightdock);
+	    	   
+         
 
             dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/rightdir/dir" ) );
             type = conf->readonestring ( "/OpenspaceConfig/rightdir/type" );
             OSPathType pt2 ( dir, type );
-            right_frame = new Frame ( rightcontrolframe, rightframe, pt2, this, -1 );
+            right_frame = new Frame (controlframe, rightframe, pt2, this,topdock,rightdock);
 
-            right_frame->f->toolbar->dock( topdock );
-            right_frame->f->toolbar2->dock( rightdock );
-
-            left_frame->f->filelist_opposite = right_frame->f;
-            right_frame->f->filelist_opposite = left_frame->f;
+          
+	    left_frame->moveToFront(leftcontrolframe,leftframe,right_frame);
+	    right_frame->moveToFront(rightcontrolframe,rightframe,left_frame);
+	    
             infoframe = new FXVerticalFrame ( ff, LAYOUT_FILL_X );
             networkframe = NULL;
             searchframe = NULL;
@@ -325,19 +322,11 @@ long OSMainWindow::onNewFrame ( FXObject * sender, FXSelector, void *ptr )
         controlframe->recalc ();
     }
     OSPathType pt ( dir, type, str_server, str_user, str_pass, str_port );
-    Frame *fr = new Frame ( controlframe, leftframe, pt, this, 0 );
-
-    fr->frame->create ();
-    fr->hf->create ();
-    fr->f->toolbar->dock( topdock );
-    fr->f->toolbar->hide();
-    fr->f->toolbar2->dock( rightdock );
-    fr->f->toolbar2->hide();
-
+    Frame *fr = new Frame ( controlframe, leftframe, pt, this,topdock,rightdock);
+    fr->create ();
 
     this->handle ( fr->toleft, FXSEL ( SEL_LEFTBUTTONRELEASE, ID_TOLEFT ), NULL );
 
-    controlframe->recalc ();
 }
 
 
@@ -634,40 +623,25 @@ long OSMainWindow::onNotify ( FXObject * sender, FXSelector sel, void *ptr )
         type = "archive";
         OSPathType pt ( dir, type, str_server );
         Frame *fr;
-        if ( left_frame->f->active )
-            fr = new Frame ( leftcontrolframe, leftframe, pt, this, -1 );
+	
+        fr = new Frame ( controlframe, leftframe, pt, this,topdock,rightdock);
+	fr->create ();
 
-        else
-            fr = new Frame ( rightcontrolframe, rightframe, pt, this, -1 );
 	    
         if ( left_frame->f->active )
         {
  	    left_frame->moveToBack(controlframe);
             left_frame = fr;
+	    fr->moveToFront( leftcontrolframe, leftframe,right_frame );
         }
-
         else
         {
             right_frame->moveToBack(controlframe);
             right_frame = fr;
+	    fr->moveToFront( rightcontrolframe, rightframe,left_frame );
         }
-        controlframe->recalc ();
-        fr->frame->create ();
-        fr->hf->create ();
-        fr->frame->show ();
-        fr->f->toolbar->dock( topdock );
-        fr->f->toolbar2->dock( rightdock );
 
-        left_frame->f->filelist_opposite = right_frame->f;
-        right_frame->f->filelist_opposite = left_frame->f;
-
-        if ( left_frame->f->active )
-            left_frame->f->handle ( this, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );
-        else
-            right_frame->f->handle ( this, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );
-
-        rightframe->recalc ();
-        leftframe->recalc ();
+	
     }
 
     else if ( id == 666 )       //directory change, for example user clicked double on direcotry, or clicked with 3rd button to go to parent dir
@@ -1112,7 +1086,7 @@ bool OSMainWindow::loadMimeSettings ( string path, string type )
 }
 
 //-----FRAME---------------------------------------------------------------------------------------------------------------------------
-Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt, int position = 0 )
+Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,FXDockSite* dock1,FXDockSite* dock2)
 {
     this->pathdir = pt.dir;
     this->type = pt.type;
@@ -1121,6 +1095,8 @@ Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,
     pathdir = path;
     firstbutton=NULL;
     
+    this->dock1=dock1;
+    this->dock2=dock2;
     
     FXButton *prebutton = NULL;
     FXButton *nextbutton = NULL;
@@ -1139,22 +1115,21 @@ Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,
         new FXLabel( hf, lab.c_str() );
     }
 
-    if ( position != 0 )
-    {
-        toleft->hide ();
-        toclose->hide ();
-        toright->hide ();
-    }
    
     generateMenu(pathdir,tgt);
 
     frame = new FXVerticalFrame ( p, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     f = new OSFileList ( frame, pt );
-    if ( position == 0 )
-    {
-        frame->hide ();
-    }
+  
+
 }
+
+void Frame::create(void)
+{
+    frame->create ();
+    hf->create ();
+}
+
 
 
 //generate buttons path for given path
@@ -1231,7 +1206,7 @@ Frame::~Frame ()
 }
 
 
-void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite)
+void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite)  
 {
 	hf->reparent ( controlframeContainer );
 	frame->reparent ( frameContainer );
@@ -1241,7 +1216,13 @@ void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameC
 	frame->show ();	
 	
     	frameOpposite->f->filelist_opposite = f;
-    	f->filelist_opposite = frameOpposite->f;    	
+    	f->filelist_opposite = frameOpposite->f;    
+	f->toolbar->dock(dock1);
+  	f->toolbar2->dock(dock2);
+
+        f->toolbar->show();        
+        f->toolbar2->show();
+		
 	f->handle ( frameContainer, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );	
 	frameContainer->recalc();
         
@@ -1255,4 +1236,8 @@ void Frame::moveToBack(FXComposite * controlframeContainer)
         toright->show ();
         toclose->show ();
         frame->hide ();
+	f->toolbar->hide();        
+        f->toolbar2->hide();
+	
+	controlframeContainer->recalc ();
 }
