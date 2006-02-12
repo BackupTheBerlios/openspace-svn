@@ -60,7 +60,8 @@ am_openspace_OBJECTS = main.$(OBJEXT) OSCMDDialogBox.$(OBJEXT) \
 	OSMainWindow.$(OBJEXT) OSMimeApp.$(OBJEXT) \
 	OSMimeType.$(OBJEXT) OSObjectManager.$(OBJEXT) \
 	OSPathType.$(OBJEXT) OSPreferences.$(OBJEXT) \
-	OSShutter.$(OBJEXT) OSThreadExec.$(OBJEXT) OSUtils.$(OBJEXT)
+	OSShutter.$(OBJEXT) OSThreadExec.$(OBJEXT) OSUtils.$(OBJEXT) \
+	OSFrame.$(OBJEXT)
 openspace_OBJECTS = $(am_openspace_OBJECTS)
 openspace_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
@@ -74,7 +75,7 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/OSFileTypeInfo.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/OSFileTypeSymbol.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/OSFirstRunDialogBox.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/OSInfoPanel.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/OSFrame.Po ./$(DEPDIR)/OSInfoPanel.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/OSMainWindow.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/OSMimeApp.Po ./$(DEPDIR)/OSMimeType.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/OSObjectManager.Po \
@@ -216,7 +217,8 @@ openspace_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
 	OSMimeApp.cpp OSMimeApp.h OSMimeType.cpp OSMimeType.h OSObjectManager.cpp \
 	OSObjectManager.h OSPathType.cpp OSPathType.h OSPreferences.cpp OSPreferences.h \
 	OSShutter.cpp OSShutter.h OSThreadExec.cpp OSThreadExec.h OSUtils.cpp OSUtils.h \
-	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h
+	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
+	OSFrame.h OSFrame.cpp
 
 SUBDIRS = plugins
 INCLUDES = -I$(top_srcdir)/src `WANT_FOX="1.4" fox-config --cflags`  `xml2-config  --cflags`  \
@@ -324,6 +326,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSFileTypeInfo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSFileTypeSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSFirstRunDialogBox.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSFrame.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSInfoPanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSMainWindow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSMimeApp.Po@am__quote@

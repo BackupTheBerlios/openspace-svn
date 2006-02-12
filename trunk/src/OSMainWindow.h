@@ -1,26 +1,18 @@
 #ifndef MAINWINDOW
 #define MAINWINDOW
 
+#include <string>
+#include <vector>
 #include <map>
-using namespace std;
 
+#include "fx.h" 
+
+#include "OSFrame.h"
 #include "OSPathType.h"
 #include "OSFileList.h"
 #include "OSFileTypeSymbol.h"
 
-
-#ifdef WIN32
-#define SEPARATOR "\\"
-#else
-#include <dlfcn.h>
-#define SEPARATOR "/"
-#endif
-
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------    
-
-class box;
-class Frame;
+using namespace std;
 
 
 //the main application window
@@ -108,11 +100,9 @@ class OSMainWindow:public FXMainWindow
     FXTextField *password;
     FXTextField *port;
 
-    Frame *fr;
-
-    Frame *current_frame;
-    Frame *left_frame;
-    Frame *right_frame;
+    OSFrame *current_frame;
+    OSFrame *left_frame;
+    OSFrame *right_frame;
     FXMenuPane *pane;
     OSPreferences *pref;
     float ratio;
@@ -132,67 +122,6 @@ class OSMainWindow:public FXMainWindow
 OSObjectManager *objmanager;
 };
 
-
-
-
-
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------
-
-class Frame;
-
-class box
-{
-
-  public:
-
-    Frame * fr;
-    FXButton *prebutton;
-    FXButton *bt;
-    FXButton *nextbutton;
-
-
-     box (Frame * fr, FXButton * prebutton, FXButton * bt, FXButton * nextbutton)
-    {
-	this->bt = bt;
-	this->fr = fr;
-	this->prebutton = prebutton;
-	this->nextbutton = nextbutton;
-    }
-
-};
-
-
-class Frame
-{
-  private:
-	
-	FXDockSite* dock1;
-	FXDockSite* dock2;
-  public:
-
-    string pathdir;
-    string type;
-    OSFileList *f;
-    FXButton *toleft;
-    FXButton *toright;
-    FXButton *toclose;
-    FXButton *firstbutton;
-    
-    FXVerticalFrame * frame;
-    FXHorizontalFrame *hf;
-
-    Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,FXDockSite* dock1,FXDockSite* dock2);
-    void generateMenu (string path, FXObject * tgt);
-    void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite);
-    void Frame::moveToBack(FXComposite * controlframeContainer);
-    ~Frame ();
-    void create(void);
-
-
-
-
-};
 
 
 

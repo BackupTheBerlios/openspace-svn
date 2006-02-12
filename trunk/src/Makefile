@@ -60,7 +60,8 @@ am_openspace_OBJECTS = main.$(OBJEXT) OSCMDDialogBox.$(OBJEXT) \
 	OSMainWindow.$(OBJEXT) OSMimeApp.$(OBJEXT) \
 	OSMimeType.$(OBJEXT) OSObjectManager.$(OBJEXT) \
 	OSPathType.$(OBJEXT) OSPreferences.$(OBJEXT) \
-	OSShutter.$(OBJEXT) OSThreadExec.$(OBJEXT) OSUtils.$(OBJEXT)
+	OSShutter.$(OBJEXT) OSThreadExec.$(OBJEXT) OSUtils.$(OBJEXT) \
+	OSFrame.$(OBJEXT)
 openspace_OBJECTS = $(am_openspace_OBJECTS)
 openspace_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
@@ -74,7 +75,7 @@ DEP_FILES = ./$(DEPDIR)/OSCMDDialogBox.Po \
 	./$(DEPDIR)/OSFileTypeInfo.Po \
 	./$(DEPDIR)/OSFileTypeSymbol.Po \
 	./$(DEPDIR)/OSFirstRunDialogBox.Po \
-	./$(DEPDIR)/OSInfoPanel.Po \
+	./$(DEPDIR)/OSFrame.Po ./$(DEPDIR)/OSInfoPanel.Po \
 	./$(DEPDIR)/OSMainWindow.Po \
 	./$(DEPDIR)/OSMimeApp.Po ./$(DEPDIR)/OSMimeType.Po \
 	./$(DEPDIR)/OSObjectManager.Po \
@@ -216,7 +217,8 @@ openspace_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
 	OSMimeApp.cpp OSMimeApp.h OSMimeType.cpp OSMimeType.h OSObjectManager.cpp \
 	OSObjectManager.h OSPathType.cpp OSPathType.h OSPreferences.cpp OSPreferences.h \
 	OSShutter.cpp OSShutter.h OSThreadExec.cpp OSThreadExec.h OSUtils.cpp OSUtils.h \
-	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h
+	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
+	OSFrame.h OSFrame.cpp
 
 SUBDIRS = plugins
 INCLUDES = -I$(top_srcdir)/src `WANT_FOX="1.4" fox-config --cflags`  `xml2-config  --cflags`  \
@@ -324,6 +326,7 @@ include ./$(DEPDIR)/OSFileListItem.Po
 include ./$(DEPDIR)/OSFileTypeInfo.Po
 include ./$(DEPDIR)/OSFileTypeSymbol.Po
 include ./$(DEPDIR)/OSFirstRunDialogBox.Po
+include ./$(DEPDIR)/OSFrame.Po
 include ./$(DEPDIR)/OSInfoPanel.Po
 include ./$(DEPDIR)/OSMainWindow.Po
 include ./$(DEPDIR)/OSMimeApp.Po

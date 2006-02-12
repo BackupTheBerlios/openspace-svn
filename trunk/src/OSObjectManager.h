@@ -34,6 +34,14 @@
 #include <fx.h>
 #include <map>
 
+#ifdef WIN32
+#define SEPARATOR "\\"
+#else
+#include <dlfcn.h>
+#define SEPARATOR "/"
+#endif
+
+
 using namespace std;
 
 extern OSConfigure *conf;

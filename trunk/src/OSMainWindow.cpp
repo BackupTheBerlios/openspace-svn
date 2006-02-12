@@ -1,13 +1,6 @@
 #include "config.h"
-#include <string>
-#include <vector>
-#include <map>
-using namespace std;
 
-#include "fx.h" 
-// #include "FXPNGIcon.h"
 #include "OSThreadExec.h"
-#include "OSFileList.h"
 #include "OSObjectManager.h"
 #include "OSMainWindow.h"
 #include "OSInfoPanel.h"
@@ -21,20 +14,13 @@ using namespace std;
 #include <unistd.h>
 #include <dirent.h>
 
-#ifdef WIN32
-#define SEPARATOR "\\"
-#else /*  */
-#include <dlfcn.h>
-#define SEPARATOR "/"
-#endif /*  */
+
 using namespace FX;
 FXDEFMAP ( OSMainWindow ) OSMainWindowMap[] =
     {
 
         //________Message_Type_____________________ID____________Message_Handler_______
         FXMAPFUNC ( SEL_COMMAND, OSMainWindow::ID_DIRCH, OSMainWindow::onChangeDir ),
-        // FXMAPFUNC(SEL_ENTER, OSMainWindow::ID_DIRCH,   OSMainWindow::onListNextDir),
-        // FXMAPFUNC(SEL_LEAVE, OSMainWindow::ID_DIRCH,   OSMainWindow::onListNextDir),
         FXMAPFUNC ( SEL_RIGHTBUTTONRELEASE, OSMainWindow::ID_DIR, OSMainWindow::onListDirs ),
         FXMAPFUNC ( SEL_COMMAND, OSMainWindow::ID_DIR, OSMainWindow::onOpenDir ),
         FXMAPFUNC ( SEL_COMMAND, OSMainWindow::ID_CONFIGURE, OSMainWindow::onOpenConfigure ),
@@ -185,14 +171,14 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             string dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/leftdir/dir" ) );
             string type = conf->readonestring ( "/OpenspaceConfig/leftdir/type" );
             OSPathType pt ( dir, type );
-            left_frame = new Frame ( controlframe, leftframe, pt, this,topdock,rightdock);
+            left_frame = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
 	    	   
          
 
             dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/rightdir/dir" ) );
             type = conf->readonestring ( "/OpenspaceConfig/rightdir/type" );
             OSPathType pt2 ( dir, type );
-            right_frame = new Frame (controlframe, rightframe, pt2, this,topdock,rightdock);
+            right_frame = new OSFrame (controlframe, rightframe, pt2, this,topdock,rightdock);
 
           
 	    left_frame->moveToFront(leftcontrolframe,leftframe,right_frame);
@@ -322,7 +308,7 @@ long OSMainWindow::onNewFrame ( FXObject * sender, FXSelector, void *ptr )
         controlframe->recalc ();
     }
     OSPathType pt ( dir, type, str_server, str_user, str_pass, str_port );
-    Frame *fr = new Frame ( controlframe, leftframe, pt, this,topdock,rightdock);
+    OSFrame *fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
     fr->create ();
 
     this->handle ( fr->toleft, FXSEL ( SEL_LEFTBUTTONRELEASE, ID_TOLEFT ), NULL );
@@ -622,9 +608,9 @@ long OSMainWindow::onNotify ( FXObject * sender, FXSelector sel, void *ptr )
         dir = "/";
         type = "archive";
         OSPathType pt ( dir, type, str_server );
-        Frame *fr;
+        OSFrame *fr;
 	
-        fr = new Frame ( controlframe, leftframe, pt, this,topdock,rightdock);
+        fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
 	fr->create ();
 
 	    
@@ -1085,159 +1071,3 @@ bool OSMainWindow::loadMimeSettings ( string path, string type )
 
 }
 
-//-----FRAME---------------------------------------------------------------------------------------------------------------------------
-Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,FXDockSite* dock1,FXDockSite* dock2)
-{
-    this->pathdir = pt.dir;
-    this->type = pt.type;
-    string path = pathdir;
-    hf = new FXHorizontalFrame ( cp, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
-    pathdir = path;
-    firstbutton=NULL;
-    
-    this->dock1=dock1;
-    this->dock2=dock2;
-    
-    FXButton *prebutton = NULL;
-    FXButton *nextbutton = NULL;
-
-    OSObjectManager*objmanager = OSObjectManager::instance( cp->getApp() );
-
-    toleft = new FXButton ( hf, "", objmanager->osicons[ "left" ], tgt, OSMainWindow::ID_TOLEFT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
-    toleft->setUserData ( new box ( this, NULL, NULL, NULL ) );
-    toclose = new FXButton ( hf, "", objmanager->osicons[ "close" ], tgt, OSMainWindow::ID_TOCLOSE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
-    toclose->setUserData ( new box ( this, NULL, NULL, NULL ) );
-    toright = new FXButton ( hf, "", objmanager->osicons[ "right" ], tgt, OSMainWindow::ID_TORIGHT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
-    toright->setUserData ( new box ( this, NULL, NULL, NULL ) );
-    if ( pt.server != "" )
-    {
-        string lab = pt.server + ": ";
-        new FXLabel( hf, lab.c_str() );
-    }
-
-   
-    generateMenu(pathdir,tgt);
-
-    frame = new FXVerticalFrame ( p, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
-    f = new OSFileList ( frame, pt );
-  
-
-}
-
-void Frame::create(void)
-{
-    frame->create ();
-    hf->create ();
-}
-
-
-
-//generate buttons path for given path
-void Frame::generateMenu ( string path, FXObject * tgt )
-{
-    OSObjectManager * objmanager = OSObjectManager::instance( hf->getApp() );
-
-    if (path.length()>1 && path[ 0 ] == '/' && path[ 1 ] == '/' )
-        path.erase ( 0, 1 );
-	
-    	if(firstbutton!=NULL)
-	{	
-    	box *boxel = ( box * ) firstbutton->getUserData ();
-    	box *boxbackup = boxel;
-    		while ( boxel )
-    		{
-        		box * boxel_del = boxel;
-       			if ( boxel->nextbutton != NULL )
-            		boxel = ( box * ) boxel->nextbutton->getUserData ();
-        		else
-            		boxel = NULL;
-			
-       		delete boxel_del->bt;
-        	delete boxel_del;
-       		boxel_del->bt = NULL;
-        	boxel_del = NULL;
-    		}
-    	}
-	
-    this->pathdir = path;
-    int z = 0;
-    FXButton *prebutton = NULL;
-    FXButton *nextbutton = NULL;
-    while ( z != -1 )
-    {
-        string path_element = "";
-        z = path.find ( SEPARATOR, 1 );
-        if ( z == -1 )
-            path_element.append ( path );
-
-        else
-            path_element.append ( path.substr ( 0, z ) );
-        path.erase ( 0, z );
-        FXButton *bt = new FXButton ( hf, path_element.c_str (), NULL, tgt,
-                                      OSMainWindow::ID_DIR, FRAME_THICK, 0, 0, 0, 0, 0, 0,
-                                      0, 0 );
-        bt->setBackColor ( objmanager->maincolor );
-	
-	if(firstbutton!=NULL)
-        bt->create ();
-	
-        if ( prebutton != NULL )
-        {
-            box * boxel = ( box * ) prebutton->getUserData ();
-            boxel->nextbutton = bt;
-        }
-
-        else
-            firstbutton = bt;
-	    
-        bt->setUserData ( new box ( this, prebutton, bt, NULL ) );
-        prebutton = bt;
-    }
-}
-
-
-Frame::~Frame ()
-{
-	    f->fb->quit ();
-    	    delete hf;
-            delete f->toolbar;
-            delete f->toolbar2;
-            delete frame;
-}
-
-
-void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite)  
-{
-	hf->reparent ( controlframeContainer );
-	frame->reparent ( frameContainer );
-	toleft->hide ();
-        toright->hide ();
-        toclose->hide ();
-	frame->show ();	
-	
-    	frameOpposite->f->filelist_opposite = f;
-    	f->filelist_opposite = frameOpposite->f;    
-	f->toolbar->dock(dock1);
-  	f->toolbar2->dock(dock2);
-
-        f->toolbar->show();        
-        f->toolbar2->show();
-		
-	f->handle ( frameContainer, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );	
-	frameContainer->recalc();
-        
-}
-void Frame::moveToBack(FXComposite * controlframeContainer)
-{
-	hf->reparent ( controlframeContainer );
-        f->toolbar->hide();
-        f->toolbar2->hide();
-        toleft->show ();
-        toright->show ();
-        toclose->show ();
-        frame->hide ();
-	f->toolbar->hide();        
-        f->toolbar2->hide();
-	
-	controlframeContainer->recalc ();
-}
