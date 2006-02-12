@@ -213,31 +213,38 @@
 		</filter_files>
 		
 		
-		<mkdir>
+		<OSMkdir>
 			<type>PLUGIN</type>
-		</mkdir>
-		<access>
+			<text>mkdir</text>
+		</OSMkdir>
+		<OSAccess>
 			<type>PLUGIN</type>
-		</access>
+			<text>access</text>
+		</OSAccess>
 		<remove>
 			<type>INTERNAL</type>
 			<key>Delete</key>
 		</remove>
-		<rename>
+		<OSRename>
 			<type>PLUGIN</type>
-		</rename>
-		<clone>
+			<text>rename</text>
+		</OSRename>
+		<OSClone>
 			<type>PLUGIN</type>
-		</clone>
-		<symlink>
+			<text>clone</text>
+		</OSClone>
+		<OSSymlink>
 			<type>PLUGIN</type>
-		</symlink>
-		<compress>
+			<text>symlink</text>
+		</OSSymlink>
+		<OSCompress>
 			<type>PLUGIN</type>
-		</compress>
-		<editsymlink>
+			<text>compress</text>
+		</OSCompress>
+		<OSEditSymlink>
 			<type>PLUGIN</type>
-		</editsymlink>
+			<text>edit symlink</text>
+		</OSEditSymlink>
 		<other>
 			<type>INTERNAL</type>
 			<icon>other</icon>
@@ -426,20 +433,20 @@
 		<common>
 			<command>copy</command>
 			<command>move</command>
-			<command>mkdir</command>
-			<command>access</command>
+			<command>OSMkdir</command>
+			<command>OSAccess</command>
 			<command>remove</command>
-			<command>rename</command>
-			<command>clone</command>
-			<command>symlink</command>
-			<command>editsymlink</command>
+			<command>OSRename</command>
+			<command>OSClone</command>
+			<command>OSSymlink</command>
+			<command>OSEditSymlink</command>
 			<command>special</command>
 			<command>totalsize</command>
 			<command>new_file</command>
 			<command>ls</command>
 		</common>
 		<compress>
-			<command>compress</command>
+			<command>OSCompress</command>
 		</compress>
 		
 		<panel>

@@ -1,0 +1,17 @@
+*~
+*.cache
+*LOG
+*log
+*.kdev*
+*.lo
+*.loT
+*.o
+*.status
+*.swp
+.deps
+.libs
+libtool
+openspacerc
+tags
+Doxyfile
+Makefile

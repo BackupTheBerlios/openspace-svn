@@ -1,6 +1,7 @@
-#include "fx.h"
-#include "../../thread_elem.h"
+
+#include "../../OSThreadExec.h"
 #include "OSFXFile.h"
+#include <fx.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -10,16 +11,12 @@
 #include <errno.h>
 
 
-
-
 #define FOX_THREAD_SAFE
 
 struct fxdirent:dirent
 {
     char buffer[256];
 };
-
-
 
 // Read bytes
 static long fullread (int fd, unsigned char *ptr, long len)
@@ -61,9 +58,8 @@ static long fullwrite (int fd, const unsigned char *ptr, long len)
 }
 
 
-
 // Copy ordinary file
-static FXbool copyfile (const FXString & oldfile, const FXString & newfile, thread_elem * te)
+static FXbool copyfile (const FXString & oldfile, const FXString & newfile, OSThreadExec* te)
 {
     unsigned char buffer[4096];
     struct stat status;
@@ -74,13 +70,9 @@ static FXbool copyfile (const FXString & oldfile, const FXString & newfile, thre
     {
 	if (::stat (oldfile.text (), &status) == 0)
 	{
-
-
 	    te->act_file_name = oldfile.text ();
 	    te->act_file_size = 1;
 	    te->file_size = status.st_size;
-
-
 
 	    if ((dst = open (newfile.text (), O_WRONLY | O_CREAT | O_TRUNC, status.st_mode)) >= 0)
 	    {
@@ -92,9 +84,6 @@ static FXbool copyfile (const FXString & oldfile, const FXString & newfile, thre
 		    if (nread == 0)
 			break;
 
-
-
-
 		    if (te->cancel == true)
 		    {
 			fxmessage ("CANCEL CANCEL CANCEL CANCEL !!!\n\n\n\n\n");
@@ -105,8 +94,6 @@ static FXbool copyfile (const FXString & oldfile, const FXString & newfile, thre
 
 		    te->act_file_size += nread;
 		    te->act_total_size += nread;
-
-
 
 		    nwritten = fullwrite (dst, buffer, nread);
 		    if (nwritten < 0)
@@ -131,11 +118,11 @@ struct inodelist
 
 
 // Forward declararion
-static FXbool copyrec (const FXString & oldfile, const FXString & newfile, FXbool overwrite, inodelist * inodes, thread_elem * te);
+static FXbool copyrec (const FXString & oldfile, const FXString & newfile, FXbool overwrite, inodelist * inodes, OSThreadExec* te);
 
 
 // Copy directory
-static FXbool copydir (const FXString & oldfile, const FXString & newfile, FXbool overwrite, struct stat &parentstatus, inodelist * inodes, thread_elem * te)
+static FXbool copydir (const FXString & oldfile, const FXString & newfile, FXbool overwrite, struct stat &parentstatus, inodelist * inodes, OSThreadExec* te)
 {
     FXString oldchild, newchild;
     struct stat status;
@@ -201,11 +188,8 @@ static FXbool copydir (const FXString & oldfile, const FXString & newfile, FXboo
     return TRUE;
 }
 
-
-
-
 // Recursive copy
-static FXbool copyrec (const FXString & oldfile, const FXString & newfile, FXbool overwrite, inodelist * inodes, thread_elem * te)
+static FXbool copyrec (const FXString & oldfile, const FXString & newfile, FXbool overwrite, inodelist * inodes, OSThreadExec* te)
 {
     struct stat status1, status2;
 
@@ -276,16 +260,10 @@ static FXbool copyrec (const FXString & oldfile, const FXString & newfile, FXboo
 }
 
 
-
-
-
 //====================================OSFXFile================================================================
 
-
-
-
 // Copy file
-FXbool OSFXFile::copy (const FXString & oldfile, const FXString & newfile, thread_elem * te, FXbool overwrite)
+FXbool OSFXFile::copy (const FXString & oldfile, const FXString & newfile, OSThreadExec* te, FXbool overwrite)
 {
     if (newfile != oldfile)
     {
@@ -301,7 +279,7 @@ FXbool OSFXFile::copy (const FXString & oldfile, const FXString & newfile, threa
 
 
 // Remove file or directory
-FXbool OSFXFile::remove (const FXString & file, thread_elem * te)
+FXbool OSFXFile::remove (const FXString & file, OSThreadExec* te)
 {
 
 
@@ -401,7 +379,7 @@ FXbool OSFXFile::remove (const FXString & file, thread_elem * te)
 
 
 // Rename or move file, or copy and delete old if different file systems
-FXbool OSFXFile::move (const FXString & oldfile, const FXString & newfile, thread_elem * te, FXbool overwrite)
+FXbool OSFXFile::move (const FXString & oldfile, const FXString & newfile, OSThreadExec* te, FXbool overwrite)
 {
 
     if (newfile != oldfile)

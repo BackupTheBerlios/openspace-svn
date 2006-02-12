@@ -1,5 +1,5 @@
 /* pftp.h : passive-capable FTP class.
-   Copyright 2002 Mr. Tines <Tines@RavnaAndTines.com>
+  Copyright 2002 Mr. Tines <Tines@RavnaAndTines.com>
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU Library General Public License as published by the
@@ -27,7 +27,8 @@ typedef int SOCKET;
 #endif
 
 
-namespace FX {
+namespace FX
+{
     class FXString;
     class FXMemoryStream;
 }
@@ -55,45 +56,61 @@ typedef unsigned int uint32_t;
 
 #define PASSIVE_FTP_PRODUCT_VERSION "1.7.1955.38236"
 
-class Logger {
-public:
-    virtual void start(uint32_t bytes, const FXString & name,uint32_t size=0) = 0;
-    virtual bool update(uint32_t bytes, const FXString & name) = 0;
-    virtual void end(uint32_t bytes, const FXString & name) = 0;
-    virtual void error(int error) = 0;
-    virtual void error(FXString & error) = 0;
-    virtual void choke() = 0;
-    virtual void logLine(FXString & line) = 0;
-};
-
-class PFTP 
+/**
+ * Logger class.
+ * 
+ * @todo Add virtual destructor - this class is a base class!
+ */
+class Logger
 {
 public:
-    PFTP(const FXString & server, const FXString & user, const FXString & pass, const FXString & proxy, Logger * feedback);
+    virtual void start( uint32_t bytes, const FXString & name, uint32_t size = 0 ) = 0;
+    virtual bool update( uint32_t bytes, const FXString & name ) = 0;
+    virtual void end( uint32_t bytes, const FXString & name ) = 0;
+    virtual void error( int error ) = 0;
+    virtual void error( FXString & error ) = 0;
+    virtual void choke() = 0;
+    virtual void logLine( FXString & line ) = 0;
+};
 
+/**
+ * FTP class.
+ */
+class PFTP
+{
+public:
+    
+    /**
+     * Constructor.
+     */
+    PFTP( const FXString& server, const FXString& user, const FXString& pass, const FXString& proxy, Logger* feedback );
+
+    /**
+     * Destructor.
+     */
+    ~PFTP( void );
+    
     // need to provide a feedback callback
-    void download(const FXString & file,FXString dst, bool asc=false);
-    void upload(const FXString & file, int throttle, bool asc=false);
+    void download( const FXString & file, FXString dst, bool asc = false );
+    void upload( const FXString & file, int throttle, bool asc = false );
 
-    void setDir(const FXString & dir);
-    void mkDir(const FXString & dir);
-    void del(const FXString & file);
-    void rmDir(const FXString & dir);
-    void pwd(FXString & dir);
-    void list(FXMemoryStream & stream);
-    void nlist(FXMemoryStream & stream);
-    void logout(void);
+    void setDir( const FXString & dir );
+    void mkDir( const FXString & dir );
+    void del( const FXString & file );
+    void rmDir( const FXString & dir );
+    void pwd( FXString & dir );
+    void list( FXMemoryStream & stream );
+    void nlist( FXMemoryStream & stream );
+    void logout( void );
 
     bool isConnected() const;
 
-    ~PFTP();
-
-void sendCmd(const FXString cmd, const FXString & value, FXString & response);
-
+    void sendCmd( const FXString cmd, const FXString & value, FXString & response );
 
 private:
 
-    enum {
+    enum
+    {
         CNTRL_PORT = 21,
         BUCKET = 4096
     };
@@ -103,32 +120,30 @@ private:
     SOCKET dsock;
 
     bool pauser;  // it's a hack. We're going to
-          // stall (refuse further requests) till we get a reply back
-          // from server for the current request.
+    // stall (refuse further requests) till we get a reply back
+    // from server for the current request.
 
-    char lineBuffer[BUCKET];
+    char lineBuffer[ BUCKET ];
     int buffered;
-	char * proxyServer;
-	int proxyPort;
+    char * proxyServer;
+    int proxyPort;
 
 
-    int connect(const FXString & server);
-    void getAsBytes(const FXString & file, SOCKET sock, FXMemoryStream & buffer);
-    void login(const FXString & user, const FXString & pass);
-    void setTransferType(bool asc);
+    int connect( const FXString & server );
+    void getAsBytes( const FXString & file, SOCKET sock, FXMemoryStream & buffer );
+    void login( const FXString & user, const FXString & pass );
+    void setTransferType( bool asc );
 
-    void getDataSock(void);
-    
-    void responseHandler(const FXString & cmd, FXString & result);
+    void getDataSock( void );
+
+    void responseHandler( const FXString & cmd, FXString & result );
 
     // responseParser: check first digit of first line of response
     // and take action based on it; set up to read an extra line
     // if the response starts with "1"
-    bool responseParser(const FXString & resp);
-    void readLine(FXString & line, bool pureFTP=true);
-
+    bool responseParser( const FXString & resp );
+    void readLine( FXString & line, bool pureFTP = true );
 
 };
 
 #endif
-
