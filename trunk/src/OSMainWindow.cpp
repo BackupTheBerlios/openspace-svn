@@ -57,6 +57,7 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             pane = NULL;
             filemenu = NULL;
             pref = NULL;
+	    lastId=0;
 
             string fontdesc = conf->readonestring ( "/OpenspaceConfig/fonts/normalfont" );
             FXFont *font = new FXFont( getApp(), fontdesc.c_str() );
@@ -168,13 +169,13 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             string dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/leftdir/dir" ) );
             string type = conf->readonestring ( "/OpenspaceConfig/leftdir/type" );
             OSPathType pt ( dir, type );
-            left_frame = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
+            left_frame = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock,lastId++,this);
 	    	   
          
             dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/rightdir/dir" ) );
             type = conf->readonestring ( "/OpenspaceConfig/rightdir/type" );
             OSPathType pt2 ( dir, type );
-            right_frame = new OSFrame (controlframe, rightframe, pt2, this,topdock,rightdock);
+            right_frame = new OSFrame (controlframe, rightframe, pt2, this,topdock,rightdock,lastId++,this);
 
           
 	    left_frame->moveToFront(leftcontrolframe,leftframe,right_frame);
@@ -302,7 +303,7 @@ long OSMainWindow::onNewFrame ( FXObject * sender, FXSelector, void *ptr )
         controlframe->recalc ();
     }
     OSPathType pt ( dir, type, str_server, str_user, str_pass, str_port );
-    OSFrame *fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
+    OSFrame *fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock,lastId++,this);
     fr->create ();
 
     this->handle ( fr->toleft, FXSEL ( SEL_LEFTBUTTONRELEASE, ID_TOLEFT ), NULL );
@@ -635,7 +636,7 @@ long OSMainWindow::onNotify ( FXObject * sender, FXSelector sel, void *ptr )
         OSPathType pt ( dir, type, str_server );
         OSFrame *fr;
 	
-        fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
+        fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock,lastId++,this);
 	fr->create ();
 
 	    
@@ -653,15 +654,6 @@ long OSMainWindow::onNotify ( FXObject * sender, FXSelector sel, void *ptr )
         }
 
 	
-    }
-
-    else if ( id == 666 )       //directory change, for example user clicked double on direcotry, or clicked with 3rd button to go to parent dir
-    {
-        if ( left_frame->f->active )
-            left_frame->generateMenu( left_frame->getDir(), this );
-
-        else
-            right_frame->generateMenu ( right_frame->getDir(), this );
     }
 
     else if ( id == 668 )
@@ -1067,3 +1059,18 @@ bool OSMainWindow::loadMimeSettings ( string path, string type )
 
 }
 
+
+void OSMainWindow::dirChange(long id)
+{
+
+	if(left_frame->id==id)	
+	left_frame->generateMenu( left_frame->getDir(), this );
+	else
+	right_frame->generateMenu( right_frame->getDir(), this );
+
+}
+
+void OSMainWindow::getFocus(long id)
+{
+
+}

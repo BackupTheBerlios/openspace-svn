@@ -35,6 +35,8 @@
 #include <string>
 #include <map>
 #include "OSPreferences.h"
+#include "OSFileListController.h"
+
 
 //OSFileList
 class OSFileList: public FXIconList
@@ -48,6 +50,9 @@ private:
     string previous_path;
     string type;
     OSPathType *pt;
+    long id;
+    
+    OSFileListController *controller;  
 
     FXWindow *notifyparent;
     FXLabel *label;
@@ -112,7 +117,7 @@ public:
     virtual ~OSFileList( void );
 
     //==============================================
-    OSFileList ( FXComposite * p, OSPathType pt );
+    OSFileList ( FXComposite * p, OSPathType pt ,long id,OSFileListController* controller);
     //==============================================
 
 

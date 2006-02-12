@@ -110,7 +110,7 @@ FXIMPLEMENT (OSFileList, FXIconList, OSFileListMap, ARRAYNUMBER (OSFileListMap))
 
 
 
-OSFileList::OSFileList (FXComposite * p, OSPathType pt):
+OSFileList::OSFileList (FXComposite * p, OSPathType pt,long id,OSFileListController* controller):
 FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
 {
 objmanager=OSObjectManager::instance(getApp());
@@ -126,6 +126,7 @@ FXScrollArea::horizontal->setShadowColor(objmanager->maincolor);
 FXScrollArea::horizontal->setHiliteColor(FXRGB(255, 255, 255));
 FXScrollArea::horizontal->setBorderColor(FXRGB(255, 255, 255));
 FXScrollArea::horizontal->setBackColor(objmanager->maincolor);
+this->id=id;
 
     flags |= FLAG_ENABLED | FLAG_DROPTARGET;
     popupmenu = NULL;
@@ -171,6 +172,8 @@ FXScrollArea::horizontal->setBackColor(objmanager->maincolor);
 
 
     notifyparent = getShell ();
+    
+    this->controller=controller;
 
     active = false;
 
@@ -656,7 +659,8 @@ bool OSFileList::openDir (string dir)
     return false;
     }
 path=dir;    
-       
+controller->dirChange(id);  
+    
 clearItems ();
 
 
@@ -1082,7 +1086,6 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
     if (command == "other")
     {
         openDir (filelist_opposite->path);
-	notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
     }
     else if (command == "copy" || command == "move" || command == "remove")
     {
@@ -1139,7 +1142,6 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
     else if (command == "home")
     {
          openDir(FXFile::getHomeDirectory ().text ());
-         notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
     } 
     else if (command == "dirup")
     {
@@ -1258,8 +1260,7 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
        }
        else if(command == "goto_dir")
        {
-    openDir (textfield->getText ().text ());
-    notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
+   	 openDir (textfield->getText ().text ());
        }
        else if (command == "get_dir")
        {
@@ -1379,10 +1380,8 @@ long OSFileList::openfile (FXObject * sender, FXSelector, void *)
     ;
     //label->setText(path.c_str());
     
-    if(openDir (dir))
-    {
-    notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
-    }  
+    openDir (dir);
+  
     }
     else
     {    
@@ -1416,11 +1415,8 @@ long OSFileList::gotoparentdir (FXObject *, FXSelector, void *)
 
    string pathnew = FXFile::upLevel (path.c_str ()).text ();
     
-    if(openDir (pathnew));
-    {
-    notifyparent->handle (this, FXSEL (SEL_COMMAND, 666), NULL);
-    
-    }
+    openDir (pathnew);
+
 }
 
 

@@ -11,13 +11,13 @@
 #include "OSPathType.h"
 #include "OSFileList.h"
 #include "OSFileTypeSymbol.h"
-
+#include "OSFileListController.h"
 using namespace std;
 
 
 //the main application window
 
-class OSMainWindow:public FXMainWindow
+class OSMainWindow:public FXMainWindow, public OSFileListController
 {
   FXDECLARE (OSMainWindow) public:
     enum
@@ -65,6 +65,9 @@ class OSMainWindow:public FXMainWindow
     long OSMainWindow::onUpdate (FXObject * sender, FXSelector sel, void *);
     long OSMainWindow::onConfigure (FXObject * sender, FXSelector sel, void *);
 
+    void dirChange(long id);
+    void getFocus(long id);
+
 
   private:
     OSMainWindow ()
@@ -102,6 +105,8 @@ class OSMainWindow:public FXMainWindow
     FXMenuPane *pane;
     OSPreferences *pref;
     float ratio;
+    
+    long lastId;
 
 
     FXToolBarShell *dragshell1;	
