@@ -181,14 +181,11 @@ class Frame
     FXHorizontalFrame *hf;
 
     Frame (FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt, int position);
-    void generate_menu (string path, FXObject * tgt);
+    void generateMenu (string path, FXObject * tgt);
+    void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer);
+    void Frame::moveToBack(FXComposite * controlframeContainer);
+    ~Frame ();
 
-    ~Frame ()
-    {
-	delete hf;
-	delete f;
-	delete frame;
-    }
 
 
 

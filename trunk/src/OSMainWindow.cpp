@@ -482,7 +482,7 @@ long OSMainWindow::onChangeDir ( FXObject * sender, FXSelector, void *ptr )
     current_path.append ( mc->getText ().text () );
     current_frame->f->path = current_path;
     current_frame->f->opendir ( current_path );
-    current_frame->generate_menu ( current_path, this );
+    current_frame->generateMenu ( current_path, this );
     popupDir ( current_frame->f, current_path, x, y );
 }
 
@@ -501,28 +501,6 @@ int OSMainWindow::popupDir ( OSFileList * current_filelist, string path, int x, 
         }
     }
 
-    /*
-     
-        if(current_filelist->fb->osopendir(path)==-1)
-        {
-        return 0;
-        }
-     
-     
-     
-     
-     
-        while(1)
-        {
-        osfile os_file=current_filelist->fb->osreaddir();
-            if(os_file.name=="")
-            break;
-        
-            if(os_file.type&FOLDER && os_file.name!="." && os_file.name!="..")
-            vec.push_back (os_file.name);       
-        }
-     
-    */
     unsigned int indx;
     if ( vec.size () > 0 )
     {
@@ -587,7 +565,7 @@ long OSMainWindow::onChangeList ( FXObject * sender, FXSelector sel, void *ptr )
     FXButton * bt = ( FXButton * ) sender;
     box *boxel = ( box * ) bt->getUserData ();
     FXushort id = FXSELID ( sel );
-    int pos = -1;
+
     if ( id == ID_TOCLOSE )
     {
         bool canclose = true;
@@ -603,80 +581,44 @@ long OSMainWindow::onChangeList ( FXObject * sender, FXSelector sel, void *ptr )
         }
         if ( canclose )
         {
-
-            boxel->fr->f->fb->quit ();
-            delete boxel->fr->hf;
-            delete boxel->fr->f->toolbar;
-            delete boxel->fr->f->toolbar2;
-            delete boxel->fr->frame;
+            delete boxel->fr;
             sender = NULL;
-
         }
         else
         {
             FXMessageBox about ( this, "error", "There are some processes connected with this filelist,\n finish them all and then you can close this filelist\n(this behavior will change in the next release of program)", NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER );
             about.execute ();
-
         }
-
-        return 1;
-
     }
-
     else
     {
-        if ( id == ID_TORIGHT )
-        {
-            pos = 1;
-        }
-
         if ( left_frame->f->getWidth() == 0 )
-            pos = 1;
+            id = ID_TORIGHT;
 
         if ( right_frame->f->getWidth() == 0 )
-            pos = -1;
+            id = ID_TOLEFT;
+	    	    
+		if ( id == ID_TOLEFT )
+   		{
+        	boxel->fr->moveToFront( leftcontrolframe, leftframe );
+        	left_frame->moveToBack(controlframe);
+       	 	left_frame = boxel->fr;
+    		}	
+    		else
+    		{
+        	boxel->fr->moveToFront( rightcontrolframe, rightframe );
+        	right_frame->moveToBack(controlframe);
+        	right_frame = boxel->fr;
+   		}
+    
+    	left_frame->f->filelist_opposite = right_frame->f;
+    	right_frame->f->filelist_opposite = left_frame->f;
+    	boxel->fr->f->handle ( this, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );
 
-
+    	rightframe->recalc ();
+    	leftframe->recalc ();	    
     }
-    if ( pos == -1 )
-    {
-        boxel->fr->frame->reparent ( leftframe );
-        boxel->fr->hf->reparent ( leftcontrolframe );
-        left_frame->hf->reparent ( controlframe );
-        left_frame->f->toolbar->hide();
-        left_frame->f->toolbar2->hide();
-        left_frame->toleft->show ();
-        left_frame->toright->show ();
-        left_frame->toclose->show ();
-        left_frame->frame->hide ();
-        left_frame = boxel->fr;
-        left_frame->frame->show ();
-
-    }
-
-    else
-    {
-        boxel->fr->frame->reparent ( rightframe );
-        boxel->fr->hf->reparent ( rightcontrolframe );
-        right_frame->hf->reparent ( controlframe );
-        right_frame->f->toolbar->hide();
-        right_frame->f->toolbar2->hide();
-        right_frame->toleft->show ();
-        right_frame->toright->show ();
-        right_frame->toclose->show ();
-        right_frame->frame->hide ();
-        right_frame = boxel->fr;
-        right_frame->frame->show ();
-    }
-    left_frame->f->filelist_opposite = right_frame->f;
-    right_frame->f->filelist_opposite = left_frame->f;
-    boxel->fr->toleft->hide ();
-    boxel->fr->toright->hide ();
-    boxel->fr->toclose->hide ();
-    boxel->fr->f->handle ( this, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );
-
-    rightframe->recalc ();
-    leftframe->recalc ();
+   
 }
 
 
@@ -703,31 +645,17 @@ long OSMainWindow::onNotify ( FXObject * sender, FXSelector sel, void *ptr )
 
         else
             fr = new Frame ( rightcontrolframe, rightframe, pt, this, -1 );
+	    
         if ( left_frame->f->active )
         {
-            left_frame->hf->reparent ( controlframe );
-            left_frame->toleft->show ();
-            left_frame->toright->show ();
-            left_frame->toclose->show ();
-            left_frame->frame->hide ();
-            left_frame->f->toolbar->hide();
-            left_frame->f->toolbar2->hide();
+ 	    left_frame->moveToBack(controlframe);
             left_frame = fr;
-
         }
 
         else
         {
-            right_frame->hf->reparent ( controlframe );
-            right_frame->toleft->show ();
-            right_frame->toright->show ();
-            right_frame->toclose->show ();
-            right_frame->frame->hide ();
-            right_frame->f->toolbar->hide();
-            right_frame->f->toolbar2->hide();
+            right_frame->moveToBack(controlframe);
             right_frame = fr;
-
-
         }
         controlframe->recalc ();
         fr->frame->create ();
@@ -751,10 +679,10 @@ long OSMainWindow::onNotify ( FXObject * sender, FXSelector sel, void *ptr )
     else if ( id == 666 )       //directory change, for example user clicked double on direcotry, or clicked with 3rd button to go to parent dir
     {
         if ( left_frame->f->active )
-            left_frame->generate_menu ( left_frame->f->path, this );
+            left_frame->generateMenu( left_frame->f->path, this );
 
         else
-            right_frame->generate_menu ( right_frame->f->path, this );
+            right_frame->generateMenu ( right_frame->f->path, this );
     }
 
     else if ( id == 668 )
@@ -801,7 +729,7 @@ long OSMainWindow::onOpenDir ( FXObject * sender, FXSelector, void *ptr )
         path = "/";
     boxbackup->fr->f->path = path;
     boxbackup->fr->f->opendir ( path );
-    boxbackup->fr->generate_menu ( path, this );
+    boxbackup->fr->generateMenu( path, this );
 }
 
 
@@ -952,9 +880,9 @@ long OSMainWindow::onTimer ( FXObject *, FXSelector, void * )
                     if ( fil->init () != false )
                     {
                         if ( left_frame->f->active )
-                            left_frame->generate_menu ( fil->path, this );
+                            left_frame->generateMenu( fil->path, this );
                         else
-                            right_frame->generate_menu ( fil->path, this );
+                            right_frame->generateMenu( fil->path, this );
                     }
                     else
                     {
@@ -1051,7 +979,6 @@ long OSMainWindow::onOverwrite ( FXObject * sender, FXSelector sel, void * )
     te->mutex.unlock ();
 }
 
-
 //NEED TO CHANGE THIS
 long OSMainWindow::onConfigure ( FXObject * sender, FXSelector sel, void *ptr )
 {
@@ -1071,7 +998,6 @@ long OSMainWindow::onUpdate ( FXObject * sender, FXSelector sel, void *ptr )
     float r = right->getWidth ();
     float w = getWidth ();
     ratio = ( float ) l / ( float ) w;
-
 }
 
 //telem is canceled
@@ -1085,14 +1011,10 @@ long OSMainWindow::cancel ( FXObject * sender, FXSelector, void * )
 }
 
 
-
-
 //load icon from file and put in the array
 void OSMainWindow::loadicons ( string icondir )
 {
-
     objmanager = OSObjectManager::instance( getApp() );
-
 
     FXIconSource *source = new FXIconSource ( getApp () );
     FXString fil = icondir.c_str();
@@ -1121,7 +1043,6 @@ void OSMainWindow::loadicons ( string icondir )
     if ( objmanager->specialicons[ 5 ] )
         objmanager->specialicons[ 5 ] ->create();
 
-
     struct stat status;
     struct dirent *dp;
     DIR *dirp;
@@ -1138,26 +1059,18 @@ void OSMainWindow::loadicons ( string icondir )
 
                 //if (name.length () >= 3 && (name.substr (name.length () - 3, 3) == "gif" || name.substr (name.length () - 3, 3) == "png"))
                 {
-
                     string file = icondir;
                     file.append ( name );
                     string shortname = name.substr ( 0, name.length () - 4 );
-
                     FXString fil_name = file.c_str();
-
                     objmanager->osicons[ shortname ] = source->loadIcon ( fil_name );
-
                     objmanager->osicons[ shortname ] ->create ();
-
-
                 }
 
             }
         }
 
     closedir ( dirp );
-
-
 }
 
 
@@ -1204,9 +1117,6 @@ bool OSMainWindow::loadMimeSettings ( string path, string type )
 
 }
 
-
-
-
 //-----FRAME---------------------------------------------------------------------------------------------------------------------------
 Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt, int position = 0 )
 {
@@ -1242,7 +1152,7 @@ Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,
         toright->hide ();
     }
    
-    generate_menu(pathdir,tgt);
+    generateMenu(pathdir,tgt);
 
     frame = new FXVerticalFrame ( p, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     f = new OSFileList ( frame, pt );
@@ -1254,7 +1164,7 @@ Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,
 
 
 //generate buttons path for given path
-void Frame::generate_menu ( string path, FXObject * tgt )
+void Frame::generateMenu ( string path, FXObject * tgt )
 {
 
     OSObjectManager * objmanager = OSObjectManager::instance( hf->getApp() );
@@ -1314,4 +1224,36 @@ void Frame::generate_menu ( string path, FXObject * tgt )
         bt->setUserData ( new box ( this, prebutton, bt, NULL ) );
         prebutton = bt;
     }
+}
+
+
+Frame::~Frame ()
+{
+	    f->fb->quit ();
+    	    delete hf;
+            delete f->toolbar;
+            delete f->toolbar2;
+            delete frame;
+}
+
+
+void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer)
+{
+	hf->reparent ( controlframeContainer );
+	frame->reparent ( frameContainer );
+	toleft->hide ();
+        toright->hide ();
+        toclose->hide ();
+	frame->show ();
+        
+}
+void Frame::moveToBack(FXComposite * controlframeContainer)
+{
+	hf->reparent ( controlframeContainer );
+        f->toolbar->hide();
+        f->toolbar2->hide();
+        toleft->show ();
+        toright->show ();
+        toclose->show ();
+        frame->hide ();
 }
