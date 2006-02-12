@@ -227,6 +227,6 @@ void OSMimeApp::save( std::string mime, std::string program )
         }
     }
 
-    OSFileTypeInfo cm = OSFileTypeInfo( command_name, command_exec );
+    OSCommandTypeInfo cm = OSCommandTypeInfo( command_name, command_exec );
     cm.save();
 }
