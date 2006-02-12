@@ -600,23 +600,17 @@ long OSMainWindow::onChangeList ( FXObject * sender, FXSelector sel, void *ptr )
 	    	    
 		if ( id == ID_TOLEFT )
    		{
-        	boxel->fr->moveToFront( leftcontrolframe, leftframe );
+        	boxel->fr->moveToFront( leftcontrolframe, leftframe,right_frame );
         	left_frame->moveToBack(controlframe);
        	 	left_frame = boxel->fr;
     		}	
     		else
     		{
-        	boxel->fr->moveToFront( rightcontrolframe, rightframe );
+        	boxel->fr->moveToFront( rightcontrolframe, rightframe,left_frame );
         	right_frame->moveToBack(controlframe);
         	right_frame = boxel->fr;
    		}
-    
-    	left_frame->f->filelist_opposite = right_frame->f;
-    	right_frame->f->filelist_opposite = left_frame->f;
-    	boxel->fr->f->handle ( this, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );
-
-    	rightframe->recalc ();
-    	leftframe->recalc ();	    
+   
     }
    
 }
@@ -1166,7 +1160,6 @@ Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,
 //generate buttons path for given path
 void Frame::generateMenu ( string path, FXObject * tgt )
 {
-
     OSObjectManager * objmanager = OSObjectManager::instance( hf->getApp() );
 
     if (path.length()>1 && path[ 0 ] == '/' && path[ 1 ] == '/' )
@@ -1221,6 +1214,7 @@ void Frame::generateMenu ( string path, FXObject * tgt )
 
         else
             firstbutton = bt;
+	    
         bt->setUserData ( new box ( this, prebutton, bt, NULL ) );
         prebutton = bt;
     }
@@ -1237,14 +1231,19 @@ Frame::~Frame ()
 }
 
 
-void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer)
+void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite)
 {
 	hf->reparent ( controlframeContainer );
 	frame->reparent ( frameContainer );
 	toleft->hide ();
         toright->hide ();
         toclose->hide ();
-	frame->show ();
+	frame->show ();	
+	
+    	frameOpposite->f->filelist_opposite = f;
+    	f->filelist_opposite = frameOpposite->f;    	
+	f->handle ( frameContainer, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );	
+	frameContainer->recalc();
         
 }
 void Frame::moveToBack(FXComposite * controlframeContainer)

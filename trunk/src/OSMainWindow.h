@@ -182,7 +182,7 @@ class Frame
 
     Frame (FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt, int position);
     void generateMenu (string path, FXObject * tgt);
-    void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer);
+    void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite);
     void Frame::moveToBack(FXComposite * controlframeContainer);
     ~Frame ();
 
