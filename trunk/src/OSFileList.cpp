@@ -800,9 +800,10 @@ clearItems ();
 long OSFileList::setFocus (FXObject * obj, FXSelector sel, void *ptr)
 {
 
-setKeys();
+    setKeys();
     active = true;
     filelist_opposite->active = false;
+    controller->getFocus(id);
     filelist_opposite->toolbar->hide();
     filelist_opposite->toolbar2->hide();        
     toolbar->show();
@@ -1014,8 +1015,7 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
     if (command_type == "VFS")  //internal command, open new window for virtual file system
     {
         int c = getCurrentItem ();
-        string *file = new string (returnpath(getItemText (c).text ()));
-        notifyparent->handle (this, FXSEL (SEL_COMMAND, 667), (void *) file);
+	controller->openVfs(id,returnpath(getItemText (c).text ()));
         return 0;
     }
     else if (command_type == "EXTERNAL" || command_type=="")
@@ -1233,7 +1233,8 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
          {
             conf->saveonestring ("/OpenspaceConfig/panels", "double");
          }
-     notifyparent->handle (this, FXSEL (SEL_COMMAND, 668), NULL);
+     
+         controller->splitFileList(id);
     
     }
     else if(command == "filter_files")

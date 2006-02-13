@@ -30,7 +30,6 @@ FXDEFMAP ( OSMainWindow ) OSMainWindowMap[] =
         FXMAPFUNC ( SEL_COMMAND, OSMainWindow::ID_NEWFRAME, OSMainWindow::onNewFrame ),
         FXMAPFUNC ( SEL_COMMAND, OSMainWindow::ID_NEW_NETWORK, OSMainWindow::onNewNetworkFrame ),
         FXMAPFUNC ( SEL_COMMAND, OSMainWindow::ID_NEW_SEARCH, OSMainWindow::onNewSearchFrame ),
-        FXMAPFUNCS ( SEL_COMMAND, 666, 668, OSMainWindow::onNotify ),
         FXMAPFUNC ( SEL_TIMEOUT, OSMainWindow::ID_TIMER, OSMainWindow::onTimer ),
         FXMAPFUNC ( SEL_COMMAND, OSMainWindow::ID_COMMANDS_SHOW, OSMainWindow::commandsShow ),
         FXMAPFUNC ( SEL_CONFIGURE, 0, OSMainWindow::onConfigure ),
@@ -370,10 +369,9 @@ long OSMainWindow::onNewSearchFrame ( FXObject * sender, FXSelector, void * )
         searchframe = new FXHorizontalFrame ( controlframe, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
         new FXLabel ( searchframe, "path: " );
         search_path = new FXTextField ( searchframe, 20 );
-        if ( left_frame->f->active )
-            search_path->setText( left_frame->getDir().c_str() );
-        else
-            search_path->setText( right_frame->getDir().c_str() );
+ 
+        search_path->setText( current_frame->getDir().c_str() );
+ 
         new FXLabel ( searchframe, "size" );
         new FXLabel ( searchframe, "greater than(KB):" );
         search_size_greater = new FXTextField ( searchframe, 10 );
@@ -617,64 +615,6 @@ long OSMainWindow::onChangeList ( FXObject * sender, FXSelector sel, void *ptr )
 }
 
 
-//notify from filelist
-long OSMainWindow::onNotify ( FXObject * sender, FXSelector sel, void *ptr )
-{
-    FXTRACE ( ( 5, "NOTIFY\n" ) );
-    FXushort id = FXSELID ( sel );
-    if ( id == 667 )
-    {
-        string * file_ptr = ( string * ) ptr;
-        string file = *file_ptr;
-        FXTRACE ( ( 5, "change to directory %s\n", file.c_str () ) );
-        delete file_ptr;
-        string dir;
-        string type;
-        string str_server = file;
-        dir = "/";
-        type = "archive";
-        OSPathType pt ( dir, type, str_server );
-        OSFrame *fr;
-	
-        fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock,lastId++,this);
-	fr->create ();
-
-	    
-        if ( left_frame->f->active )
-        {
- 	    left_frame->moveToBack(controlframe);
-            left_frame = fr;
-	    fr->moveToFront( leftcontrolframe, leftframe,right_frame );
-        }
-        else
-        {
-            right_frame->moveToBack(controlframe);
-            right_frame = fr;
-	    fr->moveToFront( rightcontrolframe, rightframe,left_frame );
-        }
-
-	
-    }
-
-    else if ( id == 668 )
-    {
-        if ( left->getWidth () == 0 || right->getWidth () == 0 )
-            left->setWidth ( getWidth () / 2 );
-
-        else
-        {
-            if ( left_frame->f == ( OSFileList * ) sender )
-                left->setWidth ( right->getWidth () + left->getWidth () );
-
-            else
-                left->setWidth ( 0 );
-        }
-    }
-}
-
-
-
-
 //executed cyclically to update informations about progress of copying/moving/deleteing files
 //using vector of special objects OSThreadExec to read from them information and to write request
 //for example stoping copying.
@@ -821,10 +761,7 @@ long OSMainWindow::onTimer ( FXObject *, FXSelector, void * )
                     FXTRACE ( ( 5, "INIT \n" ) );
                     if ( fil->init () != false )
                     {
-                        if ( left_frame->f->active )
-                            left_frame->generateMenu( fil->getDir(), this );
-                        else
-                            right_frame->generateMenu( fil->getDir(), this );
+                    current_frame->generateMenu( fil->getDir(), this );   
                     }
                     else
                     {
@@ -1072,5 +1009,58 @@ void OSMainWindow::dirChange(long id)
 
 void OSMainWindow::getFocus(long id)
 {
+	if(left_frame->id==id)	
+		current_frame=left_frame;
+	else
+		current_frame=right_frame;	
 
 }
+
+void OSMainWindow::splitFileList(long id)
+{
+
+ if ( left->getWidth () == 0 || right->getWidth () == 0 )
+            left->setWidth ( getWidth () / 2 );
+
+        else
+        {
+            if ( left_frame->id == id )
+                left->setWidth ( right->getWidth () + left->getWidth () );
+
+            else
+                left->setWidth ( 0 );
+        }
+}	
+
+void OSMainWindow::openVfs(long id,string file)
+{
+
+        FXTRACE ( ( 5, "change to directory %s\n", file.c_str () ) );
+
+        string dir;
+        string type;
+        string str_server = file;
+        dir = "/";
+        type = "archive";
+        OSPathType pt ( dir, type, str_server );
+        OSFrame *fr;
+	
+        fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock,lastId++,this);
+	fr->create ();
+
+	    
+        if ( left_frame==current_frame)
+        {
+ 	    left_frame->moveToBack(controlframe);
+            left_frame = fr;
+	    fr->moveToFront( leftcontrolframe, leftframe,right_frame );
+        }
+        else
+        {
+            right_frame->moveToBack(controlframe);
+            right_frame = fr;
+	    fr->moveToFront( rightcontrolframe, rightframe,left_frame );
+        }
+	
+}
+	

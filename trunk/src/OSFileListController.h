@@ -6,6 +6,8 @@ class OSFileListController
 public:
 	virtual void dirChange(long id)=0;
 	virtual void getFocus(long id)=0;
+	virtual void splitFileList(long id)=0;
+	virtual void openVfs(long id,string file)=0;
 
 };
 

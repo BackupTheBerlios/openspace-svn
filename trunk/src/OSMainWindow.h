@@ -65,9 +65,11 @@ class OSMainWindow:public FXMainWindow, public OSFileListController
     long OSMainWindow::onUpdate (FXObject * sender, FXSelector sel, void *);
     long OSMainWindow::onConfigure (FXObject * sender, FXSelector sel, void *);
 
+
     void dirChange(long id);
     void getFocus(long id);
-
+    void splitFileList(long id);
+    void openVfs(long id,string file);
 
   private:
     OSMainWindow ()
