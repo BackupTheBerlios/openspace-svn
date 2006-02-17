@@ -116,8 +116,9 @@ OSFrame::~OSFrame ()
 {
 	    
     	    delete hf;
-            delete f;
-            delete frame;
+	    delete f->toolbar;
+	    delete f->toolbar2;
+	    delete frame;
 }
 
 bool OSFrame::openDir(string dir)

@@ -374,7 +374,6 @@ OSFileList::~OSFileList ()
 {
 
     fb->quit ();
-
     delete sortpop;
     FXTRACE ((5, "destruct\n"));
 
