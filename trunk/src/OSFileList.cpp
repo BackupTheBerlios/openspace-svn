@@ -25,41 +25,35 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#include "OSFileList.h"
+
 
 #include <string>
 #include <map>
 #include <vector>
 #include <list>
 
-
-#include "OSMimeType.h"
-
-#include "OSPathType.h"
 #include "fx.h"
-#include "OSFile.h"
 #include "FXDLL.h"
-#include "OSCMDDialogBox.h"
-#include <fcntl.h>
-#include <sys/vfs.h>
 #include <fxkeys.h>
 
-
-#include <time.h>
-
-
+#include "OSFileList.h"
+#include "OSMimeType.h"
+#include "OSFile.h"
 #include "OSObjectManager.h"
-
 #include "OSFileListItem.h"
 #include "OSShutter.h"
+#include "OSUtils.h"
 
-#ifdef WIN32
-#define SEPARATOR "\\"
-#else
-#include <dlfcn.h>
-#define SEPARATOR "/"
-#endif
+#include <fcntl.h>
+#include <sys/vfs.h>
+#include <time.h>
 #include <sys/mount.h>
+
+
+
+#ifndef WIN32
+	#include <dlfcn.h>
+#endif
 
 
 #ifndef PATH_LIBDIR
@@ -90,8 +84,6 @@ FXMAPFUNC (SEL_FOCUSIN, OSFileList::ID_ICO, OSFileList::setFocus),
     FXMAPFUNC (SEL_DND_REQUEST, 0, OSFileList::onDNDRequest),
     FXMAPFUNC (SEL_BEGINDRAG, 0, OSFileList::onBeginDrag),
     FXMAPFUNC (SEL_ENDDRAG, 0, OSFileList::onEndDrag),
-    //FXMAPFUNC (SEL_CLIPBOARD_LOST, 0, OSFileList::onClipboardLost), 
-    //FXMAPFUNC (SEL_CLIPBOARD_GAINED, 0, OSFileList::onClipboardGained), 
     FXMAPFUNC (SEL_CLIPBOARD_REQUEST, 0, OSFileList::onClipboardRequest),
         
     };
@@ -101,12 +93,7 @@ FXIMPLEMENT (OSFileList, FXIconList, OSFileListMap, ARRAYNUMBER (OSFileListMap))
      bool OSFileList::strcase = false;
 
 
-
-
 //-----FILELIST----------------------------------------------------------------------------------------------------------------------------------------- 
-
-
-
 
 
 
@@ -261,24 +248,12 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     transform (firstLetter.begin(),firstLetter.end(), firstLetter.begin(), ::toupper);
 
     string pluginName="libOSVfs"+firstLetter+this->type.substr(1,this->type.length()-1);
+    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/filelist/" +pluginName + ".so";
 
-    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/filelist/" +pluginName;
-
-
-#ifdef WIN32
-    plugin_path += ".dll";
-#else
-    plugin_path += ".so";
-#endif
 
     if(!FXFile::exists(plugin_path.c_str()))
     {
-    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libVfs")+ pluginName;
-    #ifdef WIN32
-    plugin_path += ".dll";
-    #else
-    plugin_path += ".so";
-    #endif
+    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libVfs")+ pluginName + ".so";
     }
 
     void *dllhandle = fxdllOpen (plugin_path.c_str ());
@@ -292,11 +267,8 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     FXIconListSortFunc sortfunc = OSFileList::cmp;
     setSortFunc (sortfunc);
 
-//label=new FXLabel (p,this->path.c_str());
     info = new FXLabel (p, fb->info ().c_str ());
-    
 
-    //bottomframe = new FXHorizontalFrame (toolbar, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0);
     textfield = new FXTextField (toolbar, 30, this, OSFileList::ID_TEXTFIELD_RUN);
 
     dial = NULL;
@@ -353,7 +325,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     if (1)
     {
         processing = true;
-        OSThreadExec *el = new OSThreadExec ((void*)fb, string("init"), string("none"));
+        OSThreadExec *el = new OSThreadExec (fb, string("init"), string("none"));
         start_thread (el);
     }
     else
@@ -387,7 +359,7 @@ bool OSFileList::init ()
 
 
     if (!processing)
-    fb->init (&vector_name,*pt, conf);
+    fb->init (id, &vector_name,*pt, conf);
 
     for (int i = 0; i < vector_name.size (); i++)
     {
@@ -657,10 +629,10 @@ bool OSFileList::openDir (string dir)
     {
     return false;
     }
-path=dir;    
-controller->dirChange(id);  
+	path=dir;    
+	controller->dirChange(id);  
     
-clearItems ();
+	clearItems ();
 
 
     for (int indx = 0; indx < icon_vec.size (); indx++)
@@ -988,7 +960,7 @@ void *OSFileList::thread_func (void *data)
     else if (el->command == "init")
     {
 
-    fb->init (&filel->vector_name, (*(filel->pt)), conf);
+    fb->init (filel->id, &filel->vector_name, (*(filel->pt)), conf);
 
     }
 
@@ -1260,27 +1232,24 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
        }
        else if(command == "goto_dir")
        {
-   	 openDir (textfield->getText ().text ());
+           openDir (textfield->getText ().text ());
        }
        else if (command == "get_dir")
        {
-    textfield->setText (path.c_str ());
+           textfield->setText (path.c_str ());
        }
        else if(command=="show_hide_hidden_files")
        {
-       show_hidden_files=!show_hidden_files;
-       refresh();
+           show_hidden_files=!show_hidden_files;
+           refresh();
        
          if(show_hidden_files)
-     conf->saveonestring ("/OpenspaceConfig/show_hidden_files","true");
-     else
-     conf->saveonestring ("/OpenspaceConfig/show_hidden_files","false");
+         conf->saveonestring ("/OpenspaceConfig/show_hidden_files","true");
+         else
+         conf->saveonestring ("/OpenspaceConfig/show_hidden_files","false");
        
        }
 
-    
-    
-    
     
     }
 
@@ -1290,21 +1259,11 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
 
 
 
-    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/cmddialog/lib" + command;
-#ifdef WIN32
-    plugin_path += ".dll";
-#else
-    plugin_path += ".so";
-#endif
+    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/cmddialog/lib" + command + ".so";
 
     if(!FXFile::exists(plugin_path.c_str()))
     {
-    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/cmddialog")+"/lib" + command;
-    #ifdef WIN32
-    plugin_path += ".dll";
-    #else
-    plugin_path += ".so";
-    #endif
+    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/cmddialog")+"/lib" + command + ".so";
     }
 
 

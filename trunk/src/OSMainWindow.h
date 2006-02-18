@@ -12,6 +12,7 @@
 #include "OSFileList.h"
 #include "OSFileTypeSymbol.h"
 #include "OSFileListController.h"
+#include "OSPreferences.h"
 using namespace std;
 
 
@@ -122,6 +123,8 @@ class OSMainWindow:public FXMainWindow, public OSFileListController
     
     FXComboBox *filelisttypecombobox;    
     OSObjectManager *objmanager;
+    
+    std::map <long, OSFrame*> OSFrameMap;
 };
 
 

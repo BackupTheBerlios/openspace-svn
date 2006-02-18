@@ -111,10 +111,10 @@ int OSVfsSearch::rename (std::string orgname, std::string newname)
 
 	return ret;
 }
-int OSVfsSearch::init(std::vector<std::string>* vector_name, OSPathType pt, OSConfigure* conf)
+int OSVfsSearch::init(long id, std::vector<std::string>* vector_name, OSPathType pt, OSConfigure* conf)
 {
     fil_local=new OSVfsLocal();
-
+    this->id=id;
     pipe = popen (pt.server.c_str(), "r");
 
     if (pipe != NULL)

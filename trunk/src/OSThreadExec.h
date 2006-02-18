@@ -28,6 +28,7 @@
 #define THREAD_ELEM
 
 #include <fx.h>
+#include "OSVirtualFileSystemBase.h"
 #include <string>
 #include <vector>
 #include <ctime>
@@ -57,7 +58,7 @@ public:
      * @param src
      * @param dst
      */
-    OSThreadExec( void* fb, std::string command, std::string options, std::string src, std::string dst = "" );
+    OSThreadExec(OSVirtualFileSystemBase * fb, std::string command, std::string options, std::string src, std::string dst = "" );
     
     /**
      * Constructor.
@@ -67,7 +68,7 @@ public:
      * @param src
      * @param dst
      */
-    OSThreadExec( void* fb, std::string command, std::string options, std::vector<std::string> src = std::vector<std::string>(), std::string dst = "" );
+    OSThreadExec(OSVirtualFileSystemBase * fb, std::string command, std::string options, std::vector<std::string> src = std::vector<std::string>(), std::string dst = "" );
     
     /**
      * Initializes thread procedure object.
@@ -76,8 +77,8 @@ public:
 
     FXMutex mutex;
     void *gui;
-    void *fb;
     void *filel;
+    OSVirtualFileSystemBase *fb;
 
     std::string command;
     std::vector<std::string> src;
@@ -108,6 +109,8 @@ public:
     bool error;
     pthread_t pid;
     FXMenuPane *pane;
+    long id;
+
 
 };
 

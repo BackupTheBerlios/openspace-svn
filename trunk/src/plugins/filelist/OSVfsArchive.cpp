@@ -312,10 +312,10 @@ te->end=true;
 int OSVfsArchive::rename (string orgname, string newname)
 {
 }
-int OSVfsArchive::init (vector < string > *vector_name, OSPathType pt, OSConfigure * conf)
+int OSVfsArchive::init (long id,vector < string > *vector_name, OSPathType pt, OSConfigure * conf)
 {
 archive_filename = pt.server;
-
+this->id=id;
 
 string  command;
 

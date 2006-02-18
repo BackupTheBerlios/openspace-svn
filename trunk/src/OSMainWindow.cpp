@@ -169,13 +169,14 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             string type = conf->readonestring ( "/OpenspaceConfig/leftdir/type" );
             OSPathType pt ( dir, type );
             left_frame = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock,lastId++,this);
+	    OSFrameMap[lastId]=left_frame;
 	    	   
          
             dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/rightdir/dir" ) );
             type = conf->readonestring ( "/OpenspaceConfig/rightdir/type" );
             OSPathType pt2 ( dir, type );
             right_frame = new OSFrame (controlframe, rightframe, pt2, this,topdock,rightdock,lastId++,this);
-
+	    OSFrameMap[lastId]=right_frame;
           
 	    left_frame->moveToFront(leftcontrolframe,leftframe,right_frame);
 	    right_frame->moveToFront(rightcontrolframe,rightframe,left_frame);
@@ -303,6 +304,7 @@ long OSMainWindow::onNewFrame ( FXObject * sender, FXSelector, void *ptr )
     }
     OSPathType pt ( dir, type, str_server, str_user, str_pass, str_port );
     OSFrame *fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock,lastId++,this);
+    OSFrameMap[lastId]=fr;
     fr->create ();
 
     this->handle ( fr->toleft, FXSEL ( SEL_LEFTBUTTONRELEASE, ID_TOLEFT ), NULL );
@@ -573,7 +575,7 @@ long OSMainWindow::onChangeList ( FXObject * sender, FXSelector sel, void *ptr )
         for ( iter = objmanager->thread_vec.begin (); iter != objmanager->thread_vec.end (); iter++ )
         {
             OSThreadExec *telem = *iter;
-            if ( telem->fb == boxel->fr->f->fb )
+            if ( telem->id == boxel->fr->id )
             {
                 canclose = false;
             }
@@ -1046,6 +1048,7 @@ void OSMainWindow::openVfs(long id,string file)
         OSFrame *fr;
 	
         fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock,lastId++,this);
+	OSFrameMap[lastId]=fr;
 	fr->create ();
 
 	    

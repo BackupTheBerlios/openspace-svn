@@ -27,15 +27,17 @@
 #ifndef __FILELIST_H__
 #define __FILELIST_H__
 
+
+#include <string>
+#include <map>
+
 #include "OSVirtualFileSystemBase.h"
 #include "OSPathType.h"
 #include "OSThreadExec.h"
 #include "OSFileTypeSymbol.h"
 #include "OSCMDDialogBox.h"
-#include <string>
-#include <map>
-#include "OSPreferences.h"
 #include "OSFileListController.h"
+#include "OSObjectManager.h"
 
 
 //OSFileList

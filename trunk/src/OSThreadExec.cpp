@@ -34,7 +34,7 @@ OSThreadExec::OSThreadExec()
     gui = NULL;
 }
 
-OSThreadExec::OSThreadExec( void *fb, std::string command, std::string options, std::string src, std::string dst )
+OSThreadExec::OSThreadExec(OSVirtualFileSystemBase *fb, std::string command, std::string options, std::string src, std::string dst )
 {
     std::vector<std::string> src2;
     src2.push_back( src );
@@ -44,18 +44,22 @@ OSThreadExec::OSThreadExec( void *fb, std::string command, std::string options, 
     this->dst = dst;
     this->fb = fb;
     this->options = options;
+    this->id=fb->id;
+
+
 
     init();
 
 }
 
-OSThreadExec::OSThreadExec( void *fb, std::string command, std::string options, std::vector<std::string> src, std::string dst )
+OSThreadExec::OSThreadExec(OSVirtualFileSystemBase *fb, std::string command, std::string options, std::vector<std::string> src, std::string dst )
 {
     this->command = command;
     this->src = src;
     this->dst = dst;
     this->fb = fb;
     this->options = options;
+    this->id=fb->id;
 
     init();
 }

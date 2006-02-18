@@ -69,7 +69,7 @@ public:
     int move ( OSThreadExec * te );
     int remove ( OSThreadExec * te );
     int rename ( std::string orgname, std::string newname );
-    int init ( std::vector<std::string> *vector_name, OSPathType pt, OSConfigure* conf );
+    int init ( long id, std::vector<std::string> *vector_name, OSPathType pt, OSConfigure* conf );
     int mode ( std::string file );
     std::string owner ( std::string file );
     std::string group ( std::string file );

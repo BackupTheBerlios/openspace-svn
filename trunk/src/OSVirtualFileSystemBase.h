@@ -49,6 +49,8 @@ class OSThreadExec;
 class OSVirtualFileSystemBase
 {
 public:
+    long id;
+    
     virtual int osopendir( std::string dir ) = 0;
     virtual OSFile osreaddir( void ) = 0;
     virtual int mkdir( std::string dir, int mode = 0 ) = 0;
@@ -56,7 +58,7 @@ public:
     virtual int move( OSThreadExec* te ) = 0;
     virtual int remove( OSThreadExec* te ) = 0;
     virtual int rename( std::string orgname, std::string newname ) = 0;
-    virtual int init( std::vector<std::string>* vector_name, OSPathType pt, OSConfigure* conf ) = 0;
+    virtual int init( long id,std::vector<std::string>* vector_name, OSPathType pt, OSConfigure* conf ) = 0;
     virtual int mode( std::string file ) = 0;
     virtual std::string owner( std::string file ) = 0;
     virtual std::string group( std::string file ) = 0;

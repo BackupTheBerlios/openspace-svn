@@ -50,9 +50,9 @@ OSVirtualFileSystemInfo OSVfsLocal::setup (void)
     return v;	
 }
 
-int OSVfsLocal::init (std::vector<std::string> *vector_name, OSPathType pt, OSConfigure * conf)
+int OSVfsLocal::init (long id, std::vector<std::string> *vector_name, OSPathType pt, OSConfigure * conf)
 {
-
+    this->id=id;
     fieldsnum = vector_name->size ();
     fields = (*vector_name);
 

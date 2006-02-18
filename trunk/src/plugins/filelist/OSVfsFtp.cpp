@@ -608,9 +608,9 @@ int OSVfsFtp::rename ( std::string orgname, std::string newname )
     pftp->sendCmd( "RNTO ", FXFile::name( newname.c_str() ), tmp );
 
 }
-int OSVfsFtp::init ( std::vector < std::string > *vector_name, OSPathType pt, OSConfigure * conf )
+int OSVfsFtp::init (long id, std::vector < std::string > *vector_name, OSPathType pt, OSConfigure * conf )
 {
-
+    this->id=id;
     fieldsnum = vector_name->size ();
     fields = ( *vector_name );
 
