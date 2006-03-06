@@ -343,7 +343,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
     FXVerticalFrame *mainpane = new FXVerticalFrame ( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y );
 
-    new FXButton ( buttons, "Main Settings", NULL, switcher, FXSwitcher::ID_OPEN_FIRST, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+    new FXButton ( buttons, "Main Settings", objmanager->osicons["main_settings"], switcher, FXSwitcher::ID_OPEN_FIRST, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
     new FXLabel ( mainpane, "Let program to autoconfigure file type associacion settings" );
     FXHorizontalFrame *hoz1 = new FXHorizontalFrame ( mainpane, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     new FXButton ( hoz1, "Semi-Auto configure", NULL, this, OSPreferences::ID_MIME_APP );
@@ -436,7 +436,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
     FXVerticalFrame *buttonsPane = new FXVerticalFrame ( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
 
-    new FXButton ( buttons, "Menu and Buttons Settings", NULL, switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+    new FXButton ( buttons, "Menu and Buttons Settings", objmanager->osicons["menu_and_buttons"], switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
 
     new FXLabel ( buttonsPane, "Buttons in configurable toolbox:", NULL, LAYOUT_LEFT );
 
@@ -554,7 +554,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
     FXVerticalFrame *commandPluginsPane = new FXVerticalFrame ( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
 
-    new FXButton ( buttons, "Command plugins Settings", NULL, switcher, FXSwitcher::ID_OPEN_THIRD, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+    new FXButton ( buttons, "Command plugins Settings", objmanager->osicons["command_plugins"], switcher, FXSwitcher::ID_OPEN_THIRD, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
 
     new FXLabel ( commandPluginsPane, "installed plugins" );
     commandPluginsList = new FXListBox ( commandPluginsPane, this, ID_COMMANDPLUGIN_CHANGE );
@@ -626,7 +626,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
     commandsPane = new FXVerticalFrame ( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     new FXLabel ( commandsPane, "Commands settings", NULL, LAYOUT_LEFT );
 
-    new FXButton ( buttons, "Commands Settings", NULL, switcher, FXSwitcher::ID_OPEN_FOURTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+    new FXButton ( buttons, "Commands Settings", objmanager->osicons["commands_settings"], switcher, FXSwitcher::ID_OPEN_FOURTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
 
     commandsCombo = new FXListBox ( commandsPane, this, ID_COMMAND_CHANGE );
     new FXLabel ( commandsPane, "icon: ", NULL, LAYOUT_LEFT );
@@ -767,7 +767,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
     filetypePane = new FXVerticalFrame ( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
 
-    new FXButton ( buttons, "File types Settings", NULL, switcher, FXSwitcher::ID_OPEN_FIFTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+    new FXButton ( buttons, "File types Settings", objmanager->osicons["file_types_settings"], switcher, FXSwitcher::ID_OPEN_FIFTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
 
 
 
@@ -919,7 +919,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
     //====================================================LOOK AND FEEL============================================================
 
-    new FXButton ( buttons, "Look and feel", NULL, switcher, FXSwitcher::ID_OPEN_SIXTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+    new FXButton ( buttons, "Look and feel",objmanager->osicons["look_and_feel"], switcher, FXSwitcher::ID_OPEN_SIXTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
 
     FXVerticalFrame *vframe = new FXVerticalFrame( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
 
@@ -1032,7 +1032,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
 
 
-    new FXButton ( buttons, "Speed and delays", NULL, switcher, FXSwitcher::ID_OPEN_SEVENTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+    new FXButton ( buttons, "Speed and delays", objmanager->osicons["speed_and_delays"], switcher, FXSwitcher::ID_OPEN_SEVENTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
 
 
     hframe = new FXHorizontalFrame( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
@@ -1113,7 +1113,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
     vfsPane = new FXVerticalFrame ( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     new FXLabel ( vfsPane, "VFS settings", NULL, LAYOUT_LEFT );
 
-    new FXButton ( buttons, "Virtual File System Settings", NULL, switcher, FXSwitcher::ID_OPEN_EIGHTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+    new FXButton ( buttons, "Virtual File System Settings", objmanager->osicons["vfs_settings"], switcher, FXSwitcher::ID_OPEN_EIGHTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
 
 
 
