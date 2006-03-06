@@ -162,7 +162,7 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             new FXSeparator ( toolbar, SEPARATOR_NONE );
 
             new FXButton ( toolbar, "\tconfiguration", objmanager->osicons[ "configure" ], this, OSMainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
-            new FXButton ( toolbar, "\tabout", objmanager->osicons[ "foxmini" ], this, OSMainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+            new FXButton ( toolbar, "\tabout", objmanager->osicons[ "about" ], this, OSMainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
             toolbar->dock( rightdock );
 
             string dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/leftdir/dir" ) );
@@ -556,7 +556,7 @@ long OSMainWindow::onOpenDir ( FXObject * sender, FXSelector, void *ptr )
         path = "/";
 
     boxbackup->fr->openDir ( path );
-    boxbackup->fr->generateMenu( path, this );
+   // boxbackup->fr->generateMenu( path, this );
 }
 
 
@@ -902,27 +902,31 @@ void OSMainWindow::loadicons ( string icondir )
     FXString name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/dir/icon" ).c_str() + ".png";
     objmanager->specialicons[ 0 ] = source->loadIcon ( name );
     if ( objmanager->specialicons[ 0 ] )
+    {
+        objmanager->specialicons[ 0 ] ->blend(objmanager->specialicons[ 0 ]->getTransparentColor());
         objmanager->specialicons[ 0 ] ->create();
-    name = fil + "big_" + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/dir/icon" ).c_str() + ".png";
+    }	
+    name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/all/icon" ).c_str() + ".png";
     objmanager->specialicons[ 1 ] = source->loadIcon ( name );
     if ( objmanager->specialicons[ 1 ] )
+    {
+        objmanager->specialicons[ 1 ] ->blend(objmanager->specialicons[ 1 ]->getTransparentColor());
         objmanager->specialicons[ 1 ] ->create();
-    name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/all/icon" ).c_str() + ".png";
+    }
+    name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/executable/icon" ).c_str() + ".png";
     objmanager->specialicons[ 2 ] = source->loadIcon ( name );
     if ( objmanager->specialicons[ 2 ] )
+    {
+        objmanager->specialicons[ 2 ] ->blend(objmanager->specialicons[ 2 ]->getTransparentColor());
         objmanager->specialicons[ 2 ] ->create();
-    name = fil + "big_" + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/all/icon" ).c_str() + ".png";
+    }	
+    name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/symlink/icon" ).c_str() + ".png";
     objmanager->specialicons[ 3 ] = source->loadIcon ( name );
     if ( objmanager->specialicons[ 3 ] )
+    {
+        objmanager->specialicons[ 3 ] ->blend(objmanager->specialicons[ 3 ]->getTransparentColor());
         objmanager->specialicons[ 3 ] ->create();
-    name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/executable/icon" ).c_str() + ".png";
-    objmanager->specialicons[ 4 ] = source->loadIcon ( name );
-    if ( objmanager->specialicons[ 4 ] )
-        objmanager->specialicons[ 4 ] ->create();
-    name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/symlink/icon" ).c_str() + ".png";
-    objmanager->specialicons[ 5 ] = source->loadIcon ( name );
-    if ( objmanager->specialicons[ 5 ] )
-        objmanager->specialicons[ 5 ] ->create();
+    }	
 
     struct stat status;
     struct dirent *dp;
@@ -945,7 +949,9 @@ void OSMainWindow::loadicons ( string icondir )
                     string shortname = name.substr ( 0, name.length () - 4 );
                     FXString fil_name = file.c_str();
                     objmanager->osicons[ shortname ] = source->loadIcon ( fil_name );
+		    objmanager->osicons[ shortname ] ->blend(objmanager->osicons[ shortname ]->getTransparentColor());
                     objmanager->osicons[ shortname ] ->create ();
+		    
                 }
 
             }
@@ -992,7 +998,7 @@ bool OSMainWindow::loadMimeSettings ( string path, string type )
     string backcolorstr = conf->readonestring ( path + "/backcolor" );
     FXColor backcolor = readcolor2 ( backcolorstr );
     if ( res2 != "" )
-        objmanager->file_type_settings[ type ] = new OSFileTypeSymbol ( objmanager->osicons[ res2 ], objmanager->osicons[ "big_" + res2 ], color, backcolor );
+        objmanager->file_type_settings[ type ] = new OSFileTypeSymbol ( objmanager->osicons[ res2 ], color, backcolor );
     else
         return false;
 

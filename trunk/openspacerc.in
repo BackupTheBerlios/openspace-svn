@@ -15,7 +15,7 @@
  	 </fonts>
 	
 	<colors>
-		  <main>#9186c9</main>
+		  <main>#adaf9c</main>
   		  <base>#d6d7d6</base>
    		  <border>Black</border>
    		  <fore>Black</fore>
@@ -200,11 +200,13 @@
 		<get_dir>
 			<type>INTERNAL</type>
 			<text>get</text>
+			<icon>getdir</icon>
 		</get_dir>
 		
 		<goto_dir>
 			<type>INTERNAL</type>
 			<text>go</text>
+			<icon>goto</icon>
 		</goto_dir>
 		
 		<filter_files>
@@ -278,73 +280,73 @@
 		
 		
 		<image>
-			<icon>image</icon>
+			<icon>mime-image</icon>
 			<types>
 				<png>
 						<commands>
 							<command>edit_image</command>
 							<command>view_image</command>
 						</commands>
-					<icon>image</icon>	
 					
 				</png>
 			</types>	
 		</image>
 		
 		<video>
-			<icon>movie</icon>
+			<icon>mime-video</icon>
 		</video>
 		
 		<audio>
-			<icon>music</icon>
+			<icon>mime-audio</icon>
 		</audio>
 		
 		<text>
 			<types>
 				<html>
-					<icon>html</icon>
+					<icon>mime-text-html</icon>
 				</html>
 				<x-cPPsrc>
-					<icon>source</icon>
+					<icon>mime-text-x-c++src</icon>
 				</x-cPPsrc>
 				<x-chdr>
-					<icon>header</icon>
+					<icon>mime-text-x-c++hdr</icon>
 				</x-chdr>
 				<x-cPPhdr>
-					<icon>header</icon>
+					<icon>mime-text-x-c++hdr</icon>
 				</x-cPPhdr>
 			</types>
+			<icon>mime-text</icon>
 		</text>
 		
 		<application>
 			<types>
 				<pdf>
-					<icon>doc</icon>	
+					<icon>mime-application-pdf</icon>	
 					
 				</pdf>
 				
 				<vnd.sun.xml.writer>
-					<icon>word</icon>	
+					<icon>mime-application-vnd.sun.xml.writer</icon>	
 				</vnd.sun.xml.writer>
 				
 				<vnd.ms-powerpoint>
-					<icon>presentation</icon>
+					<icon>mime-application-vnd.ms-powerpoint</icon>
 				</vnd.ms-powerpoint>
 				
 				<msword>
-					<icon>word</icon>	
+					<icon>mime-application-vnd.sun.xml.writer</icon>	
 				</msword>
 				<vnd.sun.xml.calc>
-					<icon>word</icon>	
+					<icon>mime-application-vnd.sun.xml.calc</icon>	
 				</vnd.sun.xml.calc>
 				<vnd.ms-excel>
-					<icon>word</icon>					
+					<icon>mime-application-vnd.sun.xml.calc</icon>					
 				</vnd.ms-excel>
 				<x-sharedlib>
-					<icon>library</icon>	
+					<icon>mime-application-x-sharedlib</icon>	
 				</x-sharedlib>
 				<x-shellscript>
-					<icon>script</icon>
+					<icon>mime-application-x-shellscript</icon>
 				</x-shellscript>
 				<x-bzip-compressed-tar>
 					<default>vfs_archive</default>
@@ -355,19 +357,19 @@
 				</x-bzip-compressed-tar>
 				<x-compressed-tar>
 					<default>vfs_archive</default>
-					<icon>compressed</icon>
+					<icon>mime-application-x-compressed-tar</icon>
 					<commands>
 							<command>extract_tar_gz</command>
 					</commands>
 				</x-compressed-tar>
 				<x-rar>
-					<icon>compressed</icon>
+					<icon>mime-application-x-compressed-tar</icon>
 					<commands>
 							<command>unrar</command>
 					</commands>
 				</x-rar>
 				<zip>
-					<icon>compressed</icon>
+					<icon>mime-application-x-compressed-tar</icon>
 					<commands>
 							<command>unzip</command>
 					</commands>
@@ -380,7 +382,7 @@
 		<dir>
 			<icon>directory</icon>
 			<color>#000064</color>
-			<backcolor>#9186c9</backcolor>
+		
 			<commands>
 					<command>umount</command>
 			</commands>

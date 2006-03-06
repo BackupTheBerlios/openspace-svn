@@ -661,15 +661,13 @@ bool OSFileList::openDir (string dir)
     FXColor color;
     FXColor backcolor;
     FXIcon *icon = NULL;
-    FXIcon *icon2 = NULL;
 
     
     if (os_file.type & FOLDER)
     {
         color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/dir/color"));
         backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/dir/backcolor"));
-        icon = specialicons[1];
-        icon2 = specialicons[0];
+        icon = specialicons[0];
     }
     else
     {
@@ -693,16 +691,14 @@ bool OSFileList::openDir (string dir)
 
         if (filet)
         {
-        icon2 = filet->icon;
-        icon = filet->bigicon;
+        icon = filet->icon;
         color = filet->color;
         backcolor = filet->backcolor;
         }
         else
         {
       
-        icon = specialicons[3];
-        icon2 = specialicons[2];
+        icon = specialicons[1];
         color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/color"));
         backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/backcolor"));
         }
@@ -725,7 +721,6 @@ bool OSFileList::openDir (string dir)
             ico->create ();
             icon_vec.push_back (ico);
             icon = ico;
-            icon2 = ico;
         }
     
         
@@ -741,7 +736,7 @@ bool OSFileList::openDir (string dir)
     }
 
 
-    appendItem (new OSFileListItem (this, os_file, color, backcolor, icon, icon2));
+    appendItem (new OSFileListItem (this, os_file, color, backcolor, icon, icon));
 
 
     }

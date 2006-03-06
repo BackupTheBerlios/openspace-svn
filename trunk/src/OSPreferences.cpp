@@ -877,8 +877,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
         for ( iter2 = objmanager->osicons.begin (); iter2 != objmanager->osicons.end (); iter2++ )
         {
             FXIcon *icon = iter2->second;
-            if ( icon != NULL && ( iter2->first.length() < 4 || iter2->first.substr( 0, 4 ) != "big_" ) )
-                iconsList2->appendItem( iter2->first.c_str(), icon );
+            iconsList2->appendItem( iter2->first.c_str(), icon );
         }
         if ( ctlast->icon != "" )
             iconsList2->setCurrentItem( iconsList2->findItem( ctlast->icon.c_str() ) );

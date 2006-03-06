@@ -33,15 +33,9 @@ OSFileTypeSymbol::OSFileTypeSymbol( void )
     // construction
 }
 
-OSFileTypeSymbol::OSFileTypeSymbol ( FXIcon * ic, FXIcon*ic2, FXColor col, FXColor backcol )
+OSFileTypeSymbol::OSFileTypeSymbol ( FXIcon * ic, FXColor col, FXColor backcol )
 {
-    icon = ic;
-    
-    if ( ic2 != NULL )
-        bigicon = ic2;
-    else
-        bigicon = ic;
-
+    icon = ic;    
     color = col;
     backcolor = backcol;
 }

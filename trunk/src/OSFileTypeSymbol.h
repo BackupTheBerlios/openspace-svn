@@ -47,12 +47,11 @@ public:
     /**
      * Constructor.
      */
-    OSFileTypeSymbol( FXIcon* ic, FXIcon* ic2, FXColor col, FXColor backcol );
+    OSFileTypeSymbol( FXIcon* ic, FXColor col, FXColor backcol );
 
 public:
     
     FXIcon* icon;
-    FXIcon* bigicon;
     FXColor color;
     FXColor backcolor;
 };
