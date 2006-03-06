@@ -151,7 +151,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-SUBDIRS = default
+SUBDIRS = default mini
 all: all-recursive
 
 .SUFFIXES:

@@ -78,6 +78,7 @@ class OSMainWindow:public FXMainWindow, public OSFileListController
     }
     
     void OSMainWindow::loadicons (string dir);
+    void OSMainWindow::loadSpecialIcon (string icondir, string type, int nr );
     int OSMainWindow::popupDir (OSFileList * current_filelist, string path, int x, int y);
     string OSMainWindow::parseDir (string dir);
     bool OSMainWindow::loadMimeSettings (string path, string type);

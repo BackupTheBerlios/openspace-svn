@@ -892,42 +892,38 @@ long OSMainWindow::cancel ( FXObject * sender, FXSelector, void * )
 }
 
 
+void OSMainWindow::loadSpecialIcon (string icondir, string type, int nr )
+{
+FXIconSource *source = new FXIconSource ( getApp () );
+FXString fil = icondir.c_str();
+FXString name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/"+type+"/icon" ).c_str() + ".png";
+
+    objmanager->specialicons[ nr ] = source->loadIcon ( name );
+    if ( objmanager->specialicons[ nr ] )
+    {
+        objmanager->specialicons[ nr ] ->blend(objmanager->specialicons[ nr ]->getTransparentColor());
+        objmanager->specialicons[ nr ] ->create();
+    }
+    else
+    {
+    objmanager->specialicons[ nr ]=NULL;	
+    }	
+}
+
+
 //load icon from file and put in the array
 void OSMainWindow::loadicons ( string icondir )
 {
     objmanager = OSObjectManager::instance( getApp() );
-
-    FXIconSource *source = new FXIconSource ( getApp () );
+    FXIconSource *source = new FXIconSource ( getApp () );    
     FXString fil = icondir.c_str();
-    FXString name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/dir/icon" ).c_str() + ".png";
-    objmanager->specialicons[ 0 ] = source->loadIcon ( name );
-    if ( objmanager->specialicons[ 0 ] )
-    {
-        objmanager->specialicons[ 0 ] ->blend(objmanager->specialicons[ 0 ]->getTransparentColor());
-        objmanager->specialicons[ 0 ] ->create();
-    }	
-    name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/all/icon" ).c_str() + ".png";
-    objmanager->specialicons[ 1 ] = source->loadIcon ( name );
-    if ( objmanager->specialicons[ 1 ] )
-    {
-        objmanager->specialicons[ 1 ] ->blend(objmanager->specialicons[ 1 ]->getTransparentColor());
-        objmanager->specialicons[ 1 ] ->create();
-    }
-    name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/executable/icon" ).c_str() + ".png";
-    objmanager->specialicons[ 2 ] = source->loadIcon ( name );
-    if ( objmanager->specialicons[ 2 ] )
-    {
-        objmanager->specialicons[ 2 ] ->blend(objmanager->specialicons[ 2 ]->getTransparentColor());
-        objmanager->specialicons[ 2 ] ->create();
-    }	
-    name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/symlink/icon" ).c_str() + ".png";
-    objmanager->specialicons[ 3 ] = source->loadIcon ( name );
-    if ( objmanager->specialicons[ 3 ] )
-    {
-        objmanager->specialicons[ 3 ] ->blend(objmanager->specialicons[ 3 ]->getTransparentColor());
-        objmanager->specialicons[ 3 ] ->create();
-    }	
-
+    
+    loadSpecialIcon(icondir,"dir",0);
+    loadSpecialIcon(icondir,"all",1); 
+    loadSpecialIcon(icondir,"executable",2); 
+    loadSpecialIcon(icondir,"symlink",3); 
+    
+   
     struct stat status;
     struct dirent *dp;
     DIR *dirp;

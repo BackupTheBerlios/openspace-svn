@@ -62,6 +62,7 @@ AC_CONFIG_FILES([
 		 src/Makefile
 		 icons/Makefile
 		 icons/default/Makefile
+		 icons/mini/Makefile
 		 src/plugins/Makefile
 		 src/plugins/filelist/Makefile
 		 src/plugins/cmddialog/Makefile

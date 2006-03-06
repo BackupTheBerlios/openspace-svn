@@ -248,11 +248,15 @@ void OSFileListItem::drawBigIcon( const FXIconList* list, FXDC& dc, FXint x, FXi
         }
         if ( osf.type & EXECUTABLE && !( osf.type & FOLDER ) )
         {
-            dc.drawIcon( ( ( OSFileList* ) list ) ->specialicons[ 2 ], xi, y + 4 + font->getFontHeight() );
+	    FXIcon *icon=( ( OSFileList* ) list ) ->specialicons[ 2 ];
+	    if(icon)
+            dc.drawIcon( icon, xi, y + 4 + font->getFontHeight() );
         }
         else if ( osf.type & SYMLINK )
         {
-            dc.drawIcon( ( ( OSFileList* ) list ) ->specialicons[ 3 ], xi, y + 4 + font->getFontHeight() );
+	    FXIcon *icon=( ( OSFileList* ) list ) ->specialicons[ 3 ];
+	    if(icon)
+            dc.drawIcon( icon, xi, y + 4 + font->getFontHeight() );
         }
 
         if ( osf.content != "" )
