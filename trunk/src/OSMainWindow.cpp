@@ -140,8 +140,8 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             FXToolBar *toolbar = new FXToolBar ( topdock, dragshell1, LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | FRAME_RAISED );
             new FXToolBarGrip ( toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_SINGLE );
 
-            FXVerticalFrame *ff = new FXVerticalFrame ( this, LAYOUT_FILL_X | LAYOUT_FILL_Y );
-            controlframe = new FXVerticalFrame ( ff, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+            FXVerticalFrame *ff = new FXVerticalFrame ( this, LAYOUT_FILL_X | LAYOUT_FILL_Y| FRAME_NONE, 0, 0, 0, 0, 0, 0, 0, 0 );
+            controlframe = new FXVerticalFrame ( ff, LAYOUT_FILL_X | FRAME_NONE, 0, 0, 0, 0, 0, 0, 0, 0 );
             splitter = new FXSplitter ( ff, LAYOUT_FILL_X | SPLITTER_TRACKING | LAYOUT_FILL_Y );
             left = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 0, 0 );
             right = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 0, 0 );
@@ -153,7 +153,7 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             rightframe = new FXVerticalFrame ( right, LAYOUT_FILL_X | LAYOUT_FILL_Y );
 
             new FXButton ( toolbar, "\thide/show copy/move progress", objmanager->osicons[ "plus" ], this, OSMainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
-            new FXButton ( toolbar, "\topen new panel", objmanager->osicons[ "directory" ], this, OSMainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+            new FXButton ( toolbar, "\topen new panel", objmanager->osicons[ "folder" ], this, OSMainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
             new FXButton ( toolbar, "\tconnect", objmanager->osicons[ "network" ], this, OSMainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
             new FXButton ( toolbar, "\tsearch", objmanager->osicons[ "search" ], this, OSMainWindow::ID_NEW_SEARCH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
 
@@ -483,7 +483,7 @@ int OSMainWindow::popupDir ( OSFileList * current_filelist, string path, int x, 
         filemenu = new FXMenuPane ( this );
         for ( indx = 0; indx < vec.size (); indx++ )
         {
-            new FXMenuCommand ( filemenu, vec[ indx ].c_str (), objmanager->osicons[ "directory" ], this, OSMainWindow::ID_DIRCH );
+            new FXMenuCommand ( filemenu, vec[ indx ].c_str (), objmanager->osicons[ "folder" ], this, OSMainWindow::ID_DIRCH );
         }
         filemenu->create ();
         filemenu->popup ( NULL, x, y, 0, 0 );
