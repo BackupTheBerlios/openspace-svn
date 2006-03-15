@@ -45,7 +45,7 @@
 	</speed_delay>
 	
  	<mainwindow>
-		<width>868</width>
+		<width>898</width>
 		<height>600</height>
 	</mainwindow>
   
@@ -336,6 +336,9 @@
 				<x-java>
 					<icon>mime-text-x-java</icon>
 				</x-java>
+				<x-patch>
+					<icon>mime-text-x-patch</icon>
+				</x-patch>
 			</types>
 			<icon>mime-text</icon>
 		</text>
@@ -431,9 +434,7 @@
 				<postscript>
 					<icon>mime-application-postscript</icon>
 				</postscript>
-				<x-rpm>
-					<icon>mime-application-x-compressed-tar</icon>
-				</x-rpm>
+				
 				<x-perl>
 					<icon>mime-application-x-perl</icon>
 				</x-perl>
@@ -449,6 +450,13 @@
 				<x-tex>
 					<icon>mime-application-x-tex</icon>
 				</x-tex>
+				
+				<x-deb>
+					<icon>mime-application-x-rpm</icon>
+				</x-deb>
+				<x-rpm>
+					<icon>mime-application-x-rpm</icon>
+				</x-rpm>
 				
 				
 				
@@ -488,8 +496,8 @@
 			<command>dirup</command>
 			<command>refresh</command>
 			<command>SEPARATOR</command>
-			<command>change_view_mini_icons</command>
 			<command>change_view_big_icons</command>
+			<command>change_view_mini_icons</command>			
 			<command>change_view_detailed</command>
 			<command>SEPARATOR</command>
 			<command>clipboard_copy</command>

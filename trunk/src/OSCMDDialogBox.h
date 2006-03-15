@@ -32,6 +32,7 @@
 #include <string>
 
 #include "OSVirtualFileSystemBase.h"
+#include "OSObjectManager.h"
 
 using namespace std;
 
@@ -100,6 +101,7 @@ protected:
      * @todo to document
      */
     std::vector<std::string> src;
+
 
 };
 

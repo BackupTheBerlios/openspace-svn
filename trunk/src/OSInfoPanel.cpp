@@ -28,6 +28,7 @@
 #include <fx.h>
 #include <string>
 #include "OSInfoPanel.h"
+#include "OSObjectManager.h"
 
 
 
@@ -35,6 +36,9 @@
 
 OSInfoPanel::OSInfoPanel( FXComposite * p, std::string command )
 {
+
+    OSObjectManager* objmanager=OSObjectManager::instance(p->getApp());
+
     frame = new FXVerticalFrame( p, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0 );
 
     lab0 = new FXLabel( frame, "NONE" );
@@ -46,15 +50,19 @@ OSInfoPanel::OSInfoPanel( FXComposite * p, std::string command )
         pbar = new FXProgressBar( frame, NULL, 0, LAYOUT_FILL_X | FRAME_THICK | PROGRESSBAR_PERCENTAGE );
         pbar2 = new FXProgressBar( frame, NULL, 0, LAYOUT_FILL_X | FRAME_THICK | PROGRESSBAR_PERCENTAGE );
         bu = new FXButton( frame, "CANCEL", NULL, NULL, 999, BUTTON_TOOLBAR );
-        bu->setBackColor( FXRGB ( 145, 134, 201 ) );
-        pbar->setBarColor( FXRGB ( 145, 134, 201 ) );
-        pbar2->setBarColor( FXRGB ( 145, 134, 201 ) );
+	
+	
+	
+        bu->setBackColor( objmanager->maincolor );
+        pbar->setBarColor( objmanager->maincolor  );
+        pbar2->setBarColor( objmanager->maincolor );
+	
     }
     else if ( command == "remove" )
     {
         lab1 = new FXLabel( frame, "NONE" );
-        bu = new FXButton( frame, "CANCEL", NULL, NULL, 999, BUTTON_TOOLBAR );
-        bu->setBackColor( FXRGB ( 145, 134, 201 ) );
+        bu = new FXButton( frame, "CANCEL", NULL, NULL, 999, FRAME_RAISED );
+
     }
     
     frame->create();

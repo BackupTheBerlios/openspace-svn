@@ -346,8 +346,8 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
     new FXButton ( buttons, "Main Settings", objmanager->osicons["main_settings"], switcher, FXSwitcher::ID_OPEN_FIRST, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
     new FXLabel ( mainpane, "Let program to autoconfigure file type associacion settings" );
     FXHorizontalFrame *hoz1 = new FXHorizontalFrame ( mainpane, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
-    new FXButton ( hoz1, "Semi-Auto configure", NULL, this, OSPreferences::ID_MIME_APP );
-    new FXButton ( hoz1, "Full-Auto configure", NULL, this, OSPreferences::ID_MIME_APP_AUTO );
+    new FXButton ( hoz1, "Semi-Auto configure", NULL, this, OSPreferences::ID_MIME_APP,FRAME_RAISED );
+    new FXButton ( hoz1, "Full-Auto configure", NULL, this, OSPreferences::ID_MIME_APP_AUTO,FRAME_RAISED );
     new FXSeparator( mainpane );
 
 
@@ -364,7 +364,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
     mainwindow_height->setIncrement( 1 );
     mainwindow_height->setValue( atoi( conf->readonestring ( "/OpenspaceConfig/mainwindow/height" ).c_str () ) );
 
-    new FXButton ( hoz2, "get current openspace size", NULL, this, OSPreferences:: ID_UPDATE_WINDOW_SIZE );
+    new FXButton ( hoz2, "get current openspace size", NULL, this, OSPreferences:: ID_UPDATE_WINDOW_SIZE,FRAME_RAISED );
 
     new FXSeparator( mainpane );
 
@@ -517,8 +517,8 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
     new FXSeparator( buttonsPane );
     FXHorizontalFrame *hfr = new FXHorizontalFrame ( buttonsPane, LAYOUT_FILL_X | LAYOUT_FILL_Y );
-    new FXButton ( hfr, "Remove shutter", NULL, this, ID_REMOVE_SHUTTER, FRAME_RAISED | ICON_ABOVE_TEXT );
-    new FXButton ( hfr, "New shutter", NULL, this, ID_NEW_SHUTTER, FRAME_RAISED | ICON_ABOVE_TEXT );
+    new FXButton ( hfr, "Remove shutter", objmanager->osicons["minus"], this, ID_REMOVE_SHUTTER, FRAME_RAISED|ICON_BEFORE_TEXT  );
+    new FXButton ( hfr, "New shutter", objmanager->osicons["plus"], this, ID_NEW_SHUTTER, FRAME_RAISED|ICON_BEFORE_TEXT  );
     newShutterEdit = new FXTextField ( hfr, 20 );
 
 
@@ -566,7 +566,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
     hfr = new FXHorizontalFrame ( vv, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     availableCommandPluginsList = new FXListBox ( hfr );
     availableCommandPluginsList->setNumVisible( 30 );
-    new FXButton ( hfr, "Download and Install", NULL, this, ID_DOWNLOAD_INSTALL_CMD_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
+    new FXButton ( hfr, "Download and Install", objmanager->osicons["download"], this, ID_DOWNLOAD_INSTALL_CMD_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
     new FXButton ( vv, "Update available plugins list", NULL, this, ID_UPDATE_CMD_PLUGIN_LIST, FRAME_RAISED | ICON_ABOVE_TEXT );
 
 
@@ -750,8 +750,8 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
         new FXSeparator( commandsPane );
         FXHorizontalFrame *hfr = new FXHorizontalFrame ( commandsPane, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
-        removeCommandButton = new FXButton ( hfr, "Remove", NULL, this, ID_REMOVE_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT );
-        new FXButton ( hfr, "New Command", NULL, this, ID_NEW_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT );
+        removeCommandButton = new FXButton ( hfr, "Remove", objmanager->osicons["minus"], this, ID_REMOVE_COMMAND, FRAME_RAISED|ICON_BEFORE_TEXT );
+        new FXButton ( hfr, "New Command", objmanager->osicons["plus"], this, ID_NEW_COMMAND, FRAME_RAISED|ICON_BEFORE_TEXT  );
         newCommandEdit = new FXTextField ( hfr, 20 );
 
         if ( ctlast->type == "INTERNAL" || ctlast->type == "PLUGIN" )
@@ -823,7 +823,8 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
         allMime = new FXComboBox ( filetypeGroup, 60 );
         allMime->setNumVisible( 30 );
-        new FXButton ( filetypeGroup, "Add", NULL, this, OSPreferences::ID_ADD_FILETYPE );
+        new FXButton ( filetypeGroup, "Add", objmanager->osicons["plus"], this,
+	OSPreferences::ID_ADD_FILETYPE,FRAME_RAISED|ICON_BEFORE_TEXT);
 
         OSMimeType::_initialize();
         map<string, string>::iterator iter0;
@@ -1150,7 +1151,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
     hfr = new FXHorizontalFrame ( vv, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
     availableVfsPluginsList = new FXListBox ( hfr );
     availableVfsPluginsList->setNumVisible( 30 );
-    new FXButton ( hfr, "Download and Install", NULL, this, ID_DOWNLOAD_INSTALL_VFS_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
+    new FXButton ( hfr, "Download and Install", objmanager->osicons["download"], this, ID_DOWNLOAD_INSTALL_VFS_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
     new FXButton ( vv, "Update available plugins list", NULL, this, ID_UPDATE_VFS_PLUGIN_LIST, FRAME_RAISED | ICON_ABOVE_TEXT );
 
 
@@ -2027,7 +2028,7 @@ long OSPreferences::close ( FXObject * sender, FXSelector sel, void *ptr )
     if ( saveconfiguration )
         this->save();
 
-    FXMessageBox about ( this, "restart", "restart openspace to apply changes", NULL, MBOX_OK | DECOR_ALL );
+    FXMessageBox about ( this, "restart", "restart openspace to apply changes", objmanager->osicons["warning"], MBOX_OK | DECOR_ALL );
     about.execute ();
 
     FXDialogBox::onCmdAccept( sender, sel, ptr );
