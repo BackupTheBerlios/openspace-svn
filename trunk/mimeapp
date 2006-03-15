@@ -3,17 +3,20 @@ image:qiv gimp gimp-2.0 gimp-2.2 xv
 audio:xmms freeamp bmp
 text:nedit scite gvim kedit gedit xemacs
 image/x-xcf:gimp gimp-2.0 gimp-2.2
-application/pdf:xpdf acroread kpdf gpdf
-application/vnd.ms-powerpoint:ooffice ooffice2
-application/vnd.sun.xml.calc:ooffice ooffice2
-application/vnd.sun.xml.writer:ooffice ooffice2
+application/pdf:acroread kpdf gpdf xpdf
+application/vnd.sun.xml.impress:ooffice2 ooffice
+application/vnd.sun.xml.calc:ooffice2 ooffice
+application/vnd.sun.xml.writer:ooffice2 ooffice 
+application/vnd.ms-powerpoint:ooffice2 ooffice
+application/vnd.ms-excel:ooffice2 ooffic2
+application/msword:ooffice ooffice2
+application/vnd.oasis.opendocument.presentation:ooffice2 ooffice
+application/vnd.oasis.opendocument.graphics:ooffice2 ooffice
 application/vnd.oasis.opendocument.text:ooffice2 ooffice
 application/vnd.oasis.opendocument.spreadsheet:ooffice2 ooffice
-application/vnd.ms-excel:ooffice ooffice2
-application/msword:ooffice ooffice2
 text/plain:nedit scite gvim kedit gedit xemacs
 application/ogg:xmms freeamp bmp
-application/x-bittorrent:azerus btdownloadcurses.py
+application/x-bittorrent:azureus btdownloadcurses.py
 application/x-abiword:abiword-2.0 abiword
 text/html:opera firefox dillo mozilla
 application/xhtml+xml:opera firefox dillo mozilla

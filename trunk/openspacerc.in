@@ -289,15 +289,34 @@
 						</commands>
 					
 				</png>
+				<svgPxml>
+					<icon>mime-image-svg+xml</icon>
+				</svgPxml>
+				<x-xcf>
+					<icon>mime-image-x-xcf</icon>
+				</x-xcf>
 			</types>	
 		</image>
 		
 		<video>
 			<icon>mime-video</icon>
+			<types>
+				<quicktime>
+					<icon>mime-video-quicktime</icon>
+				</quicktime>
+			</types>
 		</video>
 		
 		<audio>
 			<icon>mime-audio</icon>
+			<types>
+				<x-pn-realaudio>
+					<icon>mime-audio-x-pn-realaudio</icon>
+				</x-pn-realaudio>
+				<x-wav>
+					<icon>mime-audio-x-wav</icon>
+				</x-wav>
+			</types>
 		</audio>
 		
 		<text>
@@ -314,6 +333,9 @@
 				<x-cPPhdr>
 					<icon>mime-text-x-c++hdr</icon>
 				</x-cPPhdr>
+				<x-java>
+					<icon>mime-text-x-java</icon>
+				</x-java>
 			</types>
 			<icon>mime-text</icon>
 		</text>
@@ -325,23 +347,52 @@
 					
 				</pdf>
 				
+							
+				<vnd.oasis.opendocument.text>
+					<icon>mime-application-vnd.oasis.opendocument.text</icon>
+				</vnd.oasis.opendocument.text>
+				
 				<vnd.sun.xml.writer>
-					<icon>mime-application-vnd.sun.xml.writer</icon>	
+					<icon>mime-application-vnd.oasis.opendocument.text</icon>	
 				</vnd.sun.xml.writer>
 				
+				<msword>
+					<icon>mime-application-vnd.oasis.opendocument.text</icon>	
+				</msword>
+				
+				<vnd.oasis.opendocument.presentation>
+					<icon>mime-application-vnd.oasis.opendocument.presentation</icon>
+				</vnd.oasis.opendocument.presentation>
+				
+				<vnd.sun.xml.impress>
+					<icon>mime-application-vnd.oasis.opendocument.presentation</icon>
+				</vnd.sun.xml.impress>
+				
 				<vnd.ms-powerpoint>
-					<icon>mime-application-vnd.ms-powerpoint</icon>
+					<icon>mime-application-vnd.oasis.opendocument.presentation</icon>
 				</vnd.ms-powerpoint>
 				
-				<msword>
-					<icon>mime-application-vnd.sun.xml.writer</icon>	
-				</msword>
+				<vnd.oasis.opendocument.spreadsheet>
+					<icon>mime-application-vnd.oasis.opendocument.spreadsheet</icon>
+				</vnd.oasis.opendocument.spreadsheet>				
+				
 				<vnd.sun.xml.calc>
-					<icon>mime-application-vnd.sun.xml.calc</icon>	
+					<icon>mime-application-vnd.oasis.opendocument.spreadsheet</icon>	
 				</vnd.sun.xml.calc>
+				
 				<vnd.ms-excel>
-					<icon>mime-application-vnd.sun.xml.calc</icon>					
+					<icon>mime-application-vnd.oasis.opendocument.spreadsheet</icon>					
 				</vnd.ms-excel>
+								
+				<vnd.oasis.opendocument.graphics>
+					<icon>mime-application-vnd.oasis.opendocument.graphics</icon>
+				</vnd.oasis.opendocument.graphics>
+				<vnd.sun.xml.draw>
+					<icon>mime-application-vnd.oasis.opendocument.graphics</icon>
+				</vnd.sun.xml.draw>
+				
+				
+				
 				<x-sharedlib>
 					<icon>mime-application-x-sharedlib</icon>	
 				</x-sharedlib>
@@ -374,6 +425,33 @@
 							<command>unzip</command>
 					</commands>
 				</zip>
+				<x-cd-image>
+					<icon>mime-application-x-cd-image</icon>
+				</x-cd-image>
+				<postscript>
+					<icon>mime-application-postscript</icon>
+				</postscript>
+				<x-rpm>
+					<icon>mime-application-x-compressed-tar</icon>
+				</x-rpm>
+				<x-perl>
+					<icon>mime-application-x-perl</icon>
+				</x-perl>
+				<x-object>
+					<icon>mime-application-x-object</icon>
+				</x-object>
+				<x-python>
+					<icon>mime-application-x-python</icon>
+				</x-python>
+				<x-php>
+					<icon>mime-application-x-php</icon>
+				</x-php>
+				<x-tex>
+					<icon>mime-application-x-tex</icon>
+				</x-tex>
+				
+				
+				
 							
 			</types>	
 		</application>	
