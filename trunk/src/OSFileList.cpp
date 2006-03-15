@@ -1934,6 +1934,7 @@ long OSFileList::onCommand (FXObject *, FXSelector, void *ptr)
 //cancel cmddialog
 long OSFileList::onCommandCancel (FXObject *, FXSelector, void *ptr)
 {
+
     dial->hide ();
     delete dial;
 }
