@@ -1118,21 +1118,21 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
     setFont (objmanager->captionfont3);
     setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
     refresh ();
-    conf->saveonestring ("/OpenspaceConfig/OSFileList/" + this->type + "/style","small icons");
+    conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","small icons");
         }
         else if (command == "change_view_big_icons")
     {
     setFont (objmanager->captionfont1);
     setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
     refresh ();
-    conf->saveonestring ("/OpenspaceConfig/OSFileList/" + this->type + "/style","big icons");
+    conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","big icons");
     }
     else if (command == "change_view_detailed")
     {
     setFont (objmanager->captionfont3);
     setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
     refresh ();
-    conf->saveonestring ("/OpenspaceConfig/OSFileList/" + this->type + "/style","detailed");
+    conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","detailed");
         }
     else if(command == "clipboard_copy" || command == "clipboard_cut")
     {
