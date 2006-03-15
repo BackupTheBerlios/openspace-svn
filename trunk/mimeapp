@@ -7,6 +7,8 @@ application/pdf:xpdf acroread kpdf gpdf
 application/vnd.ms-powerpoint:ooffice ooffice2
 application/vnd.sun.xml.calc:ooffice ooffice2
 application/vnd.sun.xml.writer:ooffice ooffice2
+application/vnd.oasis.opendocument.text:ooffice2 ooffice
+application/vnd.oasis.opendocument.spreadsheet:ooffice2 ooffice
 application/vnd.ms-excel:ooffice ooffice2
 application/msword:ooffice ooffice2
 text/plain:nedit scite gvim kedit gedit xemacs

@@ -350,7 +350,7 @@
 				</x-shellscript>
 				<x-bzip-compressed-tar>
 					<default>vfs_archive</default>
-					<icon>compressed</icon>
+					<icon>mime-application-x-compressed-tar</icon>
 					<commands>
 							<command>extract_tar_bz2</command>
 					</commands>
