@@ -14,7 +14,6 @@
 
 
 
-
 SOURCES = $(openspace_SOURCES)
 
 srcdir = .
@@ -40,8 +39,8 @@ POST_UNINSTALL = :
 host_triplet = i686-pc-linux-gnu
 bin_PROGRAMS = openspace$(EXEEXT)
 subdir = src
-DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(srcdir)/config.h.in
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	$(srcdir)/config.h.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -108,7 +107,6 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	install-recursive installcheck-recursive installdirs-recursive \
 	pdf-recursive ps-recursive uninstall-info-recursive \
 	uninstall-recursive
-HEADERS = $(noinst_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DIST_SUBDIRS = $(SUBDIRS)
@@ -218,7 +216,7 @@ openspace_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
 	OSObjectManager.h OSPathType.cpp OSPathType.h OSPreferences.cpp OSPreferences.h \
 	OSShutter.cpp OSShutter.h OSThreadExec.cpp OSThreadExec.h OSUtils.cpp OSUtils.h \
 	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
-	OSFrame.h OSFrame.cpp
+	OSFrame.h OSFrame.cpp OSFileListController.h
 
 SUBDIRS = plugins
 INCLUDES = -I$(top_srcdir)/src `WANT_FOX="1.4" fox-config --cflags`  `xml2-config  --cflags`  \
@@ -226,9 +224,6 @@ INCLUDES = -I$(top_srcdir)/src `WANT_FOX="1.4" fox-config --cflags`  `xml2-confi
 	-DPATH_LIBDIR=\"$(libdir)\"
 
 openspace_LDFLAGS = `WANT_FOX="1.4" fox-config --libs`  `xml2-config  --libs`  
-noinst_HEADERS = OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
-	OSFileTypeInfo.h
-
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -535,7 +530,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-recursive
-all-am: Makefile $(PROGRAMS) $(HEADERS) config.h
+all-am: Makefile $(PROGRAMS) config.h
 installdirs: installdirs-recursive
 installdirs-am:
 	for dir in "$(DESTDIR)$(bindir)"; do \

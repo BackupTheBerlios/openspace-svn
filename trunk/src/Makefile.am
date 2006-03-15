@@ -9,7 +9,7 @@ openspace_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
 	OSObjectManager.h OSPathType.cpp OSPathType.h OSPreferences.cpp OSPreferences.h \
 	OSShutter.cpp OSShutter.h OSThreadExec.cpp OSThreadExec.h OSUtils.cpp OSUtils.h \
 	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
-	OSFrame.h OSFrame.cpp
+	OSFrame.h OSFrame.cpp OSFileListController.h
 
 SUBDIRS = plugins
 
@@ -19,5 +19,4 @@ INCLUDES = -I$(top_srcdir)/src `WANT_FOX="1.4" fox-config --cflags`  `xml2-confi
 
 openspace_LDFLAGS = `WANT_FOX="1.4" fox-config --libs`  `xml2-config  --libs`  
 
-noinst_HEADERS = OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
-	OSFileTypeInfo.h
+
