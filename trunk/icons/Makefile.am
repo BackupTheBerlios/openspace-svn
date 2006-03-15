@@ -1,1 +1,1 @@
-SUBDIRS=default mini
+SUBDIRS=default mini big

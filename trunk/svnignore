@@ -15,3 +15,5 @@ openspacerc
 tags
 Doxyfile
 Makefile
+Makefile.in
+openspace
