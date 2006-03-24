@@ -107,6 +107,6 @@ int OSShutter::getheight( void )
         zz++;
     }
     if ( this->getFirst () != NULL )
-        height_size += ( ( ( FXShutterItem * ) this->getFirst () ) ->getButton () ->getDefaultHeight () + 2 ) * zz - 1;
+        height_size += ( ( ( FXShutterItem * ) this->getFirst () ) ->getButton () ->getDefaultHeight () + 2 ) * zz;
     return height_size;
 }

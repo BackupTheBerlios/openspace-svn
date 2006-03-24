@@ -4,16 +4,16 @@ audio:xmms freeamp bmp
 text:nedit scite gvim kedit gedit xemacs
 image/x-xcf:gimp gimp-2.0 gimp-2.2
 application/pdf:acroread kpdf gpdf xpdf
-application/vnd.sun.xml.impress:ooffice2 ooffice
-application/vnd.sun.xml.calc:ooffice2 ooffice
-application/vnd.sun.xml.writer:ooffice2 ooffice 
-application/vnd.ms-powerpoint:ooffice2 ooffice
-application/vnd.ms-excel:ooffice2 ooffic2
-application/msword:ooffice ooffice2
-application/vnd.oasis.opendocument.presentation:ooffice2 ooffice
-application/vnd.oasis.opendocument.graphics:ooffice2 ooffice
-application/vnd.oasis.opendocument.text:ooffice2 ooffice
-application/vnd.oasis.opendocument.spreadsheet:ooffice2 ooffice
+application/vnd.sun.xml.impress:ooffice2 ooffice soffice
+application/vnd.sun.xml.calc:ooffice2 ooffice soffice
+application/vnd.sun.xml.writer:ooffice2 ooffice soffice
+application/vnd.ms-powerpoint:ooffice2 ooffice soffice
+application/vnd.ms-excel:ooffice2 ooffic2 soffice
+application/msword:ooffice ooffice2 soffice
+application/vnd.oasis.opendocument.presentation:ooffice2 ooffice soffice
+application/vnd.oasis.opendocument.graphics:ooffice2 ooffice soffice
+application/vnd.oasis.opendocument.text:ooffice2 ooffice soffice
+application/vnd.oasis.opendocument.spreadsheet:ooffice2 ooffice soffice
 text/plain:nedit scite gvim kedit gedit xemacs
 application/ogg:xmms freeamp bmp
 application/x-bittorrent:azureus btdownloadcurses.py

@@ -263,6 +263,7 @@
 		</totalsize>
 		<new_file>
 			<type>INTERNAL</type>
+			<text>new file</text>
 		</new_file>
 		<umount>
 			<exec>umount {f}</exec>

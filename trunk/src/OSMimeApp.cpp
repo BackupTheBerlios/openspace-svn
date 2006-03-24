@@ -67,7 +67,7 @@ OSMimeApp::OSMimeApp( FXWindow* owner ) :
     FXVerticalFrame * vertical = new FXVerticalFrame ( this, LAYOUT_SIDE_TOP | LAYOUT_FILL_X | LAYOUT_FILL_Y );
 
     mime_label = new FXLabel( vertical, "" );
-    programsbox = new FXComboBox ( vertical, 20, NULL, 0, FRAME_THICK | LAYOUT_SIDE_TOP | COMBOBOX_STATIC );
+    programsbox = new FXComboBox ( vertical, 20, NULL, 0, FRAME_THICK | LAYOUT_SIDE_TOP );
     programsbox->setNumVisible( 10 );
 
     FXHorizontalFrame *hori = new FXHorizontalFrame ( vertical, LAYOUT_SIDE_TOP | LAYOUT_FILL_X | LAYOUT_FILL_Y );
@@ -121,11 +121,17 @@ void OSMimeApp::doAutomaticConfiguration( void )
 
 }
 
-long OSMimeApp::onNextPrevious( FXObject * sender, FXSelector sel, void * )
+long OSMimeApp::onNextPrevious( FXObject * sender, FXSelector sel, void *ptr )
 {
     FXushort id = FXSELID( sel );
 
-    if ( id == ID_NEXT && iter + 1 != mime_vector.end() )
+    if(iter + 1 == mime_vector.end())
+    {
+    FXDialogBox::onCmdAccept( sender, sel, ptr );
+    return 0;
+    }
+
+    if ( id == ID_NEXT && iter +1 != mime_vector.end() )
     {
         iter++;
     }

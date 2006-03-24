@@ -79,6 +79,9 @@ void OSFrame::generateMenu ( string path, FXObject * tgt )
     int z = 0;
     FXButton *prebutton = NULL;
     FXButton *nextbutton = NULL;
+    
+
+    
     while ( z != -1 )
     {
         string path_element = "";
@@ -94,7 +97,7 @@ void OSFrame::generateMenu ( string path, FXObject * tgt )
                                       0, 0 );
         bt->setBackColor ( objmanager->maincolor );
 	
-	if(firstbutton!=NULL)
+ 	if(bt->getParent()->id())
         bt->create ();
 	
         if ( prebutton != NULL )

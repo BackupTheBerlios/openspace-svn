@@ -1407,7 +1407,7 @@ long OSPreferences::save ( void )
             conf->addstring( "/OpenspaceConfig/shutter", shutter_iter->shutter, "" );
 
         conf->addstring( "/OpenspaceConfig/shutter/" + shutter_iter->shutter, "command", shutter_iter->command );
-
+	
     }
 
     conf->removestring ( "/OpenspaceConfig/toolbars" );

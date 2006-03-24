@@ -253,10 +253,11 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
     if(!FXFile::exists(plugin_path.c_str()))
     {
-    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/libVfs")+ pluginName + ".so";
+    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/")+ pluginName + ".so";
     }
 
     void *dllhandle = fxdllOpen (plugin_path.c_str ());
+    fxmessage(fxdllError().text());
     if (dllhandle)
     {
     
@@ -1382,7 +1383,7 @@ long OSFileList::onPopup (FXObject *, FXSelector, void *ptr)
     if (processing)
     return 0;
 
-commands_tab.clear();
+    commands_tab.clear();
 
     FXEvent *event = (FXEvent *) ptr;
     selectitem ();
@@ -1406,6 +1407,7 @@ commands_tab.clear();
 
     int command_num = 0;
 
+    
 
     if (conf->openxpath ("/OpenspaceConfig/shutter") != -1)
     {
@@ -1413,10 +1415,8 @@ commands_tab.clear();
     while (conf->getnextnode (res))
     {
 
-
         OSConfigure conflocal = *conf;
-        //shutterItem = new FXShutterItem(shutterFrame,res.c_str(),NULL,      FRAME_SUNKEN|LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT,0,0,0,0,0,0,0,0,0,0);
-        // shutterItem = new FXShutterItem(shutterFrame,res.c_str(),osicons[8],FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT,0,0,0,0,0,0,0,0,0,0);
+       
         shutterItem = new FXShutterItem (shutterFrame, res.c_str (), objmanager->osicons["execute"], FRAME_NONE | LAYOUT_FILL_X | LAYOUT_FILL_Y | LAYOUT_TOP | LAYOUT_LEFT, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
         FXButton *but = shutterItem->getButton ();
@@ -1426,14 +1426,13 @@ commands_tab.clear();
         but->setIconPosition (ICON_BEFORE_TEXT);
         but->setJustify (JUSTIFY_LEFT);
         but->setBackColor (objmanager->maincolor);
-        //but->setBackColor (readcolor (conf->readonestring ("/OpenspaceConfig/colors/maincolor")));
         content->setBackColor (getApp ()->getShadowColor ());
+	
         if (conflocal.openxpath ("/OpenspaceConfig/shutter/" + res + "/command") != -1)
         {
         string res;
         while (conflocal.getnextstring (res))
         {
-    
 
             string comm_s;
             if (res == "special")

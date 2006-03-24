@@ -235,7 +235,7 @@ long OSMainWindow::onOpenConfigure ( FXObject * sender, FXSelector sel, void * )
 long OSMainWindow::onAbout ( FXObject * sender, FXSelector sel, void * )
 {
 
-    string msg = "Openspace File Browser " + string( PACKAGE_VERSION ) + "\n\nby Mateusz Dworak (http://openspace.linux.pl)\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org) \n\n icons by Dawn Simon";
+    string msg = "Openspace File Browser " + string( PACKAGE_VERSION ) + "\n\nby Mateusz Dworak (http://openspace.linux.pl)\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org) \n\nDefault icon set: Gnome-mix";
 
     FXMessageBox about ( this, "About Openspace", msg.c_str(), objmanager->osicons[ "foxbig" ], MBOX_OK | DECOR_TITLE | DECOR_BORDER );
     about.execute ();
@@ -763,7 +763,7 @@ long OSMainWindow::onTimer ( FXObject *, FXSelector, void * )
                     FXTRACE ( ( 5, "INIT \n" ) );
                     if ( fil->init () != false )
                     {
-                    current_frame->generateMenu( fil->getDir(), this );   
+                    //current_frame->generateMenu( fil->getDir(), this );   
                     }
                     else
                     {
