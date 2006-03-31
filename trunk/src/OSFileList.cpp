@@ -1899,8 +1899,7 @@ long OSFileList::onCmdHeader (FXObject *, FXSelector sel, void *ptr)
     }
     else
     {
-    //num = ((int)*((int*)ptr));
-    num = (int)ptr;
+    num=(FXuint)(FXuval)ptr;
     }
 
     if (num == sort_nr)

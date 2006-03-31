@@ -47,7 +47,7 @@ bool OSMimeType::_matches( std::string pattern, std::string ext )
     if ( pattern[ 0 ] == '*' )
     {
         pattern = pattern.substr( 1 );
-        unsigned int pos = ext.rfind( pattern );
+        std::string::size_type pos = ext.rfind( pattern );
         if ( pos == std::string::npos )
         {
             return false;
