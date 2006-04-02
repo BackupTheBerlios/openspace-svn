@@ -140,17 +140,17 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             FXToolBar *toolbar = new FXToolBar ( topdock, dragshell1, LAYOUT_DOCK_NEXT | LAYOUT_SIDE_TOP | FRAME_RAISED );
             new FXToolBarGrip ( toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_SINGLE );
 
-            FXVerticalFrame *ff = new FXVerticalFrame ( this, LAYOUT_FILL_X | LAYOUT_FILL_Y| FRAME_NONE, 0, 0, 0, 0, 0, 0, 0, 0 );
-            controlframe = new FXVerticalFrame ( ff, LAYOUT_FILL_X | FRAME_NONE, 0, 0, 0, 0, 5, 5, 0, 0 );
+            FXVerticalFrame *ff = new FXVerticalFrame ( this, LAYOUT_FILL_X | LAYOUT_FILL_Y| FRAME_NONE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+            controlframe = new FXVerticalFrame ( ff, LAYOUT_FILL_X | FRAME_NONE, 0, 0, 0, 0, 5, 5, 0, 0, 0, 0 );
             splitter = new FXSplitter ( ff, LAYOUT_FILL_X | SPLITTER_TRACKING | LAYOUT_FILL_Y );
             left = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 5, 0, 0, 0 );
             right = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 5, 0, 0 );
 	    
      		
             leftcontrolframe = new FXVerticalFrame ( left, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0 );
-            leftframe = new FXVerticalFrame ( left, LAYOUT_FILL_X | LAYOUT_FILL_Y , 0, 0, 0, 0, 0, 0, 0, 0 );
+            leftframe = new FXVerticalFrame ( left, LAYOUT_FILL_X | LAYOUT_FILL_Y , 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 );
             rightcontrolframe = new FXVerticalFrame ( right, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0 );
-            rightframe = new FXVerticalFrame ( right, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0 );
+            rightframe = new FXVerticalFrame ( right, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
 
             new FXButton ( toolbar, "\thide/show copy/move progress", objmanager->osicons[ "plus" ], this, OSMainWindow::ID_COMMANDS_SHOW, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
             new FXButton ( toolbar, "\topen new panel", objmanager->osicons[ "folder" ], this, OSMainWindow::ID_NEWFRAME,FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
