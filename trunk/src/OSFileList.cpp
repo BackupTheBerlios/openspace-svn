@@ -270,7 +270,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
     info = new FXLabel (p, fb->info ().c_str ());
 
-    textfield = new FXTextField (toolbar, 30, this, OSFileList::ID_TEXTFIELD_RUN);
+    textfield = new FXTextField (toolbar, 21, this, OSFileList::ID_TEXTFIELD_RUN);
 
     dial = NULL;
     processing = false;
@@ -784,7 +784,7 @@ long OSFileList::setFocus (FXObject * obj, FXSelector sel, void *ptr)
 long OSFileList::lostFocus (FXObject * obj, FXSelector sel, void *ptr)
 {
 //active=false;
-    setBackColor (FXRGB (220, 220, 220));
+  //  setBackColor (FXRGB (220, 220, 220));
 
 
 }

@@ -45,8 +45,8 @@
 	</speed_delay>
 	
  	<mainwindow>
-		<width>898</width>
-		<height>600</height>
+		<width>704</width>
+		<height>450</height>
 	</mainwindow>
   
   	<defaultdir>

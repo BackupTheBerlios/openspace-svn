@@ -40,7 +40,7 @@ FXIMPLEMENT ( OSMainWindow, FXMainWindow, OSMainWindowMap, ARRAYNUMBER ( OSMainW
 
 
 //-----MAIN WINDOW---------------------------------------------------------------------------------------------------------------------------
-OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0 )
+OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0, 0, 0, 0, 0)
 {
     conf = new OSConfigure ();
 
@@ -141,28 +141,28 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             new FXToolBarGrip ( toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_SINGLE );
 
             FXVerticalFrame *ff = new FXVerticalFrame ( this, LAYOUT_FILL_X | LAYOUT_FILL_Y| FRAME_NONE, 0, 0, 0, 0, 0, 0, 0, 0 );
-            controlframe = new FXVerticalFrame ( ff, LAYOUT_FILL_X | FRAME_NONE, 0, 0, 0, 0, 0, 0, 0, 0 );
+            controlframe = new FXVerticalFrame ( ff, LAYOUT_FILL_X | FRAME_NONE, 0, 0, 0, 0, 5, 5, 0, 0 );
             splitter = new FXSplitter ( ff, LAYOUT_FILL_X | SPLITTER_TRACKING | LAYOUT_FILL_Y );
-            left = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 0, 0 );
-            right = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 0, 0 );
+            left = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 5, 0, 0, 0 );
+            right = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 5, 0, 0 );
 	    
      		
-            leftcontrolframe = new FXVerticalFrame ( left, LAYOUT_FILL_X );
-            leftframe = new FXVerticalFrame ( left, LAYOUT_FILL_X | LAYOUT_FILL_Y );
-            rightcontrolframe = new FXVerticalFrame ( right, LAYOUT_FILL_X );
-            rightframe = new FXVerticalFrame ( right, LAYOUT_FILL_X | LAYOUT_FILL_Y );
+            leftcontrolframe = new FXVerticalFrame ( left, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0 );
+            leftframe = new FXVerticalFrame ( left, LAYOUT_FILL_X | LAYOUT_FILL_Y , 0, 0, 0, 0, 0, 0, 0, 0 );
+            rightcontrolframe = new FXVerticalFrame ( right, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0 );
+            rightframe = new FXVerticalFrame ( right, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0 );
 
-            new FXButton ( toolbar, "\thide/show copy/move progress", objmanager->osicons[ "plus" ], this, OSMainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
-            new FXButton ( toolbar, "\topen new panel", objmanager->osicons[ "folder" ], this, OSMainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
-            new FXButton ( toolbar, "\tconnect", objmanager->osicons[ "network" ], this, OSMainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
-            new FXButton ( toolbar, "\tsearch", objmanager->osicons[ "search" ], this, OSMainWindow::ID_NEW_SEARCH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+            new FXButton ( toolbar, "\thide/show copy/move progress", objmanager->osicons[ "plus" ], this, OSMainWindow::ID_COMMANDS_SHOW, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+            new FXButton ( toolbar, "\topen new panel", objmanager->osicons[ "folder" ], this, OSMainWindow::ID_NEWFRAME,FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+            new FXButton ( toolbar, "\tconnect", objmanager->osicons[ "network" ], this, OSMainWindow::ID_NEW_NETWORK, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+            new FXButton ( toolbar, "\tsearch", objmanager->osicons[ "search" ], this, OSMainWindow::ID_NEW_SEARCH, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
 
             new FXSeparator ( toolbar, SEPARATOR_NONE );
             new FXSeparator ( toolbar, SEPARATOR_GROOVE );
             new FXSeparator ( toolbar, SEPARATOR_NONE );
 
-            new FXButton ( toolbar, "\tconfiguration", objmanager->osicons[ "configure" ], this, OSMainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
-            new FXButton ( toolbar, "\tabout", objmanager->osicons[ "about" ], this, OSMainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+            new FXButton ( toolbar, "\tconfiguration", objmanager->osicons[ "configure" ], this, OSMainWindow::ID_CONFIGURE, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+            new FXButton ( toolbar, "\tabout", objmanager->osicons[ "about" ], this, OSMainWindow::ID_ABOUT,FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
             toolbar->dock( rightdock );
 
             string dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/leftdir/dir" ) );
