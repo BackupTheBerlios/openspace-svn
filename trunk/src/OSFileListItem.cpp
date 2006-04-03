@@ -220,7 +220,7 @@ void OSFileListItem::drawBigIcon( const FXIconList* list, FXDC& dc, FXint x, FXi
             for ( int i = 0;i < osf.attrib.size();i++ )
             {
 
-                dc.drawText( xt + 2, yt + ( i + 2 ) * font->getFontAscent() + 2, osf.attrib[ i ].c_str(), osf.attrib[ i ].length() );
+                dc.drawText( xt + 4, yt + ( i + 2 ) * font->getFontAscent() + 2, osf.attrib[ i ].c_str(), osf.attrib[ i ].length() );
 
             }
             //=============CHANGES==========================================
@@ -235,7 +235,8 @@ void OSFileListItem::drawBigIcon( const FXIconList* list, FXDC& dc, FXint x, FXi
     {
 
         //=============CHANGES==========================================
-        xi = x;
+        //xi = x;
+	xi=x+ 2;
         //=============CHANGES==========================================
         yi = y + BIG_LINE_SPACING / 2 + ( h - th - BIG_LINE_SPACING - ss - ih ) / 2;
         if ( isSelected() )
