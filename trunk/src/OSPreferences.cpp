@@ -638,7 +638,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
 
 
-    new FXLabel ( commandsPane, "shortuct mask: ", NULL, LAYOUT_LEFT );
+    new FXLabel ( commandsPane, "shortcut mask: ", NULL, LAYOUT_LEFT );
     shortcutMaskList = new FXListBox ( commandsPane );
     shortcutMaskList->setNumVisible( 3 );
     shortcutMaskList->appendItem( "" );
