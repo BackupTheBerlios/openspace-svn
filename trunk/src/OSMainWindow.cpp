@@ -582,9 +582,11 @@ long OSMainWindow::onChangeList ( FXObject * sender, FXSelector sel, void *ptr )
         }
         if ( canclose )
         {
+	boxel->fr->hf->hide();
 	OSThreadExec *el = new OSThreadExec (boxel->fr->f->fb, "close",string("none"));
 	el->end=true;
 	el->filel=(void*)boxel->fr;
+	el->gui=NULL;
 	objmanager->thread_vec.push_back (el);
  
         }
@@ -817,6 +819,7 @@ long OSMainWindow::onTimer ( FXObject *, FXSelector, void * )
                     telem->pane->popup ( NULL, this->getX (), this->getY (), lab->getWidth (), lab->getHeight () );
                 }
                 //cleanup
+		if(telem->gui)
                 delete ( ( OSInfoPanel * ) telem->gui );
                 telem->gui = NULL;
                 infoframe->recalc ();
