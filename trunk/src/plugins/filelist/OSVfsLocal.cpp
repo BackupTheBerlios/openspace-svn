@@ -267,7 +267,7 @@ int OSVfsLocal::remove (OSThreadExec* te)
 	{
 
 	    std::string sr = (*iter);
-	    if (FXFile::isDirectory (sr.c_str ()))
+	    if (FXFile::isDirectory (sr.c_str ()) &&  !FXFile::isLink(sr.c_str ()))
 		sr.append (SEPARATOR);
 	    FXTRACE ((5, "REMOVE: %s", sr.c_str ()));
 
