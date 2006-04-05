@@ -582,8 +582,11 @@ long OSMainWindow::onChangeList ( FXObject * sender, FXSelector sel, void *ptr )
         }
         if ( canclose )
         {
-            delete boxel->fr;
-            sender = NULL;
+	OSThreadExec *el = new OSThreadExec (boxel->fr->f->fb, "close",string("none"));
+	el->end=true;
+	el->filel=(void*)boxel->fr;
+	objmanager->thread_vec.push_back (el);
+ 
         }
         else
         {
@@ -773,6 +776,11 @@ long OSMainWindow::onTimer ( FXObject *, FXSelector, void * )
 
                     }
                 }
+		if ( telem->command == "close" )
+                {
+		           delete (OSFrame*)telem->filel;
+     
+		}
                 if ( telem->command == "copy" )
                 {
                     if ( ( left_frame->f->fb == telem->fb && download == true ) || ( download == false && right_frame->f->fb == telem->fb ) )
