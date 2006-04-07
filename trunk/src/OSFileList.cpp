@@ -154,7 +154,6 @@ this->id=id;
     else if (style == "detailed")
     this->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
 
-
     sort_nr = 0;
 
 

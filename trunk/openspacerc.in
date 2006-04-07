@@ -595,6 +595,7 @@
 		
 		<ftp>
 			<type>network</type>
+			<style>big icons</style>
 			<headers>
 				<header>size</header>
 				<header>owner</header>
@@ -624,6 +625,7 @@
 		</ftp>
 		<search>
 			<type>search</type>
+			<style>small icons</style>
 			<properties>
 				<name>
 					<width>400</width>					
@@ -632,6 +634,7 @@
 		</search>
 		<archive>
 			<type>vfs</type>
+			<style>small icons</style>
 			<properties>
 				<name>
 					<width>400</width>					
