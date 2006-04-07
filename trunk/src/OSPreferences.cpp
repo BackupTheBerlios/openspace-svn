@@ -674,13 +674,13 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
 
 
-        OSCommandTypeInfo * ctlast;
+        OSCommandTypeInfo ctlast;
         string res;
         while ( conf->getnextnode ( res ) )
         {
 
             OSCommandTypeInfo ct;
-            ctlast = &ct;
+            
             commandsCombo->appendItem( res.c_str (), objmanager->osicons[ "execute" ] );
             ct.name = res;
             OSConfigure conflocal = *conf;
@@ -708,20 +708,20 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
             ct.key_mask = conflocal.readonestring ( "/OpenspaceConfig/commands/" + res + "/key_mask" );
 
             commandsMap[ ct.name ] = ct;
-
+	    ctlast = ct;
         }
 
-        commandsRescan->setCheck( ctlast->rescan );
-        commandsCapture->setCheck( ctlast->capture );
-        commandsTextfield->setText ( ctlast->exec.c_str () );
+        commandsRescan->setCheck( ctlast.rescan );
+        commandsCapture->setCheck( ctlast.capture );
+        commandsTextfield->setText ( ctlast.exec.c_str () );
         commandsCombo->setCurrentItem ( commandsCombo->getNumItems () - 1 );
-        currentCommandName = ctlast->name;
+        currentCommandName = ctlast.name;
 
         string str;
-        if ( ctlast->type == "" )
+        if ( ctlast.type == "" )
             str = "command type: EXTERNAL";
         else
-            str = "command type: " + ctlast->type;
+            str = "command type: " + ctlast.type;
 
         commandsType->setText( str.c_str() );
         string shorticonname;
@@ -737,14 +737,14 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
             if ( icon != NULL )
                 iconsList->appendItem( iter->first.c_str(), icon );
         }
-        if ( ctlast->icon != "" )
-            iconsList->setCurrentItem( iconsList->findItem( ctlast->icon.c_str() ) );
+        if ( ctlast.icon != "" )
+            iconsList->setCurrentItem( iconsList->findItem( ctlast.icon.c_str() ) );
 
-        if ( ctlast->key != "" )
-            shortcutList->setCurrentItem( shortcutList->findItem( ctlast->key.c_str() ) );
+        if ( ctlast.key != "" )
+            shortcutList->setCurrentItem( shortcutList->findItem( ctlast.key.c_str() ) );
 
-        if ( ctlast->key_mask != "" )
-            shortcutMaskList->setCurrentItem( shortcutMaskList->findItem( ctlast->key_mask.c_str() ) );
+        if ( ctlast.key_mask != "" )
+            shortcutMaskList->setCurrentItem( shortcutMaskList->findItem( ctlast.key_mask.c_str() ) );
 
 
 
@@ -754,7 +754,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
         new FXButton ( hfr, "New Command", objmanager->osicons["plus"], this, ID_NEW_COMMAND, FRAME_RAISED|ICON_BEFORE_TEXT  );
         newCommandEdit = new FXTextField ( hfr, 20 );
 
-        if ( ctlast->type == "INTERNAL" || ctlast->type == "PLUGIN" )
+        if ( ctlast.type == "INTERNAL" || ctlast.type == "PLUGIN" )
         {
             commandsTextfield->disable();
             commandsRescan->disable();
@@ -773,7 +773,7 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
     if ( conf->openxpath ( "/OpenspaceConfig/file_types" ) != -1 )
     {
-        OSFileTypeInfo * ctlast;
+        OSFileTypeInfo ctlast;
         new FXLabel( filetypePane, "File Type:" );
         fileTypeList = new FXListBox ( filetypePane, this, ID_FILETYPE_CHANGE );
         fileTypeList->setNumVisible( 30 );
@@ -864,14 +864,15 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
             }
             OSFileTypeInfo ct;
             ct.load( res );
-            ctlast = &ct;
+            
             fileTypeList->appendItem( xml2mime( ct.name ) .c_str (), objmanager->osicons[ "unknown" ] );
 
 
             filetypesMap[ ct.name ] = ct;
+	    ctlast = ct;
         }
 
-        filetypestring = ctlast->name;
+        filetypestring = ctlast.name;
 
         map < string, FXIcon * >::iterator iter2;
         iconsList2->appendItem( "", NULL );
@@ -880,8 +881,8 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
             FXIcon *icon = iter2->second;
             iconsList2->appendItem( iter2->first.c_str(), icon );
         }
-        if ( ctlast->icon != "" )
-            iconsList2->setCurrentItem( iconsList2->findItem( ctlast->icon.c_str() ) );
+        if ( ctlast.icon != "" )
+            iconsList2->setCurrentItem( iconsList2->findItem( ctlast.icon.c_str() ) );
 
 
 
@@ -901,8 +902,8 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
         }
 
         vector<string>::iterator iter;
-        if ( ctlast->commands.size() > 0 )
-            for ( iter = ctlast->commands.begin();iter != ctlast->commands.end();iter++ )
+        if ( ctlast.commands.size() > 0 )
+            for ( iter = ctlast.commands.begin();iter != ctlast.commands.end();iter++ )
             {
                 additionalCommands->appendItem( iter->c_str() );
 
@@ -911,10 +912,10 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
 
 
         fileTypeList->setCurrentItem ( fileTypeList->getNumItems () - 1 );
-        fileTypeDefaultBox->setCurrentItem( fileTypeDefaultBox->findItem( ctlast->command.c_str() ) );
+        fileTypeDefaultBox->setCurrentItem( fileTypeDefaultBox->findItem( ctlast.command.c_str() ) );
 
-        setAllColor( colorbutton, readcolor( ctlast->color ) );
-        setAllColor( backcolorbutton, readcolor2( ctlast->backcolor ) );
+        setAllColor( colorbutton, readcolor( ctlast.color ) );
+        setAllColor( backcolorbutton, readcolor2( ctlast.backcolor ) );
 
     }
 
