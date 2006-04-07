@@ -1606,7 +1606,7 @@ bool OSPreferences::validateName( string name )
     if ( name == "" ) return false;
 
     int p, k;
-    FXRex identifier( "[0-9a-zA-Z]*" );
+    FXRex identifier( "[0-9a-zA-Z_]*" );
     identifier.match( name.c_str(), name.size(), &p, &k );
 
 
@@ -1701,6 +1701,9 @@ long OSPreferences::onRemoveCommand ( FXObject * sender, FXSelector sel, void * 
 
     string res = "/OpenspaceConfig/commands/" + command;
     conf->removestring ( res );
+
+
+    commandsMap.erase(command);
 
 
 }
