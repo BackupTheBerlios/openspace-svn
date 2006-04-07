@@ -201,11 +201,11 @@ localstatedir = ${prefix}/var
 mandir = ${prefix}/man
 mkdir_p = mkdir -p -- .
 oldincludedir = /usr/include
-prefix = /root/usr
+prefix = /usr
 program_transform_name = s,x,x,
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
-sysconfdir = ${prefix}/etc
+sysconfdir = /etc
 target_alias = 
 openspace_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
 	OSCommandTypeInfo.cpp OSCommandTypeInfo.h OSConfigure.cpp OSConfigure.h OSFile.h \
