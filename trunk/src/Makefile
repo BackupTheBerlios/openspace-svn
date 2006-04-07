@@ -201,11 +201,11 @@ localstatedir = ${prefix}/var
 mandir = ${prefix}/man
 mkdir_p = mkdir -p -- .
 oldincludedir = /usr/include
-prefix = /usr
+prefix = /root/usr
 program_transform_name = s,x,x,
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
-sysconfdir = /etc
+sysconfdir = ${prefix}/etc
 target_alias = 
 openspace_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
 	OSCommandTypeInfo.cpp OSCommandTypeInfo.h OSConfigure.cpp OSConfigure.h OSFile.h \
@@ -221,7 +221,8 @@ openspace_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
 SUBDIRS = plugins
 INCLUDES = -I$(top_srcdir)/src `WANT_FOX="1.4" fox-config --cflags`  `xml2-config  --cflags`  \
 	-DPATH_CFG=\"$(sysconfdir)\" \
-	-DPATH_LIBDIR=\"$(libdir)\"
+	-DPATH_LIBDIR=\"$(libdir)\" \
+	-DPREFIX=\"$(prefix)\" 
 
 openspace_LDFLAGS = `WANT_FOX="1.4" fox-config --libs`  `xml2-config  --libs`  
 all: config.h

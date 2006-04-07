@@ -57,7 +57,7 @@
 
 
 #ifndef PATH_LIBDIR
-#define PATH_LIBDIR "/usr/local/lib"
+#define PATH_LIBDIR "PREFIX/lib"
 #endif
 
 FXDEFMAP (OSFileList) OSFileListMap[] =
