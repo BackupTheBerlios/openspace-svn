@@ -345,6 +345,11 @@ system(textfield->getText ().text());
 OSFileList::~OSFileList ()
 {
 
+    if (popupmenu)
+    {
+    delete popupmenu;
+    }
+
     fb->quit ();
     delete sortpop;
     FXTRACE ((5, "destruct\n"));
