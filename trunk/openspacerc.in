@@ -251,10 +251,6 @@
 			<type>INTERNAL</type>
 			<icon>other</icon>
 		</other>
-		<ls>
-			<exec>ls</exec>
-			<options>capture</options>
-		</ls>
 		<special>
 			<type>INTERNAL</type>
 		</special>
@@ -532,7 +528,6 @@
 			<command>special</command>
 			<command>totalsize</command>
 			<command>new_file</command>
-			<command>ls</command>
 		</common>
 		<compress>
 			<command>OSCompress</command>

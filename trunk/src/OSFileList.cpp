@@ -337,8 +337,8 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
 long OSFileList::texfield_run (FXObject * obj, FXSelector sel, void *ptr)
 {
-
-system(textfield->getText ().text());
+string cmd=textfield->getText ().text()+string(" &");
+system(cmd.c_str());
 
 }
 
