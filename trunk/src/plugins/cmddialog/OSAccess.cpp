@@ -77,7 +77,7 @@ class OSAccess:public OSCMDDialogBox
     }
     OSAccess (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
-    virtual int OSAccess::exec (void)
+    int exec (void)
     {
 
 	unsigned int mode = 0;

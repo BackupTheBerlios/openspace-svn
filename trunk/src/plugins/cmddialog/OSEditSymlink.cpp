@@ -46,7 +46,7 @@ class OSEditSymlink:public OSCMDDialogBox
     OSEditSymlink (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
 
-    virtual int OSEditSymlink::exec (void)
+    int exec (void)
     {
     
         int error = 0;

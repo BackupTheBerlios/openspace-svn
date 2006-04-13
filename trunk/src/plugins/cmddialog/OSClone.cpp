@@ -43,7 +43,7 @@ public:
     OSClone ( FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src );
 
 
-    virtual int OSClone::exec ( void )
+    int exec ( void )
     {
         int error = 0;
     

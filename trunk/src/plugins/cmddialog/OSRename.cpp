@@ -44,7 +44,7 @@ class OSRename:public OSCMDDialogBox
     OSRename (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
 
-    virtual int OSRename::exec (void)
+    int exec (void)
     {
 	int error = 0;
 	vector < string >::iterator iter;

@@ -45,7 +45,7 @@ class OSSymlink:public OSCMDDialogBox
     OSSymlink (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
 
-    virtual int OSSymlink::exec (void)
+    int exec (void)
     {
 	int error = 0;
 	vector < string >::iterator iter;

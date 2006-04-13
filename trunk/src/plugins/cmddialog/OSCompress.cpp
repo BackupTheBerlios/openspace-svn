@@ -47,7 +47,7 @@ class OSCompress:public OSCMDDialogBox
     OSCompress (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
 
-    virtual int OSCompress::exec (void)
+    int exec (void)
     {
 	int error = 0;
 	vector < string >::iterator iter;

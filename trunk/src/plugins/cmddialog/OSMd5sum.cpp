@@ -45,7 +45,7 @@ class OSMd5sum:public OSCMDDialogBox
     OSMd5sum (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
 
-    virtual int OSMd5sum::exec (void)
+    virtual int exec (void)
     {
 	
     }

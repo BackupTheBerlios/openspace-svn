@@ -33,7 +33,7 @@ class OSMkdir:public OSCMDDialogBox
     }
     OSMkdir (FXWindow * w, OSVirtualFileSystemBase * fb, vector < string > src);
 
-    int OSMkdir::exec (void)
+    int exec (void)
     {
 	string s = text->getText ().text ();
 	fb->mkdir (s, 493);
