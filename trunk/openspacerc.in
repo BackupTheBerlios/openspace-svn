@@ -7,6 +7,7 @@
 	<position>center</position>
 	<icon_size>64</icon_size>
 	<show_hidden_files>true</show_hidden_files>
+	<mime_magic>false</mime_magic>
 	  <fonts>
 	         <normalfont>arial,90,,,normal,iso8859-1,0</normalfont>
     		 <captionfont1>arial,90,bold,,normal,iso8859-1,0</captionfont1>

@@ -31,6 +31,8 @@
 #include <string>
 #include <map>
 
+#include <magic.h>
+
 #include "OSVirtualFileSystemBase.h"
 #include "OSPathType.h"
 #include "OSThreadExec.h"
@@ -53,6 +55,8 @@ private:
     string type;
     OSPathType *pt;
     long id;
+    
+    static  magic_set *ms;
     
     OSFileListController *controller;  
 
@@ -84,6 +88,7 @@ private:
 
     static bool ascend;
     static bool strcase;
+    static bool mime_magic;
 
     bool processing;
     bool maximize;

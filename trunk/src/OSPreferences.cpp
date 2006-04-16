@@ -398,6 +398,19 @@ OSPreferences::OSPreferences ( FXWindow * owner ) : FXDialogBox ( owner, "Prefer
     placement->setNumVisible( 2 );
     placement->appendItem( "centered" );
     placement->appendItem( "cursor" );
+    
+    if(conf->readonestring ( "/OpenspaceConfig/position")=="cursor")
+    placement->setCurrentItem(1);
+    
+    new FXLabel ( mainpane, "determine file type" );
+    mime_determine = new FXListBox ( mainpane );
+    mime_determine->setNumVisible( 2 );
+    mime_determine->appendItem( "filename" );
+    mime_determine->appendItem( "file content" );
+    
+    
+    if(conf->readonestring ( "/OpenspaceConfig/mime_magic")=="true")
+    mime_determine->setCurrentItem(1);
 
     string iconsdir = conf->readonestring ( "/OpenspaceConfig/path" ) + "/icons";
     struct dirent *dp;
@@ -1475,6 +1488,13 @@ long OSPreferences::save ( void )
 
 
     conf->saveonestring ( "/OpenspaceConfig/position", placement->getItem ( placement->getCurrentItem() ).text() );
+    
+    string mime_determine_s=mime_determine->getItem ( mime_determine->getCurrentItem() ).text();
+    if(mime_determine_s=="filename")
+    conf->saveonestring ( "/OpenspaceConfig/mime_magic","false"  );
+    else
+    conf->saveonestring ( "/OpenspaceConfig/mime_magic","true"  );
+    
 
 }
 

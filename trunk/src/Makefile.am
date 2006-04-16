@@ -18,6 +18,6 @@ INCLUDES = -I$(top_srcdir)/src `WANT_FOX="1.4" fox-config --cflags`  `xml2-confi
 	-DPATH_LIBDIR=\"$(libdir)\" \
 	-DPREFIX=\"$(prefix)\" 
 
-openspace_LDFLAGS = `WANT_FOX="1.4" fox-config --libs`  `xml2-config  --libs`  
+openspace_LDFLAGS = `WANT_FOX="1.4" fox-config --libs`  `xml2-config  --libs` -lmagic  
 
 

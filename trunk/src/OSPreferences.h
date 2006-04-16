@@ -96,7 +96,7 @@ private:
     FXVerticalFrame *vfsPane;
     FXListBox *vfsList;
     FXList*headersList, *availableHeadersList;
-    FXListBox *placement;
+    FXListBox *placement,*mime_determine;
 
     FXList *additionalCommands, *additionalCommandsAvailable, *additionalCommandsAvailableForButtons;
     FXList *shutterCommands;

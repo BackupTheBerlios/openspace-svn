@@ -91,7 +91,8 @@ FXMAPFUNC (SEL_FOCUSIN, OSFileList::ID_ICO, OSFileList::setFocus),
 FXIMPLEMENT (OSFileList, FXIconList, OSFileListMap, ARRAYNUMBER (OSFileListMap))
      bool OSFileList::ascend = true;
      bool OSFileList::strcase = false;
-
+     bool OSFileList::mime_magic = false;
+     magic_set* OSFileList::ms = NULL;
 
 //-----FILELIST----------------------------------------------------------------------------------------------------------------------------------------- 
 
@@ -100,6 +101,24 @@ FXIMPLEMENT (OSFileList, FXIconList, OSFileListMap, ARRAYNUMBER (OSFileListMap))
 OSFileList::OSFileList (FXComposite * p, OSPathType pt,long id,OSFileListController* controller):
 FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
 {
+
+if(ms==NULL)
+{
+//fxmessage("LOAD");
+ms = magic_open(MAGIC_MIME);
+    if (ms != NULL) 
+    {
+    	if(magic_load(ms, NULL) == -1) 
+    	{
+	magic_close(ms);
+	ms=NULL;
+	}
+	//else
+	//fxmessage("OK\n");
+
+    }
+}
+
 objmanager=OSObjectManager::instance(getApp());
  
 FXScrollArea::vertical->setArrowColor(FXRGB(255, 255, 255));
@@ -124,6 +143,12 @@ this->id=id;
     show_hidden_files=true;
     else
     show_hidden_files=false;
+
+    if(conf->readonestring ("/OpenspaceConfig/mime_magic")=="true")
+    mime_magic=true;
+    else
+    mime_magic=false;
+
 
     dropaction = DRAG_MOVE;   
 
@@ -345,6 +370,8 @@ system(cmd.c_str());
 OSFileList::~OSFileList ()
 {
 
+ //magic_close(ms);
+ 
     if (popupmenu)
     {
     delete popupmenu;
@@ -439,9 +466,22 @@ string OSFileList::getfiletype (string name)
 
     //std::transform (name.begin (), name.end (), name.begin (), std::tolower);
 
-    string r = OSMimeType::getMimeFromName (name);
-
-    //printf("Name: '%s' MimeType: '%s'\n", name.c_str(), r.c_str());
+    string r;
+    
+    if(!mime_magic)
+    {
+      r = OSMimeType::getMimeFromName (name);      
+    }
+    else
+    {	
+      r = magic_file(ms, name.c_str());
+      string::size_type n;
+      if((n=r.find(";"))!=string::npos)
+      {
+       r=r.substr(0,n);
+      }
+    } 
+   //printf("Name: '%s' MimeType: '%s'\n", name.c_str(), r.c_str());
 
     return r;
 
