@@ -93,6 +93,7 @@ FXIMPLEMENT (OSFileList, FXIconList, OSFileListMap, ARRAYNUMBER (OSFileListMap))
      bool OSFileList::strcase = false;
      bool OSFileList::mime_magic = false;
      magic_set* OSFileList::ms = NULL;
+     magic_set* OSFileList::ms2 = NULL;
 
 //-----FILELIST----------------------------------------------------------------------------------------------------------------------------------------- 
 
@@ -112,6 +113,24 @@ ms = magic_open(MAGIC_MIME);
     	{
 	magic_close(ms);
 	ms=NULL;
+	}
+	//else
+	//fxmessage("OK\n");
+
+    }
+}
+
+
+if(ms2==NULL)
+{
+//fxmessage("LOAD");
+ms2 = magic_open(MAGIC_NONE);
+    if (ms != NULL) 
+    {
+    	if(magic_load(ms2, NULL) == -1) 
+    	{
+	magic_close(ms2);
+	ms2=NULL;
 	}
 	//else
 	//fxmessage("OK\n");
@@ -480,6 +499,10 @@ string OSFileList::getfiletype (string name)
       {
        r=r.substr(0,n);
       }
+      
+      if(r=="")
+      r = OSMimeType::getMimeFromName (name);
+      
     } 
    //printf("Name: '%s' MimeType: '%s'\n", name.c_str(), r.c_str());
 
@@ -488,6 +511,15 @@ string OSFileList::getfiletype (string name)
 }
 
      
+
+string OSFileList::getfiledescription (string name)
+{
+
+      string r;   
+      r = magic_file(ms2, name.c_str());      
+      return r;
+
+}
  
 
 //return command with replaced {f} with valid path
@@ -1998,10 +2030,10 @@ long OSFileList::click (FXObject *, FXSelector, void *ptr)
 
     }
     }
-    string inf = "selected: " + ntos (count) + " size: " + numtostring (size);
+    string inf = "selected: " + ntos (count) + " size: " + numtostring (size) + " ( "+ ntos(size) + " B )";
     if (count == 1)
     {
-    inf = inf + " " + os->osf.name;
+    inf = inf + " type: "+getfiletype(os->osf.name) + "\n "+getfiledescription(os->osf.name)+ "  " + os->osf.name;
     }
 
 

@@ -57,6 +57,7 @@ private:
     long id;
     
     static  magic_set *ms;
+    static  magic_set *ms2;
     
     OSFileListController *controller;  
 
@@ -116,6 +117,7 @@ private:
     string resolvecommand( string command, string name );
     int runCommand( string name );
     static string getfiletype ( string name );
+    static string getfiledescription ( string name );
     long setKeys ( void );
 
 public:
