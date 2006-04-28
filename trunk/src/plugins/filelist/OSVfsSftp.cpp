@@ -456,7 +456,50 @@ std::string::size_type pos = te->options.find ( "upload" );
 void OSVfsSftp::totalsize (std::string path, unsigned long &size)
 {
 
-   
+fxmessage("%s\n",path.c_str());
+
+SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)path.c_str ());
+
+ if(attr) 
+ {
+  if((attr->permissions & S_IFMT) == S_IFDIR)
+  {
+
+  dirsftp=sftp_opendir(sftp,(char*)path.c_str());
+
+   if(dirsftp)
+   { 
+
+    SFTP_ATTRIBUTES *file;
+    
+    while(file=sftp_readdir(sftp,dirsftp))
+    {
+
+    	if (file->name[0] != '.' || (file->name[1] != '\0' && (file->name[1] != '.' || file->name[2] != '\0')))
+    	{
+
+    
+    		std::string filename = path;
+		filename.append ("/");
+		filename.append (file->name);
+ 
+    	        totalsize (filename, size);
+
+	}	
+    }
+   sftp_dir_close (dirsftp);
+   }
+  }
+  else
+  {
+  //fxmessage("%d\n",attr->size);
+  size += (unsigned int) attr->size;
+  //fxmessage("total=%d\n",size);
+  }    
+ sftp_attributes_free(attr);
+ }
+
+
 }
 
 std::string OSVfsSftp::info (void)
