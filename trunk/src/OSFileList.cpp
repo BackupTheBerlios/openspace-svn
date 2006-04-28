@@ -138,6 +138,8 @@ ms2 = magic_open(MAGIC_NONE);
     }
 }
 
+dial=NULL;
+
 objmanager=OSObjectManager::instance(getApp());
  
 FXScrollArea::vertical->setArrowColor(FXRGB(255, 255, 255));
@@ -396,6 +398,9 @@ OSFileList::~OSFileList ()
     delete popupmenu;
     }
 
+    if(dial)
+    delete dial;	
+    
     fb->quit ();
     delete sortpop;
     FXTRACE ((5, "destruct\n"));
@@ -1329,7 +1334,8 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
     {
     
 
-
+	if(dial)
+	delete dial;
 
     string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/cmddialog/lib" + command + ".so";
 
@@ -2010,7 +2016,7 @@ long OSFileList::onCommandCancel (FXObject *, FXSelector, void *ptr)
 {
 
     dial->hide ();
-    delete dial;
+    //delete dial;
 }
 
 //update info about selected files

@@ -452,11 +452,11 @@ bool OSVfsSftp::mode (std::string file, unsigned int mod, bool recursive)
 
 std::string OSVfsSftp::owner (std::string file)
 {
-    
+return "";   
 }
 std::string OSVfsSftp::group (std::string file)
 {
-  
+return "";   
 }
 
 bool OSVfsSftp::owner (std::string file, std::string ownername, bool recursive)
