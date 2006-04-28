@@ -135,30 +135,82 @@ int OSVfsSftp::init (long id, std::vector<std::string> *vector_name, OSPathType 
         printf("%s\n",banner);
         free(banner);
     }
+    
+    
     if(auth!=SSH_AUTH_SUCCESS){
-        //M auth=auth_kbdint(session);
+      
+      
+      
+      
+    auth=ssh_userauth_kbdint(session,NULL,NULL);
+    char *name,*instruction,*prompt,*ptr;
+    char buffer[128];
+    int i,n;
+    char echo;
+    while (auth==SSH_AUTH_INFO){
+        name=ssh_userauth_kbdint_getname(session);
+        instruction=ssh_userauth_kbdint_getinstruction(session);
+        n=ssh_userauth_kbdint_getnprompts(session);
+        if(strlen(name)>0)
+            printf("%s\n",name);
+        if(strlen(instruction)>0)
+            printf("%s\n",instruction);
+        for(i=0;i<n;++i){
+            prompt=ssh_userauth_kbdint_getprompt(session,i,&echo);
+            if(echo){
+                printf("%s",prompt);
+                fgets(buffer,sizeof(buffer),stdin);
+                buffer[sizeof(buffer)-1]=0;
+                if((ptr=strchr(buffer,'\n')))
+                    *ptr=0;
+                ssh_userauth_kbdint_setanswer(session,i,buffer);
+                memset(buffer,0,strlen(buffer));
+            } else {
+                //ptr=getpass(prompt);
+                ssh_userauth_kbdint_setanswer(session,i,(char*)pt.password.c_str());
+            }
+        }
+        auth=ssh_userauth_kbdint(session,NULL,NULL);
+    }
+      
+      
+      
+      
+      
         if(auth==SSH_AUTH_ERROR){
             fprintf(stderr,"authenticating with keyb-interactive: %s\n",
                     ssh_get_error(session));
             return -1;
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    
     if(auth!=SSH_AUTH_SUCCESS){
-        password=getpass("Password : ");
-        if(ssh_userauth_password(session,NULL,password) != SSH_AUTH_SUCCESS){
+ cout<<pt.password<<endl;
+         if(ssh_userauth_password(session,NULL,(char*)pt.password.c_str()) != SSH_AUTH_SUCCESS){
             fprintf(stderr,"Authentication failed: %s\n",ssh_get_error(session));
             ssh_disconnect(session);
             return -1;
         }
-        memset(password,0,strlen(password));
+        //memset(password,0,strlen(password));
     }
+    
+    
+    
+    
+    
+    
+    
     ssh_say(1,"Authentication success\n");
 
 
-     //do_sftp(session);    
-    //if(!sftp)
-        //do_cleanup();
-    
+   
 
     sftp=sftp_new(session);
     
@@ -211,6 +263,7 @@ OSFile OSVfsSftp::osreaddir ()
 
 std::string OSVfsSftp::getinitialdir( void )
 {
+
        char* path="./";    
        return string(sftp_canonicalize_path(sftp, path));
 }
@@ -234,25 +287,6 @@ int OSVfsSftp::osopendir (std::string dir)
         return -1;
     }
 
-
-    /*
-    
-     reading the whole directory, file by file 
-    while((file=sftp_readdir(sftp,dir))){
-        ssh_say(0,"%30s(%.8lo) : %.5d.%.5d : %.10lld bytes\n",file->name,file->permissions,file->uid,file->gid,file->size);
-        sftp_attributes_free(file);
-    }
-     when file=NULL, an error has occured OR the directory listing is end of file 
-    if(!sftp_dir_eof(dir)){
-        ssh_say(0,"error : %s\n",ssh_get_error(session));
-        return -1;
-    }
-    if(sftp_dir_close(dir)){
-        ssh_say(0,"Error : %s\n",ssh_get_error(session));
-        return -1;
-    }
-
-*/
 
 }
 
@@ -350,6 +384,7 @@ bool OSVfsSftp::hardlink (std::string src, std::string dst)
 
 int OSVfsSftp::quit (void)
 {
+    if(dirsftp)
     ssh_disconnect(session);
     return 0;
 }
