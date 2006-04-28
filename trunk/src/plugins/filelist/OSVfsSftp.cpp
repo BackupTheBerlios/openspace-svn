@@ -30,6 +30,10 @@
 #include <pwd.h>
 #include <grp.h>
 
+#include <sys/stat.h>
+#include <fcntl.h>
+
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -56,6 +60,7 @@ int OSVfsSftp::init (long id, std::vector<std::string> *vector_name, OSPathType 
 
 
     dirsftp=NULL;
+    sftp=NULL;
 
     
     SSH_OPTIONS *options;
@@ -253,6 +258,15 @@ OSFile OSVfsSftp::osreaddir ()
     return os_file;
     }
 
+    if(!sftp_dir_eof(dirsftp)){
+        ssh_say(0,"error : %s\n",ssh_get_error(session));
+        //return;
+    }
+
+   if(sftp_dir_close(dirsftp)){
+        ssh_say(0,"Error : %s\n",ssh_get_error(session));
+        //return;
+    }
 
     os_file.name = "";
     return os_file;
@@ -273,8 +287,8 @@ std::string OSVfsSftp::getinitialdir( void )
 int OSVfsSftp::osopendir (std::string dir)
 {
   
-    if(dirsftp)
-    sftp_dir_close(dirsftp);   
+    //if(dirsftp)
+    //sftp_dir_close(dirsftp);   
 
     
     /* opening a directory */
@@ -286,18 +300,25 @@ int OSVfsSftp::osopendir (std::string dir)
         ssh_say(0,"Directory not opened(%s)\n",ssh_get_error(session));
         return -1;
     }
+    else
+    {
+    this->dir=dir;
+    }
 
 
 }
 
 int OSVfsSftp::mkdir (std::string dir, int mode)
 {
+
+  string file=this->dir+"/"+dir;
   
+  return sftp_mkdir(sftp, (char*)file.c_str(), NULL);
 }
 
 int OSVfsSftp::copy ( OSThreadExec * te)
 {
-
+copymove(te,true);
 }
 
 int OSVfsSftp::move (OSThreadExec* te)
@@ -321,6 +342,86 @@ int OSVfsSftp::rename (std::string orgname, std::string newname)
 
 int OSVfsSftp::copymove (OSThreadExec* te, bool copy)
 {
+
+
+std::vector < std::string >::iterator iter;
+
+std::string::size_type pos = te->options.find ( "upload" );
+    if ( pos == std::string::npos )
+    {
+
+	for (iter = te->src.begin (); iter != te->src.end(); iter++)
+  	{
+	
+		
+		SFTP_FILE *dst;
+		int src;
+		int len=1;
+    		char data[1024];
+		
+		std::string ds = te->dst;
+	   	ds.append (SEPARATOR);
+	  	ds.append (FXFile::name (iter->c_str ()).text ());
+				
+		src=open(iter->c_str(),O_RDONLY,NULL);
+		
+    		dst=sftp_open(sftp,(char*)ds.c_str(),O_WRONLY|O_CREAT,NULL);
+		if(dst)
+		{
+		
+		
+		
+			while((len=read(src,data,1024)) > 0)
+			{
+       				if(sftp_write(dst,data,len)!=len)
+				{
+            			ssh_say(0,"error writing %d bytes : %s\n",len,ssh_get_error(session));
+            			return -1;
+        			}
+		
+			}
+		sftp_file_close(dst);
+		close(src);
+    		}	
+	
+    
+    	}
+    }
+    else
+    {
+    	for (iter = te->src.begin (); iter != te->src.end(); iter++)
+  	{
+		SFTP_FILE *src;
+		int dst;
+		int len=1;
+    		char data[1024];
+		
+    		src=sftp_open(sftp,(char*)iter->c_str(),O_RDONLY,NULL);
+		if(src)
+		{
+		
+		std::string ds = te->dst;
+	   	ds.append (SEPARATOR);
+	  	ds.append (FXFile::name (iter->c_str ()).text ());
+		
+		dst=open(ds.c_str(),O_WRONLY | O_CREAT | O_TRUNC,S_IRUSR+S_IWUSR);
+		
+			while((len=sftp_read(src,data,1024)) > 0)
+			{
+       				if(write(dst,data,len)!=len)
+				{
+            			ssh_say(0,"error writing %d bytes : %s\n",len,ssh_get_error(session));
+            			return -1;
+        			}
+		
+			}
+		sftp_file_close(src);
+		close(dst);
+    		}	
+    	}
+    }	
+
+
 
   
 }
@@ -370,7 +471,7 @@ bool OSVfsSftp::group (std::string file, std::string groupname, bool recursive)
 
 std::string OSVfsSftp::symlink (std::string path)
 {
-  
+  return "";
 }
 bool OSVfsSftp::symlink (std::string src, std::string dst)
 {
@@ -384,7 +485,7 @@ bool OSVfsSftp::hardlink (std::string src, std::string dst)
 
 int OSVfsSftp::quit (void)
 {
-    if(dirsftp)
+    if(sftp)
     ssh_disconnect(session);
     return 0;
 }
