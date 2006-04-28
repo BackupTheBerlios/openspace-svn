@@ -426,6 +426,12 @@
 							<command>unzip</command>
 					</commands>
 				</zip>
+				<x-zip>
+					<icon>mime-application-x-compressed-tar</icon>
+					<commands>
+							<command>unzip</command>
+					</commands>
+				</x-zip>				
 				<x-cd-image>
 					<icon>mime-application-x-cd-image</icon>
 				</x-cd-image>
@@ -619,6 +625,15 @@
 				</mode>
 			</properties>	
 		</ftp>
+		<sftp>
+			<type>network</type>
+			<style>small icons</style>
+			<properties>
+				<name>
+					<width>400</width>					
+				</name>
+			</properties>	
+		</sftp>
 		<search>
 			<type>search</type>
 			<style>small icons</style>

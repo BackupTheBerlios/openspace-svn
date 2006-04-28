@@ -1,4 +1,4 @@
-pkglib_LTLIBRARIES= libOSVfsLocal.la libOSVfsSearch.la libOSVfsArchive.la libOSVfsFtp.la   
+pkglib_LTLIBRARIES= libOSVfsLocal.la libOSVfsSearch.la libOSVfsArchive.la libOSVfsFtp.la    libOSVfsSftp.la
 pkglibdir=$(libdir)/openspace/plugins/filelist
 INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
 
@@ -11,6 +11,9 @@ libOSVfsArchive_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --li
 libOSVfsArchive_la_SOURCES =OSVfsArchive.cpp OSVfsArchive.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
 libOSVfsFtp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
 libOSVfsFtp_la_SOURCES =OSVfsFtp.cpp OSVfsFtp.h  pftp.cpp pftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSConfigure.h 
+
+libOSVfsSftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs` -lssh
+libOSVfsSftp_la_SOURCES =OSVfsSftp.cpp OSVfsSftp.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
 
 
 #libfilelistsftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
