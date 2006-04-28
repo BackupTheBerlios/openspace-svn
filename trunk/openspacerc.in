@@ -628,10 +628,18 @@
 		<sftp>
 			<type>network</type>
 			<style>small icons</style>
+			<headers>
+				<header>size</header>
+			</headers>
 			<properties>
 				<name>
 					<width>400</width>					
 				</name>
+				<size>
+					<width>80</width>
+					<display>MB</display>
+					<type>size</type>
+				</size>
 			</properties>	
 		</sftp>
 		<search>

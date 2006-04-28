@@ -54,7 +54,7 @@ class OSVfsSftp: public OSVirtualFileSystemBase
 {
 private:
 
-    
+    int fieldsnum;
     std::string dir;
     std::vector<std::string> fields;
     int copymove( OSThreadExec * te, bool copy = true );

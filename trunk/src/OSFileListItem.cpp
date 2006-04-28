@@ -286,11 +286,11 @@ FXint OSFileListItem::getHeight( const FXIconList* list ) const
         //=============CHANGES==========================================
         for ( int i = 0;i < osf.attrib.size();i++ )
         {
-            th = th + 4 + font1->getFontHeight();
+            th = th + 2 + font1->getFontHeight();
         }
         //=============CHANGES==========================================
 
-        if ( ih > th )
+        if ( ih + firstth > th )
             h = BIG_LINE_SPACING + ih + firstth + 4;
         else
             h = BIG_LINE_SPACING + th;

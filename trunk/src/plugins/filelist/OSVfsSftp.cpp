@@ -46,6 +46,7 @@ OSVirtualFileSystemInfo OSVfsSftp::setup (void)
 	OSVirtualFileSystemInfo v;
 	
 	v.vfsheaders.push_back(OSVirtualFileSystemHeader("name"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("size","size"));	
 	v.information="SFTP file list - default plugin";
 	v.version="1";
 	
@@ -57,6 +58,7 @@ int OSVfsSftp::init (long id, std::vector<std::string> *vector_name, OSPathType 
     this->id=id;
     fields = (*vector_name);
 
+    fieldsnum = vector_name->size ();
 
 
     dirsftp=NULL;
@@ -251,6 +253,29 @@ OSFile OSVfsSftp::osreaddir ()
 	os_file.type = FOLDER;
 	else
         os_file.type = 0;
+	
+	os_file.size=file->size;
+	
+	
+	
+	
+    for (int i = 0; i < fieldsnum - 1; i++)
+    {
+
+	if (fields[i + 1] == "size")
+	    os_file.attrib.push_back(numtostring (os_file.size));
+	
+
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
     
     //fxmessage("name=%s type=%x\n",file->name,file->permissions);
     
@@ -336,7 +361,7 @@ int OSVfsSftp::remove (OSThreadExec* te)
 
 int OSVfsSftp::rename (std::string orgname, std::string newname)
 {
-
+return sftp_rename(sftp,(char*)orgname.c_str(),(char*)newname.c_str());
 }
 
 
