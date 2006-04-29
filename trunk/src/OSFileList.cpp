@@ -519,7 +519,6 @@ string OSFileList::getfiletype (string name)
 
 string OSFileList::getfiledescription (string name)
 {
-
       string r;   
       r = magic_file(ms2, name.c_str());      
       return r;
@@ -2039,7 +2038,14 @@ long OSFileList::click (FXObject *, FXSelector, void *ptr)
     string inf = "selected: " + ntos (count) + " size: " + numtostring (size) + " ( "+ ntos(size) + " B )";
     if (count == 1)
     {
-    inf = inf + " type: "+getfiletype(os->osf.name) + "\n "+getfiledescription(os->osf.name)+ "  " + os->osf.name;
+    	   if(this->type=="local" || this->type=="search")
+           {
+           inf = inf + " type: "+getfiletype(os->osf.name) + "\n "+getfiledescription(os->osf.name)+ "  " + os->osf.name;
+	   }
+	   else
+	   {
+	   inf = inf + " type: "+getfiletype(os->osf.name) +" "+os->osf.name;
+	   }
     }
 
 

@@ -42,6 +42,7 @@ OSVirtualFileSystemInfo OSVfsLocal::setup (void)
 	v.vfsheaders.push_back(OSVirtualFileSystemHeader("size","size"));
 	v.vfsheaders.push_back(OSVirtualFileSystemHeader("owner"));
 	v.vfsheaders.push_back(OSVirtualFileSystemHeader("group"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("mode"));
 	v.vfsheaders.push_back(OSVirtualFileSystemHeader("accessed","date"));
 	v.vfsheaders.push_back(OSVirtualFileSystemHeader("modified","date"));
 	v.information="Local file list - default plugin";

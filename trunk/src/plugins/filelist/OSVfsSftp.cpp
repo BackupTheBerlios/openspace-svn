@@ -46,7 +46,10 @@ OSVirtualFileSystemInfo OSVfsSftp::setup (void)
 	OSVirtualFileSystemInfo v;
 	
 	v.vfsheaders.push_back(OSVirtualFileSystemHeader("name"));
-	v.vfsheaders.push_back(OSVirtualFileSystemHeader("size","size"));	
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("mode"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("size","size"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("accessed","date"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("modified","date"));	
 	v.information="SFTP file list - default plugin";
 	v.version="1";
 	
@@ -235,6 +238,17 @@ int OSVfsSftp::init (long id, std::vector<std::string> *vector_name, OSPathType 
     
 
 
+	if(sftp)
+	version=sftp->server_version;
+	
+	
+	char chstr[ 20 ] = { 0 };
+        sprintf ( chstr, "%d", version );
+	
+	string info="version " + string(chstr);
+	fxmessage("%s\n",info.c_str());
+
+
     return 0;
 }
 
@@ -264,6 +278,28 @@ OSFile OSVfsSftp::osreaddir ()
 
 	if (fields[i + 1] == "size")
 	    os_file.attrib.push_back(numtostring (os_file.size));
+	else if (fields[i + 1] == "accessed")
+	    os_file.attrib.push_back(FXFile::time ("%H:%M %d/%m/%y", file->atime).text());
+	else if (fields[i + 1] == "modified")
+ 	    os_file.attrib.push_back(FXFile::time ("%H:%M %d/%m/%y", file->mtime).text());  
+	else if (fields[i + 1] == "mode")
+	{
+
+	    std::string str = "---------";	 
+
+		(file->permissions & S_IRUSR) ? str[0] = 'r' : str[0] = '-';
+		(file->permissions & S_IWUSR) ? str[1] = 'w' : str[1] = '-';
+		(file->permissions & S_IXUSR) ? str[2] = 'x' : str[2] = '-';
+		(file->permissions & S_IRGRP) ? str[3] = 'r' : str[3] = '-';
+		(file->permissions & S_IWGRP) ? str[4] = 'w' : str[4] = '-';
+		(file->permissions & S_IXGRP) ? str[5] = 'x' : str[5] = '-';
+		(file->permissions & S_IROTH) ? str[6] = 'r' : str[6] = '-';
+		(file->permissions & S_IWOTH) ? str[7] = 'w' : str[7] = '-';
+		(file->permissions & S_IXOTH) ? str[8] = 'x' : str[8] = '-';
+
+	    os_file.attrib.push_back(str);
+
+	}
 	
 
     }
@@ -314,6 +350,7 @@ int OSVfsSftp::osopendir (std::string dir)
   
     //if(dirsftp)
     //sftp_dir_close(dirsftp);   
+
 
     
     /* opening a directory */
@@ -477,24 +514,21 @@ SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)path.c_str ());
 
     	if (file->name[0] != '.' || (file->name[1] != '\0' && (file->name[1] != '.' || file->name[2] != '\0')))
     	{
-
-    
+   
     		std::string filename = path;
 		filename.append ("/");
 		filename.append (file->name);
  
     	        totalsize (filename, size);
-
-	}	
+	}
+	
     }
    sftp_dir_close (dirsftp);
    }
   }
   else
   {
-  //fxmessage("%d\n",attr->size);
   size += (unsigned int) attr->size;
-  //fxmessage("total=%d\n",size);
   }    
  sftp_attributes_free(attr);
  }
@@ -504,12 +538,15 @@ SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)path.c_str ());
 
 std::string OSVfsSftp::info (void)
 {
-    return "";
+string info="";
+return info;
 }
 
 
 int OSVfsSftp::mode (std::string file)
 {
+    
+
     
 }
 
@@ -520,6 +557,17 @@ bool OSVfsSftp::mode (std::string file, unsigned int mod, bool recursive)
 
 std::string OSVfsSftp::owner (std::string file)
 {
+
+	SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)file.c_str ());
+        if(attr) 
+	{
+	string owner="";
+	//owner+=attr->owner;
+	//fxmessage(attr->uid);
+	sftp_attributes_free(attr);	
+	return owner;
+	}
+
 return "";   
 }
 std::string OSVfsSftp::group (std::string file)

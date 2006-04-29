@@ -61,6 +61,7 @@ private:
     SSH_SESSION *session;
     SFTP_SESSION *sftp;
     SFTP_DIR *dirsftp;
+    int version;
 
 public:
 

@@ -630,6 +630,8 @@
 			<style>small icons</style>
 			<headers>
 				<header>size</header>
+				<header>mode</header>
+				<header>modified</header>
 			</headers>
 			<properties>
 				<name>
@@ -640,6 +642,17 @@
 					<display>MB</display>
 					<type>size</type>
 				</size>
+				<accessed>
+					<width>100</width>
+					<type>date</type>
+				</accessed>
+				<modified>
+					<width>100</width>
+					<type>date</type>
+				</modified>
+				<mode>
+					<width>80</width>
+				</mode>
 			</properties>	
 		</sftp>
 		<search>
