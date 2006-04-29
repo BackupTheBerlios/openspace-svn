@@ -47,6 +47,8 @@ OSVirtualFileSystemInfo OSVfsSftp::setup (void)
 	
 	v.vfsheaders.push_back(OSVirtualFileSystemHeader("name"));
 	v.vfsheaders.push_back(OSVirtualFileSystemHeader("mode"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("owner"));
+	v.vfsheaders.push_back(OSVirtualFileSystemHeader("group"));
 	v.vfsheaders.push_back(OSVirtualFileSystemHeader("size","size"));
 	v.vfsheaders.push_back(OSVirtualFileSystemHeader("accessed","date"));
 	v.vfsheaders.push_back(OSVirtualFileSystemHeader("modified","date"));	
@@ -242,10 +244,7 @@ int OSVfsSftp::init (long id, std::vector<std::string> *vector_name, OSPathType 
 	version=sftp->server_version;
 	
 	
-	char chstr[ 20 ] = { 0 };
-        sprintf ( chstr, "%d", version );
-	
-	string info="version " + string(chstr);
+	string info="version " + ntos(version);
 	fxmessage("%s\n",info.c_str());
 
 
@@ -278,6 +277,10 @@ OSFile OSVfsSftp::osreaddir ()
 
 	if (fields[i + 1] == "size")
 	    os_file.attrib.push_back(numtostring (os_file.size));
+	else if (fields[i + 1] == "owner")
+	    os_file.attrib.push_back(ntos(file->uid));
+	else if (fields[i + 1] == "group")
+	    os_file.attrib.push_back(ntos(file->gid));       
 	else if (fields[i + 1] == "accessed")
 	    os_file.attrib.push_back(FXFile::time ("%H:%M %d/%m/%y", file->atime).text());
 	else if (fields[i + 1] == "modified")

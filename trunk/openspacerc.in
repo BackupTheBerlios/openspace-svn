@@ -627,10 +627,12 @@
 		</ftp>
 		<sftp>
 			<type>network</type>
-			<style>small icons</style>
+			<style>big icons</style>
 			<headers>
 				<header>size</header>
 				<header>mode</header>
+				<header>owner</header>
+				<header>group</header>
 				<header>modified</header>
 			</headers>
 			<properties>
@@ -653,6 +655,12 @@
 				<mode>
 					<width>80</width>
 				</mode>
+				<owner>
+					<width>80</width>
+				</owner>
+				<group>
+					<width>80</width>
+				</group>
 			</properties>	
 		</sftp>
 		<search>
