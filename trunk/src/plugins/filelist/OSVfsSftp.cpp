@@ -548,14 +548,28 @@ return info;
 
 int OSVfsSftp::mode (std::string file)
 {
-    
+  
+  SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)file.c_str ());
+        if(attr) 
+	{
+	return attr->permissions;
+	}  
 
     
 }
 
 bool OSVfsSftp::mode (std::string file, unsigned int mod, bool recursive)
 {
-   
+
+	SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)file.c_str ());
+        if(attr) 
+	{
+	attr->permissions=mod;
+	sftp_setstat(sftp,(char*)file.c_str (),attr);
+	sftp_attributes_free(attr);
+	}
+
+    
 }
 
 std::string OSVfsSftp::owner (std::string file)
@@ -564,9 +578,7 @@ std::string OSVfsSftp::owner (std::string file)
 	SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)file.c_str ());
         if(attr) 
 	{
-	string owner="";
-	//owner+=attr->owner;
-	//fxmessage(attr->uid);
+	string owner=ntos(attr->uid);
 	sftp_attributes_free(attr);	
 	return owner;
 	}
