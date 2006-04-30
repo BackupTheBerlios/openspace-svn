@@ -39,10 +39,21 @@ AC_CHECK_FUNCS([dup2 endgrent endpwent mkdir mkfifo rmdir strtoul])
 dnl Check for FOX
 AC_CHECK_LIB(FOX-1.4,fxfindfox,,AC_MSG_ERROR("libFOX-1.4 not found"))
 
+
 dnl Checks for FOX 1.4 header files.
 AC_HEADER_STDC
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(fox-1.4/fx.h,,AC_MSG_ERROR("fox-1.4/fx.h not found"))
+
+
+dnl Checks for libssh header files.
+AC_CHECK_HEADERS(libssh/sftp.h,,AC_MSG_ERROR("libssh/sftp.h not found"))
+
+dnl Checks for libmagic header files.
+AC_CHECK_HEADERS(magic.h,,AC_MSG_ERROR("magic.h not found"))
+
+
+
 
 AC_CHECK_PROG(FOX_CONFIG, fox-config,yes,no )
         if test "$FOX_CONFIG" = "no"
@@ -54,6 +65,8 @@ AC_CHECK_PROG(XML2_CONFIG, xml2-config,yes,no)
         then
                  AC_MSG_ERROR("xml2 library not found")
         fi
+
+
 
 
 AC_CONFIG_FILES([

@@ -492,7 +492,7 @@ string OSFileList::getfiletype (string name)
 
     string r;
     
-    if(!mime_magic)
+    if(!mime_magic || type!="local" || type!="search")
     {
       r = OSMimeType::getMimeFromName (name);      
     }
@@ -505,7 +505,8 @@ string OSFileList::getfiletype (string name)
        r=r.substr(0,n);
       }
       
-      if(r=="")
+      if(r=="" || r=="video/unknown" || r=="application/octet-stream" || r=="audio/X-HX-AAC-ADTS") // .serverauth.9710: video/unknown
+
       r = OSMimeType::getMimeFromName (name);
       
     } 
@@ -1825,10 +1826,10 @@ FXint OSFileList::cmp (const FXIconItem * pa, const FXIconItem * pb)
     }
     else if (fl->sort_nr == -1) //extension sorting
     {
-    string exta = OSFileList::getfiletype (a->getText ().text ());
+    string exta = fl->getfiletype (a->getText ().text ());
     if (exta == "")
         exta = "zzzzz";
-    string extb = OSFileList::getfiletype (b->getText ().text ());
+    string extb = fl->getfiletype (b->getText ().text ());
     if (exta == "")
         extb = "zzzzz";
 

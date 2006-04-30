@@ -116,7 +116,7 @@ private:
     string getdefaultcommand ( string name );
     string resolvecommand( string command, string name );
     int runCommand( string name );
-    static string getfiletype ( string name );
+    string getfiletype ( string name);
     static string getfiledescription ( string name );
     long setKeys ( void );
 

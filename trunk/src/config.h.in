@@ -34,9 +34,15 @@
 /* Define to 1 if you have the `FOX-1.4' library (-lFOX-1.4). */
 #undef HAVE_LIBFOX_1_4
 
+/* Define to 1 if you have the <libssh/sftp.h> header file. */
+#undef HAVE_LIBSSH_SFTP_H
+
 /* Define to 1 if `lstat' has the bug that it succeeds when given the
    zero-length file name argument. */
 #undef HAVE_LSTAT_EMPTY_STRING_BUG
+
+/* Define to 1 if you have the <magic.h> header file. */
+#undef HAVE_MAGIC_H
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
