@@ -492,12 +492,8 @@ string OSFileList::getfiletype (string name)
 
     string r;
     
-    if(!mime_magic || type!="local" || type!="search")
+    if(mime_magic && (type=="local" || type=="search"))
     {
-      r = OSMimeType::getMimeFromName (name);      
-    }
-    else
-    {	
       r = magic_file(ms, name.c_str());
       string::size_type n;
       if((n=r.find(";"))!=string::npos)
@@ -505,10 +501,14 @@ string OSFileList::getfiletype (string name)
        r=r.substr(0,n);
       }
       
-      if(r=="" || r=="video/unknown" || r=="application/octet-stream" || r=="audio/X-HX-AAC-ADTS") // .serverauth.9710: video/unknown
+      if(r=="" || r=="video/unknown" || r=="application/octet-stream" || r=="FFF6    0xFFF0          audio/X-HX-AAC-ADTS") // .serverauth.9710: video/unknown
 
-      r = OSMimeType::getMimeFromName (name);
-      
+      r = OSMimeType::getMimeFromName (name);    
+    }
+    else
+    {	
+     r = OSMimeType::getMimeFromName (name);
+ 
     } 
    //printf("Name: '%s' MimeType: '%s'\n", name.c_str(), r.c_str());
 
