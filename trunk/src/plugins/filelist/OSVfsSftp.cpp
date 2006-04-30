@@ -380,8 +380,12 @@ copymove(te,false);
 
 int OSVfsSftp::remove (OSThreadExec* te)
 {
+std::vector < std::string >::iterator iter;
 
-
+for ( iter = te->src.begin (); iter != te->src.end(); iter++ )
+        {
+	removeRecursive( *iter, te );	
+	}
 
 }
 
@@ -396,17 +400,45 @@ return sftp_rename(sftp,(char*)orgname.c_str(),(char*)newname.c_str());
 int OSVfsSftp::uploadFile (string from, string to, OSThreadExec* te)
 {
 
-fxmessage("from %s to %s\n",from.c_str(),to.c_str());
+//fxmessage("from %s to %s\n",from.c_str(),to.c_str());
 
 
 te->act_file_name=from;
 te->act_file_size=0;
 te->file_size=FXFile::size(from.c_str());
 
+
+fxmessage("TO=%s\n",to.c_str());
+
+SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)to.c_str ());
+
+	if (attr)
+	{
+	sftp_attributes_free(attr);
+	
+	    if (te->all == false)
+	    {
+
+		te->question = true;
+		while (te->answer != true)
+		    usleep (5000);
+		te->answer = false;
+
+	    }
+	    if (!te->overwrite)
+		return -1;	
+	    if (this->removeRecursive( to, te )==-1)
+		return -1;
+	}
+	
+
+	
+
+
 		SFTP_FILE *dst;
 		int src;
 		int len=1;
-    		char data[1024];
+    		char data[131072]; //128KB
 						
 		src=open(from.c_str(),O_RDONLY,NULL);
 		
@@ -416,7 +448,7 @@ te->file_size=FXFile::size(from.c_str());
 		
 		
 		
-			while((len=read(src,data,1024)) > 0)
+			while((len=read(src,data,131072)) > 0)
 			{
        				if(sftp_write(dst,data,len)!=len)
 				{
@@ -425,6 +457,8 @@ te->file_size=FXFile::size(from.c_str());
         			}
 			te->act_total_size+=len;
 			te->act_file_size+=len;
+			if ( te->cancel == true )
+        		return -1;
 			
 			}
 		sftp_file_close(dst);
@@ -436,10 +470,35 @@ te->file_size=FXFile::size(from.c_str());
 int OSVfsSftp::downloadFile (string from, string to, OSThreadExec* te)
 {
 
+te->act_file_name=from;
+te->act_file_size=0;
+
+
+if (FXFile::exists (to.c_str()))
+	{
+
+	    if (te->all == false)
+	    {
+
+		te->question = true;
+		while (te->answer != true)
+		    usleep (5000);
+		te->answer = false;
+
+	    }
+	    if (!te->overwrite)
+		return -1;	
+	    if (!OSFXFile::remove (to.c_str(), te))
+		return -1;
+	}
+
+
+
+
 		SFTP_FILE *src;
 		int dst;
 		int len=1;
-    		char data[1024];
+    		char data[131072]; //128KB
 		
     		src=sftp_open(sftp,(char*)from.c_str(),O_RDONLY,NULL);
 		if(src)
@@ -447,14 +506,17 @@ int OSVfsSftp::downloadFile (string from, string to, OSThreadExec* te)
 				
 		dst=open(to.c_str(),O_WRONLY | O_CREAT | O_TRUNC,S_IRUSR+S_IWUSR);
 		
-			while((len=sftp_read(src,data,1024)) > 0)
+			while((len=sftp_read(src,data,131072)) > 0)
 			{
        				if(write(dst,data,len)!=len)
 				{
             			ssh_say(0,"error writing %d bytes : %s\n",len,ssh_get_error(session));
             			return -1;
         			}
-		
+			te->act_total_size+=len;
+			te->act_file_size+=len;
+			if ( te->cancel == true )
+        		return -1;
 			}
 		sftp_file_close(src);
 		close(dst);
@@ -501,13 +563,20 @@ std::string::size_type pos = te->options.find ( "upload" );
     }
     else
     {
+    
+    
+    	for ( iter = te->src.begin (); iter != te->src.end(); iter++ )
+        {
+            totalsize ( *iter, size );
+        }
+
+        te->total_size = size;
+	
+    
     	for (iter = te->src.begin (); iter != te->src.end(); iter++)
   	{
-		
-		
-		//std::string ds = te->dst;
-	   	//ds.append (SEPARATOR);
-	  	//ds.append (FXFile::name (iter->c_str ()).text ());
+
+	goRecursive( *iter, te->dst, te );
 		
     	}
     }	
@@ -590,7 +659,7 @@ void OSVfsSftp::goLocalRecursive ( std::string path, std::string dstdir, OSThrea
 	dstdir = dstdir +"/"+ FXFile::name( path.c_str() ).text();
 	this->mkdir( FXFile::name( path.c_str() ).text(),0);
 
-	fxmessage("MKDIR = %s\n",dstdir.c_str());
+	//fxmessage("MKDIR = %s\n",dstdir.c_str());
 
         while ( ( dp = readdir ( dirp ) ) != NULL )
         {
@@ -617,6 +686,116 @@ void OSVfsSftp::goLocalRecursive ( std::string path, std::string dstdir, OSThrea
 
 }
 
+
+int OSVfsSftp::removeRecursive ( std::string path, OSThreadExec *te )
+{
+
+ if ( te->cancel == true )
+        return -1;
+int ret=0;
+
+SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)path.c_str ());
+SFTP_DIR *dirsftp;
+
+ if(attr) 
+ {
+  if((attr->permissions & S_IFMT) == S_IFDIR)
+  {
+
+  dirsftp=sftp_opendir(sftp,(char*)path.c_str());
+
+   if(dirsftp)
+   { 
+
+    SFTP_ATTRIBUTES *file;
+    
+    while(file=sftp_readdir(sftp,dirsftp))
+    {
+
+    	if (file->name[0] != '.' || (file->name[1] != '\0' && (file->name[1] != '.' || file->name[2] != '\0')))
+    	{
+   
+    		std::string filename = path;
+		filename.append ("/");
+		filename.append (file->name);
+ 
+    	        removeRecursive(filename,te);
+	}
+	
+    }
+   sftp_dir_close (dirsftp);
+   te->act_file_name=path;
+   ret=sftp_rmdir(sftp,(char*)path.c_str());  
+   }
+  }
+  else
+  {
+  te->act_file_name=path;
+  ret=sftp_rm(sftp,(char*)path.c_str());  
+  }    
+ sftp_attributes_free(attr);
+ } 
+ 
+return ret; 
+ 
+}
+
+
+void OSVfsSftp::goRecursive ( std::string path, std::string dstdir, OSThreadExec *te )
+{
+
+ if ( te->cancel == true )
+        return ;
+
+
+SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)path.c_str ());
+SFTP_DIR *dirsftp;
+
+ if(attr) 
+ {
+  if((attr->permissions & S_IFMT) == S_IFDIR)
+  {
+
+	dstdir = dstdir +"/"+ FXFile::name( path.c_str() ).text();
+	FXFile::createDirectory(dstdir.c_str(),0);
+
+	//fxmessage("X MKDIR = %s\n",dstdir.c_str());
+
+  dirsftp=sftp_opendir(sftp,(char*)path.c_str());
+
+   if(dirsftp)
+   { 
+
+    SFTP_ATTRIBUTES *file;
+    
+    while(file=sftp_readdir(sftp,dirsftp))
+    {
+
+    	if (file->name[0] != '.' || (file->name[1] != '\0' && (file->name[1] != '.' || file->name[2] != '\0')))
+    	{
+   
+    		std::string filename = path;
+		filename.append ("/");
+		filename.append (file->name);
+ 
+    	        goRecursive(filename,dstdir,te);
+	}
+	
+    }
+   sftp_dir_close (dirsftp);
+   }
+  }
+  else
+  {
+  te->file_size=attr->size;
+  
+  
+  	downloadFile(path,dstdir+"/"+string(FXFile::name (path.c_str()).text ()),te);
+  
+  }    
+ sftp_attributes_free(attr);
+ } 
+}
 
 
 

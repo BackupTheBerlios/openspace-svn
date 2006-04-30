@@ -88,6 +88,8 @@ public:
     void totalsize ( std::string path, unsigned long &size );
     void local_totalsize ( std::string path, unsigned long &size );
     void goLocalRecursive ( std::string path, std::string prefix, OSThreadExec *te );
+    void goRecursive ( std::string path, std::string prefix, OSThreadExec *te );
+    int removeRecursive ( std::string path, OSThreadExec *te );
     int  uploadFile (std::string from, std::string to, OSThreadExec* te);
     int  downloadFile (std::string from, std::string to, OSThreadExec* te);
     std::string getinitialdir( void );
