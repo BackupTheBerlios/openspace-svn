@@ -308,15 +308,6 @@ OSFile OSVfsSftp::osreaddir ()
     }
 	
 	
-	
-	
-	
-	
-	
-	
-	
-    
-    //fxmessage("name=%s type=%x\n",file->name,file->permissions);
     
     sftp_attributes_free(file);
     return os_file;
@@ -350,11 +341,6 @@ std::string OSVfsSftp::getinitialdir( void )
 
 int OSVfsSftp::osopendir (std::string dir)
 {
-  
-    //if(dirsftp)
-    //sftp_dir_close(dirsftp);   
-
-
     
     /* opening a directory */
   
@@ -388,7 +374,7 @@ copymove(te,true);
 
 int OSVfsSftp::move (OSThreadExec* te)
 {
-
+copymove(te,false);
 }
 
 
@@ -405,32 +391,26 @@ return sftp_rename(sftp,(char*)orgname.c_str(),(char*)newname.c_str());
 }
 
 
-int OSVfsSftp::copymove (OSThreadExec* te, bool copy)
+
+
+int OSVfsSftp::uploadFile (string from, string to, OSThreadExec* te)
 {
 
+fxmessage("from %s to %s\n",from.c_str(),to.c_str());
 
-std::vector < std::string >::iterator iter;
 
-std::string::size_type pos = te->options.find ( "upload" );
-    if ( pos == std::string::npos )
-    {
+te->act_file_name=from;
+te->act_file_size=0;
+te->file_size=FXFile::size(from.c_str());
 
-	for (iter = te->src.begin (); iter != te->src.end(); iter++)
-  	{
-	
-		
 		SFTP_FILE *dst;
 		int src;
 		int len=1;
     		char data[1024];
+						
+		src=open(from.c_str(),O_RDONLY,NULL);
 		
-		std::string ds = te->dst;
-	   	ds.append (SEPARATOR);
-	  	ds.append (FXFile::name (iter->c_str ()).text ());
-				
-		src=open(iter->c_str(),O_RDONLY,NULL);
-		
-    		dst=sftp_open(sftp,(char*)ds.c_str(),O_WRONLY|O_CREAT,NULL);
+    		dst=sftp_open(sftp,(char*)to.c_str(),O_WRONLY|O_CREAT,NULL);
 		if(dst)
 		{
 		
@@ -443,33 +423,29 @@ std::string::size_type pos = te->options.find ( "upload" );
             			ssh_say(0,"error writing %d bytes : %s\n",len,ssh_get_error(session));
             			return -1;
         			}
-		
+			te->act_total_size+=len;
+			te->act_file_size+=len;
+			
 			}
 		sftp_file_close(dst);
 		close(src);
     		}	
-	
-    
-    	}
-    }
-    else
-    {
-    	for (iter = te->src.begin (); iter != te->src.end(); iter++)
-  	{
+}
+
+
+int OSVfsSftp::downloadFile (string from, string to, OSThreadExec* te)
+{
+
 		SFTP_FILE *src;
 		int dst;
 		int len=1;
     		char data[1024];
 		
-    		src=sftp_open(sftp,(char*)iter->c_str(),O_RDONLY,NULL);
+    		src=sftp_open(sftp,(char*)from.c_str(),O_RDONLY,NULL);
 		if(src)
 		{
-		
-		std::string ds = te->dst;
-	   	ds.append (SEPARATOR);
-	  	ds.append (FXFile::name (iter->c_str ()).text ());
-		
-		dst=open(ds.c_str(),O_WRONLY | O_CREAT | O_TRUNC,S_IRUSR+S_IWUSR);
+				
+		dst=open(to.c_str(),O_WRONLY | O_CREAT | O_TRUNC,S_IRUSR+S_IWUSR);
 		
 			while((len=sftp_read(src,data,1024)) > 0)
 			{
@@ -482,7 +458,57 @@ std::string::size_type pos = te->options.find ( "upload" );
 			}
 		sftp_file_close(src);
 		close(dst);
-    		}	
+  		}	
+	
+}
+
+
+
+
+int OSVfsSftp::copymove (OSThreadExec* te, bool copy)
+{
+
+unsigned long size = 0;
+
+std::vector < std::string >::iterator iter;
+
+fxmessage(te->options.c_str());
+
+std::string::size_type pos = te->options.find ( "upload" );
+    if ( pos == std::string::npos )
+    {
+
+
+	for ( iter = te->src.begin (); iter != te->src.end(); iter++ )
+        {
+            std::string sr = ( *iter );
+            if ( FXFile::isDirectory ( sr.c_str () ) )
+                sr.append ( "/" );
+            local_totalsize ( sr, size );
+        }
+
+        te->total_size = size;
+
+
+	for (iter = te->src.begin (); iter != te->src.end(); iter++)
+  	{
+	
+	goLocalRecursive( *iter, this->dir, te );	
+		
+	
+    
+    	}
+    }
+    else
+    {
+    	for (iter = te->src.begin (); iter != te->src.end(); iter++)
+  	{
+		
+		
+		//std::string ds = te->dst;
+	   	//ds.append (SEPARATOR);
+	  	//ds.append (FXFile::name (iter->c_str ()).text ());
+		
     	}
     }	
 
@@ -496,9 +522,10 @@ std::string::size_type pos = te->options.find ( "upload" );
 void OSVfsSftp::totalsize (std::string path, unsigned long &size)
 {
 
-fxmessage("%s\n",path.c_str());
+//fxmessage("%s\n",path.c_str());
 
 SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)path.c_str ());
+SFTP_DIR *dirsftp;
 
  if(attr) 
  {
@@ -534,10 +561,126 @@ SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)path.c_str ());
   size += (unsigned int) attr->size;
   }    
  sftp_attributes_free(attr);
- }
+ } 
 
 
 }
+
+void OSVfsSftp::goLocalRecursive ( std::string path, std::string dstdir, OSThreadExec *te )
+{
+
+    if ( te->cancel == true )
+        return ;
+
+    if ( FXFile::isDirectory ( path.c_str () ) )
+    {
+        struct stat status;
+        struct dirent *dp;
+        DIR *dirp;
+
+        
+	
+        
+
+
+        dirp = opendir ( path.c_str () );
+	
+	this->dir=dstdir;
+	
+	dstdir = dstdir +"/"+ FXFile::name( path.c_str() ).text();
+	this->mkdir( FXFile::name( path.c_str() ).text(),0);
+
+	fxmessage("MKDIR = %s\n",dstdir.c_str());
+
+        while ( ( dp = readdir ( dirp ) ) != NULL )
+        {
+            if ( dp->d_name[ 0 ] != '.' || ( dp->d_name[ 1 ] != '\0' && ( dp->d_name[ 1 ] != '.' || dp->d_name[ 2 ] != '\0' ) ) )
+            {
+
+                std::string file = path + "/";
+                file.append ( dp->d_name );
+                goLocalRecursive( file, dstdir, te );
+            }
+        }
+
+        closedir ( dirp );
+    }
+    else
+    {
+        
+		std::string ds = dstdir;
+	   	ds.append (SEPARATOR);
+	  	ds.append (FXFile::name (path.c_str()).text ());
+		uploadFile(path,ds,te);
+
+    }
+
+}
+
+
+
+
+
+
+void OSVfsSftp::local_totalsize ( std::string path, unsigned long &size )
+{
+
+//fxmessage("%s\n",path.c_str());
+
+    if ( FXFile::isDirectory ( path.c_str () ) )
+    {
+        struct stat status;
+        struct dirent *dp;
+        DIR *dirp;
+
+
+        dirp = opendir ( path.c_str () );
+
+        while ( ( dp = readdir ( dirp ) ) != NULL )
+        {
+            if ( dp->d_name[ 0 ] != '.' || ( dp->d_name[ 1 ] != '\0' && ( dp->d_name[ 1 ] != '.' || dp->d_name[ 2 ] != '\0' ) ) )
+            {
+
+                std::string file = path;
+                file.append ( dp->d_name );
+#ifndef WIN32
+                lstat ( file.c_str (), &status );
+#else
+                stat ( file.c_str (), &status );
+#endif
+                if ( S_ISDIR ( status.st_mode ) )
+                {
+                    size = size + ( unsigned int ) status.st_size;
+                    file.append ( "/" );
+                    totalsize ( file, size );
+
+                }
+                else
+                {
+                    size = size + status.st_size;
+                }
+            }
+        }
+
+        closedir ( dirp );
+    }
+    else
+    {
+        size += FXFile::size ( path.c_str () );
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
 
 std::string OSVfsSftp::info (void)
 {
