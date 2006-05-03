@@ -116,20 +116,20 @@ int OSVfsSftp::init (long id, std::vector<std::string> *vector_name, OSPathType 
                 ssh_disconnect(session);
               return -1;
         case SSH_SERVER_NOT_KNOWN:
-            fprintf(stderr,"The server is unknown. Do you trust the host key ?\n");
+            //fprintf(stderr,"The server is unknown. Do you trust the host key ?\n");
             ssh_get_pubkey_hash(session,hash);
             ssh_print_hexa("Public key hash",(unsigned char*)hash,MD5_DIGEST_LEN);
-            fgets(buf,sizeof(buf),stdin);
-            if(strncasecmp(buf,"yes",3)!=0){
-                ssh_disconnect(session);
-                return -1;
-            }
-            fprintf(stderr,"This new key will be written on disk for further usage. do you agree ?\n");
-            fgets(buf,sizeof(buf),stdin);
-            if(strncasecmp(buf,"yes",3)==0){
+            //fgets(buf,sizeof(buf),stdin);
+            //if(strncasecmp(buf,"yes",3)!=0){
+            //   ssh_disconnect(session);
+            //   return -1;
+            //}
+            //fprintf(stderr,"This new key will be written on disk for further usage. do you agree ?\n");
+            //fgets(buf,sizeof(buf),stdin);
+            //if(strncasecmp(buf,"yes",3)==0){
                 if(ssh_write_knownhost(session))
                     fprintf(stderr,"error %s\n",ssh_get_error(session));
-            }
+           // }
             
             break;
         case SSH_SERVER_ERROR:
