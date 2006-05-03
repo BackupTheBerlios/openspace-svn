@@ -95,6 +95,7 @@ private:
     OSFile priv_osreaddir( std::map <std::string, OSFile> & filesMap, std::map <std::string, OSFile>::iterator & iter2 );
     void getRecursiveFiles( std::vector<std::string> src, unsigned long &size );
     void goLocalRecursive( std::string path, std::string prefix, OSThreadExec* te );
+    void chmodRecursive(std::string path, unsigned int mod);
     void local_totalsize( std::string path, unsigned long &size );
     int str_mode_int( std::string per );
 

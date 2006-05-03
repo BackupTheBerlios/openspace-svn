@@ -87,6 +87,8 @@ int OSVfsSftp::init (long id, std::vector<std::string> *vector_name, OSPathType 
       
     options_set_username(options,(char*)pt.user.c_str());
     options_set_host(options,(char*)pt.server.c_str());
+    if(pt.port!="")
+    options_set_port(options,atoi(pt.port.c_str()));
     session=ssh_connect(options);
     
     if(!session)
@@ -883,6 +885,9 @@ int OSVfsSftp::mode (std::string file)
 bool OSVfsSftp::mode (std::string file, unsigned int mod, bool recursive)
 {
 
+  if(!recursive)
+  {
+
 	SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)file.c_str ());
         if(attr) 
 	{
@@ -891,7 +896,68 @@ bool OSVfsSftp::mode (std::string file, unsigned int mod, bool recursive)
 	sftp_attributes_free(attr);
 	}
 
+  }
+  else
+  {
+  chmodRecursive(file,mod);
+  }
+
+
+
     
+}
+
+void OSVfsSftp::chmodRecursive(string path, unsigned int mod)
+{
+
+
+
+SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)path.c_str ());
+SFTP_DIR *dirsftp;
+
+ if(attr) 
+ {
+  if((attr->permissions & S_IFMT) == S_IFDIR)
+  {
+	
+  attr->permissions=mod;
+  sftp_setstat(sftp,(char*)path.c_str (),attr);	 
+  
+  dirsftp=sftp_opendir(sftp,(char*)path.c_str());
+
+   if(dirsftp)
+   { 
+
+    SFTP_ATTRIBUTES *file;
+    
+    while(file=sftp_readdir(sftp,dirsftp))
+    {
+
+    	if (file->name[0] != '.' || (file->name[1] != '\0' && (file->name[1] != '.' || file->name[2] != '\0')))
+    	{
+   
+    		std::string filename = path;
+		filename.append ("/");
+		filename.append (file->name);
+ 
+    	        chmodRecursive(filename,mod);
+	}
+	
+    }
+   sftp_dir_close (dirsftp);
+   }
+  }
+  else
+  {
+	attr->permissions=mod;
+	sftp_setstat(sftp,(char*)path.c_str (),attr);  
+  
+  }    
+ sftp_attributes_free(attr);
+ } 
+
+
+
 }
 
 std::string OSVfsSftp::owner (std::string file)
