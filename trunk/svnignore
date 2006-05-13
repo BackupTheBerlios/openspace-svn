@@ -11,9 +11,9 @@
 .deps
 .libs
 libtool
-openspacerc
+nao.conf
+nao
 tags
 Doxyfile
 Makefile
 Makefile.in
-openspace
