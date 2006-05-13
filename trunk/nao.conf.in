@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<OpenspaceConfig>
+<NaoConfig>
 	<version>@PACKAGE_VERSION@</version>
 	<path>@prefix@/share/@PACKAGE@/</path>
 	<icons_theme>default</icons_theme>
@@ -691,4 +691,4 @@
 	
 	
 	
-</OpenspaceConfig>
+</NaoConfig>

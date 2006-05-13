@@ -197,8 +197,8 @@ void OSMimeApp::save( std::string mime, std::string program )
 
         command_name += mime_major + "_" + mime_minor;
 
-        reg2 = conf->readonestring ( "/OpenspaceConfig/file_types/" + mime_major + "/default" );
-        std::string command_major = conf->readonestring ( "/OpenspaceConfig/commands/" + reg2 + "/exec" );
+        reg2 = conf->readonestring ( "/NaoConfig/file_types/" + mime_major + "/default" );
+        std::string command_major = conf->readonestring ( "/NaoConfig/commands/" + reg2 + "/exec" );
 
         if ( reg2.empty() || ( command_major != command_exec && reg2 != command_name ) )
         {
@@ -216,8 +216,8 @@ void OSMimeApp::save( std::string mime, std::string program )
     else // major mime type: audio,video,etc
     {
         command_name += mime;
-        std::string reg = conf->readonestring ( "/OpenspaceConfig/file_types/" + mime + "/default" );
-        std::string cmd = conf->readonestring ( "/OpenspaceConfig/commands/" + reg + "/exec" );
+        std::string reg = conf->readonestring ( "/NaoConfig/file_types/" + mime + "/default" );
+        std::string cmd = conf->readonestring ( "/NaoConfig/commands/" + reg + "/exec" );
 
         if ( reg.empty() || cmd != command_exec )
         {

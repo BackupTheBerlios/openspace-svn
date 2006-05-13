@@ -19,7 +19,7 @@
 //
 // C++ Implementation: OSThreadExec
 //
-// Author: Mateusz Dworak <http://openspace.linux.pl>, (C) 2005
+// Author: Mateusz Dworak <http://nao.linux.pl>, (C) 2005
 //
 // Description:
 //

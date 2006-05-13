@@ -131,19 +131,19 @@
 #define LSTAT_FOLLOWS_SLASHED_SYMLINK 1
 
 /* Name of package */
-#define PACKAGE "openspace"
+#define PACKAGE "nao"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "http://openspace.linux.pl"
+#define PACKAGE_BUGREPORT "http://nao.linux.pl"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "openspace"
+#define PACKAGE_NAME "nao"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "openspace 0.2.0"
+#define PACKAGE_STRING "nao 0.2.0"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "openspace"
+#define PACKAGE_TARNAME "nao"
 
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "0.2.0"

@@ -40,13 +40,13 @@ FXIMPLEMENT ( OSMainWindow, FXMainWindow, OSMainWindowMap, ARRAYNUMBER ( OSMainW
 
 
 //-----MAIN WINDOW---------------------------------------------------------------------------------------------------------------------------
-OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0, 0, 0, 0, 0)
+OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "nao file manager", NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0, 0, 0, 0, 0)
 {
     conf = new OSConfigure ();
 
     if ( conf->loadconfig() )
     {
-        if ( conf->readonestring ( "/OpenspaceConfig/version" ) == PACKAGE_VERSION )
+        if ( conf->readonestring ( "/NaoConfig/version" ) == PACKAGE_VERSION )
         {
 
 
@@ -58,72 +58,72 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             pref = NULL;
 	    lastId=0;
 
-            string fontdesc = conf->readonestring ( "/OpenspaceConfig/fonts/normalfont" );
+            string fontdesc = conf->readonestring ( "/NaoConfig/fonts/normalfont" );
             FXFont *font = new FXFont( getApp(), fontdesc.c_str() );
             font->create();
             getApp() ->setNormalFont( font );
 
 
-            getApp() ->setTypingSpeed( FXIntVal( conf->readonestring ( "/OpenspaceConfig/speed_delay/typing_speed" ).c_str () ) );
-            getApp() ->setClickSpeed( FXIntVal( conf->readonestring ( "/OpenspaceConfig/speed_delay/click_speed" ).c_str () ) );
-            getApp() ->setScrollSpeed( FXIntVal( conf->readonestring ( "/OpenspaceConfig/speed_delay/scroll_speed" ).c_str () ) );
-            getApp() ->setScrollDelay( FXIntVal( conf->readonestring ( "/OpenspaceConfig/speed_delay/scroll_delay" ).c_str () ) );
-            getApp() ->setBlinkSpeed( FXIntVal( conf->readonestring ( "/OpenspaceConfig/speed_delay/blink_speed" ).c_str () ) );
-            getApp() ->setAnimSpeed( FXIntVal( conf->readonestring ( "/OpenspaceConfig/speed_delay/anim_speed" ).c_str () ) );
-            getApp() ->setMenuPause( FXIntVal( conf->readonestring ( "/OpenspaceConfig/speed_delay/menu_pause" ).c_str () ) );
-            getApp() ->setTooltipPause( FXIntVal( conf->readonestring ( "/OpenspaceConfig/speed_delay/tooltip_pause" ).c_str () ) );
-            getApp() ->setTooltipTime( FXIntVal( conf->readonestring ( "/OpenspaceConfig/speed_delay/tooltip_time" ).c_str () ) );
-            getApp() ->setDragDelta( FXIntVal( conf->readonestring ( "/OpenspaceConfig/speed_delay/drag_delta" ).c_str () ) );
-            getApp() ->setWheelLines( FXIntVal( conf->readonestring ( "/OpenspaceConfig/speed_delay/wheel_lines" ).c_str () ) );
+            getApp() ->setTypingSpeed( FXIntVal( conf->readonestring ( "/NaoConfig/speed_delay/typing_speed" ).c_str () ) );
+            getApp() ->setClickSpeed( FXIntVal( conf->readonestring ( "/NaoConfig/speed_delay/click_speed" ).c_str () ) );
+            getApp() ->setScrollSpeed( FXIntVal( conf->readonestring ( "/NaoConfig/speed_delay/scroll_speed" ).c_str () ) );
+            getApp() ->setScrollDelay( FXIntVal( conf->readonestring ( "/NaoConfig/speed_delay/scroll_delay" ).c_str () ) );
+            getApp() ->setBlinkSpeed( FXIntVal( conf->readonestring ( "/NaoConfig/speed_delay/blink_speed" ).c_str () ) );
+            getApp() ->setAnimSpeed( FXIntVal( conf->readonestring ( "/NaoConfig/speed_delay/anim_speed" ).c_str () ) );
+            getApp() ->setMenuPause( FXIntVal( conf->readonestring ( "/NaoConfig/speed_delay/menu_pause" ).c_str () ) );
+            getApp() ->setTooltipPause( FXIntVal( conf->readonestring ( "/NaoConfig/speed_delay/tooltip_pause" ).c_str () ) );
+            getApp() ->setTooltipTime( FXIntVal( conf->readonestring ( "/NaoConfig/speed_delay/tooltip_time" ).c_str () ) );
+            getApp() ->setDragDelta( FXIntVal( conf->readonestring ( "/NaoConfig/speed_delay/drag_delta" ).c_str () ) );
+            getApp() ->setWheelLines( FXIntVal( conf->readonestring ( "/NaoConfig/speed_delay/wheel_lines" ).c_str () ) );
 
-            getApp() ->setBaseColor( fxcolorfromname( conf->readonestring ( "/OpenspaceConfig/colors/base" ).c_str() ) );
-            getApp() ->setBorderColor( fxcolorfromname( conf->readonestring ( "/OpenspaceConfig/colors/border" ).c_str() ) );
-            getApp() ->setForeColor( fxcolorfromname( conf->readonestring ( "/OpenspaceConfig/colors/fore" ).c_str() ) );
-            getApp() ->setHiliteColor( fxcolorfromname( conf->readonestring ( "/OpenspaceConfig/colors/hilite" ).c_str() ) );
-            getApp() ->setShadowColor( fxcolorfromname( conf->readonestring ( "/OpenspaceConfig/colors/shadow" ).c_str() ) );
-            getApp() ->setSelforeColor( fxcolorfromname( conf->readonestring ( "/OpenspaceConfig/colors/selfore" ).c_str() ) );
-            getApp() ->setSelbackColor( fxcolorfromname( conf->readonestring ( "/OpenspaceConfig/colors/selback" ).c_str() ) );
-            getApp() ->setTipforeColor( fxcolorfromname( conf->readonestring ( "/OpenspaceConfig/colors/tipfore" ).c_str() ) );
-            getApp() ->setTipbackColor( fxcolorfromname( conf->readonestring ( "/OpenspaceConfig/colors/tipback" ).c_str() ) );
-            getApp() ->setSelMenuTextColor( fxcolorfromname( conf->readonestring ( "/OpenspaceConfig/colors/selmenutext" ).c_str() ) );
-            getApp() ->setSelMenuBackColor( fxcolorfromname( conf->readonestring ( "/OpenspaceConfig/colors/selmenuback" ).c_str() ) );
+            getApp() ->setBaseColor( fxcolorfromname( conf->readonestring ( "/NaoConfig/colors/base" ).c_str() ) );
+            getApp() ->setBorderColor( fxcolorfromname( conf->readonestring ( "/NaoConfig/colors/border" ).c_str() ) );
+            getApp() ->setForeColor( fxcolorfromname( conf->readonestring ( "/NaoConfig/colors/fore" ).c_str() ) );
+            getApp() ->setHiliteColor( fxcolorfromname( conf->readonestring ( "/NaoConfig/colors/hilite" ).c_str() ) );
+            getApp() ->setShadowColor( fxcolorfromname( conf->readonestring ( "/NaoConfig/colors/shadow" ).c_str() ) );
+            getApp() ->setSelforeColor( fxcolorfromname( conf->readonestring ( "/NaoConfig/colors/selfore" ).c_str() ) );
+            getApp() ->setSelbackColor( fxcolorfromname( conf->readonestring ( "/NaoConfig/colors/selback" ).c_str() ) );
+            getApp() ->setTipforeColor( fxcolorfromname( conf->readonestring ( "/NaoConfig/colors/tipfore" ).c_str() ) );
+            getApp() ->setTipbackColor( fxcolorfromname( conf->readonestring ( "/NaoConfig/colors/tipback" ).c_str() ) );
+            getApp() ->setSelMenuTextColor( fxcolorfromname( conf->readonestring ( "/NaoConfig/colors/selmenutext" ).c_str() ) );
+            getApp() ->setSelMenuBackColor( fxcolorfromname( conf->readonestring ( "/NaoConfig/colors/selmenuback" ).c_str() ) );
 
-            string iconsdir = conf->readonestring ( "/OpenspaceConfig/path" ) + "icons/" + conf->readonestring ( "/OpenspaceConfig/icons_theme" );
+            string iconsdir = conf->readonestring ( "/NaoConfig/path" ) + "icons/" + conf->readonestring ( "/NaoConfig/icons_theme" );
 
             if ( !FXFile::exists( iconsdir.c_str() ) )
-                iconsdir = FXFile::getUserDirectory ( "" ).text () + string( "/.openspace/icons/" ) + conf->readonestring ( "/OpenspaceConfig/icons_theme" );
+                iconsdir = FXFile::getUserDirectory ( "" ).text () + string( "/.nao/icons/" ) + conf->readonestring ( "/NaoConfig/icons_theme" );
 
             iconsdir += string( "/" );
 
             loadicons( iconsdir );
 
 
-            string res = conf->readonestring ( "/OpenspaceConfig/version" );
-            FXTRACE ( ( 1, "\n openspace version %s\n\n", res.c_str () ) );
-            int w = atoi ( conf->readonestring ( "/OpenspaceConfig/mainwindow/width" ).c_str () );
-            int h = atoi ( conf->readonestring ( "/OpenspaceConfig/mainwindow/height" ).c_str () );
+            string res = conf->readonestring ( "/NaoConfig/version" );
+            FXTRACE ( ( 1, "\n nao version %s\n\n", res.c_str () ) );
+            int w = atoi ( conf->readonestring ( "/NaoConfig/mainwindow/width" ).c_str () );
+            int h = atoi ( conf->readonestring ( "/NaoConfig/mainwindow/height" ).c_str () );
             resize ( w, h );
 
             // read icons for file types
-            if ( conf->openxpath ( "/OpenspaceConfig/file_types" ) != -1 )
+            if ( conf->openxpath ( "/NaoConfig/file_types" ) != -1 )
             {
                 string res;
                 while ( conf->getnextnode ( res ) )
                 {
-                    loadMimeSettings ( "/OpenspaceConfig/file_types/" + res, res );
+                    loadMimeSettings ( "/NaoConfig/file_types/" + res, res );
                     OSConfigure conflocal = *conf;
-                    if ( conflocal.openxpath ( "/OpenspaceConfig/file_types/" + res + "/types" ) != -1 )
+                    if ( conflocal.openxpath ( "/NaoConfig/file_types/" + res + "/types" ) != -1 )
                     {
                         string res2;
                         while ( conflocal.getnextnode ( res2 ) )
                         {
-                            loadMimeSettings ( "/OpenspaceConfig/file_types/" + res + "/types/" + res2, res + "/" + res2 );
+                            loadMimeSettings ( "/NaoConfig/file_types/" + res + "/types/" + res2, res + "/" + res2 );
                         }
                     }
                 }
             }
 
-    	    if ( conf->readonestring ( "/OpenspaceConfig/panels" ) == "single" )
+    	    if ( conf->readonestring ( "/NaoConfig/panels" ) == "single" )
                 ratio = 0;
             else
                 ratio = 1.0 / 2.0;
@@ -165,15 +165,15 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             new FXButton ( toolbar, "\tabout", objmanager->osicons[ "about" ], this, OSMainWindow::ID_ABOUT,FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
             toolbar->dock( rightdock );
 
-            string dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/leftdir/dir" ) );
-            string type = conf->readonestring ( "/OpenspaceConfig/leftdir/type" );
+            string dir = parseDir ( conf->readonestring ( "/NaoConfig/leftdir/dir" ) );
+            string type = conf->readonestring ( "/NaoConfig/leftdir/type" );
             OSPathType pt ( dir, type );
             left_frame = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock,lastId++,this);
 	    OSFrameMap[lastId]=left_frame;
 	    	   
          
-            dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/rightdir/dir" ) );
-            type = conf->readonestring ( "/OpenspaceConfig/rightdir/type" );
+            dir = parseDir ( conf->readonestring ( "/NaoConfig/rightdir/dir" ) );
+            type = conf->readonestring ( "/NaoConfig/rightdir/type" );
             OSPathType pt2 ( dir, type );
             right_frame = new OSFrame (controlframe, rightframe, pt2, this,topdock,rightdock,lastId++,this);
 	    OSFrameMap[lastId]=right_frame;
@@ -186,9 +186,9 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
             searchframe = NULL;
             getApp () ->addTimeout ( this, ID_TIMER, 200 );
 
-            if ( conf->readonestring ( "/OpenspaceConfig/first_run" ) == "true" )
+            if ( conf->readonestring ( "/NaoConfig/first_run" ) == "true" )
             {
-                conf->saveonestring ( "/OpenspaceConfig/first_run", "false" );
+                conf->saveonestring ( "/NaoConfig/first_run", "false" );
 
                 OSFirstRunDialogBox* first_run;
                 first_run = new OSFirstRunDialogBox( this );
@@ -198,7 +198,7 @@ OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "openspace", NULL, 
         else
         {
             new FXLabel( this, "Configuration file version mismatch" );
-            new FXLabel( this, "Please remove .openspace/openspacerc file in your home directory" );
+            new FXLabel( this, "Please remove .nao/nao.conf file in your home directory" );
             conf->loadconfig( true );
             delete conf;
             conf = NULL;
@@ -235,9 +235,9 @@ long OSMainWindow::onOpenConfigure ( FXObject * sender, FXSelector sel, void * )
 long OSMainWindow::onAbout ( FXObject * sender, FXSelector sel, void * )
 {
 
-    string msg = "Openspace File Browser " + string( PACKAGE_VERSION ) + "\n\nby Mateusz Dworak (http://openspace.linux.pl)\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org) \n\nDefault icon set: Gnome-mix";
+    string msg = "nao file manager " + string( PACKAGE_VERSION ) + "\n\nby Mateusz Dworak (http://nao.linux.pl)\n\nUsing the FOX C++ GUI Library (http://www.fox-tookit.org) \n\nDefault icon set: Gnome-mix";
 
-    FXMessageBox about ( this, "About Openspace", msg.c_str(), objmanager->osicons[ "foxbig" ], MBOX_OK | DECOR_TITLE | DECOR_BORDER );
+    FXMessageBox about ( this, "About nao file manager", msg.c_str(), objmanager->osicons[ "foxbig" ], MBOX_OK | DECOR_TITLE | DECOR_BORDER );
     about.execute ();
 }
 
@@ -255,8 +255,8 @@ long OSMainWindow::onNewFrame ( FXObject * sender, FXSelector, void *ptr )
     string str_port;
     if ( networkframe == NULL && searchframe == NULL )
     {
-        dir = parseDir ( conf->readonestring ( "/OpenspaceConfig/defaultdir/dir" ) );
-        type = conf->readonestring ( "/OpenspaceConfig/defaultdir/type" );
+        dir = parseDir ( conf->readonestring ( "/NaoConfig/defaultdir/dir" ) );
+        type = conf->readonestring ( "/NaoConfig/defaultdir/type" );
     }
     else
     {
@@ -331,12 +331,12 @@ long OSMainWindow::onNewNetworkFrame ( FXObject * sender, FXSelector, void * )
                                                 FRAME_THICK | LAYOUT_SIDE_TOP | COMBOBOX_STATIC );
 
         int count = 0;
-        if ( conf->openxpath ( "/OpenspaceConfig/filelist" ) != -1 )
+        if ( conf->openxpath ( "/NaoConfig/filelist" ) != -1 )
         {
             string res;
             while ( conf->getnextnode ( res ) )
             {
-                string filelist_type = conf->readonestring ( "/OpenspaceConfig/filelist/" + res + "/type" );
+                string filelist_type = conf->readonestring ( "/NaoConfig/filelist/" + res + "/type" );
 
                 if ( filelist_type == "network" )
                 {
@@ -413,7 +413,7 @@ void OSMainWindow::create ()
     FXMainWindow::create ();
     string position;
     if ( conf )
-        position = conf->readonestring ( "/OpenspaceConfig/position" );
+        position = conf->readonestring ( "/NaoConfig/position" );
 
     if ( position == "cursor" )
         show ( PLACEMENT_CURSOR );
@@ -649,7 +649,7 @@ long OSMainWindow::onTimer ( FXObject *, FXSelector, void * )
 
                 else if ( telem->command == "execute" )
                 {
-                    string show_commands = conf->readonestring ( "/OpenspaceConfig/show_commands" );
+                    string show_commands = conf->readonestring ( "/NaoConfig/show_commands" );
                     if ( show_commands == "true" )
                     {
                         FXFont * font = new FXFont ( getApp (), "Arial", 8 );
@@ -907,7 +907,7 @@ void OSMainWindow::loadSpecialIcon (string icondir, string type, int nr )
 {
 FXIconSource *source = new FXIconSource ( getApp () );
 FXString fil = icondir.c_str();
-FXString name = fil + conf->readonestring ( "/OpenspaceConfig/file_types/COMMON/types/"+type+"/icon" ).c_str() + ".png";
+FXString name = fil + conf->readonestring ( "/NaoConfig/file_types/COMMON/types/"+type+"/icon" ).c_str() + ".png";
 
     objmanager->specialicons[ nr ] = source->loadIcon ( name );
     if ( objmanager->specialicons[ nr ] )

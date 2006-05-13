@@ -55,7 +55,7 @@ public:
             string newname = dir + SEPARATOR + vec[ i ] ->getText ().text ();
             string newonlyname = vec[ i ] ->getText ().text ();
 
-            string destdir = "/tmp/openspace";
+            string destdir = "/tmp/nao";
             string filename = FXFile::name( iter->c_str() ).text();
             string dirname = FXFile::directory( iter->c_str() ).text();
 

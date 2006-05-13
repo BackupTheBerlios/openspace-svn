@@ -1,5 +1,5 @@
 pkglib_LTLIBRARIES=libOSMkdir.la libOSAccess.la libOSRename.la libOSClone.la libOSSymlink.la libOSEditSymlink.la libOSCompress.la libOSMd5sum.la
-pkglibdir=$(libdir)/openspace/plugins/cmddialog
+pkglibdir=$(libdir)/nao/plugins/cmddialog
 INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
 
 libOSMkdir_la_SOURCES =OSMkdir.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 

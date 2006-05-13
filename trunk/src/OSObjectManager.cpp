@@ -19,7 +19,7 @@
 //
 // C++ Implementation: OSObjectManager
 //
-// Author: Mateusz Dworak <http://openspace.linux.pl>, (C) 2005
+// Author: Mateusz Dworak <http://nao.linux.pl>, (C) 2005
 //
 // Description:
 //
@@ -44,16 +44,16 @@ OSObjectManager::OSObjectManager( FXApp *app )
 {
     //... perform necessary instance initializations
 
-    captionfont1 = new FXFont( app, conf->readonestring ( "/OpenspaceConfig/fonts/captionfont1" ).c_str() );
+    captionfont1 = new FXFont( app, conf->readonestring ( "/NaoConfig/fonts/captionfont1" ).c_str() );
     captionfont1->create ();
 
-    captionfont2 = new FXFont( app, conf->readonestring ( "/OpenspaceConfig/fonts/captionfont2" ).c_str() );
+    captionfont2 = new FXFont( app, conf->readonestring ( "/NaoConfig/fonts/captionfont2" ).c_str() );
     captionfont2->create ();
 
-    captionfont3 = new FXFont( app, conf->readonestring ( "/OpenspaceConfig/fonts/captionfont3" ).c_str() );
+    captionfont3 = new FXFont( app, conf->readonestring ( "/NaoConfig/fonts/captionfont3" ).c_str() );
     captionfont3->create ();
 
-    maincolor = fxcolorfromname( conf->readonestring ( "/OpenspaceConfig/colors/main" ).c_str() );
+    maincolor = fxcolorfromname( conf->readonestring ( "/NaoConfig/colors/main" ).c_str() );
 
     key_map[ "a" ] = 0x0061;
     key_map[ "b" ] = 0x0062;

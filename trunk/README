@@ -1,5 +1,5 @@
 INTRODUCTION
-Openspace is a graphical file manager.
+Nao File Manager
 To compile this program you need 
 *FOX toolkit library in version 1.4.x http://fox-toolkit.org
 *libpng
@@ -22,6 +22,6 @@ without ANY form of warranty.
 AUTHOR
 Mateusz Dworak aka compbatant - age 22, live and study in Poland, city: Lodz.
 
-Websites: http://openspace.linux.pl and http://navynos.linux.pl
-Project website: https://developer.berlios.de/projects/openspace/
+Websites: http://nao.linux.pl and http://navynos.linux.pl
+Project website: https://developer.berlios.de/projects/nao/
 

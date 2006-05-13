@@ -19,7 +19,7 @@
 //
 // C++ Implementation: OSFileTypeInfo
 //
-// Author: Mateusz Dworak <http://openspace.linux.pl>, (C) 2005
+// Author: Mateusz Dworak <http://nao.linux.pl>, (C) 2005
 //
 // Description:
 //
@@ -52,11 +52,11 @@ bool OSFileTypeInfo::load( std::string name )
     {
         mime_major = name.substr( 0, pos );
         mime_minor = name.substr( pos + 1 );
-        path = "/OpenspaceConfig/file_types/" + mime_major + "/types/" + mime_minor;
+        path = "/NaoConfig/file_types/" + mime_major + "/types/" + mime_minor;
     }
     else
     {
-        path = "/OpenspaceConfig/file_types/" + name;
+        path = "/NaoConfig/file_types/" + name;
     }
 
     command = conf->readonestring ( path + "/default" );
@@ -94,33 +94,33 @@ void OSFileTypeInfo::save( void )
         mime_major = name.substr( 0, pos );
         mime_minor = name.substr( pos + 1 );
         std::string ret;
-        if ( conf->readonestring ( "/OpenspaceConfig/file_types/" + mime_major, ret ) == false )
+        if ( conf->readonestring ( "/NaoConfig/file_types/" + mime_major, ret ) == false )
         {
-            conf->addstring ( "/OpenspaceConfig/file_types", mime_major, "" );
+            conf->addstring ( "/NaoConfig/file_types", mime_major, "" );
         }
 
-        if ( conf->readonestring ( "/OpenspaceConfig/file_types/" + mime_major + "/types", ret ) == false )
+        if ( conf->readonestring ( "/NaoConfig/file_types/" + mime_major + "/types", ret ) == false )
         {
-            conf->addstring ( "/OpenspaceConfig/file_types/" + mime_major , "types", "" );
+            conf->addstring ( "/NaoConfig/file_types/" + mime_major , "types", "" );
         }
 
-        if ( conf->readonestring ( "/OpenspaceConfig/file_types/" + mime_major + "/types/" + mime_minor, ret ) == false )
+        if ( conf->readonestring ( "/NaoConfig/file_types/" + mime_major + "/types/" + mime_minor, ret ) == false )
         {
-            conf->addstring ( "/OpenspaceConfig/file_types/" + mime_major + "/types" , mime_minor, "" );
+            conf->addstring ( "/NaoConfig/file_types/" + mime_major + "/types" , mime_minor, "" );
         }
 
-        path = "/OpenspaceConfig/file_types/" + mime_major + "/types/" + mime_minor;
+        path = "/NaoConfig/file_types/" + mime_major + "/types/" + mime_minor;
 
     }
     else  // major mime type: audio,video,etc
     {
         std::string ret;
-        if ( conf->readonestring ( "/OpenspaceConfig/file_types/" + name, ret ) == false )
+        if ( conf->readonestring ( "/NaoConfig/file_types/" + name, ret ) == false )
         {
-            conf->addstring ( "/OpenspaceConfig/file_types/" , name, "" );
+            conf->addstring ( "/NaoConfig/file_types/" , name, "" );
         }
 
-        path = "/OpenspaceConfig/file_types/" + name;
+        path = "/NaoConfig/file_types/" + name;
     }
 
     if ( !command.empty() )

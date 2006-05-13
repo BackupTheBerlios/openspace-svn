@@ -19,7 +19,7 @@
 //
 // C++ Implementation: $MODULE$
 //
-// Author: Mateusz Dworak <http://openspace.linux.pl>, (C) 2005
+// Author: Mateusz Dworak <http://nao.linux.pl>, (C) 2005
 //
 // Description:
 //
@@ -54,15 +54,15 @@ int main ( int argc, char **argv )
         }
     }
 
-    string tmpdir = "/tmp/openspace";
+    string tmpdir = "/tmp/nao";
     if ( !FXFile::exists( tmpdir.c_str() ) )
     {
         FXFile::createDirectory( tmpdir.c_str(), 493 );
     }
 
     string dir = FXFile::getUserDirectory ( "" ).text ();
-    dir = dir + "/.openspace";
-    string file = dir + "/openspacerc";
+    dir = dir + "/.nao";
+    string file = dir + "/nao.conf";
 
     if ( !FXFile::exists( file.c_str() ) )
     {
@@ -77,11 +77,11 @@ int main ( int argc, char **argv )
         FXFile::createDirectory( dir2.c_str(), 493 );
 
 
-        string src = PATH_CFG + string( "/openspacerc" );
+        string src = PATH_CFG + string( "/nao.conf" );
         FXFile::copy( src.c_str(), file.c_str() );
     }
     fxTraceLevel = 0;
-    FXApp *application = new FXApp ( "openspace", NULL );
+    FXApp *application = new FXApp ( "nao", NULL );
     application->init ( argc, argv );
 
     new OSMainWindow ( application );

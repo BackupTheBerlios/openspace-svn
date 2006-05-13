@@ -19,7 +19,7 @@
 //
 // C++ Implementation: OSFirstRunDialogBox
 //
-// Author: Mateusz Dworak <http://openspace.linux.pl>, (C) 2005
+// Author: Mateusz Dworak <http://nao.linux.pl>, (C) 2005
 //
 // Description:
 //
@@ -88,7 +88,7 @@ long OSFirstRunDialogBox::onConfigure( FXObject * sender, FXSelector sel, void *
 
     }
     
-    FXMessageBox about( this, "restart", "restart openspace to apply changes",
+    FXMessageBox about( this, "restart", "restart nao to apply changes",
                         NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER );
     about.execute();
 }

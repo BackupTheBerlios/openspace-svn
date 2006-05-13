@@ -19,7 +19,7 @@
 //
 // C++ Implementation: OSFileList
 //
-// Author: Mateusz Dworak <http://openspace.linux.pl>, (C) 2005
+// Author: Mateusz Dworak <http://nao.linux.pl>, (C) 2005
 //
 // Description:
 //
@@ -159,13 +159,13 @@ this->id=id;
     popupmenu = NULL;
     sortpop = NULL;
 
-    icons_size=atoi(conf->readonestring ("/OpenspaceConfig/icon_size").c_str());   
-    if(conf->readonestring ("/OpenspaceConfig/show_hidden_files")=="true")
+    icons_size=atoi(conf->readonestring ("/NaoConfig/icon_size").c_str());   
+    if(conf->readonestring ("/NaoConfig/show_hidden_files")=="true")
     show_hidden_files=true;
     else
     show_hidden_files=false;
 
-    if(conf->readonestring ("/OpenspaceConfig/mime_magic")=="true")
+    if(conf->readonestring ("/NaoConfig/mime_magic")=="true")
     mime_magic=true;
     else
     mime_magic=false;
@@ -185,11 +185,11 @@ this->id=id;
 
     if (type == "local")
     {
-    string size = conf->readonestring ("/OpenspaceConfig/filelist/local/thumbs/size");
+    string size = conf->readonestring ("/NaoConfig/filelist/local/thumbs/size");
     thumb_size = atoi (size.c_str ());
     }
 
-    string style = conf->readonestring ("/OpenspaceConfig/filelist/" + this->type + "/style");
+    string style = conf->readonestring ("/NaoConfig/filelist/" + this->type + "/style");
     if (style == "big icons")
     {
     this->setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
@@ -222,7 +222,7 @@ this->id=id;
 int command_num=0;
 
 
- if(conf->openxpath("/OpenspaceConfig/toolbars")!=-1)
+ if(conf->openxpath("/NaoConfig/toolbars")!=-1)
            {
            string commandstr;
              while(conf->getnextnode(commandstr))
@@ -232,7 +232,7 @@ int command_num=0;
          
          OSConfigure conflocal=*conf;      
          
-          if(conflocal.openxpath("/OpenspaceConfig/toolbars/"+commandstr+"/command")!=-1)
+          if(conflocal.openxpath("/NaoConfig/toolbars/"+commandstr+"/command")!=-1)
               {
              string res;
                  while(conflocal.getnextstring(res))
@@ -253,12 +253,12 @@ int command_num=0;
             }
             else
             {
-            string name=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/icon");
+            string name=conf->readonestring ("/NaoConfig/commands/"+res+"/icon");
                 if(name=="")
                 new FXButton (toolb, res.c_str (), NULL, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
                 else
                 {
-                string cmd_txt=conf->readonestring ("/OpenspaceConfig/commands/"+res+"/text");
+                string cmd_txt=conf->readonestring ("/NaoConfig/commands/"+res+"/text");
                 if(cmd_txt=="")
                 cmd_txt=res;
                 cmd_txt="\t"+cmd_txt;
@@ -277,7 +277,7 @@ int command_num=0;
            }     
 
 
-if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
+if (conf->openxpath ("/NaoConfig/button_commands/command") != -1)
     {
 
     string res;
@@ -293,12 +293,12 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     transform (firstLetter.begin(),firstLetter.end(), firstLetter.begin(), ::toupper);
 
     string pluginName="libOSVfs"+firstLetter+this->type.substr(1,this->type.length()-1);
-    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/filelist/" +pluginName + ".so";
+    string plugin_path = string(PATH_LIBDIR) + "/nao/plugins/filelist/" +pluginName + ".so";
 
 
     if(!FXFile::exists(plugin_path.c_str()))
     {
-    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/filelist/")+ pluginName + ".so";
+    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.nao/plugins/filelist/")+ pluginName + ".so";
     }
 
     void *dllhandle = fxdllOpen (plugin_path.c_str ());
@@ -325,7 +325,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
     vector_name.push_back ("name");
     string wi;
 
-    if ((wi = conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/name/width")) != "")
+    if ((wi = conf->readonestring ("/NaoConfig/filelist/"+type+"/properties/name/width")) != "")
     vector_width.push_back (atoi (wi.c_str ()));
     else
     vector_width.push_back (100);
@@ -335,16 +335,16 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
     int counter = 1;
 
-   // display_size = conf->readonestring ("/OpenspaceConfig/OSFileList/"+type+"/properties/name/display");
+   // display_size = conf->readonestring ("/NaoConfig/OSFileList/"+type+"/properties/name/display");
 
-    if (conf->openxpath ("/OpenspaceConfig/filelist/"+type+"/headers/header") != -1)
+    if (conf->openxpath ("/NaoConfig/filelist/"+type+"/headers/header") != -1)
     {
     string res;
     while (conf->getnextstring (res))
     {
 
 
-        if ((wi = conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/" + res + "/width")) != "")
+        if ((wi = conf->readonestring ("/NaoConfig/filelist/"+type+"/properties/" + res + "/width")) != "")
         vector_width.push_back (atoi (wi.c_str ()));
         else
         vector_width.push_back (40);
@@ -352,7 +352,7 @@ if (conf->openxpath ("/OpenspaceConfig/button_commands/command") != -1)
 
         vector_name.push_back (res);
 
-        string fieldtype=conf->readonestring ("/OpenspaceConfig/filelist/"+type+"/properties/" + res + "/type");
+        string fieldtype=conf->readonestring ("/NaoConfig/filelist/"+type+"/properties/" + res + "/type");
                 
         if (fieldtype == "size")
         vector_type.push_back (1);
@@ -470,13 +470,13 @@ string OSFileList::getdefaultcommand (string name)
     {
     string str = "/types/";
     ext = ext.replace (ext.find ("/"), 1, str);
-    key = conf->readonestring ("/OpenspaceConfig/file_types/" + ext + "/default");
+    key = conf->readonestring ("/NaoConfig/file_types/" + ext + "/default");
     }
 
     if (key == "")
     {
     ext = ext.substr (0, ext.find ("/"));
-    key = conf->readonestring ("/OpenspaceConfig/file_types/" + ext + "/default");
+    key = conf->readonestring ("/NaoConfig/file_types/" + ext + "/default");
     }
 
 
@@ -532,7 +532,7 @@ string OSFileList::resolvecommand(string command,string name)
 {
 string res;
     if (command != "")
-        res = conf->readonestring ("/OpenspaceConfig/commands/" + command + "/exec");
+        res = conf->readonestring ("/NaoConfig/commands/" + command + "/exec");
     else
         return "";
 
@@ -553,7 +553,7 @@ string res;
         fullname = "\"" + returnpath(name) + "\"";
     else
     {
-        fullname = "\"/tmp/openspace/" + name + "\"";
+        fullname = "\"/tmp/nao/" + name + "\"";
     }   
     
     int pos = res.find ("{f}");
@@ -599,14 +599,14 @@ long OSFileList::setKeys (void)
 {
 FXAccelTable *table = getShell ()->getAccelTable ();
 int counter=0;
-    if (conf->openxpath ("/OpenspaceConfig/commands") != -1)
+    if (conf->openxpath ("/NaoConfig/commands") != -1)
       {
         string res;
         while (conf->getnextnode (res))
         {
         OSConfigure conflocal = *conf;
-        string key = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/key");
-        string key_mask = conflocal.readonestring ("/OpenspaceConfig/commands/" + res + "/key_mask");
+        string key = conflocal.readonestring ("/NaoConfig/commands/" + res + "/key");
+        string key_mask = conflocal.readonestring ("/NaoConfig/commands/" + res + "/key_mask");
             if(key!="")
             {
             unsigned int mask=0;
@@ -747,8 +747,8 @@ bool OSFileList::openDir (string dir)
     
     if (os_file.type & FOLDER)
     {
-        color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/dir/color"));
-        backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/dir/backcolor"));
+        color = readcolor (conf->readonestring ("/NaoConfig/file_types/COMMON/types/dir/color"));
+        backcolor = readcolor2 (conf->readonestring ("/NaoConfig/file_types/COMMON/types/dir/backcolor"));
         icon = specialicons[0];
     }
     else
@@ -781,8 +781,8 @@ bool OSFileList::openDir (string dir)
         {
       
         icon = specialicons[1];
-        color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/color"));
-        backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/backcolor"));
+        color = readcolor (conf->readonestring ("/NaoConfig/file_types/COMMON/types/all/color"));
+        backcolor = readcolor2 (conf->readonestring ("/NaoConfig/file_types/COMMON/types/all/backcolor"));
         }
         
         string graphtype=ext.substr(0,5);
@@ -813,8 +813,8 @@ bool OSFileList::openDir (string dir)
 
     if (os_file.type & EXECUTABLE && !(os_file.type & FOLDER))
     {
-        color = readcolor (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/executable/color"));
-        backcolor = readcolor2 (conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/executable/backcolor"));
+        color = readcolor (conf->readonestring ("/NaoConfig/file_types/COMMON/types/executable/color"));
+        backcolor = readcolor2 (conf->readonestring ("/NaoConfig/file_types/COMMON/types/executable/backcolor"));
     }
 
 
@@ -932,7 +932,7 @@ void *OSFileList::thread_func (void *data)
         if(((OSFileList*)el->filel)->type!="local")
         {
         tmpdir=FXFile::time ("%S%H%M%d%m%y", FXFile::now()).text ();
-        destdir=string("/tmp/openspace/") + tmpdir;
+        destdir=string("/tmp/nao/") + tmpdir;
         FXFile::createDirectory(destdir.c_str(),0);
         }
         
@@ -1050,7 +1050,7 @@ int OSFileList::runCommand(string command)
 {
 
 
-string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command + "/type");
+string command_type=conf->readonestring ("/NaoConfig/commands/" + command + "/type");
 
 
 /*
@@ -1070,8 +1070,8 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
     {
 
 
-    string res = conf->readonestring ("/OpenspaceConfig/commands/" + command + "/exec");
-    string options = conf->readonestring ("/OpenspaceConfig/commands/" + command + "/options");
+    string res = conf->readonestring ("/NaoConfig/commands/" + command + "/exec");
+    string options = conf->readonestring ("/NaoConfig/commands/" + command + "/options");
     if (res == "")
         return 0;
         
@@ -1200,21 +1200,21 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
     setFont (objmanager->captionfont3);
     setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
     refresh ();
-    conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","small icons");
+    conf->saveonestring ("/NaoConfig/filelist/" + this->type + "/style","small icons");
         }
         else if (command == "change_view_big_icons")
     {
     setFont (objmanager->captionfont1);
     setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
     refresh ();
-    conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","big icons");
+    conf->saveonestring ("/NaoConfig/filelist/" + this->type + "/style","big icons");
     }
     else if (command == "change_view_detailed")
     {
     setFont (objmanager->captionfont3);
     setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
     refresh ();
-    conf->saveonestring ("/OpenspaceConfig/filelist/" + this->type + "/style","detailed");
+    conf->saveonestring ("/NaoConfig/filelist/" + this->type + "/style","detailed");
         }
     else if(command == "clipboard_copy" || command == "clipboard_cut")
     {
@@ -1275,11 +1275,11 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
 
          if (maximize)
          {
-            conf->saveonestring ("/OpenspaceConfig/panels", "single");
+            conf->saveonestring ("/NaoConfig/panels", "single");
          }
          else
          {
-            conf->saveonestring ("/OpenspaceConfig/panels", "double");
+            conf->saveonestring ("/NaoConfig/panels", "double");
          }
      
          controller->splitFileList(id);
@@ -1321,9 +1321,9 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
            refresh();
        
          if(show_hidden_files)
-         conf->saveonestring ("/OpenspaceConfig/show_hidden_files","true");
+         conf->saveonestring ("/NaoConfig/show_hidden_files","true");
          else
-         conf->saveonestring ("/OpenspaceConfig/show_hidden_files","false");
+         conf->saveonestring ("/NaoConfig/show_hidden_files","false");
        
        }
 
@@ -1337,11 +1337,11 @@ string command_type=conf->readonestring ("/OpenspaceConfig/commands/" + command 
 	if(dial)
 	delete dial;
 
-    string plugin_path = string(PATH_LIBDIR) + "/openspace/plugins/cmddialog/lib" + command + ".so";
+    string plugin_path = string(PATH_LIBDIR) + "/nao/plugins/cmddialog/lib" + command + ".so";
 
     if(!FXFile::exists(plugin_path.c_str()))
     {
-    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.openspace/plugins/cmddialog")+"/lib" + command + ".so";
+    plugin_path = FXFile::getUserDirectory ("").text ()+string("/.nao/plugins/cmddialog")+"/lib" + command + ".so";
     }
 
 
@@ -1435,7 +1435,7 @@ long OSFileList::openfile (FXObject * sender, FXSelector, void *)
     }
     else
     {
-    runCommand(conf->readonestring ("/OpenspaceConfig/file_types/COMMON/types/all/default"));
+    runCommand(conf->readonestring ("/NaoConfig/file_types/COMMON/types/all/default"));
     
     }
             
@@ -1491,7 +1491,7 @@ long OSFileList::onPopup (FXObject *, FXSelector, void *ptr)
 
     
 
-    if (conf->openxpath ("/OpenspaceConfig/shutter") != -1)
+    if (conf->openxpath ("/NaoConfig/shutter") != -1)
     {
     string res;
     while (conf->getnextnode (res))
@@ -1510,7 +1510,7 @@ long OSFileList::onPopup (FXObject *, FXSelector, void *ptr)
         but->setBackColor (objmanager->maincolor);
         content->setBackColor (getApp ()->getShadowColor ());
 	
-        if (conflocal.openxpath ("/OpenspaceConfig/shutter/" + res + "/command") != -1)
+        if (conflocal.openxpath ("/NaoConfig/shutter/" + res + "/command") != -1)
         {
         string res;
         while (conflocal.getnextstring (res))
@@ -1545,7 +1545,7 @@ long OSFileList::onPopup (FXObject *, FXSelector, void *ptr)
 
                 int open = 0;
 
-                if (ext != "" && conflocal3.openxpath ("/OpenspaceConfig/" + rep + "/commands/command") != -1)
+                if (ext != "" && conflocal3.openxpath ("/NaoConfig/" + rep + "/commands/command") != -1)
                 {
                     open++;
                        string res;
@@ -1576,7 +1576,7 @@ long OSFileList::onPopup (FXObject *, FXSelector, void *ptr)
                 ext = ext.substr (0, ext.find ("/"));
                 rep = "file_types/" + ext;
 
-                if (ext != "" && conflocal3.openxpath ("/OpenspaceConfig/" + rep + "/commands/command") != -1)
+                if (ext != "" && conflocal3.openxpath ("/NaoConfig/" + rep + "/commands/command") != -1)
                 {
                     open++;
                         string res;
@@ -1621,7 +1621,7 @@ long OSFileList::onPopup (FXObject *, FXSelector, void *ptr)
                 supported_commands.pop_front ();
 
                 OSConfigure conflocal2 = conflocal;
-                string command_text = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/text");
+                string command_text = conflocal2.readonestring ("/NaoConfig/commands/" + res + "/text");
                 if(command_text=="")command_text=res;
         
                 new FXButton (shutterItem->getContent (), command_text.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -1634,7 +1634,7 @@ long OSFileList::onPopup (FXObject *, FXSelector, void *ptr)
             }
 
             OSConfigure conflocal2 = conflocal;
-            string command_text = conflocal2.readonestring ("/OpenspaceConfig/commands/" + res + "/text");
+            string command_text = conflocal2.readonestring ("/NaoConfig/commands/" + res + "/text");
             if(command_text=="")command_text=res;
     
             new FXButton (shutterItem->getContent (), command_text.c_str (), 0, this, ID_LAST + command_num, FRAME_RAISED | LAYOUT_FILL_X | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -1948,7 +1948,7 @@ for(int i=0;i<getNumHeaders();i++)
     {
     string header=getHeaderText(i).text();
     int width=getHeaderSize(i);
-    conf->saveonestring("/OpenspaceConfig/OSFileList/"+this->type+"/properties/"+header+"/width",ntos(width));
+    conf->saveonestring("/NaoConfig/OSFileList/"+this->type+"/properties/"+header+"/width",ntos(width));
     
     }
 }

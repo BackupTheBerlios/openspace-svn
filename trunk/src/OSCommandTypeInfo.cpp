@@ -19,7 +19,7 @@
 //
 // C++ Implementation: OSCommandTypeInfo
 //
-// Author: Mateusz Dworak <http://openspace.linux.pl>, (C) 2005
+// Author: Mateusz Dworak <http://nao.linux.pl>, (C) 2005
 //
 // Description:
 //
@@ -48,22 +48,22 @@ void OSCommandTypeInfo::save( void )
 
     if ( type != "INTERNAL" && type != "PLUGIN" )
     {
-        if ( !conf->saveonestring ( "/OpenspaceConfig/commands/" + com + "/exec", value ) )
+        if ( !conf->saveonestring ( "/NaoConfig/commands/" + com + "/exec", value ) )
         {
-            conf->addstring ( "/OpenspaceConfig/commands", com, "" );
+            conf->addstring ( "/NaoConfig/commands", com, "" );
 
             if ( !exec.empty() )
             {
-                conf->addstring ( "/OpenspaceConfig/commands/" + com, "exec", value );
+                conf->addstring ( "/NaoConfig/commands/" + com, "exec", value );
             }
         }
     }
     else
     {
-        if ( !conf->saveonestring ( "/OpenspaceConfig/commands/" + com + "/type", type ) )
+        if ( !conf->saveonestring ( "/NaoConfig/commands/" + com + "/type", type ) )
         {
-            conf->addstring ( "/OpenspaceConfig/commands", com, "" );
-            conf->addstring ( "/OpenspaceConfig/commands/" + com, "type", type );
+            conf->addstring ( "/NaoConfig/commands", com, "" );
+            conf->addstring ( "/NaoConfig/commands/" + com, "type", type );
         }
     }
 
@@ -80,52 +80,52 @@ void OSCommandTypeInfo::save( void )
 
     if ( !options.empty() )
     {
-        if ( !conf->saveonestring ( "/OpenspaceConfig/commands/" + com + "/options", options ) )
-            conf->addstring ( "/OpenspaceConfig/commands/" + com, "options", options );
+        if ( !conf->saveonestring ( "/NaoConfig/commands/" + com + "/options", options ) )
+            conf->addstring ( "/NaoConfig/commands/" + com, "options", options );
     }
     else
     {
-        conf->removestring ( "/OpenspaceConfig/commands/" + com + "/options" );
+        conf->removestring ( "/NaoConfig/commands/" + com + "/options" );
     }
 
     if ( !text.empty() )
     {
-        if ( !conf->saveonestring ( "/OpenspaceConfig/commands/" + com + "/text", text ) )
-            conf->addstring ( "/OpenspaceConfig/commands/" + com, "text", text );
+        if ( !conf->saveonestring ( "/NaoConfig/commands/" + com + "/text", text ) )
+            conf->addstring ( "/NaoConfig/commands/" + com, "text", text );
     }
     else
     {
-        conf->removestring ( "/OpenspaceConfig/commands/" + com + "/text" );
+        conf->removestring ( "/NaoConfig/commands/" + com + "/text" );
     }
 
     if ( !icon.empty() )
     {
-        if ( !conf->saveonestring ( "/OpenspaceConfig/commands/" + com + "/icon", icon ) )
-            conf->addstring ( "/OpenspaceConfig/commands/" + com, "icon", icon );
+        if ( !conf->saveonestring ( "/NaoConfig/commands/" + com + "/icon", icon ) )
+            conf->addstring ( "/NaoConfig/commands/" + com, "icon", icon );
     }
     else
     {
-        conf->removestring ( "/OpenspaceConfig/commands/" + com + "/icon" );
+        conf->removestring ( "/NaoConfig/commands/" + com + "/icon" );
     }
 
     if ( !key.empty() )
     {
-        if ( !conf->saveonestring ( "/OpenspaceConfig/commands/" + com + "/key", key ) )
-            conf->addstring ( "/OpenspaceConfig/commands/" + com, "key", key );
+        if ( !conf->saveonestring ( "/NaoConfig/commands/" + com + "/key", key ) )
+            conf->addstring ( "/NaoConfig/commands/" + com, "key", key );
     }
     else
     {
-        conf->removestring ( "/OpenspaceConfig/commands/" + com + "/key" );
+        conf->removestring ( "/NaoConfig/commands/" + com + "/key" );
     }
 
     if ( !key_mask.empty() )
     {
-        if ( !conf->saveonestring ( "/OpenspaceConfig/commands/" + com + "/key_mask", key ) )
-            conf->addstring ( "/OpenspaceConfig/commands/" + com, "key_mask", key );
+        if ( !conf->saveonestring ( "/NaoConfig/commands/" + com + "/key_mask", key ) )
+            conf->addstring ( "/NaoConfig/commands/" + com, "key_mask", key );
     }
     else
     {
-        conf->removestring ( "/OpenspaceConfig/commands/" + com + "/key_mask" );
+        conf->removestring ( "/NaoConfig/commands/" + com + "/key_mask" );
     }
 
 } // save

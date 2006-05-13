@@ -1,5 +1,5 @@
 pkglib_LTLIBRARIES= libOSVfsLocal.la libOSVfsSearch.la libOSVfsArchive.la libOSVfsFtp.la    libOSVfsSftp.la
-pkglibdir=$(libdir)/openspace/plugins/filelist
+pkglibdir=$(libdir)/nao/plugins/filelist
 INCLUDES = `WANT_FOX="1.4" fox-config --cflags` `xml2-config  --cflags` 
 
 libOSVfsLocal_la_LDFLAGS = `WANT_FOX="1.4" fox-config --libs` `xml2-config  --libs`  

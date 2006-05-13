@@ -19,7 +19,7 @@
 //
 // C++ Implementation: OSConfigure
 //
-// Author: Mateusz Dworak <http://openspace.linux.pl>, (C) 2005
+// Author: Mateusz Dworak <http://nao.linux.pl>, (C) 2005
 //
 // Description:
 //
@@ -77,12 +77,12 @@ bool OSConfigure::loadconfig( bool restore )
 {
 
     std::string dir = FXFile::getUserDirectory ( "" ).text ();
-    file = dir + "/.openspace/openspacerc";
+    file = dir + "/.nao/nao.conf";
 
     if ( !FXFile::exists ( file.c_str () ) )
     {
         file = "";
-        file = file + PATH_CFG + SEPARATOR + "openspacerc";
+        file = file + PATH_CFG + SEPARATOR + "nao.conf";
     }
     FXTRACE ( ( 5, "OPENING CONFIGRATION FILE %s\n", file.c_str () ) );
 

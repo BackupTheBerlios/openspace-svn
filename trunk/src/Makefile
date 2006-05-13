@@ -14,14 +14,14 @@
 
 
 
-SOURCES = $(openspace_SOURCES)
+SOURCES = $(nao_SOURCES)
 
 srcdir = .
 top_srcdir = ..
 
-pkgdatadir = $(datadir)/openspace
-pkglibdir = $(libdir)/openspace
-pkgincludedir = $(includedir)/openspace
+pkgdatadir = $(datadir)/nao
+pkglibdir = $(libdir)/nao
+pkgincludedir = $(includedir)/nao
 top_builddir = ..
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 INSTALL = /usr/bin/install -c
@@ -37,7 +37,7 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_triplet = i686-pc-linux-gnu
-bin_PROGRAMS = openspace$(EXEEXT)
+bin_PROGRAMS = nao$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/config.h.in
@@ -51,7 +51,7 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_openspace_OBJECTS = main.$(OBJEXT) OSCMDDialogBox.$(OBJEXT) \
+am_nao_OBJECTS = main.$(OBJEXT) OSCMDDialogBox.$(OBJEXT) \
 	OSCommandTypeInfo.$(OBJEXT) OSConfigure.$(OBJEXT) \
 	OSFileList.$(OBJEXT) OSFileListItem.$(OBJEXT) \
 	OSFileTypeInfo.$(OBJEXT) OSFileTypeSymbol.$(OBJEXT) \
@@ -61,8 +61,8 @@ am_openspace_OBJECTS = main.$(OBJEXT) OSCMDDialogBox.$(OBJEXT) \
 	OSPathType.$(OBJEXT) OSPreferences.$(OBJEXT) \
 	OSShutter.$(OBJEXT) OSThreadExec.$(OBJEXT) OSUtils.$(OBJEXT) \
 	OSFrame.$(OBJEXT)
-openspace_OBJECTS = $(am_openspace_OBJECTS)
-openspace_LDADD = $(LDADD)
+nao_OBJECTS = $(am_nao_OBJECTS)
+nao_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -99,8 +99,8 @@ LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(openspace_SOURCES)
-DIST_SOURCES = $(openspace_SOURCES)
+SOURCES = $(nao_SOURCES)
+DIST_SOURCES = $(nao_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-exec-recursive install-info-recursive \
@@ -153,11 +153,11 @@ LN_S = ln -s
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /root/openspace/missing --run makeinfo
 OBJEXT = o
-PACKAGE = openspace
-PACKAGE_BUGREPORT = http://openspace.linux.pl
-PACKAGE_NAME = openspace
-PACKAGE_STRING = openspace 0.2.0
-PACKAGE_TARNAME = openspace
+PACKAGE = nao
+PACKAGE_BUGREPORT = http://nao.linux.pl
+PACKAGE_NAME = nao
+PACKAGE_STRING = nao 0.2.0
+PACKAGE_TARNAME = nao
 PACKAGE_VERSION = 0.2.0
 PATH_SEPARATOR = :
 RANLIB = ranlib
@@ -207,7 +207,7 @@ sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 sysconfdir = /etc
 target_alias = 
-openspace_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
+nao_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
 	OSCommandTypeInfo.cpp OSCommandTypeInfo.h OSConfigure.cpp OSConfigure.h OSFile.h \
 	OSFileList.cpp OSFileList.h OSFileListItem.cpp OSFileListItem.h OSFileTypeInfo.cpp \
 	OSFileTypeInfo.h OSFileTypeSymbol.cpp OSFileTypeSymbol.h OSFirstRunDialogBox.cpp \
@@ -224,7 +224,7 @@ INCLUDES = -I$(top_srcdir)/src `WANT_FOX="1.4" fox-config --cflags`  `xml2-confi
 	-DPATH_LIBDIR=\"$(libdir)\" \
 	-DPREFIX=\"$(prefix)\" 
 
-openspace_LDFLAGS = `WANT_FOX="1.4" fox-config --libs`  `xml2-config  --libs` -lmagic  
+nao_LDFLAGS = `WANT_FOX="1.4" fox-config --libs`  `xml2-config  --libs` -lmagic  
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -304,9 +304,9 @@ clean-binPROGRAMS:
 	  echo " rm -f $$p $$f"; \
 	  rm -f $$p $$f ; \
 	done
-openspace$(EXEEXT): $(openspace_OBJECTS) $(openspace_DEPENDENCIES) 
-	@rm -f openspace$(EXEEXT)
-	$(CXXLINK) $(openspace_LDFLAGS) $(openspace_OBJECTS) $(openspace_LDADD) $(LIBS)
+nao$(EXEEXT): $(nao_OBJECTS) $(nao_DEPENDENCIES) 
+	@rm -f nao$(EXEEXT)
+	$(CXXLINK) $(nao_LDFLAGS) $(nao_OBJECTS) $(nao_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

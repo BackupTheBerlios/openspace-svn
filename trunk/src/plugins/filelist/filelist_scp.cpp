@@ -25,7 +25,7 @@
 int filelist_scp::init (string ** name, unsigned int **type, unsigned int **width, pathtype pt, configure * conf)
 {
     configure conflocal = *conf;
-    int size = conflocal.countxpath ("/OpenspaceConfig/filelist/scp/headers/header") + 1;
+    int size = conflocal.countxpath ("/NaoConfig/filelist/scp/headers/header") + 1;
     fields = new string[size];
     fieldsnum = size;
 
@@ -35,16 +35,16 @@ int filelist_scp::init (string ** name, unsigned int **type, unsigned int **widt
     string wi;
     (*name)[0] = "name";
     fields[0] = "name";
-    if ((wi = conflocal.readonestring ("/OpenspaceConfig/filelist/scp/properties/name/width")) != "")
+    if ((wi = conflocal.readonestring ("/NaoConfig/filelist/scp/properties/name/width")) != "")
 	(*width)[0] = atoi (wi.c_str ());
     else
 	(*width)[0] = 100;
     (*type)[0] = 0;
     int counter = 1;
 
-    display_size = conflocal.readonestring ("/OpenspaceConfig/filelist/scp/properties/name/display");
+    display_size = conflocal.readonestring ("/NaoConfig/filelist/scp/properties/name/display");
 
-    if (conflocal.openxpath ("/OpenspaceConfig/filelist/scp/headers/header") != -1)
+    if (conflocal.openxpath ("/NaoConfig/filelist/scp/headers/header") != -1)
     {
 	while (1)
 	{
@@ -52,7 +52,7 @@ int filelist_scp::init (string ** name, unsigned int **type, unsigned int **widt
 	    if (res == "")
 		break;
 
-	    if ((wi = conflocal.readonestring ("/OpenspaceConfig/filelist/scp/properties/" + res + "/width")) != "")
+	    if ((wi = conflocal.readonestring ("/NaoConfig/filelist/scp/properties/" + res + "/width")) != "")
 	    {
 
 		(*width)[counter] = atoi (wi.c_str ());

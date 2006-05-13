@@ -1,6 +1,6 @@
-bin_PROGRAMS = openspace
+bin_PROGRAMS = nao
 
-openspace_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
+nao_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
 	OSCommandTypeInfo.cpp OSCommandTypeInfo.h OSConfigure.cpp OSConfigure.h OSFile.h \
 	OSFileList.cpp OSFileList.h OSFileListItem.cpp OSFileListItem.h OSFileTypeInfo.cpp \
 	OSFileTypeInfo.h OSFileTypeSymbol.cpp OSFileTypeSymbol.h OSFirstRunDialogBox.cpp \
@@ -18,6 +18,6 @@ INCLUDES = -I$(top_srcdir)/src `WANT_FOX="1.4" fox-config --cflags`  `xml2-confi
 	-DPATH_LIBDIR=\"$(libdir)\" \
 	-DPREFIX=\"$(prefix)\" 
 
-openspace_LDFLAGS = `WANT_FOX="1.4" fox-config --libs`  `xml2-config  --libs` -lmagic  
+nao_LDFLAGS = `WANT_FOX="1.4" fox-config --libs`  `xml2-config  --libs` -lmagic  
 
 

@@ -133,7 +133,7 @@ int OSVfsArchive::filesoperation(string typeoperation,OSThreadExec * te)
 			string tmpdir;
 			string destdir;
 			tmpdir=FXFile::time ("%S%H%M%d%m%y", FXFile::now()).text ();
-			destdir=string("/tmp/openspace/tmp") + tmpdir;
+			destdir=string("/tmp/nao/tmp") + tmpdir;
 			FXFile::createDirectory(destdir.c_str(),0);
 			
 			
@@ -250,7 +250,7 @@ int OSVfsArchive::filesoperation(string typeoperation,OSThreadExec * te)
 				string tmpdir;
 				string destdir;
 				tmpdir=FXFile::time ("%S%H%M%d%m%y", FXFile::now()).text ();
-				destdir=string("/tmp/openspace/tmp") + tmpdir;
+				destdir=string("/tmp/nao/tmp") + tmpdir;
 			
 				FXFile::createDirectory(destdir.c_str(),0);
 				command="cd "+destdir + " && mkdir -p " + reldir;

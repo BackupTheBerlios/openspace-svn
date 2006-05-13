@@ -146,7 +146,7 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-iconsdir = $(datadir)/openspace/icons/big
+iconsdir = $(datadir)/nao/icons/big
 EXTRA_DIST = *.png
 icons_DATA = *.png
 all: all-am
