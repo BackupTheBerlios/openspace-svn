@@ -954,6 +954,8 @@ void *OSFileList::thread_func (void *data)
                 tmpfile=destdir+"/"+name;
             
                 OSThreadExec *el2 = new OSThreadExec (fb, "copy", "upload", *iter,destdir);
+		el2->all=true;
+		el2->overwrite=true;
                 fb->copy (el2);
                 delete el2;
                 }
@@ -969,6 +971,8 @@ void *OSFileList::thread_func (void *data)
                     if(t1!=t2)
                     {
                     OSThreadExec *el2 = new OSThreadExec (fb, "copy", "download", tmpfile,fbdir);
+		    el2->all=true;
+		    el2->overwrite=true;
                     fb->copy (el2);
                     delete el2;
                     }
@@ -1012,6 +1016,8 @@ void *OSFileList::thread_func (void *data)
                 if(copysrc.size()>0)
                 {
                 OSThreadExec *el2 = new OSThreadExec (fb, "copy", "download",copysrc,fbdir);
+		el2->all=true;
+		el2->overwrite=true;
                 fb->copy (el2);
                 delete el2;
                 

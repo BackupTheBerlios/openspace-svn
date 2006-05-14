@@ -410,14 +410,14 @@ te->act_file_size=0;
 te->file_size=FXFile::size(from.c_str());
 
 
-fxmessage("TO=%s\n",to.c_str());
+//fxmessage("FROM=%s TO=%s\n",from.c_str(),to.c_str());
 
 SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)to.c_str ());
 
 	if (attr)
 	{
 	sftp_attributes_free(attr);
-	
+
 	    if (te->all == false)
 	    {
 
@@ -425,15 +425,13 @@ SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)to.c_str ());
 		while (te->answer != true)
 		    usleep (5000);
 		te->answer = false;
-
 	    }
 	    if (!te->overwrite)
-		return -1;	
+		{return -1;}	
 	    if (this->removeRecursive( to, te )==-1)
-		return -1;
+		{return -1;}
 	}
 	
-
 	
 
 
@@ -536,7 +534,7 @@ unsigned long size = 0;
 
 std::vector < std::string >::iterator iter;
 
-fxmessage(te->options.c_str());
+//fxmessage(te->options.c_str());
 
 std::string::size_type pos = te->options.find ( "upload" );
     if ( pos == std::string::npos )

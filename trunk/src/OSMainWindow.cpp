@@ -40,7 +40,7 @@ FXIMPLEMENT ( OSMainWindow, FXMainWindow, OSMainWindowMap, ARRAYNUMBER ( OSMainW
 
 
 //-----MAIN WINDOW---------------------------------------------------------------------------------------------------------------------------
-OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "nao file manager", NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0, 0, 0, 0, 0)
+OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, "nao", NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0, 0, 0, 0, 0)
 {
     conf = new OSConfigure ();
 
@@ -676,6 +676,7 @@ long OSMainWindow::onTimer ( FXObject *, FXSelector, void * )
             //popup with question about skipping or overwriting file
             if ( telem->question == true )
             {
+	    
                 telem->question = false;
                 telem->pane = new FXMenuPane ( this );
                 FXButton *but = new FXButton ( telem->pane, "overwrite", NULL, this,
