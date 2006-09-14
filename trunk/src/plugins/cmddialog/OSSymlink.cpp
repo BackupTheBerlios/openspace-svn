@@ -80,7 +80,7 @@ class OSSymlink:public OSCMDDialogBox
     }
 
 
-    long OSSymlink::press (FXObject * sender, FXSelector, void *);
+    long press (FXObject * sender, FXSelector, void *);
 
 };
 

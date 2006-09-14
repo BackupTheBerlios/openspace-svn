@@ -26,14 +26,8 @@
 /* Define to 1 if you have the `fork' function. */
 #define HAVE_FORK 1
 
-/* Define to 1 if you have the <fox-1.4/fx.h> header file. */
-#define HAVE_FOX_1_4_FX_H 1
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
-
-/* Define to 1 if you have the `FOX-1.4' library (-lFOX-1.4). */
-#define HAVE_LIBFOX_1_4 1
 
 /* Define to 1 if you have the <libssh/sftp.h> header file. */
 #define HAVE_LIBSSH_SFTP_H 1

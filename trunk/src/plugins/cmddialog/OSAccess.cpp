@@ -119,7 +119,7 @@ class OSAccess:public OSCMDDialogBox
     }
 
 
-    long OSAccess::press (FXObject * sender, FXSelector, void *);
+    long press (FXObject * sender, FXSelector, void *);
 
 };
 

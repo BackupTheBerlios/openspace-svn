@@ -94,7 +94,7 @@ class OSEditSymlink:public OSCMDDialogBox
 
 
 
-    long OSEditSymlink::press (FXObject * sender, FXSelector, void *);
+    long press (FXObject * sender, FXSelector, void *);
 
 };
 

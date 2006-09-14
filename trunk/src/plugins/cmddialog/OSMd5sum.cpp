@@ -51,7 +51,7 @@ class OSMd5sum:public OSCMDDialogBox
     }
 
 
-    long OSMd5sum::press (FXObject * sender, FXSelector, void *);
+    long press (FXObject * sender, FXSelector, void *);
 
 };
 

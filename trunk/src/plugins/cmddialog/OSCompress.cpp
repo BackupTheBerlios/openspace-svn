@@ -74,7 +74,7 @@ class OSCompress:public OSCMDDialogBox
     }
 
 
-    long OSCompress::press (FXObject * sender, FXSelector, void *);
+    long press (FXObject * sender, FXSelector, void *);
 
 };
 

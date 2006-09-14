@@ -36,14 +36,14 @@ AC_FUNC_STAT
 AC_CHECK_FUNCS([dup2 endgrent endpwent mkdir mkfifo rmdir strtoul])
 
 
-dnl Check for FOX
-AC_CHECK_LIB(FOX-1.4,fxfindfox,,AC_MSG_ERROR("libFOX-1.4 not found"))
+#dnl Check for FOX
+#AC_CHECK_LIB(FOX-1.4,fxfindfox,,AC_MSG_ERROR("libFOX-1.4 not found"))
 
 
-dnl Checks for FOX 1.4 header files.
-AC_HEADER_STDC
-AC_LANG_CPLUSPLUS
-AC_CHECK_HEADERS(fox-1.4/fx.h,,AC_MSG_ERROR("fox-1.4/fx.h not found"))
+#dnl Checks for FOX 1.4 header files.
+#AC_HEADER_STDC
+#AC_LANG_CPLUSPLUS
+#AC_CHECK_HEADERS(fox-1.4/fx.h,,AC_MSG_ERROR("fox-1.4/fx.h not found"))
 
 
 dnl Checks for libssh header files.

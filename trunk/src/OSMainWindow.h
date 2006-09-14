@@ -47,24 +47,24 @@ class OSMainWindow:public FXMainWindow, public OSFileListController
     virtual ~ OSMainWindow ();
     virtual void create ();
 
-    long OSMainWindow::onListDirs (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::onChangeDir (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::onChangeList (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::onNewFrame (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::onNewSearchFrame (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::onNotify (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::onOpenDir (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::onTimer (FXObject *, FXSelector, void *);
-    long OSMainWindow::cancel (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::update (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::commandsShow (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::onListNextDir (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::onOverwrite (FXObject * sender, FXSelector, void *);
-    long OSMainWindow::onAbout (FXObject * sender, FXSelector sel, void *);
-    long OSMainWindow::onOpenConfigure (FXObject * sender, FXSelector sel, void *);
-    long OSMainWindow::onUpdate (FXObject * sender, FXSelector sel, void *);
-    long OSMainWindow::onConfigure (FXObject * sender, FXSelector sel, void *);
+    long onListDirs (FXObject * sender, FXSelector, void *);
+    long onChangeDir (FXObject * sender, FXSelector, void *);
+    long onChangeList (FXObject * sender, FXSelector, void *);
+    long onNewFrame (FXObject * sender, FXSelector, void *);
+    long onNewNetworkFrame (FXObject * sender, FXSelector, void *);
+    long onNewSearchFrame (FXObject * sender, FXSelector, void *);
+    long onNotify (FXObject * sender, FXSelector, void *);
+    long onOpenDir (FXObject * sender, FXSelector, void *);
+    long onTimer (FXObject *, FXSelector, void *);
+    long cancel (FXObject * sender, FXSelector, void *);
+    long update (FXObject * sender, FXSelector, void *);
+    long commandsShow (FXObject * sender, FXSelector, void *);
+    long onListNextDir (FXObject * sender, FXSelector, void *);
+    long onOverwrite (FXObject * sender, FXSelector, void *);
+    long onAbout (FXObject * sender, FXSelector sel, void *);
+    long onOpenConfigure (FXObject * sender, FXSelector sel, void *);
+    long onUpdate (FXObject * sender, FXSelector sel, void *);
+    long onConfigure (FXObject * sender, FXSelector sel, void *);
 
 
     void dirChange(long id);
@@ -77,11 +77,11 @@ class OSMainWindow:public FXMainWindow, public OSFileListController
     {
     }
     
-    void OSMainWindow::loadicons (string dir);
-    void OSMainWindow::loadSpecialIcon (string icondir, string type, int nr );
-    int OSMainWindow::popupDir (OSFileList * current_filelist, string path, int x, int y);
-    string OSMainWindow::parseDir (string dir);
-    bool OSMainWindow::loadMimeSettings (string path, string type);
+    void loadicons (string dir);
+    void loadSpecialIcon (string icondir, string type, int nr );
+    int popupDir (OSFileList * current_filelist, string path, int x, int y);
+    string parseDir (string dir);
+    bool loadMimeSettings (string path, string type);
     
     FXVerticalFrame *leftframe;
     FXVerticalFrame *rightframe;

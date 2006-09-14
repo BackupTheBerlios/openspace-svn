@@ -95,7 +95,7 @@ public:
     }
 
 
-    long OSClone::press ( FXObject * sender, FXSelector, void * );
+    long press ( FXObject * sender, FXSelector, void * );
 
 };
 

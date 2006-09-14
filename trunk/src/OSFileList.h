@@ -150,24 +150,24 @@ public:
 
     virtual void create ();
 
-    void OSFileList::refresh ( void );
-    bool OSFileList::init ( void );
-    bool OSFileList::openDir ( string dir );
-    string OSFileList::getDir (  ){return path;}
+    void refresh ( void );
+    bool init ( void );
+    bool openDir ( string dir );
+    string getDir (  ){return path;}
 
-    long OSFileList::setFocus ( FXObject * obj, FXSelector sel, void *ptr );
-    long OSFileList::lostFocus ( FXObject * obj, FXSelector sel, void *ptr );
-    long OSFileList::openfile ( FXObject *, FXSelector, void * );
-    long OSFileList::gotoparentdir ( FXObject *, FXSelector, void * );
-    long OSFileList::onPopup ( FXObject *, FXSelector, void * );
-    long OSFileList::file_operation ( FXObject *, FXSelector, void * );
-    long OSFileList::onCmdHeader ( FXObject *, FXSelector, void *ptr );
-    long OSFileList::onCommand ( FXObject *, FXSelector, void *ptr );
-    long OSFileList::onCommandCancel ( FXObject *, FXSelector, void *ptr );
-    long OSFileList::click ( FXObject *, FXSelector, void *ptr );
-    long OSFileList::onCmdResize( FXObject * sender, FXSelector, void * );
-    long OSFileList::key_shortcut ( FXObject * obj, FXSelector sel, void *ptr );
-    long OSFileList::texfield_run ( FXObject * obj, FXSelector sel, void *ptr );
+    long setFocus ( FXObject * obj, FXSelector sel, void *ptr );
+    long lostFocus ( FXObject * obj, FXSelector sel, void *ptr );
+    long openfile ( FXObject *, FXSelector, void * );
+    long gotoparentdir ( FXObject *, FXSelector, void * );
+    long onPopup ( FXObject *, FXSelector, void * );
+    long file_operation ( FXObject *, FXSelector, void * );
+    long onCmdHeader ( FXObject *, FXSelector, void *ptr );
+    long onCommand ( FXObject *, FXSelector, void *ptr );
+    long onCommandCancel ( FXObject *, FXSelector, void *ptr );
+    long click ( FXObject *, FXSelector, void *ptr );
+    long onCmdResize( FXObject * sender, FXSelector, void * );
+    long key_shortcut ( FXObject * obj, FXSelector sel, void *ptr );
+    long texfield_run ( FXObject * obj, FXSelector sel, void *ptr );
 
     long onDNDEnter ( FXObject *, FXSelector, void * );
     long onDNDLeave ( FXObject *, FXSelector, void * );

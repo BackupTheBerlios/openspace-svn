@@ -40,7 +40,7 @@ class OSMkdir:public OSCMDDialogBox
     }
 
 
-    long OSMkdir::press (FXObject * sender, FXSelector, void *);
+    long press (FXObject * sender, FXSelector, void *);
 
 };
 
