@@ -373,6 +373,9 @@ bool OSConfigure::getnextstring ( std::string &ret )
 {
     xmlChar* keyword = NULL;
 
+if(pos < nodeset->nodeNr)
+{
+
     if ( nodeset->nodeNr == pos )
     {
         xmlXPathFreeObject ( result );
@@ -386,7 +389,12 @@ bool OSConfigure::getnextstring ( std::string &ret )
     pos++;
     ret = retstring;
     return true;
-
+}
+else 
+{
+xmlXPathFreeObject ( result );
+return false;
+}
 }
 
 int OSConfigure::countxpath ( std::string path )
